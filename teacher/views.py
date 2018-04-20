@@ -647,7 +647,6 @@ def make(request):
    	  return JsonResponse({'status':'n!'}, safe=False)  
   else:
     return JsonResponse({'status':classroom_id}, safe=False)        
-
 # Create your views here.
 def import_sheet(request):
     if False:
@@ -665,7 +664,7 @@ def import_sheet(request):
             return render(request, 'teacher/import_student.html',{'users':users})
         else:
             return HttpResponseBadRequest()
-    else:	
+    else:
         form = UploadFileForm()
     return render(
         request,
@@ -676,37 +675,45 @@ def import_sheet(request):
             'header': ('Please choose any excel file ' +
                        'from your cloned repository:')
         })
-	
+
 # Create your views here.
 def import_student(request):
     if False:
         return redirect("/")
-           
-    users = ImportUser.objects.all()
-    for user in users:
-        try:
-            account = User.objects.get(username=request.user.username+"_"+user.username)
-        except ObjectDoesNotExist:
-            username = request.user.username+"_"+user.username
-            new_user = User(username=username, first_name=user.first_name, last_name=request.user.last_name, password=user.password, email=username+"@edu.tw")
-            # Set the chosen password                 
-            new_user.set_password(user.password)
-            # Save the User object
-            new_user.save()
-            profile = Profile(user=new_user)
-            profile.save()          
-     
-            # create Message
-            title = "請洽詢任課教師課程名稱及選課密碼"
-            url = "/student/classroom/add"
-            message = Message(title=title, url=url, time=timezone.now())
-            message.save()                        
-                    
-            # message for group member
-            messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
-            messagepoll.save()               
-    return redirect('/teacher/student/list')	
 
+    users = ImportUser.objects.all()
+    username_list = [request.user.username+"_"+user.username for user in users]
+    exist_users = [user.username for user in User.objects.filter(username__in=username_list)]
+    create_list = []
+    for user in users:
+        username = request.user.username+"_"+user.username
+        if username in exist_users:
+            continue
+        new_user = User(username=username, first_name=user.first_name, last_name=request.user.last_name, password=user.password, email=username+"@edu.tw")
+        new_user.set_password(user.password)
+        create_list.append(new_user)
+
+    User.objects.bulk_create(create_list)
+    new_users = User.objects.filter(username__in=[user.username for user in create_list])
+
+    profile_list = []
+    message_list = []
+    poll_list = []
+    title = "請洽詢任課教師課程名稱及選課密碼"
+    url = "/student/classroom/add"
+    message = Message(title=title, url=url, time=timezone.now())
+    message.save()
+    for user in new_users:
+        profile = Profile(user=user)
+        profile_list.append(profile)
+        poll = MessagePoll(message_id=message.id, reader_id=user.id)
+        poll_list.append(poll)
+
+    Profile.objects.bulk_create(profile_list)
+    MessagePoll.objects.bulk_create(poll_list)
+
+    return redirect('/teacher/student/list')
+	
 # 教師可以查看所有帳號
 class StudentListView(ListView):
     context_object_name = 'users'

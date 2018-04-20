@@ -325,7 +325,7 @@ def submit(request, lesson, index):
     else :
         lesson_list = lesson_list1	
     if lesson == "1":
-        works = Work.objects.filter(index=index, user_id=request.user.id)
+        works = Work.objects.filter(index=index, user_id=request.user.id, lesson_id=lesson)
         try:
             filepath = request.FILES['file']
         except :
@@ -359,7 +359,7 @@ def submit(request, lesson, index):
                     
                 else :
                     works.update(memo=form.cleaned_data['memo'])           
-            return redirect('/student/lessonA/'+request.POST.get("lesson", ""))									
+            return redirect('/student/lesson/'+request.POST.get("lesson", ""))									
     elif lesson == "2":
         if request.method == 'POST':
             form = SubmitBForm(request.POST, request.FILES)

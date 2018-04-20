@@ -1,6 +1,6 @@
 {% if is_paginated %}
 <div class="pagination-wrapper">
-     <ul class="pagination">
+     <ul class="pagination" style="text-align: center;display:flex;justify-content:center;">
     {% if page_obj.has_previous %}
         <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一頁</a></li>
     {% endif %}
@@ -12,7 +12,7 @@
                 <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
             {% endifequal %}
         {% else %}
-            ...
+             <li class="page-item"><a class="page-link">...</a></li>
         {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}

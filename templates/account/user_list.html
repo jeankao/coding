@@ -21,7 +21,7 @@
                 <td>{{user.last_name|school}}</td>
                 <td>{{user.last_login}}</td>
                 <td>
-                {% if user.groups.all.0.name == "teacher"  %}<a href="#" data-userid="{{ user.id }}" data-action="unset" class="teacher btn btn-info active" role="button">取消教師</a>{% else %}<a href="#" data-userid="{{ user.id }}" data-action="set" class="teacher btn btn-success" role="button">設為教師</a>{% endif %}
+                {% if user|has_group:"teacher"  %}<a href="#" data-userid="{{ user.id }}" data-action="unset" class="teacher btn btn-info active" role="button">取消教師</a>{% else %}<a href="#" data-userid="{{ user.id }}" data-action="set" class="teacher btn btn-success" role="button">設為教師</a>{% endif %}
                 <A href="/account/password/{{user.id}}" class="btn btn-success" role="button">重設密碼</a>
                 <A href="/account/realname/{{user.id}}" class="btn btn-success" role="button">設定姓名</a></td>
             </tr>
