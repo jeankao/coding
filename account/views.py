@@ -284,7 +284,7 @@ class SchoolUpdateView(UpdateView):
     template_name = 'form.html'
     #success_url = '/teacher/forum/domain/'
     def get_success_url(self):
-        succ_url =  '/account/schools'
+        succ_url =  '/account/admin/schools'
         return succ_url
 	
 	# 修改密碼
