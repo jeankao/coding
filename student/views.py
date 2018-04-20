@@ -397,8 +397,8 @@ def submit(request, lesson, index):
                 mime, b64 = head.split(';', 1)
                 mtype, fext = mime.split('/', 1)
                 binary_data = a2b_base64(data)
-                directory = "static/work/vphysics/{uid}/{id}".format(uid=request.user.id, id=work.id)
-                image_file = "static/work/vphysics/{uid}/{id}/{filename}.jpg".format(uid=request.user.id, id=work.id, filename='run')
+                directory = "static/work/vphysics/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
+                image_file = "static/work/vphysics/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                 with open(image_file, 'wb') as fd:

@@ -7,7 +7,7 @@
               <font color=black>心得感想：</font><BR>{{work.memo}}<BR>              
 			  <font color=black>創作過程：</font><BR>{{work.helps}}<BR>
               <font color=black>程式碼：</font><pre>{{work.code}}</pre><BR>
-            執行結果：<img width=880 src="/static/work/{% if lesson == '2' %}vphysics{% else %}vphysics{% endif %}/{{request.user.id}}/{{work.id}}/run.jpg"><BR>
+            執行結果：<img width=880 src="/static/work/{% if lesson == '2' %}vphysics{% else %}vphysics{% endif %}/{{request.user.id}}/{{work.index}}/{{work.id}}.jpg"><BR>
 			{% else %}
 			尚未繳交
 			{% endif %}
