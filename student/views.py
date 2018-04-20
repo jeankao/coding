@@ -59,15 +59,18 @@ def lessons(request, subject_id):
 # 課程內容
 def lesson(request, lesson):  
     work_dict = {}	
-    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
     hit = statics_lesson(request, lesson)
     if lesson[0] == "A":
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
         return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "B":
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=2, user_id=request.user.id)))	
         return render_to_response('student/lessonB.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=3, user_id=request.user.id)))	
         return render_to_response('student/lessonC.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
     else:
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
         return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
 
 # 判斷是否為授課教師
@@ -335,7 +338,7 @@ def submit(request, lesson, index):
                 myfile = request.FILES['file']
                 fs = FileSystemStorage()
                 filename = uuid4().hex
-                fs.save("static/work/"+str(request.user.id)+"/"+filename, myfile)
+                fs.save("static/work/scratch/"+str(request.user.id)+"/"+filename, myfile)
 						
             form = SubmitAForm(request.POST, request.FILES)
 
@@ -394,8 +397,8 @@ def submit(request, lesson, index):
                 mime, b64 = head.split(';', 1)
                 mtype, fext = mime.split('/', 1)
                 binary_data = a2b_base64(data)
-                directory = "static/pic/{uid}/{id}".format(uid=request.user.id, id=work.id)
-                image_file = "static/pic/{uid}/{id}/{filename}.jpg".format(uid=request.user.id, id=work.id, filename='run')
+                directory = "static/work/vphysics/{uid}/{id}".format(uid=request.user.id, id=work.id)
+                image_file = "static/work/vphysics/{uid}/{id}/{filename}.jpg".format(uid=request.user.id, id=work.id, filename='run')
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                 with open(image_file, 'wb') as fd:
@@ -407,7 +410,7 @@ def submit(request, lesson, index):
                 work.helps=form.cleaned_data['helps']
                 work.save()
                 return redirect("/student/work/show/"+lesson+"/"+index)
-            return redirect('/student/lessonB/'+request.POST.get("lesson", ""))	
+            return redirect('/student/lesson/'+request.POST.get("lesson", ""))	
         return render_to_response('student/submit.html', {'form':form, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
 
 def show(request, lesson, index):
