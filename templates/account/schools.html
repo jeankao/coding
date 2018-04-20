@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+{% for school in schools %}
+<a href="/account/admin/school/{{school.id}}" class="btn btn-primary" role=btn>{{school.name}}</a>
+{% endfor %}
+{% endblock %}

@@ -5,7 +5,7 @@
     var county = new Array();          
     var zone = new Array();
     var school = new Array();
-    {% for county, zone in district %}
+    {% for county, zone, mapx, mapy in district %}
        county[{{forloop.counter|add:-1}}] = [{{county.id}}, "{{county.name}}"];
        zone[{{forloop.counter|add:-1}}] = new Array();
        school[{{forloop.counter|add:-1}}] = new Array();     

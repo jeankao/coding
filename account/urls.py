@@ -46,7 +46,9 @@ urlpatterns = [
     #積分記錄
     url(r'^log/(?P<kind>\d+)/(?P<user_id>\d+)/$', views.LogListView.as_view()),	     
     #管理介面 
-    url(r'^admin/$', login_required(views.admin)),  
+    url(r'^admin/$', login_required(views.admin)),     
+    url(r'^admin/schools/$', views.schools),       
+    url(r'^admin/school/(?P<pk>\d+)/$', login_required(views.SchoolUpdateView.as_view())),    
     #設定教師
     url(r'^teacher/make/$', login_required(views.make)), 
     # 列所出有圖像

@@ -4,7 +4,7 @@ from django.template import RequestContext
 from forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
 from zone import *
 from account.models import County, Zone, School, Profile, PointHistory, Message, MessagePoll, Visitor, VisitorLog, LessonCounter
@@ -272,6 +272,20 @@ def message(request, messagepoll_id):
     messagepoll.save()
     message = Message.objects.get(id=messagepoll.message_id)
     return redirect(message.url)			
+
+# 所有註冊學校
+def schools(request):
+    schools = School.objects.all()
+    return render_to_response('account/schools.html',{'schools': schools}, context_instance=RequestContext(request))		
+	
+class SchoolUpdateView(UpdateView):
+    model = School
+    fields = ['county', 'zone', 'name']
+    template_name = 'form.html'
+    #success_url = '/teacher/forum/domain/'
+    def get_success_url(self):
+        succ_url =  '/account/schools'
+        return succ_url
 	
 	# 修改密碼
 def password(request, user_id):

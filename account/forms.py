@@ -17,11 +17,12 @@ class LoginForm(forms.Form):
 class RegistrationSchoolForm(forms.ModelForm):
         class Meta:
                 model = School
-                fields = ('zone', 'system', 'name')
+                fields = ('county', 'zone', 'system', 'name')
 
         def __init__(self, *args, **kwargs):
                 super(RegistrationSchoolForm, self).__init__(*args, **kwargs)
-                self.fields['zone'].label = "縣市/區域"
+                self.fields['county'].label = "縣市"            
+                self.fields['zone'].label = "區域"
                 self.fields['system'].label = "學制"     
                 self.fields['name'].label = "學校名稱"                     
 
@@ -73,8 +74,8 @@ class RegistrationForm(forms.ModelForm):
                         self.error_messages['duplicate_username'],
                         code='duplicate_username',
                 )
-                
-
+             
+               
 # 修改密碼表單
 class PasswordForm(forms.ModelForm):
         class Meta:
