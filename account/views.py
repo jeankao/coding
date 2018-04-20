@@ -47,7 +47,6 @@ def homepage(request):
         admin_profile = ""
     classroom_count = Classroom.objects.all().count()
     return render_to_response('homepage.html', {'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
-
   
 # 網站大廳
 def dashboard(request):
@@ -58,7 +57,9 @@ def author(request):
 	
 def about(request):   
     return render_to_response('account/about.html', context_instance=RequestContext(request))	  
-	
+
+def contact(request):   
+    return render_to_response('account/contact.html', context_instance=RequestContext(request))	  	
 	
 def statics_zone(request):
     cities = County.objects.all()
@@ -67,7 +68,7 @@ def statics_zone(request):
 def statics_lesson(request):
 		counters = LessonCounter.objects.all().order_by("-hit")		
 		return render_to_response('account/statics_lesson.html', {'counters':counters}, context_instance=RequestContext(request))
-  	
+ 	
 	
 	
 # 管理介面 
@@ -440,7 +441,7 @@ def profile(request, user_id):
 class VisitorListView(ListView):
     model = Visitor
     context_object_name = 'visitors'
-    template_name = 'account/visitor_list.html'    
+    template_name = 'account/statics_login.html'    
     paginate_by = 20
     
     def get_queryset(self):       
@@ -468,7 +469,7 @@ class VisitorListView(ListView):
 class VisitorLogListView(ListView):
     model = VisitorLog
     context_object_name = 'visitorlogs'
-    template_name = 'account/visitorlog_list.html'    
+    template_name = 'account/statics_login_log.html'    
     paginate_by = 50
     
     def get_queryset(self):

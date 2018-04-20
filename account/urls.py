@@ -20,9 +20,14 @@ urlpatterns = [
     url(r'^author/$', views.author),
     # 關於我們
     url(r'^about/$', views.about),  
+    # 連絡我們
+    url(r'^contact/$', views.contact),  
     # 數據統計
     url(r'^statics/zone/$', views.statics_zone),    
     url(r'^statics/lesson/$', views.statics_lesson),      
+    #訪客
+    url(r'^statics/login/$', views.VisitorListView.as_view()),    
+    url(r'^statics/login/log/(?P<visitor_id>\d+)/$', login_required(views.VisitorLogListView.as_view())),   
     # 讀取訊息
     url(r'^message/(?P<messagepoll_id>\d+)/$', views.message),  
     #個人檔案
@@ -40,9 +45,6 @@ urlpatterns = [
     url(r'^email/$', views.adminemail),    
     #積分記錄
     url(r'^log/(?P<kind>\d+)/(?P<user_id>\d+)/$', views.LogListView.as_view()),	     
-    #訪客
-    url(r'^visitor/$', views.VisitorListView.as_view()),    
-    url(r'^visitorlog/(?P<visitor_id>\d+)/$', login_required(views.VisitorLogListView.as_view())), 
     #管理介面 
     url(r'^admin/$', login_required(views.admin)),  
     #設定教師
