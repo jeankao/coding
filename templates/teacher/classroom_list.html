@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %} Teachers {% endblock %}
+{% block content %}
+<!--
+        <a href="/vphysics/classroom/">Vphysics班級</a><BR><BR>
+		<HR>
+-->
+     <a href="/teacher/classroom/add" role="button" class="btn btn-info active">新增班級</a>
+     <a href="/teacher/student/list" role="button" class="btn btn-info active">學生帳號</a><BR><BR>	
+        <table class="table">
+            <tr>
+                <td>名稱</td>
+                <td>密碼</td>
+                <td>功能</td>
+        {% for classroom in classrooms %}
+            <tr>
+            <td>{{classroom.name}}({{classroom.lesson_choice}})</td>
+            <td>{{classroom.password}}</td>
+            <td>
+                <a href="/teacher/classroom/edit/{{classroom.id}}" role="button" class="btn btn-success">修改</a>
+                <a href="/student/classmate/{{classroom.id}}" role="button" class="btn btn-success">學生</a>
+                <a href="/student/group/{{classroom.id}}" role="button" class="btn btn-success">組別</a>
+                <a href="/teacher/announce/{{classroom.id}}" role="button" class="btn btn-success">公告</a>
+							  <a href="/teacher/work/{{classroom.lesson}}/{{classroom.id}}" role="button" class="btn btn-success">作業</a>
+							  <a href="/teacher/work1/{{classroom.lesson}}/{{classroom.id}}" role="button" class="btn btn-success">小老師</a>
+							  <a href="/teacher/memo/{{classroom.lesson}}/{{classroom.id}}" role="button" class="btn btn-success">心得</a>						  
+							  <a href="/teacher/grade/{{classroom.lesson}}/{{classroom.id}}" role="button" class="btn btn-success">成績</a>
+            </td>
+            </tr>
+        {% endfor %}
+        </table>
+{% endblock %}

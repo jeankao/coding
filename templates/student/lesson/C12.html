@@ -1,0 +1,93 @@
+  <p>三角數</p>
+<p>一定數目的點或圓在等距離的排列下可以形成一個等邊三角形，這樣的數被稱為三角數。</p>
+
+<img src="/static/lesson/euler/triangular.png">
+圖片來源：維基百科<br>
+<p>比如10個點可以組成一個等邊三角形，因此10是一個三角數。</p>
+<p>一開始的10個三角形數是1、3、6、10、15、21、28、36、45、55</p>
+<p>T(1)=1</p>
+<p>T(2)=1+2=3</p>
+<p>T(3)=1+2+3=6</p>
+<p>T(4)=1+2+3+4=10</p>
+<p>T(5)=1+2+3+4+5=15</p>
+<p>T(6)=1+2+3+4+5+6=21</p>
+<p>T(7)=1+2+3+3+4+5+6+7=28</p>
+<p>利用等差數列總和公式推出三角數第n項T(n)=(n+1)n/2</p>
+<p>在三角數列中28是第一個擁有超過5個因數(1,2,4,7,14,28，共6個)</p>
+<p>【最後目標】</p>
+<p>求第一個超過500個因數的三角數。</p>
+<BR>
+<p>練習1：集合</p>
+<p>集合(sets)是一組無序且沒有重複的元素。大括號或 set() 函式都可以用來創建集合。(注意：要創建一個空的集合，必須使用set()而不是{})</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s">&#39;abracadabra&#39;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s">&#39;alacazam&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c">#印出集合a</span>
+<span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="c">#印出集合b</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span> <span class="c">#差集：在集合a中但不在集合b中的元素集合</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">|</span><span class="n">b</span><span class="p">)</span> <span class="c">#聯集：在集合a或在集合b中的元素集合</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="c">#交集：在集合a且在集合b中的元素集合</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="p">)</span> <span class="c">#在集合a或集合b中，但不同時存在兩個集合</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<p>練習2：找出第100項三角數</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">number</span> <span class="o">*</span> <span class="p">(</span><span class="n">number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">T</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<p>練習3：找出100的所有因數及其因數個數</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">factors</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">div</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mod</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">|</span> <span class="p">{</span><span class="n">i</span><span class="p">,</span> <span class="n">div</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">factor_set</span> <span class="o">=</span> <span class="n">factors</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">factor_set</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">factor_set</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<p>練習4：找出100的因數中，除了100本身之外最大的因數。</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">number</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">factor</span> <span class="o">=</span> <span class="n">number</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="n">factor</span>
+    <span class="k">if</span> <span class="n">mod</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span><span class="o">-</span><span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>

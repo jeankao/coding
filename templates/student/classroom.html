@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+        <a href="/student/classroom/add" role="button" class="btn btn-info active">加入班級</a><BR><BR>
+        
+        {% for enroll in enrolls %}
+<div class="card">
+  <h5 class="card-header">{{enroll.classroom}} ({{enroll.classroom.lesson_choice}})：{{enroll.seat}}號</h5>
+  <div class="card-body">
+    <p class="card-text">
+基本資料：
+			<a href="/student/classroom/seat/{{enroll.id}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">座號</a>
+			<a href="/student/group/{{enroll.classroom_id}}" role="button" class="btn btn-success">組別</a>
+			<a href="/student/classmate/{{enroll.classroom_id}}" role="button" class="btn btn-success">同學</a>
+	        <a href="/student/work/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">作業</a>
+{% if not enroll.classroom.lesson == 1 %}
+			<a href="/student/progress/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度</a>
+{% endif %}
+			<a href="/student/work1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">小老師</a>
+{% if enroll.classroom.lesson == 1 %}
+			<BR><BR>作業進度：
+			<a href="/student/progress/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>
+			<a href="/student/progress/{{enroll.classroom.lesson}}/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>
+			<a href="/student/progress/{{enroll.classroom.lesson}}/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
+			<a href="/student/progress/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
+{% endif %}
+
+			<BR><BR>師生互動：
+			<a href="/student/announce/{{enroll.classroom_id}}" role="button" class="btn btn-success">公告</a>
+		    <a href="/account/line/{{enroll.classroom_id}}" role="button" class="btn btn-success">我的私訊</a>
+   			{% if request.user|has_group:"teacher" %}
+		    <a href="/account/line/class/{{enroll.classroom_id}}" role="button" class="btn btn-success">私訊同學</a>
+			{% endif %}
+			<a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.classroom.teacher_id}}" role="button" class="btn btn-success">私訊老師</a>
+    </p>
+  </div>
+</div>
+<BR>
+        {% endfor %}
+
+{% endblock %}

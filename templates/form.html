@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="form-group">
+    <form action="" method="post">
+    {{ form.as_p }}{% csrf_token %}
+    <input type="submit" value="送出"/>
+    </form>
+</div>
+{% endblock %}

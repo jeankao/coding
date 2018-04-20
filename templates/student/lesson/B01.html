@@ -1,0 +1,129 @@
+<BR>
+<a target=_blank href="https://www.python.org/ftp/python/2.7.13/python-2.7.13.msi">Python安裝程式下載</a><BR>
+<a target=_blank href="http://sourceforge.net/projects/vpythonwx/files/6.11-release/VPython-Win-32-Py2.7-6.11.exe/download">VPython安裝程式下載</a>
+<BR>
+<BR>
+<h1>
+  第一個程式
+</h1>
+  <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#產生一個寬400像素，高400像素的3度空間以進行繪圖</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+<span class="c">#產生一個扁長形方塊，當做是地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+  
+
+<BR>第6行程式會開一個專屬視窗,並以 scene 為名字,代表此視窗,而視窗在開啟時,右方為模擬世界中的+x 軸、向上為+y 軸、射出紙面為+z 軸。width 與 height 是視窗的寬與高,單位是顯示器的像素。
+<BR>
+  <BR>第8行程式會產生一個 box 物件,在視窗中畫一個非常扁平的 box,代表地板,取名為 floor。length, height, width 為長(平行 x 軸)、高(y 軸)、寬(z 軸)
+<BR>
+<BR>
+<img src="/static/lesson/vphysics/2Lesson01.png">　<img src="/static/lesson/vphysics/box.png">
+<BR><BR>
+  
+上圖看起來不像是立體空間，反而像是一張平面圖，所以我們試著設定一下視角的中心點，調整一下Y軸。<BR>
+  
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.06</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+
+  
+<BR>
+<img src="/static/lesson/vphysics/2Lesson02.png">
+<BR><BR>
+  
+有了畫布，有了參考地板，接著我們來產生一個正立方物體<BR>
+  
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#產生一個寬400像素，高400像素的3度空間以進行繪圖</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.06</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="c">#產生一個扁長形方塊，當做是地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="hll"><span class="c">#產生一個正立方物體</span>
+</span><span class="hll"><span class="n">cube</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+  
+<BR>
+<img src="/static/lesson/vphysics/2Lesson03.png">
+<BR><BR>  
+  
+由於這個物體的中心點與參考地板的中心點重疊，所以看起來它是沈入地板，我們要將它的位置上移半個物體高。<BR>
+  
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cube</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+  
+<BR>
+<img src="/static/lesson/vphysics/2Lesson04.png">
+<BR><BR>  
+  
+有了這個物體，接著我們可以寫個程式讓這個物體動起來(改變它的X座標)<BR>
+  
+  <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#產生一個寬400像素，高400像素的3度空間以進行繪圖</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.06</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="c">#產生一個扁長形方塊，當做是地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="c">#產生一個正立方物體</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+<span class="hll"><span class="c">#讓物體運動</span>
+</span><span class="hll"><span class="k">while</span> <span class="n">cube</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">rate</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">cube</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">cube</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.001</span>
+</span><span class="hll">
+</span></pre></div>
+</td></tr></table></div>
+<BR>
+<h1>
+作業(1)：讓方塊先往右移動到0.1的位置，再往左移動到-0.1的位置  
+</h1>
+<iframe width="880" height="520" src="https://www.youtube.com/embed/blwiYGAsngs?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>  
+
+<h1>
+作業(2)：讓方塊能夠繞著地板的邊邊繞一圈。
+</h1>
+  

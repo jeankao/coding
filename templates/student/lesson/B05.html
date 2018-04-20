@@ -1,0 +1,129 @@
+<BR>
+<h1>
+畫出座標軸與標籤  
+</h1>
+
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#畫布</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+
+<span class="c"># x軸箭頭</span>
+<span class="n">x_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># y軸箭頭</span>
+<span class="n">y_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># z軸箭頭</span>
+<span class="n">z_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c"># x軸標籤</span>
+<span class="n">label</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c"># y軸標籤</span>
+<span class="n">label</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c"># z軸標籤</span>
+<span class="n">label</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;z&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+
+  <BR>執行結果</BR>
+  <img src="/static/lesson/vphysics/B0701.png">
+  <BR><BR>
+  
+<h1>
+  畫出向量及做加法運算
+  </h1>
+  
+  <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#畫布</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+
+<span class="c"># x軸箭頭</span>
+<span class="n">x_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># y軸箭頭</span>
+<span class="n">y_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># z軸箭頭</span>
+<span class="n">z_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c"># x軸標籤</span>
+<span class="n">label</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c"># y軸標籤</span>
+<span class="n">label</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c"># z軸標籤</span>
+<span class="n">label</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="s">&#39;z&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="hll"><span class="c">#畫出二個向量</span>
+</span><span class="hll"><span class="n">vector1</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="hll"><span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">vector1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">black</span><span class="p">,</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</span><span class="hll"><span class="n">vector2</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="hll"><span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">vector2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">black</span><span class="p">,</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll"><span class="c">#向量加法運算</span>
+</span><span class="hll"><span class="n">final_vector</span> <span class="o">=</span> <span class="n">vector1</span> <span class="o">+</span> <span class="n">vector2</span>
+</span><span class="hll"><span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">final_vector</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+
+  <BR>執行結果</BR>
+  <img src="/static/lesson/B0702.png">
+  <BR><BR>
+    
+<h1>
+  作業
+    </h1>
+    
+請在上面的向量中，加入文字標籤顯示向量值，如下圖<BR>提示：str(vector)可以將向量轉換成文字資料型態<BR>
+    <img src="/static/lesson/B0703.png">
+	
+<BR><BR>

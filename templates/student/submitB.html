@@ -1,0 +1,104 @@
+{% load tag %}
+{% block header %}
+<script language="javascript">
+    window.addEventListener('load', function (e) {
+        var node = document.getElementById('edit-box{{index}}');
+        node.onpaste = function (e) {
+            if (e.clipboardData && e.clipboardData.types) {
+                // Loop the data store in type and display it
+                for (var i = 0; i < e.clipboardData.types.length; ++i) {
+                    var key = e.clipboardData.types[i];
+                    var item = e.clipboardData.items[i];
+                    if (key === 'Files') {
+                        var file = item.getAsFile();
+                        var reader = new FileReader();
+                        reader.onload = function(evt) {
+                            var img = document.createElement('img');
+                            img.src = evt.target.result;
+                            $(node).append(img);
+                        };
+                        reader.readAsDataURL(file);
+                        return found = true;
+                    }
+                }
+            }
+        };
+        //$("#edit-box").focus();
+        $("#form{{index}}").submit(function(event) {
+            var img = $("img", $("#edit-box{{index}}"));
+            if (img.length < 1) {
+                alert("請先貼上螢幕擷圖後再按上傳");
+                event.preventDefault();
+            } else {
+                $("#screenshot{{index}}").val(img[0].src);
+            }
+        });
+		$("#id_memo{{index}}").focus();
+    });
+	
+	function validateForm() {
+    /*
+	    if ($('input[name=help]:checked').length == 0) {
+            // do something here
+			      alert("請填寫創作過程!")
+            var row = document.getElementById('trp1')
+            row.style.backgroundColor = "#ffb0aa";       
+            top = row.offsetTop
+            window.scrollTo( 0, top );			
+			return false;
+        }
+       */
+	}
+</script>
+{% endblock %}
+            <br>
+            <form name="myForm" id="form{{index}}" action="/student/work/submit/2/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+                            <input type="hidden" name="lesson" value={{lesson}}>
+<div class="form-group">
+    <label for="exampleFormControlTextarea1">心得感想：</label>
+    <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
+  </div>    
+  <div class="form-group">
+    {% with helps=work_dict|hash_helps:index %}
+    <label for="exampleFormControlSelect2">創作過程</label>
+    <select class="form-control" name="helps">
+      <option value=0 {% if helps == 0 %} selected {% endif %}>全部靠自己想</option>
+      <option value=1 {% if helps == 1 %} selected {% endif %}>同學幫一點忙</option>
+      <option value=2 {% if helps == 2 %} selected {% endif %}>同學幫很多忙</option>
+      <option value=3 {% if helps == 3 %} selected {% endif %}>解答幫一點忙</option>
+      <option value=4 {% if helps == 4 %} selected {% endif %}>解答幫很多忙</option>
+    </select>
+    {% endwith %}
+  </div>  
+<div class="form-group">
+    <label for="exampleFormControlTextarea1">程式碼：：</label>
+    <textarea class="form-control" id="id_code{{index}}" rows="5" name="code">{{work_dict|hash_code:index}}</textarea>
+  </div>
+<div class="form-group">
+    <label for="exampleFormControlTextarea1">執行結果：：</label>
+   <div id="edit-box{{index}}" class="form-control target" contenteditable="true">請在此貼上螢幕擷圖...</div>
+   <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" /><BR> 
+  </div>                 
+<div class="form-group">           
+        <input id="submit" type="submit" value="送出" />
+</div>
+            </form>
+        <br>
+
+{% load tag %}
+        <table class="table">
+        <tr>
+          {% if work_dict|hash_score:index < 0  %}
+          <td>
+            <a href="/student/work/submit/2/{{index}}">繳交</a>
+          </td>
+          {% endif %} {% if work_dict|hash_date:index %}
+          <td>
+            <a href="/student/work/show/2/{{index}}">觀看({{work_dict|hash_date:index}})</a>
+          </td>
+          {% endif %}
+          <td>
+            <a href="/student/work/answer/2/{{index}}">解答</a>
+          </td>
+        </tr>
+      </table>

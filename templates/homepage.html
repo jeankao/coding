@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block header %}
+<style>
+/* Slideshow container */
+.slideshow-container {
+  position: relative;
+  background: #f1f1f1f1;
+}
+
+/* Slides */
+.mySlides {
+  display: none;
+  padding: 80px;
+  text-align: justify;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -30px;
+  padding: 16px;
+  color: #888;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  position: absolute;
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+}
+
+/* The dot/bullet/indicator container */
+.dot-container {
+    text-align: center;
+    padding: 20px;
+    background: #ddd;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+/* Add a background color to the active dot/circle */
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Add a blue color to the author */
+.author {color: cornflowerblue;}
+</style>
+{% endblock %}
+{% block banner %}
+<BR><BR>
+  <div class="wrapper">
+  <div id="header">
+    <h1>Joy of Code</h1>
+    <p></p>
+  </div>
+</div>
+<!-- ####################################################################################################### -->
+<div class="wrapper">
+  <div id="topbar">
+    <div class="fl_right">
+      <img src="/static/images/banner.png">      
+    </div>
+    <br class="clear" />
+  </div>
+</div>
+<!-- ####################################################################################################### -->
+
+<div class="wrapper">
+  <div id="footer">
+    <div class="latestgallery">
+      <h2>程式語言</h2>
+      <img src="/static/images/language.png">
+      <BR><BR>
+      <h2>相關網站</h2>
+      <ul>
+        <li><a href="http://scratch.mit.edu" target="_blank">Scratch<BR>官網</a></li>
+        <li><a href="https://www.python.org/" target="_blank">Python<BR>官網</a></li>
+        <li><a href="http://vpython.org/" target="_blank">VPython<BR>官網</a></li>
+        <li class="last"><a href="https://projecteuler.net/" target="_blank">尤拉計畫<BR>官網</a></li>          
+      </ul>      
+    </div>
+    <div class="footbox">
+      <h2>關於本站</h2>
+      <ul>
+        <li><a href="/account/about">關於我們</a></li>        
+        <li><a href="/account/visitor">網站使用手冊</a></li>           
+        <li><a href="#">課程瀏覽人次統計</a></li>
+        <li><a href="/account/statics">分區數據統計</a></li>
+        <li><a href="/account/visitor">使用者登入統計</a></li>
+        <li><a href="http://www.books.com.tw/products/0010703424" target="_blank">參考圖書</a></li>          
+        <li><a href="/account/visitor">連絡我們</a></li>        
+      </ul>
+    </div>
+    <div class="footbox last">
+      <h2>網站統計</h2>
+      <ul>
+        <li><a href="#">使用者登入次數：{{admin_profile.visitor_count}}次</a></li>
+        <li><a href="#">訪客人次：{{admin_profile.home_count}}次</a></li>
+        <li><a href="#">教師人數：{{classroom_count}}人</a></li>   
+        <li><a href="#">學生人數：{{classroom_count}}人</a></li>         
+        <li><a href="#">開課班次：{{classroom_count}}班</a></li>
+        <li><a href="#">註冊使用者：{{user_count}}人</a></li>
+        <li><a href="#">資料庫記錄：共{{row_count}}筆</a></li>
+        <li class="last"><a href="#">開站時間：{{admin_profile.open_time|date:'Y-m-d H:i'}}</a></li>
+      </ul>
+    </div>
+    <br class="clear" />
+  </div>
+</div>        
+{% endblock %}
+  
+{% block content %}
+<div class="slideshow-container">
+
+<div class="mySlides">
+  <q>每個人都應該學習程式設計嗎？是的。就像每個人都應該學習數學或音樂、美術一樣；學習數學可以培養我們抽象思考、邏輯思維能力，學習音樂、美術可以培養我們藝術美感、創意表現能力，學習程式設計則可以培養我們運算思維（computational thinking）、運用電腦解決問題的能力。蘋果公司創辦人Steve Jobs認為每個人都應該學習程式設計，因為程式設計訓練我們如何思考，他認為程式設計應該屬於人文素養教育的一部分。</q>
+  <p class="author" style="text-align:center;">- 國立臺灣師範大學 資訊教育研究所 吳正己教授</p>
+</div>
+  
+<div class="mySlides">
+  <q>新經濟時代，電腦科學不再是選修科目，而是基礎能力，像讀、寫、算數一樣重要。</q>
+  <p class="author" style="text-align:center;">- 美國總統 歐巴馬</p>
+</div>
+  
+<div class="mySlides">
+  <q>How can we help young people develop as creative thinkers so that they’re prepared for life in this ever-changing world?</q>
+  <p class="author" style="text-align:center;">- Mitchel Resnick, Lifelong Kindergarten, MIT.</p>
+</div>
+  
+<a class="prev" onclick="plusSlides(-1)">❮</a>
+<a class="next" onclick="plusSlides(1)">❯</a>
+
+</div>
+
+<div class="dot-container">
+  <span class="dot" onclick="currentSlide(1)"></span> 
+  <span class="dot" onclick="currentSlide(2)"></span> 
+  <span class="dot" onclick="currentSlide(3)"></span>   
+</div>  
+{% endblock %}
+  
+{% block footer_script %}
+<script>
+var slideIndex = Math.floor(Math.random() * Math.floor(3));
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}    
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";  
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+}
+</script>
+{% endblock %}

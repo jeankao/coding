@@ -1,0 +1,158 @@
+# -*- coding: UTF-8 -*-
+from django import template
+from account.models import MessagePoll, School
+from student.models import Enroll, Work, WorkFile
+from teacher.models import Classroom
+from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+register = template.Library()
+
+@register.filter
+def modulo(num, val):
+    return num % val
+  
+@register.filter(name="img")
+def img(title):
+    if title.startswith(u'[私訊]'):
+        return "line"
+    elif title.startswith(u'[公告]'):
+        return "announce"
+    elif u'擔任小老師' in title:
+        return "assistant"
+    elif u'設您為教師' in title:
+        return "teacher"
+    elif u'核發了一張證書給你' in title:
+        return "certificate"
+    else :
+        return ""
+      
+@register.filter(name='unread') 
+def unread(user_id):
+    return MessagePoll.objects.filter(reader_id=user_id, read=False).count()      
+
+@register.filter()
+def to_int(value):
+    return int(value)
+  
+@register.filter(name='week') 
+def week(date_number):
+    year = date_number / 10000
+    month = (date_number - year * 10000) / 100
+    day = date_number - year * 10000 - month * 100
+    now = datetime(year, month, day, 8, 0, 0)
+    return now.strftime("%A")  
+  
+@register.filter()
+def classroom(user_id):
+    if user_id > 0 :
+        enrolls = Enroll.objects.filter(student_id=user_id).order_by("-id")
+        if len(enrolls) > 0 :
+            classroom_name = Classroom.objects.get(id=enrolls[0].classroom_id).name
+        else :
+            classroom_name = ""
+        return str(len(enrolls)) + ":" + classroom_name
+    else : 
+        return "匿名"
+      
+@register.filter(takes_context=True)
+def realname(user_id):
+    try: 
+        user = User.objects.get(id=user_id)
+        return user.first_name
+    except ObjectDoesNotExist:
+        pass
+        return ""      
+      
+@register.filter(takes_context=True)
+def school(user_id):
+    try: 
+        user = User.objects.get(id=user_id)
+        try: 
+            school_name = School.objects.get(id=user.last_name).name
+        except ObjectDoesNotExist:
+            school_name = ""
+        return school_name
+    except ObjectDoesNotExist:        
+        return ""        
+      
+@register.filter(name='has_group') 
+def has_group(user, group_name):
+    try:
+        group =  Group.objects.get(name=group_name) 
+    except ObjectDoesNotExist:
+        group = None
+    return group in user.groups.all()
+  
+@register.filter
+def subtract(a, b):
+    return a - b
+  
+@register.filter
+def hash_memo(h, key):
+    if key in h:
+      return h[key][0].memo
+    else:
+      return ""
+    
+@register.filter
+def hash_code(h, key):
+    if key in h:
+      return h[key][0].code
+    else:
+      return ""
+    
+@register.filter
+def hash_helps(h, key):
+    if key in h:
+      return h[key][0].helps
+    else:
+      return -1
+    
+@register.filter
+def hash_score(h, key):
+    if key in h:
+      return h[key][0].score
+    else:
+      return -1  
+    
+@register.filter
+def hash_date(h, key):
+    if key in h:
+      return h[key][0].publication_date
+    else:
+      return False
+    
+@register.filter
+def hash_scorer(h, key):
+    if key in h:
+      return h[key][0].scorer
+    else:
+      return 0
+    
+@register.filter
+def hash_file(h, key):
+    if key in h:
+      if len(h[key][1])>0:
+        return h[key][1][0].filename
+      else:
+        return None
+    else:
+      return None
+    
+@register.filter
+def hash_files(h, key):
+    if key in h:
+      if len(h[key][1])>0:
+        return h[key][1]
+      else:
+        return None
+    else:
+      return None   
+    
+@register.filter
+def student_username(name):
+    start = "_"
+    student = name[name.find(start)+1:]
+    return student    

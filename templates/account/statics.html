@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block header %}
+{% endblock %}
+{% block content %}
+<style type="text/css">
+  div#container {width: 600px; height: 800px; position: relative; padding: 0}
+  a.city {position: absolute; font-family: Arial; font-size: 16px; background-color: transparent; text-decoration: none; color: black}
+  a.city:hover {color: steelblue}
+</style>
+地圖:
+<a href="" role="button" class="btn btn-info active">學校數</a>
+<a href="" role="button" class="btn btn-info">教師數</a>
+<a href="" role="button" class="btn btn-info">班級數</a>
+<a href="" role="button" class="btn btn-info">學生數</a>
+<a href="" role="button" class="btn btn-info">作品數</a>
+　統計圖:
+<a href="" role="button" class="btn btn-info">學校數</a>
+<a href="" role="button" class="btn btn-info">教師數</a>
+<a href="" role="button" class="btn btn-info">班級數</a>
+<a href="" role="button" class="btn btn-info">學生數</a>
+<a href="" role="button" class="btn btn-info">作品數</a>
+<BR><BR>
+<div id="container">
+  <img id="taiwan2" width="576" height="750" src="/static/images/taiwan.png" style="position: absolute; left: 10px; top: 10px;" />
+</div>
+<script type="application/javascript">
+  function init() {
+    var cities = [
+      {% for city in cities %}
+      ["{{city.name}}(23)", {{city.mapx}}, {{city.mapy}}, "#"],
+      {% endfor %}
+    ];
+    var mcontainer = $('#container');
+    for (c of cities) {
+      $(mcontainer).append(`<a class='city' href='${c[3]}' style='left: ${c[1]}px; top: ${c[2]-16}px'>${c[0]}</a>`);
+    }
+  }
+  $("body").ready(init);
+</script>
+{% endblock %}

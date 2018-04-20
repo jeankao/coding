@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block header %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
+{% load tag %}
+{% block content %}
+  {% if lesson == "1" %}
+        學生：{{student.first_name}}
+        <br>
+    {% if  workfiles %}
+<font color=red>作品：</font>
+{% if workfiles %}
+<script type="text/javascript" src="/static/sb2/swfobject.js"></script>
+ 
+<script >   
+var flashvars = {
+project: "/static/work/{{student.id}}/{{workfiles.0.filename}}" ,
+autostart: "false"
+};
+var params = {
+bgcolor: "#FFFFFF",
+allowScriptAccess: "always",
+allowFullScreen: "true",
+wmode: "window",
+menu:"‘false"
+};
+var attributes = {};
+swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.2.0","expressInstall.swf", flashvars, params, attributes);
+</script>
+              
+<div id="flashContent" >
+ 
+</div>   
+{% endif %}
+        {% for workfile in workfiles %}
+              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{index}}/{{student.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
+        {% endfor %}
+<BR>
+  <font color=red>心得：</font>
+        <br>
+        {{work.memo}}
+
+        <form action="" enctype="multipart/form-data"  method="post">
+            <table class="table" style="width:300px">
+                <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
+                            {% if teacher %}
+<tr><td colspan=2><span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
+        <input type="checkbox" style="display: none;" name="assistant"/>
+    </span></td></tr>              
+              {% endif %}
+              <tr><td colspan=2><input type="submit" value="Submit"></td></tr>
+            </table>
+           {% csrf_token %}
+     {% else %}
+        尚未繳交
+    {% endif %}
+  {% else %}
+    <br>
+    {% if work.code %}
+        <font color=black>心得感想：</font><BR>
+        {{work.memo}}
+        <br>
+        <font color=black>程式碼：</font><BR>
+        <pre>{{work.code}}</pre>
+        <br>
+        <font color=black>執行結果：</font><BR>
+        <img width=880 src="/static/pic/{{student.id}}/{{work.id}}/run.jpg">
+        <form action="" enctype="multipart/form-data"  method="post">
+            <table class="table" style="width:300px">
+                <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
+              {% if teacher %}
+<tr><td colspan=2><span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
+        <input type="checkbox" style="display: none;" name="assistant"/>
+    </span></td></tr>          
+              {% endif %}
+              <tr><td colspan=2><input type="submit" value="Submit"></td></tr>
+            </table>
+           {% csrf_token %}
+    {% else %}
+        尚未繳交
+    {% endif %}
+  {% endif %}
+{% endblock %}
+{% block domready %}
+$(function () {
+    $('.button-checkbox').each(function () {
+
+        // Settings
+        var $widget = $(this),
+            $button = $widget.find('button'),
+            $checkbox = $widget.find('input:checkbox'),
+            color = $button.data('color'),
+            settings = {
+                on: {
+                    icon: 'fa fa-check-square-o'
+                },
+                off: {
+                    icon: 'fa fa-square-o'
+                }
+            };
+
+        // Event Handlers
+        $button.on('click', function () {
+            $checkbox.prop('checked', !$checkbox.is(':checked'));
+            $checkbox.triggerHandler('change');
+            updateDisplay();
+        });
+        $checkbox.on('change', function () {
+            updateDisplay();
+        });
+
+        // Actions
+        function updateDisplay() {
+            var isChecked = $checkbox.is(':checked');
+
+            // Set the button's state
+            $button.data('state', (isChecked) ? "on" : "off");
+
+            // Set the button's icon
+            $button.find('.state-icon')
+                .removeClass()
+                .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+            // Update the button's color
+            if (isChecked) {
+                $button
+                    .removeClass('btn-default')
+                    .addClass('btn-' + color + ' active');
+            }
+            else {
+                $button
+                    .removeClass('btn-' + color + ' active')
+                    .addClass('btn-default');
+            }
+        }
+
+        // Initialization
+        function init() {
+
+            updateDisplay();
+
+            // Inject the icon if applicable
+            if ($button.find('.state-icon').length == 0) {
+                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
+            }
+        }
+        init();
+    });
+});
+{% endblock %}

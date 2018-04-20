@@ -1,0 +1,58 @@
+  <p>最小公倍數</p>
+<p>能夠被某些數字都除盡的最小正整數稱為是這些數字的最小公倍數</p>
+<p>【最後目標】</p>
+<p>請找出數字1-20都能除盡的最小正整數</p>
+<p>練習1：找出1,2,3,4,5,6,7,8,9,10都能除盡的最小正整數。</p>
+<p>最直覺的方法，就是使用窮舉法，一個一個去測試是否滿足條件。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+<span class="n">number</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">find</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>雖然可以用窮舉法來找答案，但是這個方法很沒有效率，尤其是隨著條件增加，要耗費更多時間。</p>
+<p>要找出1-10都能除盡的最小正整數，用這個方法尚能接受。</p>
+<p>但是如果是要找出1-20都能除盡的最小正整數，還是用這種暴力法來求解，並不是好方法。</p>
+<p>因此，我們可以運用數學上的解法，先找出兩數的最大公因數，再進一步算出兩數的最小公倍數。</p>
+<p>練習2:運用輾轉相除法求兩數最大公因數(GCD)</p>
+<p>輾轉相除法是求最大公因數很有效率的方法，例如：我們求 a = 481 和 b = 221 的最大公因數。</p>
+<p>(1)用大的數當被除數，小的數當除數，可得 481 = 2 * 221 + 39, 得到餘數39。</p>
+<p>(2)再用小的數當被除數，餘數當除數，可得　221 = 5 * 39 + 26, 得到餘數26。</p>
+<p>(3)重複第(2)步，直到餘數等於0，其除數就是最大公因數。</p>
+<p>39 = 1 * 26 + 13,   26 = 2 * 13 + 0  因此 GCD(481, 221) = 13</p>
+<p>數學上的輾轉相除法也很容易寫成程式碼用電腦去計算。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="mi">481</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">221</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">m</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+<span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>練習3：運用兩數乘積除以最大公因數求得最小公倍數</p>
+<p>已知a、b兩數相乘等於其最大公因乘以最小公倍數，即 axb=(a,b)*[a,b]</p>
+<p>那麼找出最大公因數後就可以拿來求最小公倍數。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">GCD</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">b</span>
+
+<span class="k">def</span> <span class="nf">LCM</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">//</span> <span class="n">GCD</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">LCM</span><span class="p">(</span><span class="mi">481</span><span class="p">,</span> <span class="mi">221</span><span class="p">))</span>
+</pre></div>
+</div>

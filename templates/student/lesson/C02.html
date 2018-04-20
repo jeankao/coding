@@ -1,0 +1,47 @@
+﻿<h1>費式數列(Fibonacci)</h1>
+
+<p>規則：第一項為1，第二項為1，往後每一項數字為前二項數字和。</p>
+<img src="/static/lesson/euler/g002-1.png">
+<p>【最後目標】求出費式數列中，小於4百萬的所有數字中，該項是偶數的所有數字和。</p>
+<p>提示：我們並不知道小於4百萬的數字有幾項，所以不適合用計次式迴圈(for)來處理，而要用條件式迴圈(while)來處理。</p>
+<p>練習1：使用條件式迴圈列出1~100所有數字。</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>練習2：使用計次式迴圈列出費式數列前100項。</p>
+<p>從1開始：1，1，2，3，5，8，13，21，34，55，89，……</p>
+<p>因為這不是等差數列，需要3個變數來指定，先指定a1=第1項，a2=第2項，a3=a1+a2，下一回，將a2的值指定給a1，a3的值指定給a2，而新的a3還是取a1+a2，這樣不斷循環。</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">a1</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">101</span><span class="p">):</span>
+        <span class="n">a3</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">a3</span><span class="p">)</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">a2</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">a3</span>
+</pre></div>
+</div>
+<p>練習3：判斷偶數方法： 48 % 2 得到0 ，49%1 會得到1</p>
+<p>%是餘數計算</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>number = int(input('請輸入數字:'))
+if number % 2 == 0:
+        print('您輸入的是偶數')
+else:
+        print('您輸入的是奇數')
+</pre></div>
+</div>
+<p>練習4：求1~100的數字和</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">):</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">i</span>
+<span class="k">print</span> <span class="nb">sum</span>
+</pre></div>
+</div>
+<p>你並不知道有多少項，先列出4百萬以內的項，判斷如果該項是偶數就把它加進來。</p>
+
+
+

@@ -1,0 +1,69 @@
+@charset "utf-8";
+/*
+Template Name: Realistic
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+File: Navigation CSS
+*/
+#topnav{
+  text-align:center; 
+    border-top:1px solid #999999; 
+    border-bottom:1px solid #999999;  
+    background-color:#EEEEEE;  
+  
+}
+
+.topnav{
+    z-index:1000;
+    text-align:center; 
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+  
+}
+
+/* ESSENTIAL STYLES */
+
+.nav1, .nav1 *{margin:0; padding:0; list-style:none;}
+.nav1 ul{position:absolute; /*top:-999em;*/}
+.nav1 ul li{width:300px;}
+.nav1 li:hover{visibility:inherit;}
+.nav1 li{position:relative; display:inline-block; zoom:1; *display:inline;}
+.nav1 a{display:block; position:relative;}
+.nav1 li:hover ul, .nav1 li.sfHover ul{left:0; top:2.5em; z-index:99;}
+ul.nav1 li:hover li ul, ul.nav1 li.sfHover li ul{top:-999em;}
+ul.nav1 li li:hover ul, ul.nav1 li li.sfHover ul{left:10em; top:0;}
+ul.nav1 li li:hover li ul, ul.nav1 li li.sfHover li ul{top:-999em;}
+ul.nav1 li li li:hover ul, ul.nav1 li li li.sfHover ul{left:10em; top:0;}
+
+/* Default Colours */
+
+.nav1 a{padding:.75em 0em; text-decoration:none;background-color:#EEEEEE;}
+.nav1 li.active a{color:#999999;}
+.nav1 a, .nav a:visited, .nav li.active li a{color:#333333;}
+.nav1 li{background:#EEEEEE;}
+.nav1 li li{background:#E0E0E0;}
+.nav1 li li li{background:#E0E0E0;}
+.nav1 li:hover, .nav1 li.sfHover, .nav1 a:focus, .nav1 a:hover, .nav1 a:active{background:#C0C0C0;}
+
+/* arrows */
+
+.nav1 li a{padding:.5em .5em; text-align:left; margin:5px;}
+.nav1 a.sf-with-ul{background:url("images/nav_arrows.png") no-repeat 5px 16px;}
+
+/* ----------------------------------------------Column Navigation------------------------------------- */
+
+.column .subnav{display:block; padding:25px; background-color:#F9F9F9; margin-bottom:30px;}
+.column .subnav h2{margin:0 0 20px 0; padding:0 0 14px 0; font-size:20px; font-weight:normal; font-family:Georgia, "Times New Roman", Times, serif; color:#666666; background-color:#F9F9F9; line-height:normal; border-bottom:1px dotted #666666;}
+.column .subnav ul{margin:0; padding:0; list-style:none;}
+.column .subnav li{margin:0 0 3px 0; padding:0;}
+.column .subnav ul ul, .column .subnav ul ul ul, .column .subnav ul ul ul ul, .column .subnav ul ul ul ul ul{border-top:none; padding-top:0;}
+.column .subnav a{display:block; margin:0; padding:5px 10px 5px 20px; color:#666666; background:url("images/red_file.gif") no-repeat 10px center #F9F9F9; text-decoration:none; border-bottom:1px dotted #666666;}
+.column .subnav a:hover{color:#A3443E; background-color:#F9F9F9;}
+.column .subnav ul ul a, .column .subnav ul ul ul a, .column .subnav ul ul ul ul a, .column .subnav ul ul ul ul ul a{background:url("images/black_file.gif") no-repeat #F9F9F9;}
+.column .subnav ul ul a{padding-left:40px; background-position:30px center;}
+.column .subnav ul ul ul a{padding-left:50px; background-position:40px center;}
+.column .subnav ul ul ul ul a{padding-left:60px; background-position:50px center;}
+.column .subnav ul ul ul ul ul a{padding-left:70px; background-position:60px center;}

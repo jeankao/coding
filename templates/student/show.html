@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+			{% if work %}
+            {% if work.score > 0 %}分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}{% endif %}
+			<BR>
+              <font color=black>心得感想：</font><BR>{{work.memo}}<BR>              
+			  <font color=black>創作過程：</font><BR>{{work.helps}}<BR>
+              <font color=black>程式碼：</font><pre>{{work.code}}</pre><BR>
+            執行結果：<img width=880 src="/static/pic/{{request.user.id}}/{{work.id}}/run.jpg"><BR>
+			{% else %}
+			尚未繳交
+			{% endif %}
+
+{% endblock %}

@@ -1,0 +1,70 @@
+  <p>考拉茲猜想</p>
+<p>任意數使用以下公式可以導出一系列數字，而此數列最終會結束於1(目前尚未被證明)</p>
+<p>
+n → n/2    (n是偶數)<BR>
+n → 3n + 1 (n是奇數)<BR>
+</p>
+<p>例如 n=13，可以導出以下10個數字，我們可以稱13這個數字的考拉茲生命週期是10。</p>
+<p>13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1</p>
+<p>【最後目標】</p>
+<p>在小於一百萬的數字中，哪一個數字的考拉茲生命週期最長？</p>
+<BR>
+<p>練習1：使用遞迴印出10到1的數字</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">count_down</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">count</span><span class="p">(</span><span class="n">number</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">count_down</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<p>
+<img src="/static/lesson/euler/recursion1.png"><BR><BR>
+<img src="/static/lesson/euler/recursion2.png"><BR>
+</p>
+<BR>
+<p>練習2：數字13的考拉茲數字串</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">collatz</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">numbers</span>
+    <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">collatz</span><span class="p">(</span><span class="n">number</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">collatz</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">number</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">collatz</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<p>練習3：計算串列中元素個數</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">numbers</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>

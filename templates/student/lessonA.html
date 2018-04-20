@@ -1,0 +1,1648 @@
+{% extends "base.html" %}
+{% block content %}
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% if lesson == "A001" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：為什麼要學程式設計</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/survey/pre_survey" role="tab" aria-selected="false">問卷</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:window.open('https://studio.code.org/hoc/1','_blank');" role="tab" aria-controls="contact" aria-selected="false">1小時學程式設計</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">證書</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">影片：基本介紹</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">範例：綜合應用</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：綜合應用</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/fAbrNXTgkeo?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4">
+      <form action="/certificate/" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <p>
+          <input id="id_image" type="file" class="" name="image">
+        </p>
+        <input type="submit" value="送出" />
+      </form>
+    </div>
+    <div class="tab-pane fade" id="tab5" role="tabpanel" aria-labelledby="tab5-tab">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/AImNJyXxzUA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade" id="tab6" role="tabpanel" aria-labelledby="tab6-tab">
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24703191/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+      <br />我們要做的事情大致有以下四項：
+      <br />1. 搭建一個表演的舞台。
+      <br />2. 設定歌手造型及其演唱的歌曲。
+      <br />3. 讓舞台呈現的動態效果。
+      <br />4. 讓歌手演唱歌曲並跳舞。$
+    </div>
+    <div class="tab-pane fade" id="tab7" role="tabpanel" aria-labelledby="tab7-tab">
+      <iframe id="player" width="900" height="520" src="https://www.youtube.com/embed/08PXzHfnI5A?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade" id="tab8" role="tabpanel" aria-labelledby="tab8-tab">
+      <img src="/static/images/conceptmap/map01.png" width=900p>
+    </div>
+    <div class="tab-pane fade" id="tab9" role="tabpanel" aria-labelledby="tab9-tab">
+      {% include "student/submitA.html" with  index=1 %}
+    </div>
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A002" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：第一個動畫</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">對話下載</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">作業：第一個動畫</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24816421/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+      <br />小貓和狗狗相遇在學校門口，開啟一段對話。
+      <br />小貓：嗨！你現在想做什麼？
+      <br />狗狗：我餓啦，我想去吃點東西。
+      <br />小貓：要不要去一家義大利餐廳吃？
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <a href="/static/file/dialog.zip">下載</a>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/7siMzGSbjUk?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map02.png" style="width:900px">
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      {% include "student/submitA.html" with  index=2 %}
+    </div>
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A003" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：計次式迴圈</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：馬兒跑步</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖1</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：馬兒跑步</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">練習：變大變小</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖2</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：變大變小</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/1pL-RevYlDc?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      遊戲方法：畫面上有三隻馬兒，用滑鼠按一下馬兒，它會往前跑步。
+      <br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24818263/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/vSGCwF-EXuc?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map03.png" style="width:900px">
+    </div>
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=3 %}
+    </div>
+    <div class="tab-pane fade show" id="tab6" role="tabpanel">
+      【說明】點一下貓或狗，會將角色連續放大再連續縮小回原大小。
+      <br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24818968/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/x26GUc6-pto?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab8" role="tabpanel">
+      <img src="/static/images/conceptmap/map04.png" style="width:900px">
+    </div>
+    <div class="tab-pane fade show" id="tab9" role="tabpanel">
+       {% include "student/submitA.html" with  index=4 %}
+    </div>
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A004" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：條件式迴圈</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：貓狗賽跑</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖1</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：貓狗賽跑</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">練習：發球</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖2</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：發球</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/QMVJWV33GwA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <br /> 遊戲方法：按下綠旗，貓和狗開始賽跑，先跑到終點號線的會說「我最快」。
+      <br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24819295/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/nQTBTIIL9Lg?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map05.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=5 %}
+    </div>
+    {% endif %}
+    <div class="tab-pane fade show" id="tab6" role="tabpanel">
+      <br /> 【說明】按下綠旗，會有一顆棒球由右方隨機的位置出現並且旋轉向左方移動，當棒球遇到左方的終止線就會消失。
+      <br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24819637/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/ePeQu8zhf78?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab8" role="tabpanel">
+      <img src="/static/images/conceptmap/map06.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab9" role="tabpanel">
+      {% include "student/submitA.html" with  index=6 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A005" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：無窮迴圈</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：魚兒水中游</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖1</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：魚兒水中游</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">練習：不斷發球</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖2</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：不斷發球</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/apkBgtMItDo?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <br /> 遊戲方法：按下綠旗，讓魚兒在水中不斷地游動。
+      <br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24820344/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/P3IIw2xhxm8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map07.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=7 %}
+    </div>
+    {% endif %}
+    <div class="tab-pane fade show" id="tab6" role="tabpanel">
+      <br /> 【說明】接上一堂課發球練習題，不斷地會有球從右方發出。
+      <br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24820516/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/KGmH9EKFqEc?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab8" role="tabpanel">
+      <img src="/static/images/conceptmap/map08.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab9" role="tabpanel">
+      {% include "student/submitA.html" with  index=8 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A006" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：單向選擇結構</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：電流急急棒</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖1</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：電流急急棒</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">練習：開車</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖2</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：開車</a>
+    </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/uG7EdV-hZ6o?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <br /> 遊戲方法：按下綠旗開始執行程式，當你在黃色圓點上按一下滑鼠左鍵時，它就會跟著你的滑鼠移動，不能讓它跑出去軌道(碰到白色)，當黃色圓點移動到終點(碰到紅色)時，就過關完成任務了。
+      <br/>
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24820742/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/xAGByzQFmZA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map09.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=9 %}
+    </div>
+    {% endif %}
+    <div class="tab-pane fade show" id="tab6" role="tabpanel">
+      <br /> 【說明】車子會從左往右開，開到右邊靠近邊緣(x座標200)時，會再從左方(x座標-200)
+      <br />變換隨機造型出現繼續往右開。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24821914/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/EKdZlD2oOqQ?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab8" role="tabpanel">
+      <img src="/static/images/conceptmap/map10.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab9" role="tabpanel">
+      {% include "student/submitA.html" with  index=10 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A007" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：雙向選擇結構</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：打地鼠</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖1</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：打地鼠</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">練習：密碼檢查</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖2</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：密碼檢查</a>
+    </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/QtvXqxykAWA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <br />
+      遊戲方法：按下綠旗開始執行程式，棒子會跟著你的滑鼠移動。<br />當你按下滑鼠左鍵，棒子會切換到打下的狀態，打到地鼠時，會播放聲音。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24823825/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/dgAOtjyZFQ8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map11.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=11 %}
+    </div>
+    {% endif %}
+    <div class="tab-pane fade show" id="tab6" role="tabpanel">
+      <br />
+      【說明】按下綠旗，貓咪會問使用者密碼，若輸入錯誤的密碼，貓咪會說「密碼錯誤」，<br />若輸入正確的密碼(123)，貓咪會說「密碼正確」、「歡迎進入本系統」。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24823859/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/iAFdX-yQGW0?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab8" role="tabpanel">
+      <img src="/static/images/conceptmap/map12.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab9" role="tabpanel">
+      {% include "student/submitA.html" with  index=12 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A008" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：全域變數</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：猴子吃香蕉</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：猴子吃香蕉</a>
+    </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/lLIBIEWQIJk?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <br />
+      遊戲方法：按下綠旗開始執行程式，猴子會跟著你的滑鼠左右移動。香蕉從畫面上方不斷地掉下來，遊戲會記錄猴子吃到了幾串香蕉，當猴子吃到10串香蕉時，會說我吃飽了，然後遊戲停止。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24851301/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/azfituk-JiU?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map13.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=13 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A009" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：打魔鬼</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">心智圖</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：打魔鬼</a>
+    </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <br />
+      遊戲方法：有4隻魔鬼會隨機地從洞口跑出來，看到魔鬼就要用滑鼠點它一下，魔鬼就會縮回洞裡，看看你能夠打到幾隻魔鬼。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94177702/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/qIEqLjWYMM8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <img src="/static/images/conceptmap/map14.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=14 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A010" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片：角色變數</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">範例：射蝙蝠</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：射蝙蝠</a>
+    </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/lLIBIEWQIJk?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <br />
+      遊戲方法：按下綠旗開始執行程式，槍枝的準心會跟著你的滑鼠移動。蝙蝠會不斷地到處飛翔，當蝙蝠被射中累計三次時，就會從畫面上消失不見。試著把所有的蝙蝠都射下來。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24852917/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/XEsKBHxcf2g?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map15.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=15 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A011" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：養魚</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片：養魚(上)</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片：養魚(下)</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">心智圖1</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：養魚</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab6" role="tab" aria-selected="false">練習：打磚塊</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab7" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab8" role="tab" aria-selected="false">心智圖2</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab9" role="tab" aria-selected="false">作業：打磚塊</a>
+    </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <br />
+      遊戲方法：按下綠旗開始執行程式，在舞台上按一下滑鼠左鍵，會有一個飼料由上往下掉，飼料一出現，魚群就會往飼料的方向移動。當飼料被吃掉時，魚群就會往各自的方向移動。當魚兒吃到飼料時，它會長大一點，每隻魚兒吃三次飼料就飽了，就不會往飼料的方向游動。當三隻魚兒都吃飽了，則顯示過關。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24853669/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/CobY5S1znSw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/61KiB2GFbC8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <img src="/static/images/conceptmap/map16.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab5" role="tabpanel">
+      {% include "student/submitA.html" with  index=16 %}
+    </div>
+    {% endif %}
+    <div class="tab-pane fade show" id="tab6" role="tabpanel">
+      <br />
+      【說明】用滑鼠控制下方的吹管，按下滑鼠左鍵可發射砲彈，射中左右移動的磚塊會變色，射中磚塊三次就會消失，三個磚塊全部射完就過關。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/24853739/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab7" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/tds96KSqUd8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab8" role="tabpanel">
+      <img src="/static/images/conceptmap/map17.png">
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab9" role="tabpanel">
+      {% include "student/submitA.html" with  index=17 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A101" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：接雞蛋</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：接雞蛋</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：移動滑鼠，男孩會跟著滑鼠左右移動，會有雞蛋從上方掉下來。男孩若接到到雞蛋，則得1分，雞蛋沒有被接到會破掉，漏接三個雞蛋就遊戲結束，看你最多能接到幾顆雞蛋。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94181779/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/vPAHkPARafA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=18 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A102" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：電流急急棒</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：電流急急棒</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：按下綠旗，將滑鼠移動到黃球上，按下滑鼠左鍵之後，黃球就會跟著滑鼠移動，當黃球跑出軌道(碰到白色)或遇到障礙物(碰到黑色)，則顯示失敗，遊戲重來。若能順利走到終點(碰到紅色)，則顯示成功。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94182317/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/FxFkj0P0VdY?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=19 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A103" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：打磚塊</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：打磚塊</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      按下紅球開始遊戲，在畫面上方有12個磚塊，就球打到磚塊時，磚塊就會消失，把所有的磚塊打完就過關。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94184509/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/8CkpsV-4bN0?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=20 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A104" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：打蟑螂</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：打蟑螂</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：使用滑鼠移動拖鞋，瞄準蟑螂後，按下滑鼠左鍵敲打蟑螂，看看你在30秒內能打到幾隻。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187087/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/426Wn0iV3DA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=21 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A105" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：猜數字</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：猜數字</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：畫面上有0~9共十個數字，遊戲開始時，魔術師會寫好一個數字放在箱子裡，按下畫面上的數字，看看你按的數字和魔術師寫的數字是否一樣。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187206/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/OueKqzrrQWA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=22 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A106" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：射氣球</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：射氣球</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲玩法：使用滑鼠旋轉下方的吹管，按下滑鼠左鍵發射吹箭。看看你能用十隻吹箭打破幾個氣球。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187304/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/kvS2fqCcTmE?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=23 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A107" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：猴子吃香蕉</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：猴子吃香蕉</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲玩法：香蕉會從上往下掉，猴子吃到香蕉可得1分，得到10分進入第二關，會有棒球由上往下掉，被打到會扣1分。猴子繼續吃到香蕉可得1分，得到20分進入第三關，會有起士盤由上往下掉，吃到可得5分。猴子繼續吃到香蕉可得1分，得到40分則完成任務。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187417/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/nPxW5vx_wW8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=24 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A108" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：聖誕老公公送禮物</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">文字說明</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：聖誕老公公送禮物</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲玩法：按下滑鼠左鍵，聖誕老公公會從天上丟下禮物，若是禮物丟在煙囪，則會加1分，丟中三個禮物，則過關。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/103092446/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <div>【素材】</div>
+      <ul>
+        <li>聖誕老公公：santa.gif</li>
+        <li>背景圖：background.gif</li>
+        <li>房屋：house.gif</li>
+        <li>禮物：present.gif</li>
+        <li>過關：pass.png</li>
+      </ul>
+      <div>【配分】</div>
+      <ul>
+        <li>5分 設置背景圖為星空(background.gif)。</li>
+        <li>5分 設置房屋(house.gif)在畫面下方。</li>
+        <li>5分 設置聖誕老公公(santa.gif)在畫面上方。</li>
+        <li>5分 設定聖誕老公公只允許左右翻轉。</li>
+        <li>10分 讓聖誕老公公不斷地左右移動。</li>
+        <li>10分 設置禮物(present.gif)在畫面上方，按下綠旗開始時，隱藏。</li>
+        <li>5分 設定禮物不允許旋轉。</li>
+        <li>5分 設定禮物面對180度的方向。</li>
+        <li>10分 若按下滑鼠左鍵，禮物會從聖誕老公公的位置往下掉，直到碰到房屋(黑色)或煙囟(灰色)為止。</li>
+        <li>5分 新增變數「分數」，設定其起始值為0。</li>
+        <li>10分 判斷禮物是否碰到煙囟，如果有，則「分數」加1分。</li>
+        <li>5分 將禮物隱藏起來。</li>
+        <li>10分 設置過關文字，當綠旗按下時，隱藏。當接受到「過關」廣播時，顯示。</li>
+        <li>10分 判斷「分數」是否到達3分，如果是，則顯示過關文字，遊戲終止。</li>
+      </ul>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=25 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A201" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：小蜜蜂對抗戰</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：小蜜蜂對抗戰</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：小蜜蜂會由上而下飛，當小蜜蜂叮到男孩就遊戲結束(失敗)，男孩要踢球把小蜜蜂射下來。使用滑鼠的可以控制男孩的位置，按下滑鼠左鍵可以踢出一顆足球，若是把小蜜蜂全部射下來就會過關。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187577/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/FJ4TXEz4n2o?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=26 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A202" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：貓貓大戰</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：貓貓大戰</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：在畫面上方有一個跑動中的力道指標，當按下滑鼠左鍵後，左方的小黃貓就會依力道發出一顆棒球，力道愈大，棒球飛得愈遠。棒球打到右方的小貓，會記錄擊中的次數。試試看，看你能不能百發百中？<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187701/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/EZBQKwC2VDA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=27 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A203" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：貓貓大戰</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：貓貓大戰</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：在畫面上方有一個跑動中的力道指標，當按下滑鼠左鍵後，左方的小黃貓就會依力道發出一顆棒球，力道愈大，棒球飛得愈遠。棒球打到右方的小貓，會記錄擊中的次數。試試看，看你能不能百發百中？<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187701/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/EZBQKwC2VDA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=28 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A204" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：小章魚快快游</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：小章魚快快游</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：小章魚會因為重力往下墜。點滑鼠左鍵，小章魚會往上游。小章魚的前面會亂數出現水管。小章魚每游過一個水管，分數就加一。小章魚要是撞到水管，就死了，遊戲結束。小章魚要是掉到海底，也會遊戲結束。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94187928/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/W0ODgzaTyxI?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=29 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A205" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：緊急救援</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：緊急救援</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：地面上有多數人等待救援，所以一台直升機需使用垂吊籃救起在地面上的人，利用鍵盤左右鍵移動直升機，移到適當位置後，按下空白鍵放下垂吊籃，只要垂吊籃遇到底下的人，就可以將人拉起吊籃，被拉上來的人會遇到直升機後會消失不見，看你能在30秒內救援幾個人。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188067/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/rvDPEMhpM8M?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=30 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A206" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：大魚吃小魚</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：大魚吃小魚</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：移動滑鼠鯊魚會跟著滑鼠移動，若碰到小魚且按下滑鼠左鍵，則大魚會把小魚吃掉，遇到不能吃(水母、龍蝦、海馬、河豚)的會中毐(暫時動彈不得且扣分)，看看你30秒能吃到幾隻小魚。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188199/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/HAUqbmLrhY0?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=31 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A207" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：猜拳</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：猜拳</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：開始遊戲後按下剪刀、石頭、布其中一個按鈕出招，對手(北極熊)採亂數對招，採用五戰三勝制，若有一方3勝即灑花結束，若平手不計分。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188328/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/tC43RLwmNYg?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=32 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A208" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：搶救貓咪</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">文字說明</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：搶救貓咪</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：用滑鼠控制棒球上下移動，會有四串香蕉隨機從天上掉下來，可以按滑鼠左鍵發射棒球去射香蕉，若香蕉碰到貓咪則遊戲結束。若射到最右邊的綠色香蕉，下次發球可以一次發射三顆棒球(呈現放射狀射出)。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/103092959/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <div>【配分】</div>
+      <ul>
+        <li>5分 設定舞台的背景為desert.gif(遊戲中畫面)、desert1.gif(遊戲結束畫面)，當綠旗被點一下，切換到desert.gif造型。</li>
+        <li>5分 新增變數「射到幾串香蕉」，在舞台設定其起始值是0</li>
+        <li>10分 讓小黃貓在畫面下方不斷地左右移動。</li>
+        <li>10分 新增角色「發球」，其造型為baseball.png 。將此角色置放在畫面左方，用滑鼠控制它上下移動。</li>
+        <li>20分 新增4個香蕉的角色，其中有三個是黃蕉(banaan.png)，一個是綠蕉(banana2.png)，綠蕉放在最右方。讓這4個香蕉能夠不斷地由上往下掉。</li>
+        <li>10分 按下滑鼠左鍵，可發出一顆棒球。</li>
+        <li>10分 若棒球打到香蕉，兩個都會隱藏，並將變數「射到幾串香蕉」增加1。</li>
+        <li>20分 若棒球打到綠色香蕉，則下次會一次發出三顆棒球，呈放射狀射出。</li>
+        <li>10分 若香蕉碰到貓咪，則遊戲結束，讓舞台切換到desert1.gif背景。</li>
+      </ul>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=33 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A301" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：跳遠</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：跳遠</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：在舞台上點一下先選擇跳遠的力道，在舞台上再點一下選擇跳遠的方向，然後貓咪就會開始往前跳，看看你的貓咪能跳多遠。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188564/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/uMgb9yoMdEo?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=34 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A302" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：對對碰</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：對對碰</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：畫面中有6對12張卡片，按下綠色旗子會將12張卡片蓋起來並打亂順序，用滑鼠點選2張被蓋住的卡片，2張為同一種圖案，則可以繼續挑選下一<br />組卡片；若挑選出的2張為不同的圖案，則這2張卡片要恢復被蓋住的狀態。只要成功挑出6組配對成功的卡片即可過關。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188670/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/BsaIb9BLKHE?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=35 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A303" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：水果盤</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：水果盤</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：點一下機器右側的拉桿，機器上會隨機出現三個水果，如果出現的水果符合左方的樣式，則可以獲得相對應的代幣，每玩一次需使用三個代幣，代幣用完就遊戲結束。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188773/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/3qu-r1VC6gM?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=36 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A304" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：簡易接龍</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：簡易接龍</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：發牌後，將撲克牌由小至大放到目標區。點撲克牌發牌台，會隨機發出13張撲克牌(點數1~13)，點一下撲克牌，它就會放大並且跟著滑鼠移動位置。再點一下撲克牌可以將牌放下，若放下的位置碰到目標區，會判斷點數是否由小至大置入，成功的話則將撲克牌放到目標區，失敗的話，將撲克牌放回原位。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94188873/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/DNokj3S_7yQ?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=37 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A305" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：星際大戰</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：星際大戰</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲方法：使用滑鼠移動下方的砲台，按下滑鼠左鍵發射子彈。打完九個外星人就過關。外星人也會發射子彈破壞下方的砲台，你只有三座砲台可以使用，三座都被破壞掉就遊戲結束。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94189018/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/f3_72Sy6q44?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=38 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A306" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：貪食蛇</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：貪食蛇</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲玩法：利用方向鍵控制蛇的前進方向，當蛇吃到老鼠，蛇的身體就會變長，不能讓蛇碰到邊緣或是自己的身體，否則遊戲就會結束。在遊戲結束前，看看你能夠吃到幾隻老鼠。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94189126/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/w3vvnsd-5rw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=39 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A307" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：九宮拼圖</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：九宮拼圖</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲玩法：按下綠色旗子會將8張圖片打亂，用滑鼠點空格旁的圖片將其與空格交換，成功將8張圖片移回正確的位置上時，右下角空格的隱藏圖片會顯示，並顯示「過關」訊息。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/94189261/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="900" height="520" src="https://www.youtube.com/embed/r2YYoktc2Uk?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=40 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "A308" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">範例：見縫插針</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">文字說明</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">圖片下載</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業：見縫插針</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      遊戲玩法：按下綠旗後開始，使用空白鍵發射箭，箭射在紅心上得1分，撞到其他箭，結束遊戲，看你最高可以得幾分。<br />
+      <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/103093636/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <div>【素材】</div>
+      <ul>
+        <li>圖片：箭.svg、箭管.svg、旋轉中心.svg</li>
+      </ul>
+      <div>【配分】</div>
+      <ul>
+        <li>10分 刪除貓咪角色，新增旋轉中心角色(使用圖片旋轉中心.svg)，放在畫面中中央。當綠旗按下，就不斷的旋轉。</li>
+        <li>10分 新增固定第一箭角色(使用圖片箭.svg)，當綠旗按下，插在紅色中心上，同步旋轉。</li>
+        <li>10分 新增箭角色(使用圖片箭.svg)，增加音效，內建效果分類的pop，當綠旗按下，箭出現在左下角。</li>
+        <li> 5分 新增箭管角色(使用圖片箭管.svg)，出現在左下角，蓋住鍵箭角色。</li>
+        <li>20分 當綠旗按下後，任何鍵盤按鍵都會複製一個箭角色的分身，射向紅色中心，直到碰到紅色中心才停下，並且跟著旋轉。</li>
+        <li>10分 新增分數變數 ，起始遊戲時要歸零，顯示在畫面左上方。當箭角色分身射到紅色中心時，加1分，發出聲音pop。</li>
+        <li>10分 箭角色分身射到其他藍色箭，即結束遊戲，畫面顯示出Game Over。但此時要保持畫面上所有的箭，不可以讓分身箭消失，直到按下八角形停止鍵或綠旗重新開始。</li>
+        <li>25分 你可能還需要用新變數或廣播來控制，這最後25分看你能否讓畫面流暢合理，讓射出的箭走直線(箭的方向)，不要有漂移的箭。射在紅色中心，跟著旋轉的箭也要流暢合理、不穿幫。如果你的旋轉中心角色，轉起來會搖擺就不像圓，那其他箭旋轉起來也會不自然，通常是沒放在中心點沒有調好。</li>
+      </ul>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <a role="button" class="btn" href="/static/files/scratch/{{lesson}}.zip">下載</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      {% include "student/submitA.html" with  index=41 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

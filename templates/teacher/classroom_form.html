@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block domready %}
+$('#id_lesson').each(function(element) {
+    $(this).attr('readonly','readonly');
+});
+{% endblock %}
+{% block content %}
+  <div class="form-group">
+    <form action="" method="post">
+    {{ form.as_p }}{% csrf_token %}
+    <input type="submit" value="送出" />
+    </form>
+</div>
+{% endblock %}

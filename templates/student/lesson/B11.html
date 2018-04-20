@@ -1,0 +1,289 @@
+<h1>(一)地球的轉動</h1>
+  <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#  1. 參數設定</span>
+<span class="c">#球半徑 0.5 m</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="c">#  2. 畫面設定</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="c"># x軸箭頭</span>
+<span class="n">x_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># y軸箭頭</span>
+<span class="n">y_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># z軸箭頭</span>
+<span class="n">z_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+
+<span class="c">#3. 球的設定</span>
+<span class="hll"><span class="n">earth</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">earth</span><span class="p">)</span>
+</span>
+<span class="c">#  4. 運動</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="hll">        <span class="n">earth</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+<Br>
+<h1>(二)五顆球的轉動</h1>
+使用循序結構<BR>
+  <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#  1. 參數設定</span>
+<span class="c">#球半徑 0.05 m</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="c">#  2. 畫面設定</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="c"># x軸箭頭</span>
+<span class="n">x_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># y軸箭頭</span>
+<span class="n">y_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># z軸箭頭</span>
+<span class="n">z_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+
+<span class="c">#3. 球的設定</span>
+<span class="hll"><span class="n">earth</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">earth</span><span class="p">)</span>
+</span><span class="hll"><span class="n">marble</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">marble</span><span class="p">)</span>
+</span><span class="hll"><span class="n">bricks</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">bricks</span><span class="p">)</span>
+</span><span class="hll"><span class="n">wood</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">wood</span><span class="p">)</span>
+</span><span class="hll"><span class="n">rough</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">rough</span><span class="p">)</span>
+</span>
+<span class="c">#  4. 運動</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="hll">    <span class="n">earth</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">marble</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">bricks</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">wood</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">rough</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+
+<BR>使用串列(List)<BR>
+此處balls屬於一種稱為串列(list)的資料型態，可以儲存並處理多項資料。在list中(被中括號[ ]框住)
+的資料稱為元素(element)或項目(item)，存在 list 中的元素沒有限定種類，可以是任何種類的資
+料或物件等，在這裡balls中存了五個ball。創造一個list最簡單的方式就是用中括號[ ]，
+在其中放入想存的元素，以逗號分隔。你可以想像，list 就是一個清單，裏面有一串序列的物
+件。你可以用索引(index)來定位其中的任何元素，每個元素所對應的索引，就是該元素與 list
+中第一個元素的索引值的偏移量(offset)，如 list 中的第一個元素的索引值為 0，第二個元素的
+索引值為 1、第三個元素的索引值為 2…以此類推。例如<BR>
+A = [1, 2, 3, 4, 5]<BR>
+代表我們設定一個 list 叫做 A，其中 A[0]的值是 1，A[1]值是 2，以下依此類推。
+另外當索引是 -1 時，則指的是最後一個元素，如 A[-1]的值就是 5。<BR>
+在程式當中，如果要在已存在的 list 增加元素，可利用 append 指令，其用法範例如下：
+A.append(6)<BR>
+如此 A 會有六個元素，依序為 1、2、3、4、5、6。而此時，A[-1]的值就是 6。<BR>
+不含任何元素的 list 也可以使用，如 B=[ ]，或主程式中的 arrows 都是空的 list。<BR>
+
+<BR>使用迴圈<BR>
+Python的for敘述會將一系列(例如list)裡所有的元素走訪一遍，而執行的順序是依照系列中元素的順序。例如:<BR>
+  <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">x</span>
+</pre></div>
+</td></tr></table></div>
+以上的式碼會把A中的元素都印出來。<BR>
+<BR>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#  1. 參數設定</span>
+<span class="c">#球半徑 0.05 m</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="c">#  2. 畫面設定</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="c"># x軸箭頭</span>
+<span class="n">x_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># y軸箭頭</span>
+<span class="n">y_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c"># z軸箭頭</span>
+<span class="n">z_axis</span> <span class="o">=</span> <span class="n">arrow</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">shaftwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+
+<span class="c">#3. 球的設定</span>
+<span class="n">earth</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">earth</span><span class="p">)</span>
+<span class="n">marble</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">marble</span><span class="p">)</span>
+<span class="n">bricks</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">bricks</span><span class="p">)</span>
+<span class="n">wood</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">wood</span><span class="p">)</span>
+<span class="n">rough</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">rough</span><span class="p">)</span>
+
+<span class="hll"><span class="n">balls</span> <span class="o">=</span> <span class="p">[</span><span class="n">earth</span><span class="p">,</span> <span class="n">marble</span><span class="p">,</span> <span class="n">bricks</span><span class="p">,</span> <span class="n">wood</span><span class="p">,</span> <span class="n">rough</span><span class="p">]</span>
+</span>
+<span class="c">#  4. 運動</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="hll">    <span class="k">for</span> <span class="n">ball</span> <span class="ow">in</span> <span class="n">balls</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">ball</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="mi">2</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+<BR>
+<h1>(三)滚動的球</h1>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#  1. 參數設定</span>
+<span class="c">#球半徑 0.05 m</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="c">#地板長</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="c">#  2. 畫面設定</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="n">bottom</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">size</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">wall</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="o">-</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c">#3. 球的設定</span>
+<span class="n">marble</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">materials</span><span class="o">.</span><span class="n">marble</span><span class="p">)</span>
+<span class="n">marble</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="c">#  4. 運動</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">marble</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">marble</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">marble</span><span class="o">.</span><span class="n">v</span> <span class="o">*</span><span class="n">dt</span>
+    <span class="n">marble</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="o">=-</span><span class="n">marble</span><span class="o">.</span><span class="n">v</span><span class="o">*</span><span class="n">dt</span><span class="o">/</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">marble</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">L</span><span class="o">-</span><span class="n">size</span> <span class="p">:</span>
+        <span class="n">marble</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<h1>作業</h1>
+請修改上述程式碼，使用串列(list)與迴圈(for loop)畫出三顆滾動的球，

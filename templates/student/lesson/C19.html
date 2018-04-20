@@ -1,0 +1,16 @@
+<p>計算星期數</p>
+<p>【最後目標】</p>
+<p>已知1900年元旦是星期一，求1901年1月到2000年12月中，有多少月份的第一天(1號)是星期日。</p>
+<p>【討論】</p>
+<p>Python可以從某一天的日期得到該天是星期幾，星期一的值是0，星期日的值是6。</p>
+<BR>
+<p>練習1：算出1900年元旦是星期一</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="n">day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1900</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">day</span><span class="o">.</span><span class="n">weekday</span><span class="p">())</span>
+</pre></div>
+</td></tr></table></div>

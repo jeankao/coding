@@ -1,0 +1,71 @@
+ <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">forward</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">G</span><span class="o">=</span><span class="mf">6.673E-11</span>
+
+<span class="k">def</span> <span class="nf">G_force</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">pos_vector</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">G</span> <span class="o">*</span> <span class="n">sun</span><span class="o">.</span><span class="n">mass</span> <span class="o">*</span> <span class="n">mass</span> <span class="o">/</span> <span class="n">mag2</span><span class="p">(</span><span class="n">pos_vector</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">pos_vector</span><span class="p">)</span>
+
+<span class="n">sun</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">2.1E10</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">orange</span><span class="p">,</span> <span class="n">material</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">emissive</span><span class="p">)</span>
+<span class="n">sun</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">1.989E30</span>
+<span class="nb">sum</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">earth</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">9.56E9</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">blue</span><span class="p">,</span> <span class="n">material</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">earth</span><span class="p">,</span> <span class="n">make_trail</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">earth</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">5.972E24</span>
+<span class="n">earth</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="mf">1.495E11</span>
+<span class="n">earth</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">2.9783E4</span><span class="p">)</span>
+<span class="n">earth</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">earth</span><span class="o">.</span><span class="n">distance</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="mi">60</span><span class="o">*</span><span class="mi">60</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">rate</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="mi">24</span><span class="p">)</span>
+        <span class="n">earth</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">G_force</span><span class="p">(</span><span class="n">earth</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">earth</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">/</span> <span class="n">earth</span><span class="o">.</span><span class="n">mass</span>
+        <span class="n">earth</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">earth</span><span class="o">.</span><span class="n">v</span> <span class="o">+</span> <span class="n">earth</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="n">earth</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">earth</span><span class="o">.</span><span class="n">pos</span> <span class="o">+</span> <span class="n">earth</span><span class="o">.</span><span class="n">v</span> <span class="o">*</span> <span class="n">dt</span>
+</pre></div>
+</td></tr></table></div>
+
+作業：增加一顆火星<BR>
+mars.radius = 4.9E9<BR>
+mars.mass = 6.42E23<BR>
+mars.distance = 2.279E11<BR>
+mars.v = vector(0, 0, 2.4077E4)<BR>
+
+作業：增加一顆哈雷慧星<BR>
+halley.radius = 1.0E10<BR>
+halley.mass = 2.2E14<BR>
+halley.distance = 8.7665E10<BR>
+halley.v = vector(0, 0, 54563.3)<BR>
+
+<img src="/static/lesson/vphysics/planet.png">

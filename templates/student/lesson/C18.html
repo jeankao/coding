@@ -1,0 +1,92 @@
+<p>最大路徑和</p>
+<p>一個給定的4層數字三角形（第n層有n個數），從最頂數位出發每次只能移動到左下或右下的直到最底層。在所有的路徑中，經過路徑數字和最大值是3+7+4+9=23。</p>
+<p><img src="/static/lesson/euler/route1.png"></p>
+<p>【最後目標】</p>
+<p>一個給定的15層數字三角形（第n層有n個數），從最頂數位出發每次只能移動到左下或右下的直到最底層。請找出最大的經過路徑數字和。</p>
+<p><img src="/static/lesson/euler/route2.png"></p>
+<p>【討論】</p>
+<p>每次移動只有左下和右下兩種不同走法，若是左下用0表示，右下用1表示，則走3層有幾種不同走法呢?</p>
+<p>用0和1組成長度3的數列有000,001,010,011,100,101,110,111，共有2^3=8種</p>
+<BR>
+<p>練習1:用0和1組成長度14的數列有16384種不同的排列法</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">routes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">14</span><span class="p">):</span>
+    <span class="n">routes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">routes</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<BR>
+<p><a href="/static/file/numbers4.txt">下載數字</a></p>
+<p>練習2：讀進15層數字，並且求某一特定條路徑的數字和。</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: UTF-8 -*-</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c"># 打開檔案</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;d:/numbers4.txt&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+
+<span class="c"># 讀取檔案</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>    <span class="c">#依序讀取每行</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>    <span class="c">#去掉每行頭尾空白</span>
+    <span class="n">number_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="n">number_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+    <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number_list</span><span class="p">)</span>
+
+<span class="c"># 關閉檔案</span>
+<span class="nb">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+
+<span class="n">route</span> <span class="o">=</span> <span class="s">&quot;01100110101011&quot;</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="nb">sum</span> <span class="o">=</span> <span class="mi">75</span>
+<span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="n">route</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">digit</span> <span class="o">==</span> <span class="s">&quot;0&quot;</span><span class="p">:</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>

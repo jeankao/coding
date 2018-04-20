@@ -1,0 +1,62 @@
+{% load tag %}
+<script type="text/javascript">
+function checkvalue() { 
+    var mystring = document.getElementById('id_memo{{index}}').value; 
+    if(!mystring.match(/\S/)) {
+        alert ('請填寫心得~~');
+        return false;
+    } else {
+        return true;
+    }
+}
+</script>
+            <form action="/student/work/submit/1/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this);">      
+              <input type="hidden" name="lesson" value={{lesson}}>
+              <table class="table">            
+        {% if not work_dict|hash_memo:index %}                      
+            <tr><td>狀態</td><td>尚未繳交</td></tr>
+        {% else %}
+            {% if work_dict|hash_score:index > 0 %}
+              <tr><Td>分數</td><td>{{ work_dict|hash_score:index }} /  評分者：{{ work_dict|hash_scorer:index|realname }}</Td></tr>           
+            {% else %}
+            <tr><td>分數</td><td>尚未評分</td></tr>                                   
+            {% endif %}              
+        {% endif %}
+        {% if not work_dict|hash_score:index > 0 %}      
+            <tr><td>作品檔案</td><td><input id="id_file" name="file" type="file" class="form-control"></td></tr>
+            <tr><td valign="top">心得感想</td><td><textarea cols="20" id="id_memo{{index}}" name="memo" rows="5"  class="form-control">{{ work_dict|hash_memo:index }}</textarea></td></tr>              
+            <tr><td></td><td><input type="submit" value="送出"  class="form-control"/></td></tr>
+        {% endif %}         
+              </table>
+      {% csrf_token %}   
+            </form>
+
+{% if work_dict|hash_memo:index %}
+<script type="text/javascript" src="/static/sb2/swfobject.js"></script>
+ 
+<script type="text/javascript">   
+var flashvars = {
+project: "/static/work/{{request.user.id}}/{{work_dict|hash_file:index}}" ,
+autostart: "false"
+};
+var params = {
+bgcolor: "#FFFFFF",
+allowScriptAccess: "always",
+allowFullScreen: "true",
+wmode: "window",
+menu:"‘false"
+};
+var attributes = {};
+swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent{{index}}", "482", "387", "10.2.0","expressInstall.swf", flashvars, params, attributes);
+</script>
+              
+<div id="flashContent{{index}}" >
+ 
+</div>   
+{% endif %}
+        {% with workfiles=work_dict|hash_files:index %}
+
+        {% for workfile in workfiles %}
+              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
+        {% endfor %}
+        {% endwith %}

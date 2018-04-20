@@ -1,0 +1,311 @@
+<BR>
+<h1>物理觀念</h1>
+  
+速度 = 速度 + 加速度 * 時間
+<BR>
+<BR>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># 1. 參數設定</span>
+<span class="c">#加速度</span>
+<span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.8</span>    <span class="c">#加速度值,在 x、z 方向為 0,在 y 方向為 g=-9.8 公尺/秒^2</span>
+<span class="c">#速度</span>
+<span class="n">vy</span> <span class="o">=</span> <span class="mi">0</span>      <span class="c">#球的 y 方向速度(公尺/秒)，初始值為0</span>
+<span class="c">#高度</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">10.0</span>    <span class="c">#球的初始高度，單位為公尺</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c">#畫面更新的時間間隔,單位為秒</span>
+<span class="c">#經過時間</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c">#模擬所經過的時間 ,單位為秒,初始值為0</span>
+
+<span class="c"># 2. 畫面設定</span>
+<span class="c">#畫布</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="c">#參考地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c">#球</span>
+<span class="n">ball</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span> <span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+
+<span class="c"># 3. 描述物體的運動</span>
+
+<span class="k">while</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mf">ball.radius</span><span class="p">:</span>
+        <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="c"># 速度 = 速度 + 加速度 * 時間間隔</span>
+        <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="c"># 位置 = 位置 + 速度 * 時間間隔</span>
+        <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">dt</span>
+</pre></div>
+</td></tr></table></div>
+  
+  
+<BR>
+<img src="/static/lesson/vphysics/flowchart2.png">
+  
+<BR>  
+
+<h1>觸地反彈</h1>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># 1. 參數設定</span>
+<span class="c">#加速度</span>
+<span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.8</span>    <span class="c">#加速度值,在 x、z 方向為 0,在 y 方向為 g=-9.8 m/s^2</span>
+<span class="c">#速度</span>
+<span class="n">vy</span> <span class="o">=</span> <span class="mi">0</span>      <span class="c">#球的 y 方向速度(公尺/秒)，初始值為0</span>
+<span class="c">#高度</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">10.0</span>    <span class="c">#球的初始高度，單位為公尺</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c">#畫面更新的時間間隔,單位為秒</span>
+<span class="c">#經過時間</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c">#模擬所經過的時間 ,單位為秒,初始值為0</span>
+
+<span class="c"># 2. 畫面設定</span>
+<span class="c">#畫布</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="c">#參考地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c">#球</span>
+<span class="n">ball</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span> <span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+
+<span class="c"># 3. 描述物體的運動</span>
+
+<span class="hll"><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+</span>        <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="c"># 速度 = 速度 + 加速度 * 時間間隔</span>
+        <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="c"># 位置 = 位置 + 速度 * 時間間隔</span>
+        <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">dt</span>
+
+<span class="hll">        <span class="k">if</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
+</span><span class="hll">                <span class="n">vy</span> <span class="o">=</span> <span class="n">-vy</span>
+</span></pre></div>
+</td></tr></table></div>
+
+<BR>  
+<h1>觸地反彈(摸擬能量耗損)</h1>
+
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># 1. 參數設定</span>
+<span class="c">#加速度</span>
+<span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.8</span>    <span class="c">#加速度值,在 x、z 方向為 0,在 y 方向為 g=-9.8 m/s^2</span>
+<span class="c">#速度</span>
+<span class="n">vy</span> <span class="o">=</span> <span class="mi">0</span>      <span class="c">#球的 y 方向速度(公尺/秒)，初始值為0</span>
+<span class="c">#高度</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">10.0</span>    <span class="c">#球的初始高度，單位為公尺</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c">#畫面更新的時間間隔,單位為秒</span>
+<span class="c">#經過時間</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c">#模擬所經過的時間 ,單位為秒,初始值為0</span>
+
+<span class="c"># 2. 畫面設定</span>
+<span class="c">#畫布</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="c">#參考地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c">#球</span>
+<span class="n">ball</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span> <span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+
+<span class="c"># 3. 描述物體的運動</span>
+
+<span class="hll"><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+</span>        <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="c"># 速度 = 速度 + 加速度 * 時間間隔</span>
+        <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="c"># 位置 = 位置 + 速度 * 時間間隔</span>
+        <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">dt</span>
+
+<span class="hll">        <span class="k">if</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mf">ball.radius</span><span class="p"> and vy < 0</span><span class="p">:</span>
+</span><span class="hll">            <span class="n">vy</span> <span class="o">=</span><span class="n"> -vy</span><span class="o">*</span><span class="mf">0.9</span>
+</span></pre></div>
+</td></tr></table></div>
+  
+<BR>
+
+<h1>
+作業:修改模擬程式，計算自1 0公尺高球自由落下在能量耗損(0.9)的情況下觸地反彈直到第6次碰到地面所花的時間。
+</h1>
+  <p>提示：觸地反彈，第三次碰到地面後停止動畫</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="c"># 匯入視覺化套件</span>
+<span class="kn">from</span> <span class="nn">visual</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># 1. 參數設定</span>
+<span class="c">#加速度</span>
+<span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.8</span>    <span class="c">#加速度值,在 x、z 方向為 0,在 y 方向為 g=-9.8 m/s^2</span>
+<span class="c">#速度</span>
+<span class="n">vy</span> <span class="o">=</span> <span class="mi">0</span>      <span class="c">#球的 y 方向速度(公尺/秒)，初始值為0</span>
+<span class="c">#高度</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">10.0</span>    <span class="c">#球的初始高度，單位為公尺</span>
+<span class="c">#時間間隔</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c">#畫面更新的時間間隔,單位為秒</span>
+<span class="c">#經過時間</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c">#模擬所經過的時間 ,單位為秒,初始值為0</span>
+
+<span class="c"># 2. 畫面設定</span>
+<span class="c">#畫布</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">display</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="c">#參考地板</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c">#球</span>
+<span class="n">ball</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span><span class="n">pos</span> <span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+<span class="c">#次數</span>
+<span class="hll"><span class="n">number</span> <span class="o">=</span> <span class="mi">0</span>
+</span>
+<span class="c"># 3. 描述物體的運動</span>
+
+<span class="hll"><span class="k">while</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+</span>        <span class="n">rate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="c"># 速度 = 速度 + 加速度 * 時間間隔</span>
+        <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="c"># 位置 = 位置 + 速度 * 時間間隔</span>
+        <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">dt</span>
+        <span class="k">if</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
+                <span class="n">vy</span> <span class="o">=</span> <span class="o">-</span><span class="n">vy</span>
+<span class="hll">                <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
+</span></pre></div>
+</td></tr></table></div>
+
+
+ 

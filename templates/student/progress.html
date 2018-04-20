@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+<style>
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+</style>
+{% endblock %}
+{% block content %}
+        <table class="table">
+            <tr>
+                <Td></Td>
+                {% for assignment in lesson_list %}
+                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{forloop.counter}}</button></td>              
+                {% endfor %}
+            </tr>          
+            <tr>
+                <Td></Td>
+                {% for assignment in lesson_list %}
+                    {% if lesson == "1" %}
+                     <td><font size=-2>{{assignment.2}}</font></td>
+                    {% else %}
+                     <td><font size=-2>{{assignment.1}}</font></td>              
+                    {% endif %}
+                {% endfor %}
+            </tr>          
+            {% for enroll, bar in bars %}
+          <tr><td nowrap>{{enroll.seat}}){{enroll.student.first_name}}</td>
+            {% for work in bar %}
+                {% if work %}
+                    {% if work.score > 0 %}
+            <td style="padding:0px"><button type="button" class="btn btn-info btn-circle">{{work.score}}</button><BR><font size=-2>{{work.publication_date|date:"m/d"}}<BR>{{work.scorer|realname}}</td>
+                    {% else %}
+            <td style="padding:0px"><button type="button" class="btn btn-success btn-circle"></button><BR><font size=-2>{{work.publication_date|date:"m/d"}}</font></td>                   
+                    {% endif %}
+                {% else %}
+           <td style="padding:0px"><button type="button" class="btn btn-default btn-circle"></button></td>            
+                {% endif %}
+            {% endfor %}
+          </tr>
+            {% endfor %}
+</table>
+{% endblock %}

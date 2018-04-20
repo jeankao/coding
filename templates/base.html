@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load tag %}
+<!--
+Template Name: Realistic
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Joy of Code</title>
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">  
+<!-- Superfish Menu -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>  
+<script type="text/javascript" src="/static/layout/scripts/superfish/jquery.hoverIntent.js"></script>
+<script type="text/javascript" src="/static/layout/scripts/superfish/superfish.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script type="text/javascript">
+jQuery(function () {
+    $('ul.nav1').superfish();
+    $('form>p').addClass('form-group form-inline');
+    $('form>p>input').addClass('form-control');  
+    $('form>p>select').addClass('form-control'); 
+    $('td>select').addClass('form-control'); 	
+    $('td>input').addClass('form-control');  		
+	  $('input').addClass('form-control'); 
+});
+
+</script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="/static/layout/styles/layout.css" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
+<!-- / Superfish Menu -->
+{% block header %}
+{% endblock %}	
+</head>
+<body id="top">
+<div class="wrapper topnav">
+  <div id="topnav">
+    <div class="fl_left">
+    <ul class="nav1">
+      <li><a href="/"><img src="/static/images/icon_home.png"> 首頁</a></li>
+      <li><a href="#"><img src="/static/images/icon_lesson.png"> 課程</a>    
+        <ul>
+          <li><a href="/student/lessons/A">程式設計輕鬆學：使用Scratch2.X</a></li>
+          <li><a href="/student/lessons/B">VPhysics物理模擬：使用Python2</a></li>
+          <li><a href="/student/lessons/C">Euler數學解題：使用Python3</a></li>          
+        </ul>
+      </li>
+      {% if user.is_authenticated %}  
+			<li><a href="/account/dashboard"><img src="/static/images/icon_message.png"> 訊息{% if request.user.id|unread > 0 %}({{request.user.id|unread}}){% endif %}</a></li>
+			<li><a href="/account/profile/{{request.user.id}}"><img  width=16 src="/static/images/icon_doc.png"> 檔案</a>
+        <ul>
+            <li><a href="/account/profile/{{user.id}}#tab1">積分</a></li>
+              <li><a href="/account/profile/{{user.id}}#tab3">證書</a></li>
+		        <li><a href="/account/event/calendar/{{user.id}}">登入記錄</a></li>			
+		        <li><a href="/account/event/timeline/{{user.id}}">使用記錄</a></li>		
+			  </ul>
+			</li>											
+		  <li><a href="/student/classroom"><img  width=16 src="/static/images/icon_class.png">班級</a></li>						
+						{% if request.user|has_group:"teacher" %}
+			<li><a href="/teacher/classroom"><img src="/static/images/icon_teacher.png"> 教師</a></li>
+					 {% endif %}           
+      {% else %}
+        <li><a href="/account/author"><img src="/static/images/icon_teacher.png"> 作者</a>               					
+      {% endif %}
+    </ul>  
+    </div>
+    <div class="fl_right">
+      <ul class="nav">     
+      {% if user.is_authenticated %}   
+        <li><a href="/account/avatar"><img src="/static/avatar/s0.png"></a>{{ request.user.first_name }}　</li>
+        <li><a href="/account/logout" class="btn">登出</a></li>              
+      {% else %}
+        <li><a href="/account/register_school" class="btn">註冊新學校</a></li>
+      <li><a href="/account/register" class="btn">註冊新帳號</a></li>
+      <li><a href="/account/login/0/" class="btn">教師登入</a></li>
+      <li><a href="/account/login/1/" class="btn">學生登入</a></li>				
+      {% endif %}
+    </ul>  
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+  </div>
+<!-- ####################################################################################################### -->
+<div class="main">
+  
+{% block banner %}
+{% endblock %}
+<div class="wrapper">
+  <div class="container">
+    <div class="whitebox">
+      <div class="content">        
+        {% block content %}{% endblock %}
+       </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ####################################################################################################### -->
+<div class="wrapper">
+  <div id="copyright">
+		<p class="fl_left">Copyright &copy; All Rights Reserved - 
+			<a href="/account/visitor"><img src="/static/images/icon_visitor.png"> 訪客</a>  
+   {% if user.is_superuser %}
+			<a href="/account/admin"><img src="/static/images/icon_admin.png"> 管理</a>
+		{% endif %}
+		</p>
+    <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a>
+		Designed by <a href='http://www.freepik.com'>Freepik</a></p>
+		</p>
+    <br class="clear" />
+  </div>
+</div>
+  </div> 
+<!-- JAVASCRIPTS -->
+<script>
+  var csrftoken = $.cookie('csrftoken');
+  function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    }
+  });
+  $(document).ready(function(){
+		$(window).scroll(function(){
+			if ($(this).scrollTop() > 100) {
+				$('.scrollToTop').fadeIn();
+			} else {
+				$('.scrollToTop').fadeOut();
+			}
+		});
+		//Click event to scroll to top
+		$('.scrollToTop').click(function(){
+			$('html, body').animate({scrollTop : 0},800);
+			return false;
+		});
+    {% block domready %}
+    {% endblock %}
+  });
+</script>
+{% block footer_script %}
+{% endblock %}
+</body>
+</html>

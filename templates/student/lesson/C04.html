@@ -1,0 +1,44 @@
+<h1>回文數(palindromic number)</h1>
+<p>回文數(或迴文數)是指一個像14641這樣「對稱」的數，即：將這個數的數字按相反的順序重新排列後，所得到的數和原來的數一樣。</p>
+<p>【最後目標】</p>
+<p>在二個二位數字乘積的數字中，最大的回文數是9009=91*99</p>
+<p>請找出二個三位數字乘積數字中，最大的回文數。</p>
+<p>練習1：字典(Dictionary)</p>
+<p>字典是一種資料模型，可以儲存任意型態資料，其內容包含有「鍵(key)」和「值(value)」。</p>
+<p>字典的每個键與值使用「冒號(:)」分割，每對鍵與值之間用「逗號(,)分割，每個键必須是唯一的。</p>
+<p>整個字典則包含在「大括號({})」之內，格式如下所示：</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">key1</span> <span class="p">:</span> <span class="n">value1</span><span class="p">,</span> <span class="n">key2</span> <span class="p">:</span> <span class="n">value2</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>一個簡單的字典範例，並查詢字典裡的值。</p>
+<p>把相對應鍵放入「中括號([])」，即可查詢其值。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Alice&#39;</span><span class="p">:</span> <span class="mi">232</span><span class="p">,</span> <span class="s">&#39;John&#39;</span><span class="p">:</span> <span class="mi">910</span><span class="p">,</span> <span class="s">&#39;Tom&#39;</span><span class="p">:</span> <span class="mi">325</span><span class="p">}</span>
+<span class="k">print</span> <span class="nb">dict</span><span class="p">[</span><span class="s">&#39;Alice&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>練習2：國字數字轉換</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf8 -*-</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="s">&#39;壹&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s">&#39;貮&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="s">&#39;參&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span><span class="s">&#39;肆&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span><span class="s">&#39;伍&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="s">&#39;陸&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span><span class="s">&#39;柒&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span><span class="s">&#39;捌&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span><span class="s">&#39;玖&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="s">&#39;零&#39;</span><span class="p">}</span>
+<span class="n">decimal</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="s">&#39;拾&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s">&#39;百&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="s">&#39;千&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span><span class="s">&#39;萬&#39;</span><span class="p">}</span>
+<span class="n">number</span> <span class="o">=</span> <span class="mi">36294</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">string</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="k">while</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">digit</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">10</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">[</span><span class="n">digit</span><span class="p">]</span> <span class="o">+</span> <span class="n">decimal</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">+</span> <span class="n">string</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">//</span> <span class="mi">10</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">print(string)</span>
+</pre></div>
+</div>
+
+<p>練習3：反轉數字</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;請輸入數字&#39;</span><span class="p">))</span>
+<span class="n">reverse</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">digit</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">10</span>
+                <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">digit</span>
+                <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">//</span> <span class="mi">10</span>
+<span class="k">print</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span>
+</pre></div>
+</div>

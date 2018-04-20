@@ -1,0 +1,29 @@
+<p>質數</p>
+<p>質數（Prime number），指在大於1的自然數中，除了1和該數自身外，無法被其他自然數整除的數。</p>
+<p>驗證一個數字n是否為質數的一種簡單但緩慢的方法為試除法。此一方法會測試n是否為任一在2與<img src="/static/lesson/Euler/sqrtn.png">之間的整數之倍數。</p>
+<p>【最後目標】</p>
+<p>找出第10001個質數。</p>
+<p>練習1：求小於100的所有質數</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">:</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">primes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
+                        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                        <span class="k">break</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="k">print</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>練習2:求費式數列前20項數字</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fibonacci</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">fibonacci</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fibonacci</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">fibonacci</span><span class="p">)</span>
+</pre></div>
+</div>

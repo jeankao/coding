@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+		 <a href="/teacher/work/group/{{index}}/{{classroom_id}}" role="button" class="btn">組別</a>
+        <table class="table">
+        <tr>
+            <td>學生</td>
+            <td>組別</td>
+            <td>功能</td>
+        </tr>
+        {% for list in classmate_work  %}
+                <tr>
+                <td>
+                {% if not list.1.user_id = 0 %} 
+                        {{list.0.seat}})<a href="/teacher/scoring/{{classroom.lesson}}/{{classroom.id}}/{{list.0.student.id}}/{{index}}">{{list.0.student.first_name}}-{% if list.1 %}{{list.1.publication_date}}{% endif %}
+                    {% if list.1.scorer > 0 %}
+                        ({{list.1.score}}-{{list.1.scorer|realname}})
+                    {%  endif %}
+                        </a><br/>
+                {% else %}
+                        {{list.0.seat}}){{list.0.student.first_name}}-尚未繳交<br/>
+                {% endif %}
+                </td>
+                <td>{{list.4}}</td>
+								{% if list.1.user_id > 0 %}
+                <td>{% if list.2 > 0 %}<a class="assistant btn btn-info active" role="button" href="/teacher/work/assistant/make/" data-classroomid="{{classroom.id}}" data-userid="{{ user.id }}"  data-action="unset"  data-lesson="{{ lesson }}"  data-index="{{ index }}">取消小老師</a>{% else %}<a class="assistant btn" role="button" href="/teacher/work/assistant/make" data-classroomid="{{classroom.id}}" data-userid="{{ user.id }}"  data-action="set"  data-lesson="{{ lesson }}"  data-index="{{ index }}">設定為小老師</a>{% endif %}</td>
+                {% else %}
+								<td></td>
+								{% endif %}
+					      </tr>
+        {% endfor %}
+        </table>
+{% endblock %}
+{% block domready %}
+  $('a.assistant').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/teacher/work/assistant/make/',
+      {
+        userid: $(launcher).data('userid'),
+        action: $(launcher).data('action'),
+        lesson: $(launcher).data('lesson'),
+        index: $(launcher).data('index'),
+        classroomid: $(launcher).data('classroomid'),
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+          var previous_action = $(launcher).data('action');
+		      if (previous_action == 'set') {
+               $(launcher).removeClass("btn-default").addClass("btn-info active");
+               $(launcher).html("取消小老師");
+               $(launcher).data('action', 'unset');
+           } else {
+               $(launcher).removeClass("btn-info").addClass("btn-default");
+               $(launcher).html("設為小老師");
+               $(launcher).data('action', 'set');               
+           }
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );
+  });
+{% endblock %}

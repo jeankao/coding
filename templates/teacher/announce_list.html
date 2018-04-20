@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1>班級名稱：{{classroom.name}}</h1>
+        <a href="/teacher/announce/add/{{classroom.id}}" role="button" class="btn btn-info active">新增公告</a><BR><BR>
+        <table class="table">
+            <tr>
+                <td>時間</td>
+                <td>主旨</td>
+        {% for message in messages %}
+            <tr>
+            <td>{{message.time}}</td>
+            <td><a href="/teacher/announce/detail/{{message.id}}">{{message.title}}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+ {% include "pagination.html" with page=page_obj %}          
+{% endblock %}

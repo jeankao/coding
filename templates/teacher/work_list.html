@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+		{% if classroom.lesson == 1 %}
+        <table class="table">
+            <tr>
+                <td>名稱</td>                
+                <td colspan=2>功能</td>		
+		{% for work in works %}
+            <tr>
+            <td>{{forloop.counter}}){{work.1}} / {{work.2}}</td>			
+            <td><a href="/teacher/work/class/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">評分</a></td>
+            <td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>			
+            </tr>
+		{% endfor %}
+        </table>
+		{% else %}
+        <table class="table">
+            <tr>
+                <td>名稱</td>                
+                <td colspan=2>功能</td>		
+		{% for work in works %}
+            <tr>
+            <td>{{forloop.counter}}){{work.1}}</td>			
+            <td><a href="/teacher/work/class/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">評分</a></td>
+            <td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>			
+            </tr>
+		{% endfor %}
+        </table>		
+	
+		{% endif %}
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block title %} Teachers {% endblock %}
+{% block content %}
+    <form action="."  method="get">
+<A href="/teacher/import/upload" role="button" class="btn btn-info active">匯入帳號</A>      
+ 搜尋帳號：<input type="text" name = "account" style="display:inline-block;width:200px"><input type="submit" value="送出" style="display:inline-block;width:100px"/>
+    </form>
+        <tr>
+        <table class="table">
+            <td>帳號</td>
+            <td>姓名</td>
+            <td>最新登入</td>
+            <td>功能</td>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{user.username|student_username}}</td>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_login}}</td>
+                <Td>
+                  <a href="/teacher/password/{{user.id}}" role="button" class="btn">重設密碼</a>
+                  <a href="/teacher/realname/{{user.id}}" role="button" class="btn">修改姓名</a>
+              </Td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% load pagination %}
+        {% get_pagination %}  
+{% endblock %}

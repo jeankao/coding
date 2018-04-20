@@ -1,0 +1,43 @@
+@charset "utf-8";
+/*
+Template Name: Realistic
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+File: Tables CSS
+*/
+
+.table{width:100%; border-collapse:collapse; table-layout:auto; vertical-align:top; margin-bottom:15px; border:1px solid #CCCCCC;}
+.table thead th{color:#FFFFFF; background-color:#666666; /* border:1px solid #CCCCCC; */ border-collapse:collapse; text-align:center; table-layout:auto; vertical-align:middle;}
+.table tbody td{vertical-align:top; border-collapse:collapse; /* border-left:1px solid #CCCCCC; border-right:1px solid #CCCCCC; */}
+.table thead th, table tbody td{padding:5px; border-collapse:collapse;}
+.table tbody tr.light{color:#666666; background-color:#F7F7F7;}
+.table tbody tr.dark{color:#666666; background-color:#E8E8E8;}
+
+table.highlighttable{width:100%; border-collapse:collapse; table-layout:auto; vertical-align:top; margin-bottom:0px;border:0px;}
+td.linenos {
+    text-align: right;
+    border:0px;
+    background-color: white;
+	width:34px;
+}
+td.code {  
+    background-color: #eeffcc; 
+    border:1px solid #CCCCCC;  
+}
+
+pre {
+    font-family: 'Consolas', 'Deja Vu Sans Mono',
+                 'Bitstream Vera Sans Mono', monospace;
+    font-size: 1em;
+    letter-spacing: 0.015em;
+    line-height: 120%;
+    padding: 0.5em;
+    background-color: transparent;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    border: 0px solid @pre-border-color;
+}
+
+pre{display:block;padding:9.5px;margin:0 0 10px;font-size:14px;line-height:1.42857143;color:#333;word-break:break-all;word-wrap:break-word;background-color:transparent;border:0px solid #ccc;border-radius:4px}

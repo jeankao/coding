@@ -1,0 +1,46 @@
+﻿<h1>質因數</h1>
+
+<p>120的所有因數有1,2,3,4,5,6,8,10,12,15,20,24,30,40,60, 120</p>
+<p>這些因數中，有2,3,5三個數是質數，因此又稱為120的質因數，</p>
+<p>而120可以因數分解成這三個質因數的乘積。<img src="/static/lesson/euler/mul.png"></p>
+<p>我們可以進一步再推出120最大的質因數是5。</p>
+<p>【最後目標】求600851475143的最大質因數是多少？</p>
+<p>練習1：印出120的所有因數</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">121</span><span class="p">):</span>
+        <span class="k">if</span> <span class="mi">120</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span><span class="mi">0</span> <span class="p">:</span>
+                <span class="k">print(i)</span>
+</pre></div>
+</div>
+<p>練習2：判斷是否為質數</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span>  <span class="nf">is_prime</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+<span class="n">number</span> <span class="o">=</span> <span class="nb">int(input</span><span class="p">(</span><span class="s">&#39;請輸入數字&#39;</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;您輸入的是質數&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;您輸入的不是質數&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>練習3：找出隨機數字串列中的最大數</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="nb">max</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">99</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
+                <span class="nb">max</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">max</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果要找120的質因數，只需檢查比<img src="/static/lesson/euler/sqr.png">小的因數是否為質數即可。</p>
+<p>使用開根號指令求<img src="/static/lesson/euler/sqr.png"></p>
+<p>120**0.5</p>
+<p>可以使用int函數將開根號後的數字轉換為整數</p>
+<p>int(120**0.5)</p>

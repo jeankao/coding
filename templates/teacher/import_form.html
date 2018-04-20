@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+    <a href="/static/files/sample.xls" class="btn btn-primary" role="btn">格式範本.xls</a>
+    <form action="" enctype="multipart/form-data"  method="post">
+        <table>
+            {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <input type="submit" class="btn-info" value="送出">
+    </form>
+{% endblock %}

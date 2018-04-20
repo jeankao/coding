@@ -1,0 +1,34 @@
+<h1>倍數和</h1>
+
+<p>在小於10的數字中，3和5的倍數有3,5,6,9，這些倍數的和是23</p>
+
+<p>【最後目標】請求出小於1000的數字中，所有3和5的倍數和。</p>
+
+  <p>練習1：用for迴圈印出小於10的正整數</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="k">print(i)</span>
+</pre></div>
+</div>
+<p>練習2：判斷輸入值是否為3的倍數</p>
+<div class="highlight-python"><div class="highlight"><pre>number = int(input('請輸入數字'))
+if number % 3 == 0:
+        print('您輸入的是3的倍數')
+else :
+        print('您輸入的不是3的倍數')
+</pre></div>
+</div>
+<p>練習3：計算小於100的正整數和</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">i</span>
+<span class="k">print(sum)</span>
+</pre></div>
+</div>
+<p>練習4：判斷是否為2或3的倍數</p>
+<div class="highlight-python"><div class="highlight"><pre>number = int(input('請輸入數字'))
+if number % 2 == 0 or number % 3 == 0:
+        print('您輸入的是2或3的倍數')
+else :
+        print('您輸入的不是2也不是3的倍數')
+</pre></div>
+</div>
