@@ -9,7 +9,7 @@ from student.lesson import *
 from django.views.generic import ListView, CreateView
 from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer
 from teacher.models import Classroom
-from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory
+from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
 from student.forms import EnrollForm, GroupForm, SeatForm, GroupSizeForm, SubmitAForm, SubmitBForm
 from django.conf import settings
@@ -21,29 +21,53 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import MultipleObjectsReturned
 from binascii import a2b_base64
 import os
+from datetime import datetime
+
+# 課程瀏覽記錄
+def statics_lesson(request, lesson):
+		try :
+			counter = LessonCounter.objects.get(name=lesson)
+			counter.hit = counter.hit + 1
+		except ObjectDoesNotExist:
+			counter = LessonCounter(name=lesson, hit=1)
+		except MultipleObjectsReturned:
+			counters = LessonCounter.objects.filter(name=lesson)
+			counter = counter[0] 
+			counter.hit = counter.hit + 1
+		counter.save()
+		day = str(datetime.now())[0:4]+str(datetime.now())[5:7]+str(datetime.now())[8:10]
+		try :
+			daycounter = DayCounter.objects.get(day=day)
+			daycounter.hit = daycounter.hit + 1			
+		except ObjectDoesNotExist:
+			daycounter = DayCounter(day=day, hit=1)
+		except MultipleObjectsReturned:
+			daycounters = DayCounter.objects.filter(day=day)
+			daycounter = daycounters[0]
+			daycounter.hit = daycounter.hit + 1
+		daycounter.save()		
+		log = LogCounter(counter_id=counter.id, counter_ip=request.META['REMOTE_ADDR'])
+		log.save()			
+
 
 # 各種課程    
 def lessons(request, subject_id):
+    statics_lesson(request, subject_id)
     return render_to_response('student/lessons.html', {'subject_id': subject_id}, context_instance=RequestContext(request))
 
 # 課程內容
-def lessonA(request, lesson):  
+def lesson(request, lesson):  
     work_dict = {}	
     work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
-    return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
-
-# 課程內容
-def lessonB(request, lesson):
-    work_dict = {}
-    work_dict = dict(((work.index, [work, None]) for work in Work.objects.filter(lesson_id=2, user_id=request.user.id)))	
-    return render_to_response('student/lessonB.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
-
-# 課程內容
-def lessonC(request, lesson):
-    work_dict = {}
-    work_dict = dict(((work.index, [work, None]) for work in Work.objects.filter(lesson_id=3, user_id=request.user.id)))	
-    return render_to_response('student/lessonC.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
-	
+    statics_lesson(request, lesson)
+    if lesson[0] == "A":
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
+    elif lesson[0] == "B":
+        return render_to_response('student/lessonB.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
+    elif lesson[0] == "C":
+        return render_to_response('student/lessonC.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))			
+    else:
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))			
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):

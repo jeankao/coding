@@ -5,9 +5,7 @@ from . import views
 
 urlpatterns = [
     url(r'^lessons/(?P<subject_id>[^/]+)/$', views.lessons),
-    url(r'^lessonA/(?P<lesson>[^/]+)/$', views.lessonA),
-    url(r'^lessonB/(?P<lesson>[^/]+)/$', views.lessonB),	
-    url(r'^lessonC/(?P<lesson>[^/]+)/$', views.lessonC),		
+    url(r'^lesson/(?P<lesson>[^/]+)/$', views.lesson),
     # 選課
     url(r'^classroom/enroll/(?P<classroom_id>[^/]+)/$', views.classroom_enroll),      
     url(r'^classroom/add/$', views.classroom_add),  

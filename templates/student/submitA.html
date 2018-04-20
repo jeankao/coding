@@ -25,7 +25,7 @@ function checkvalue() {
         {% if not work_dict|hash_score:index > 0 %}      
             <tr><td>作品檔案</td><td><input id="id_file" name="file" type="file" class="form-control"></td></tr>
             <tr><td valign="top">心得感想</td><td><textarea cols="20" id="id_memo{{index}}" name="memo" rows="5"  class="form-control">{{ work_dict|hash_memo:index }}</textarea></td></tr>              
-            <tr><td></td><td><input type="submit" value="送出"  class="form-control"/></td></tr>
+            <tr><td></td><td><input type="submit" value="送出"  class="form-control btn-info"/></td></tr>
         {% endif %}         
               </table>
       {% csrf_token %}   

@@ -21,7 +21,8 @@ urlpatterns = [
     # 關於我們
     url(r'^about/$', views.about),  
     # 數據統計
-    url(r'^statics/$', views.statics),    
+    url(r'^statics/zone/$', views.statics_zone),    
+    url(r'^statics/lesson/$', views.statics_lesson),      
     # 讀取訊息
     url(r'^message/(?P<messagepoll_id>\d+)/$', views.message),  
     #個人檔案

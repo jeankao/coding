@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView
 from django.db.models import Q
 from zone import *
-from account.models import County, Zone, School, Profile, PointHistory, Message, MessagePoll, Visitor, VisitorLog
+from account.models import County, Zone, School, Profile, PointHistory, Message, MessagePoll, Visitor, VisitorLog, LessonCounter
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.timezone import localtime
@@ -60,10 +60,16 @@ def about(request):
     return render_to_response('account/about.html', context_instance=RequestContext(request))	  
 	
 	
-def statics(request):
+def statics_zone(request):
     cities = County.objects.all()
-    return render_to_response('account/statics.html', {'cities':cities}, context_instance=RequestContext(request))	  	
+    return render_to_response('account/statics_zone.html', {'cities':cities}, context_instance=RequestContext(request))	  	
 
+def statics_lesson(request):
+		counters = LessonCounter.objects.all().order_by("-hit")		
+		return render_to_response('account/statics_lesson.html', {'counters':counters}, context_instance=RequestContext(request))
+  	
+	
+	
 # 管理介面 
 def admin(request):
     return render_to_response('account/admin.html', context_instance=RequestContext(request))

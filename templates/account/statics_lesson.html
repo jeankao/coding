@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<table class="table">
+<tr><td>名次</td><td>瀏覽次數</td><td>課程編號</td></tr>
+{% for counter in counters %}
+<Tr><td>{{forloop.counter}}</td><td><a href="/student/counter/{{counter.name}}" target="_blank">{{counter.hit}}</a></td><td><a href="/student/lesson{% if counter.name|length == 1 %}s{% endif%}/{{counter.name}}" target="_blank">{{counter.name}}</td></Tr>
+{% endfor %}
+</table>
+{% endblock %}
