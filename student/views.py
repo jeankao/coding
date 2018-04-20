@@ -47,27 +47,28 @@ def statics_lesson(request, lesson):
 			daycounter.hit = daycounter.hit + 1
 		daycounter.save()		
 		log = LogCounter(counter_id=counter.id, counter_ip=request.META['REMOTE_ADDR'])
-		log.save()			
+		log.save()
+		return counter.hit
 
 
 # 各種課程    
 def lessons(request, subject_id):
-    statics_lesson(request, subject_id)
-    return render_to_response('student/lessons.html', {'subject_id': subject_id}, context_instance=RequestContext(request))
+    hit = statics_lesson(request, subject_id)
+    return render_to_response('student/lessons.html', {'subject_id': subject_id, 'counter': hit}, context_instance=RequestContext(request))
 
 # 課程內容
 def lesson(request, lesson):  
     work_dict = {}	
     work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
-    statics_lesson(request, lesson)
+    hit = statics_lesson(request, lesson)
     if lesson[0] == "A":
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "B":
-        return render_to_response('student/lessonB.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonB.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
-        return render_to_response('student/lessonC.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))			
+        return render_to_response('student/lessonC.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
     else:
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict}, context_instance=RequestContext(request))			
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
