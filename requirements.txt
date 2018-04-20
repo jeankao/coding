@@ -1,0 +1,11 @@
+Django==1.9.2
+dj-database-url==0.3.0
+dj-static==0.0.6
+static3==0.6.1
+gunicorn==19.3.0
+path.py==8.1.2
+ptyprocess==0.5
+static3==0.6.1
+psycopg2==2.6.1
+XlsxWriter==0.7.3
+python-docx == 0.8.6
