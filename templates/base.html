@@ -67,6 +67,9 @@ jQuery(function () {
 						{% if request.user|has_group:"teacher" %}
 			<li><a href="/teacher/classroom"><img src="/static/images/icon_teacher.png"> 教師</a></li>
 					 {% endif %}           
+ 					{% if user.is_superuser %}
+			<li><a href="/account/admin"><img src="/static/images/icon_admin.png"> 管理</a></li>
+		      {% endif %}			
       {% else %}
         <li><a href="/account/author"><img src="/static/images/icon_teacher.png"> 作者</a>               					
       {% endif %}
@@ -108,12 +111,7 @@ jQuery(function () {
 <!-- ####################################################################################################### -->
 <div class="wrapper">
   <div id="copyright">
-		<p class="fl_left">Copyright &copy; All Rights Reserved - 
-			<a href="/account/visitor"><img src="/static/images/icon_visitor.png"> 訪客</a>  
-   {% if user.is_superuser %}
-			<a href="/account/admin"><img src="/static/images/icon_admin.png"> 管理</a>
-		{% endif %}
-		</p>
+		<p class="fl_left">Copyright &copy; All Rights Reserved </p>
     <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a>
 		Designed by <a href='http://www.freepik.com'>Freepik</a></p>
 		</p>

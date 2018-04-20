@@ -121,8 +121,8 @@
       <ul>
         <li><a href="#">使用者登入次數：{{admin_profile.visitor_count}}次</a></li>
         <li><a href="#">訪客人次：{{admin_profile.home_count}}次</a></li>
-        <li><a href="#">教師人數：{{classroom_count}}人</a></li>   
-        <li><a href="#">學生人數：{{classroom_count}}人</a></li>         
+        <li><a href="#">教師人數：{{teacher}}人</a></li>   
+        <li><a href="#">學生人數：{{student}}人</a></li>         
         <li><a href="#">開課班次：{{classroom_count}}班</a></li>
         <li><a href="#">註冊使用者：{{user_count}}人</a></li>
         <li><a href="#">資料庫記錄：共{{row_count}}筆</a></li>
@@ -192,5 +192,5 @@ function showSlides(n) {
   slides[slideIndex-1].style.display = "block";  
   dots[slideIndex-1].className += " active";
 }
-</script>
+</script>    
 {% endblock %}

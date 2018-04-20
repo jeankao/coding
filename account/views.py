@@ -46,7 +46,11 @@ def homepage(request):
     except ObjectDoesNotExist:
         admin_profile = ""
     classroom_count = Classroom.objects.all().count()
-    return render_to_response('homepage.html', {'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
+		
+    teacher = User.objects.filter(groups__name='teacher').count()
+    student = Enroll.objects.values('student_id').distinct().count()
+		
+    return render_to_response('homepage.html', {'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
   
 # 網站大廳
 def dashboard(request):
