@@ -79,7 +79,7 @@ jQuery(function () {
         <li><a href="/account/avatar"><img src="/static/avatar/s0.png"></a>{{ request.user.first_name }}　</li>
         <li><a href="/account/logout" class="btn">登出</a></li>              
       {% else %}
-        <li><a href="/account/register_school" class="btn">註冊新學校</a></li>
+      <li><a href="/account/register_school" class="btn">註冊新學校</a></li>
       <li><a href="/account/register" class="btn">註冊新帳號</a></li>
       <li><a href="/account/login/0/" class="btn">登入</a></li>
       <li><a href="/account/login/1/" class="btn">學生登入</a></li>				
@@ -104,7 +104,10 @@ jQuery(function () {
       <div class="clear"></div>
     </div>
   </div>
-</div>
+</div>  
+{% block footer %}
+ 
+{% endblock %}  
 
 <!-- ####################################################################################################### -->
 <div class="wrapper">

@@ -162,6 +162,22 @@
   <span class="dot" onclick="currentSlide(3)"></span>   
 </div>  
 {% endblock %}
+{% block footer %}
+<!------------------------------------------->
+<div class="wrapper">
+  <div class="container">
+    <div class="whitebox">
+      <div class="content">        
+        <h1>在 Joy of Code 上學習</h1>
+        {{student}} 個學生在這兒撰寫了 {{work}} 個程式。
+  <img src="/static/images/work.png">
+
+       </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>     
+{% endblock %}
   
 {% block footer_script %}
 <script>

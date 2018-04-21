@@ -8,6 +8,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
 from zone import *
 from account.models import County, Zone, School, Profile, PointHistory, Message, MessagePoll, Visitor, VisitorLog, LessonCounter
+from student.models import Work
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.timezone import localtime
@@ -49,8 +50,9 @@ def homepage(request):
 		
     teacher = User.objects.filter(groups__name='teacher').count()
     student = Enroll.objects.values('student_id').distinct().count()
+    work = Work.objects.all().count()
 		
-    return render_to_response('homepage.html', {'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
+    return render_to_response('homepage.html', {'work':work, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
   
 # 網站大廳
 def dashboard(request):
