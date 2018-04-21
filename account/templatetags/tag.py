@@ -66,16 +66,12 @@ def realname(user_id):
         return ""      
       
 @register.filter(takes_context=True)
-def school(user_id):
+def school(school_id):
     try: 
-        user = User.objects.get(id=user_id)
-        try: 
-            school_name = School.objects.get(id=user.last_name).name
-        except ObjectDoesNotExist:
-            school_name = ""
-        return school_name
-    except ObjectDoesNotExist:        
-        return ""        
+        school_name = School.objects.get(id=school_id).name
+    except ObjectDoesNotExist:
+        school_name = ""
+    return school_name
       
 @register.filter(name='has_group') 
 def has_group(user, group_name):

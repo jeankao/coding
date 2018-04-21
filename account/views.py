@@ -180,7 +180,7 @@ def register(request):
                        
                         profile = Profile(user=new_user)
                         profile.save()
-                        
+						
                         # create Message
                         title = "申請成為教師以進行開班授課"
                         url = "/account/teacher/apply"
@@ -189,8 +189,8 @@ def register(request):
                     
                         # message for member
                         messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
-                        messagepoll.save() 	                        
-
+                        messagepoll.save() 	      						
+									
                         return render_to_response('registration/register_done.html',{'new_user': new_user}, context_instance=RequestContext(request))
         else:
                 form = RegistrationForm()
@@ -217,8 +217,8 @@ def register_school(request):
         if request.method == 'POST':
                 form = RegistrationSchoolForm(request.POST)    
                 if form.is_valid():
-                    form.save()
-                    return redirect("/account/register")
+                    school = form.save()
+                    return redirect("/account/register?school="+str(school.county)+"/"+str(school.zone)+"/"+str(school.id))
         else:
                 form = RegistrationSchoolForm()
         school_pool = School.objects.filter(online=True)

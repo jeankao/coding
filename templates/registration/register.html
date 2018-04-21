@@ -52,11 +52,10 @@
         schools.options[ i ] = new Option( school_name[ master.selectedIndex ][ detail.selectedIndex ][ i ],    
                                           school_id[ master.selectedIndex ][ detail.selectedIndex ][ i ] );    
       }
-    }     
+    }
 </script>
 {% endblock %}
 {% block content %}
-<body onload="loadMaster( document.getElementById( 'county' ), document.getElementById( 'zone' ) , document.getElementById( 'schools' ) );">
   <h1>註冊新帳號</h1>
   <p>請填寫以下資料：</p>
   <form action="." method="post">
@@ -74,7 +73,19 @@
 <p><label for="id_password">密碼：</label> <input id="id_password" name="password" type="password" /></p>
 <p><label for="id_password2">再次確認密碼：</label> <input id="id_password2" name="password2" type="password" /></p>
             {% csrf_token %}    
-        <p><input type="submit" value="建立帳號"></p>
+        <p><input class="btn-info" type="submit" value="建立帳號"></p>
   </form>
   </form>
+{% endblock %}
+
+{% block domready %}
+  loadMaster( document.getElementById( 'county' ), document.getElementById( 'zone' ) , document.getElementById( 'schools' ) );
+  school = location.href.match(/\?school=(\d+)\/(\d+)\/(\d+)/);
+  if (school && school.length == 4) {
+    $('#county').val(school[1]);
+    doNewMaster( document.getElementById( 'county' ), document.getElementById( 'zone' ) , document.getElementById( 'schools' ) );
+    $('#zone').val(school[2]);
+    doNewDetail( document.getElementById( 'county' ), document.getElementById( 'zone' ) , document.getElementById( 'schools' ) );
+    $('#schools').val(school[3]);
+  }
 {% endblock %}
