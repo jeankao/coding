@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django import forms
 from django.contrib.auth.models import User
-from account.models import School, Message, MessagePoll
+from account.models import School, Message, MessagePoll, TeacherApply
 
 # 使用者登入表單
 class LoginForm(forms.Form):
@@ -139,3 +139,14 @@ class LoginStudentForm(forms.Form):
         self.fields['teacher'].label = "教師帳號"        
         self.fields['username'].label = "學生帳號"
         self.fields['password'].label = "密碼"    
+        
+# 教師申請表單
+class TeacherApplyForm(forms.ModelForm):
+    class Meta:
+        model = TeacherApply
+        fields = ['memo', 'file']
+            
+    def __init__(self, *args, **kwargs):
+        super(TeacherApplyForm, self).__init__(*args, **kwargs)
+        self.fields['memo'].label = "申請原因"  
+        self.fields['file'].label = "證明文件"        

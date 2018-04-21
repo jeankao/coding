@@ -118,3 +118,10 @@ class LogCounter(models.Model):
 	counter_id = models.IntegerField(default=0)
 	counter_date = models.DateTimeField(default=timezone.now)
 	counter_ip = models.CharField(max_length=20)
+  
+#教師申請
+class TeacherApply(models.Model):
+  user_id = models.IntegerField(default=0)
+  approver = models.IntegerField(default=0)
+  memo = models.TextField()
+  file =  models.FileField()

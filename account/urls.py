@@ -51,6 +51,7 @@ urlpatterns = [
     url(r'^admin/school/(?P<pk>\d+)/$', login_required(views.SchoolUpdateView.as_view())),    
     #設定教師
     url(r'^teacher/make/$', login_required(views.make)), 
+    url(r'^teacher/apply/$', login_required(views.teacher_apply)),   
     # 列所出有圖像
     url(r'^avatar/$', views.avatar),  
 ]

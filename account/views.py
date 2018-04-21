@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm
+from forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm, TeacherApplyForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView
@@ -180,7 +180,17 @@ def register(request):
                        
                         profile = Profile(user=new_user)
                         profile.save()
-									
+                        
+                        # create Message
+                        title = "申請成為教師以進行開班授課"
+                        url = "/account/teacher/apply"
+                        message = Message(title=title, url=url, time=timezone.now())
+                        message.save()                        
+                    
+                        # message for member
+                        messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
+                        messagepoll.save() 	                        
+
                         return render_to_response('registration/register_done.html',{'new_user': new_user}, context_instance=RequestContext(request))
         else:
                 form = RegistrationForm()
@@ -229,6 +239,16 @@ def register_school(request):
             index = index + 1
         return render_to_response('registration/register_school.html', {'form': form, 'district':district}, context_instance=RequestContext(request))
   
+# 申請教師
+def teacher_apply(request):      
+        if request.method == 'POST':
+                form = TeacherApplyForm(request.POST)    
+                if form.is_valid():
+                    form.save()
+                    return redirect("/account/register")
+        else:
+                form = TeacherApplyForm()
+        return render_to_response('account/teacher_apply.html', {'form': form}, context_instance=RequestContext(request))
 
 # 超級管理員可以查看所有帳號
 class UserListView(ListView):
