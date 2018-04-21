@@ -169,9 +169,17 @@
     <div class="whitebox">
       <div class="content">        
         <h1>在 Joy of Code 上學習</h1>
-        {{student}} 個學生在這兒撰寫了 {{work}} 個程式。
+        {{student}} 個學生在這兒撰寫了 {{works.0}} 個程式。
   <img src="/static/images/work.png">
-
+<div>
+{{works.1.0}}  班次共 {{works.1.1}} 個作業
+</div>
+<div>
+{{works.2.0}}  班次共 {{works.2.1}} 個作業
+</div>
+<div>
+{{works.3.0}}  班次共 {{works.3.1}} 個作業
+</div>        
        </div>
       <div class="clear"></div>
     </div>

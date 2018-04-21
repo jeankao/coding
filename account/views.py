@@ -51,8 +51,15 @@ def homepage(request):
     teacher = User.objects.filter(groups__name='teacher').count()
     student = Enroll.objects.values('student_id').distinct().count()
     work = Work.objects.all().count()
-		
-    return render_to_response('homepage.html', {'work':work, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
+    class_scratch = Classroom.objects.filter(lesson=1).count()
+    class_vphysics =  Classroom.objects.filter(lesson=2).count()
+    class_euler =  Classroom.objects.filter(lesson=3).count()
+    work_scratch = Work.objects.filter(lesson_id=1).count()
+    work_vphysics = Work.objects.filter(lesson_id=2).count()
+    work_euler = Work.objects.filter(lesson_id=3).count()
+    works = [work, [class_scratch, work_scratch], [class_vphysics, work_vphysics], [class_euler, work_euler]]
+            
+    return render_to_response('homepage.html', {'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
   
 # 網站大廳
 def dashboard(request):
