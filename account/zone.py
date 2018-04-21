@@ -2,7 +2,22 @@
 county = []
 
 def reset():
-    zone = []
+    zone = []    
+    zone.append('板橋區')
+    zone.append('三重區')
+    zone.append('中和區')
+    zone.append('永和區')
+    zone.append('新莊區')
+    zone.append('新店區')
+    zone.append('樹林區')
+    zone.append('鶯歌區')
+    zone.append('三峽區')
+    zone.append('淡水區')
+    zone.append('汐止區')
+    zone.append('瑞芳區')
+    zone.append('土城區')
+    zone.append('蘆洲區')
+    zone.append('五股區')
     zone.append('泰山區')
     zone.append('林口區')
     zone.append('深坑區')
@@ -16,7 +31,7 @@ def reset():
     zone.append('貢寮區')
     zone.append('金山區')
     zone.append('萬里區')
-    zone.append('烏來區')    
+    zone.append('烏來區')
     county.append(['新北市', zone,470,100])
     
     zone = []
