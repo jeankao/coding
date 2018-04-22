@@ -51,7 +51,7 @@ ul.nav1 li li li:hover ul, ul.nav1 li li li.sfHover ul{left:10em; top:0;}
 /* arrows */
 
 .nav1 li a{padding:.5em .5em; text-align:left; margin:5px;}
-.nav1 a.sf-with-ul{background:url("images/nav_arrows.png") no-repeat 5px 16px;}
+.nav1 a.sf-with-ul{background:transparent no-repeat -20px 16px;}
 
 /* ----------------------------------------------Column Navigation------------------------------------- */
 
