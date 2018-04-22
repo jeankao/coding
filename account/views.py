@@ -81,8 +81,6 @@ def statics_zone(request):
 def statics_lesson(request):
 		counters = LessonCounter.objects.all().order_by("-hit")		
 		return render_to_response('account/statics_lesson.html', {'counters':counters}, context_instance=RequestContext(request))
- 	
-	
 	
 # 管理介面 
 def admin(request):
