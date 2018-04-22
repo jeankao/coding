@@ -37,10 +37,29 @@ jQuery(function () {
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="/static/layout/styles/layout.css" type="text/css" />
 <!-- / Superfish Menu -->
+<style>
+.scrollToTop{
+	width:80px; 
+	height:80px;
+	padding:1px; 
+	text-align:left; 
+	color: #333;
+	text-decoration: none;
+	position:fixed;
+	bottom:0px;
+	right:10px;
+	display:none;
+	background: url('/static/images/up.png') no-repeat 5px 25px;
+}
+.scrollToTop:hover{
+	text-decoration:none;
+}	
+</style>
 {% block header %}
 {% endblock %}	
 </head>
 <body id="top">
+<a href="#" class="scrollToTop">回上方</a>  
 <div class="wrapper topnav">
   <div id="topnav">
     <div class="fl_left">
