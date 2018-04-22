@@ -419,7 +419,7 @@ def reset():
 	
     zone = []
     zone.append('東　區')
-    zone.append('市西　區')	
+    zone.append('西　區')	
     county.append(['嘉義市', zone,200,410])
 	
     zone = []
