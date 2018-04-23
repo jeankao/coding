@@ -432,20 +432,16 @@ def rank(request, lesson, index):
 	
 # 查詢某作業所有同學心得
 def memo(request, lesson, classroom_id, index):
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+    student_ids = map(lambda a: a.student_id, enroll_pool)
+    work_pool = Work.objects.filter(lesson_id=lesson, user_id__in=student_ids, index=index)
     datas = []
-    for enroll in enrolls:
-        try:
-            work = Work.objects.get(lesson_id=lesson, index=index, user_id=enroll.student_id)
-            datas.append([enroll, work.memo])
-        except ObjectDoesNotExist:
-            datas.append([enroll, ""])
-        except MultipleObjectsReturned:
-            work = Work.objects.filter(lesson_id=lesson, index=index, user_id=enroll.student_id).last()
-            datas.append([enroll, work.memo])
-    def getKey(custom):
-        return custom[0].seat
-    datas = sorted(datas, key=getKey)	
+    for enroll in enroll_pool:
+        works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+        if works :
+            datas.append([enroll, works[0].memo])
+        else:
+            datas.append([enroll, ""])                
     
     return render_to_response('student/memo.html', {'datas': datas}, context_instance=RequestContext(request))
     
