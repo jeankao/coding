@@ -444,7 +444,7 @@ def memo(request, lesson, classroom_id, index):
             work = Work.objects.filter(lesson_id=lesson, index=index, user_id=enroll.student_id).last()
             datas.append([enroll, work.memo])
     def getKey(custom):
-        return custom[0]
+        return custom[0].seat
     datas = sorted(datas, key=getKey)	
     
     return render_to_response('student/memo.html', {'datas': datas}, context_instance=RequestContext(request))
