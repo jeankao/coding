@@ -405,7 +405,11 @@ def adminschool(request):
                     district[index][1][index2][1].append(school)
                 index2 = index2 + 1
             index = index + 1
-    return render_to_response('account/school.html',{'form': form, 'district':district }, context_instance=RequestContext(request))
+        try :
+            school = School.objects.get(id=user.last_name)
+        except ObjectDoesNotExist:
+            school = School.objects.get(id=1)
+    return render_to_response('account/school.html',{'form': form, 'district':district, 'school':school }, context_instance=RequestContext(request))
     
 # 修改信箱
 def adminemail(request):

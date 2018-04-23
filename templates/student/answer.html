@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load tz %}
+{% block title %} Teachers {% endblock %}
+{% block content %}
+{% if answer or work.scorer > 0 %}
+<img src="/static/lesson/vphysics/answer/{{index}}.png">
+{% else %}
+觀看解答後繳交作業會少得2分積分，您確定要看解答嗎?<BR>
+<a href="/student/work/answer_watch/{{lesson}}/{{index}}" role="button" class="btn">我要看解答</a>
+{% endif %}
+
+{% endblock %}

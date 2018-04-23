@@ -61,17 +61,21 @@ def lesson(request, lesson):
     work_dict = {}	
     hit = statics_lesson(request, lesson)
     if lesson[0] == "A":
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        lesson_id = 1
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "B":
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=2, user_id=request.user.id)))	
-        return render_to_response('student/lessonB.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        lesson_id = 2     
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=3, user_id=request.user.id)))	
-        return render_to_response('student/lessonC.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
+        lesson_id = 3      
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
     else:
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=1, user_id=request.user.id)))	
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
+        lesson_id = 4
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -549,3 +553,23 @@ def work_group(request, lesson, index, classroom_id):
         assignment = lesson_dict[int(index)]	     
         return render_to_response('student/work_group.html', {'lesson':lesson, 'assignment':assignment, 'student_groups':student_groups, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
 
+# 解答
+def answer(request, lesson, index):
+    answers = Answer.objects.filter(lesson_id=lesson, index=index, student_id=request.user.id)
+    if len(answers) > 0:
+        answer = True
+    else:
+        answer = False
+    try:
+        work = Work.objects.get(lesson_id=lesson, index=index, user_id=request.user.id)
+    except ObjectDoesNotExist:
+        work = Work(lesson_id=lesson, index=index, user_id=request.user.id)
+    except MultipleObjectsReturned:
+        work = Work.objects.filter(lesson_id=lesson, index=index, user_id=request.user.id).last()
+    return render_to_response('student/answer.html', {'lesson':lesson, 'index':index, 'answer':answer, 'work':work}, context_instance=RequestContext(request))
+	
+# 解答
+def answer_watch(request, lesson, index):
+    answer = Answer(lesson_id=lesson, index=index, student_id=request.user.id)
+    answer.save()
+    return redirect("/student/work/answer/"+lesson+"/"+index)	

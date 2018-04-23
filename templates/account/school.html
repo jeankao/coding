@@ -30,18 +30,20 @@
         master.options[ i ] = new Option( county[i][1], county[i][0] );  
         // Option( text , value );    
       }    
-      master.selectedIndex = 0;    
+      master.selectedIndex = {{school.county}}-1;    
       doNewMaster( master, detail, school );    
       doNewDetail( master, detail, school );
     }    
     // 當 master 選單異動時，變更 detail 選單內容    
     function doNewMaster( master, detail, school) {    
       detail.options.length = zone[ master.selectedIndex ].length;    
+   
       for( i = 0; i < zone[ master.selectedIndex ].length; i++ ) 
       {    
         detail.options[ i ] = new Option( zone[ master.selectedIndex ][ i ][1],    
                                           zone[ master.selectedIndex ][ i ][0] );    
       }
+      detail.selectedIndex = {{school.zone}}-1;         
       doNewDetail( master, detail, school );      
     }   
     // 當 detail 選單異動時，變更 school 內容    
@@ -52,6 +54,7 @@
         schools.options[ i ] = new Option( school_name[ master.selectedIndex ][ detail.selectedIndex ][ i ],    
                                           school_id[ master.selectedIndex ][ detail.selectedIndex ][ i ] );    
       }
+      schools.selectedIndex = {{school.id}}-1;        
     }     
 </script>
 {% endblock %}
@@ -63,7 +66,7 @@
    </select>    
    <select class="form-control" name="zone" id="zone" onChange="doNewDetail( document.getElementById( 'county' ),document.getElementById( 'zone' ), document.getElementById( 'schools' ));">    
    </select> 
-    <select class="form-control" name="last_name" id="schools"><option value=0>請選擇</option>
+    <select class="form-control" name="last_name" id="schools">
     </select>    
     </p>
                 {% csrf_token %}   

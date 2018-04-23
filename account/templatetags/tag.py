@@ -128,6 +128,13 @@ def hash_scorer(h, key):
       return 0
     
 @register.filter
+def hash_workid(h, key):
+    if key in h:
+      return h[key][0].id
+    else:
+      return 0    
+    
+@register.filter
 def hash_file(h, key):
     if key in h:
       if len(h[key][1])>0:

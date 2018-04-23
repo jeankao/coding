@@ -51,9 +51,15 @@
 	}
 </script>
 {% endblock %}
-            <br>
-            <form name="myForm" id="form{{index}}" action="/student/work/submit/2/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
-                            <input type="hidden" name="lesson" value={{lesson}}>
+   <br>
+  {% if work_dict|hash_scorer:index > 0 %}
+  <button class="btn">
+    分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index|realname}}
+</button>
+<BR><BR>
+  {% endif %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/2/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+<input type="hidden" name="lesson" value={{lesson}}>
 <div class="form-group">
     <label for="exampleFormControlTextarea1">心得感想：</label>
     <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
@@ -76,29 +82,33 @@
   </div>
 <div class="form-group">
     <label for="exampleFormControlTextarea1">執行結果：：</label>
+  {% if work_dict|hash_scorer:index == 0 %}
    <div id="edit-box{{index}}" class="form-control target" contenteditable="true">請在此貼上螢幕擷圖...</div>
    <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" /><BR> 
-  </div>                 
+  </BR>
 <div class="form-group">           
         <input id="submit" type="submit" class="btn-info" value="送出" />
-</div>
+</div> 
+             
+  {% else %}
+  <div>
+     <div id="edit-box{{index}}"></div>
+    <img width=880 src="/static/work/{% if lesson == '2' %}vphysics{% else %}vphysics{% endif %}/{{request.user.id}}/{{index}}/{{work_dict|hash_workid:index}}.jpg">
+  </div>
+  {% endif %}
+  </div>
             </form>
         <br>
-
-{% load tag %}
+  
         <table class="table">
         <tr>
-          {% if work_dict|hash_score:index < 0  %}
+          {% if work_dict|hash_date:index %}
           <td>
-            <a href="/student/work/submit/2/{{index}}">繳交</a>
-          </td>
-          {% endif %} {% if work_dict|hash_date:index %}
-          <td>
-            <a href="/student/work/show/2/{{index}}">觀看({{work_dict|hash_date:index}})</a>
+            <a href="/student/work/show/{{lesson_id}}/{{index}}">觀看({{work_dict|hash_date:index}})</a>
           </td>
           {% endif %}
           <td>
-            <a href="/student/work/answer/2/{{index}}">解答</a>
+            <a href="/student/work/answer/{{lesson_id}}/{{index}}">解答</a>
           </td>
         </tr>
       </table>
