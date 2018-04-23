@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from account.models import School, Message, MessagePoll, TeacherApply
+from nocaptcha_recaptcha.fields import NoReCaptchaField
 
 # 使用者登入表單
 class LoginForm(forms.Form):
@@ -15,6 +16,8 @@ class LoginForm(forms.Form):
                 
 # 學校表單
 class RegistrationSchoolForm(forms.ModelForm):
+        captcha = NoReCaptchaField()
+
         class Meta:
                 model = School
                 fields = ('county', 'zone', 'system', 'name')
@@ -24,7 +27,8 @@ class RegistrationSchoolForm(forms.ModelForm):
                 self.fields['county'].label = "縣市"            
                 self.fields['zone'].label = "區域"
                 self.fields['system'].label = "學制"     
-                self.fields['name'].label = "學校名稱"                     
+                self.fields['name'].label = "學校名稱"
+                #self.fields['captcha'].label = "Captcha"
 
 class RegistrationForm(forms.ModelForm):
         error_messages = {
@@ -37,9 +41,9 @@ class RegistrationForm(forms.ModelForm):
                         'invalid': ("帳號名稱無效")
                 }
         )
-
         password = forms.CharField(label='Password',widget=forms.PasswordInput)
         password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+        captcha = NoReCaptchaField()
 
         class Meta:
                 model = User

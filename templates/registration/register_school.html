@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block header %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>    
     // 通常，當資料選項的變動性不大時，都會直接寫成 .js 檔含入即可。    
     var county = new Array();          
@@ -71,8 +72,9 @@
    </select>
       </p>
 <p><label for="id_name">學校名稱：</label> <input class="form-control" id="id_name" maxlength="50" name="name" type="text" /></p><input type='hidden' name='csrfmiddlewaretoken' value='ijNhpy7KEuPr639O6zzhEUgpPA5EQ5Te' />
+    {{ form.captcha }}
     <input class="form-control btn-info" type="submit" value="送出" />
-     {% csrf_token %}  
+     {% csrf_token %}
     </form>
   <BR>
         <div id="comments">

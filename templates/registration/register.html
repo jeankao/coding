@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block header %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>    
     // 通常，當資料選項的變動性不大時，都會直接寫成 .js 檔含入即可。    
     var county = new Array();          
@@ -72,6 +73,7 @@
 <p><label for="id_email">電子郵件：</label> <input id="id_email" maxlength="254" name="email" type="email" /></p>
 <p><label for="id_password">密碼：</label> <input id="id_password" name="password" type="password" /></p>
 <p><label for="id_password2">再次確認密碼：</label> <input id="id_password2" name="password2" type="password" /></p>
+    <p>{{ form.captcha }}</p>
             {% csrf_token %}    
         <p><input class="btn-info" type="submit" value="建立帳號"></p>
   </form>

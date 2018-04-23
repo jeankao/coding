@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 """
 Django settings for coding project.
 
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'teacher',
     'student',
     'certificate',
+    'nocaptcha_recaptcha',  
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -136,3 +138,14 @@ FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# 先去 Google 申請 API Key 
+# https://www.google.com/recaptcha/admin
+# 再將 SITE_KEY 與 SECRET_KEY 置換下方內容
+NORECAPTCHA_SITE_KEY = "6LcNEVUUAAAAAFQxZbZzVUCW34nLOAhqwZ1dVfZi"
+NORECAPTCHA_SECRET_KEY = "6LcNEVUUAAAAAH0hzwBAPXlwDztbu9wehdSL0cLr"
