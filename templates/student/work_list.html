@@ -9,10 +9,10 @@
         {% for lesson in lessons %}
 				<tr>
 								<td>{{forloop.counter}}){% if classroom.lesson == 1%}{{lesson.0.2}}{% else %}{{lesson.0.1}}{% endif %}</td>
-				  <td>{% if not work.score %}<a href="/student/work/submit/{{classroom.lesson}}/{{forloop.counter|add:-1}}">繳交</a>{% endif %}</td>
-				  <td><a href="/student/work/show/{{classroom.lesson}}/{{forloop.counter|add:-1}}">觀看({{work.date}}){{work.score}}</a></td>							
-								<td><a href="/student/work/rank/{{classroom.lesson}}/{{forloop.counter|add:-1}}">排行榜</a></td>  
-								<td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom_id}}/{{forloop.counter|add:-1}}">心得</a></td>
+				  <td>{% if not work.score %}<a href="/student/work/submit/{{classroom.lesson}}/{{forloop.counter}}">繳交</a>{% endif %}</td>
+				  <td><a href="/student/work/show/{{classroom.lesson}}/{{forloop.counter}}">觀看({{work.date}}){{work.score}}</a></td>							
+								<td><a href="/student/work/rank/{{classroom.lesson}}/{{forloop.counter}}">排行榜</a></td>  
+								<td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>
 				</tr>				
           {% endfor %}		
         </table>

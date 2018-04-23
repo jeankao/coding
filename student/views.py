@@ -437,12 +437,12 @@ def memo(request, lesson, classroom_id, index):
     for enroll in enrolls:
         try:
             work = Work.objects.get(lesson_id=lesson, index=index, user_id=enroll.student_id)
-            datas.append([enroll.seat, enroll.student.first_name, work.memo])
+            datas.append([enroll, work.memo])
         except ObjectDoesNotExist:
-            datas.append([enroll.seat, enroll.student.first_name, ""])
+            datas.append([enroll, ""])
         except MultipleObjectsReturned:
             work = Work.objects.filter(lesson_id=lesson, index=index, user_id=enroll.student_id).last()
-            datas.append([enroll.seat, enroll.student.first_name, work.memo])
+            datas.append([enroll, work.memo])
     def getKey(custom):
         return custom[0]
     datas = sorted(datas, key=getKey)	

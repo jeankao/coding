@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load tz %}
+{% block content %}
+        <table class="table">
+        <tr>
+            <td>座號</td>        
+            <td>姓名</td>
+            <td>心得</td>
+        </tr>
+        {% for data in datas %}
+            <tr>
+            <td>{{data.0.seat}}</td>
+            <td nowrap><a href="/student/memo_user/{{data.0.student_id}}">{{data.0.student.first_name}}</a></td>
+            <td>{{data.1}}</td>            
+            </tr>
+        {% endfor %}
+        </table>
+
+{% endblock %}

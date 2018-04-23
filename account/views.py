@@ -111,9 +111,12 @@ def user_login(request, role):
                                 for zone_name in zones:
                                     zone = Zone(name=zone_name, county=city.id)
                                     zone.save()
+                            school = School(county=1, zone=9, system=3, name="南港高中")
+                            school.save()
+                            user.last_name = "1"
+                            user.save()
                         if user.first_name == "":
-                            user.first_name = "管理員"
-                            user.last_name = "0"
+                            user.first_name = "管理員"                            
                             user.save()
                             try :
                                 group = Group.objects.get(name="apply")	

@@ -1,7 +1,22 @@
 # -*- coding: UTF-8 -*-
 county = []
 
-def reset():
+def reset():  
+    zone = []
+    zone.append('松山區')
+    zone.append('信義區')
+    zone.append('大安區')
+    zone.append('中山區')
+    zone.append('中正區')
+    zone.append('大同區')
+    zone.append('萬華區')
+    zone.append('文山區')
+    zone.append('南港區')
+    zone.append('內湖區')
+    zone.append('士林區')
+    zone.append('北投區')    
+    county.append(['臺北市', zone,470,70])
+    
     zone = []    
     zone.append('板橋區')
     zone.append('三重區')
@@ -34,20 +49,6 @@ def reset():
     zone.append('烏來區')
     county.append(['新北市', zone,470,100])
     
-    zone = []
-    zone.append('松山區')
-    zone.append('信義區')
-    zone.append('大安區')
-    zone.append('中山區')
-    zone.append('中正區')
-    zone.append('大同區')
-    zone.append('萬華區')
-    zone.append('文山區')
-    zone.append('南港區')
-    zone.append('內湖區')
-    zone.append('士林區')
-    zone.append('北投區')    
-    county.append(['臺北市', zone,470,70])
     
     zone = []
     zone.append('桃園區')
