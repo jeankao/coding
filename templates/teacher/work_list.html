@@ -8,8 +8,8 @@
 		{% for work in works %}
             <tr>
             <td>{{forloop.counter}}){{work.1}} / {{work.2}}</td>			
-            <td><a href="/teacher/work/class/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">評分</a></td>
-            <td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>			
+            <td><a href="/teacher/work/class/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}" target="_blank">評分</a></td>
+            <td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}" target="_blank">心得</a></td>			
             </tr>
 		{% endfor %}
         </table>
@@ -21,8 +21,8 @@
 		{% for work in works %}
             <tr>
             <td>{{forloop.counter}}){{work.1}}</td>			
-            <td><a href="/teacher/work/class/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">評分</a></td>
-            <td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>			
+            <td><a href="/teacher/work/class/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}" target="_blank">評分</a></td>
+            <td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}" target="_blank">心得</a></td>			
             </tr>
 		{% endfor %}
         </table>		
