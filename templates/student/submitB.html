@@ -93,7 +93,7 @@
   {% else %}
   <div>
      <div id="edit-box{{index}}"></div>
-    <img width=880 src="/static/work/{% if lesson == '2' %}vphysics{% else %}vphysics{% endif %}/{{request.user.id}}/{{index}}/{{work_dict|hash_workid:index}}.jpg">
+    <img width=880 src="/static/work/{% if lesson_id == '2' %}vphysics{% else %}vphysics{% endif %}/{{request.user.id}}/{{index}}/{{work_dict|hash_workid:index}}.jpg">
   </div>
   {% endif %}
   </div>
@@ -107,8 +107,10 @@
             <a href="/student/work/show/{{lesson_id}}/{{index}}">觀看({{work_dict|hash_date:index}})</a>
           </td>
           {% endif %}
+          {% if lesson_id == "2" %}
           <td>
             <a href="/student/work/answer/{{lesson_id}}/{{index}}">解答</a>
           </td>
+          {% endif %}
         </tr>
       </table>
