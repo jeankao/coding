@@ -93,7 +93,7 @@
   {% else %}
   <div>
      <div id="edit-box{{index}}"></div>
-    <img width=880 src="/static/work/{% if lesson_id == '2' %}vphysics{% else %}vphysics{% endif %}/{{request.user.id}}/{{index}}/{{work_dict|hash_workid:index}}.jpg">
+    <img width=880 src="/static/work/{% if lesson_id == 2 %}vphysics{% else %}euler{% endif %}/{{request.user.id}}/{{index}}/{{work_dict|hash_workid:index}}.jpg">
   </div>
   {% endif %}
   </div>
