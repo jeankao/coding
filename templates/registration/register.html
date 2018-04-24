@@ -31,7 +31,7 @@
         master.options[ i ] = new Option( county[i][1], county[i][0] );  
         // Option( text , value );    
       }    
-      master.selectedIndex = 0;    
+      master.selectedIndex = {{school.county}} - 1;    
       doNewMaster( master, detail, school );    
       doNewDetail( master, detail, school );
     }    
@@ -43,6 +43,7 @@
         detail.options[ i ] = new Option( zone[ master.selectedIndex ][ i ][1],    
                                           zone[ master.selectedIndex ][ i ][0] );    
       }
+      detail.selectedIndex = {{school.zone}} - 1;         
       doNewDetail( master, detail, school );      
     }   
     // 當 detail 選單異動時，變更 school 內容    
@@ -53,6 +54,7 @@
         schools.options[ i ] = new Option( school_name[ master.selectedIndex ][ detail.selectedIndex ][ i ],    
                                           school_id[ master.selectedIndex ][ detail.selectedIndex ][ i ] );    
       }
+      schools.selectedIndex = {{school.id}} - 1;         
     }
 </script>
 {% endblock %}

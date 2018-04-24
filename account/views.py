@@ -219,8 +219,9 @@ def register(request):
                 for school in schools :
                     district[index][1][index2][1].append(school)
                 index2 = index2 + 1
-            index = index + 1
-        return render_to_response('registration/register.html', {'form': form, 'district':district}, context_instance=RequestContext(request))
+            index = index + 1      
+        school = School.objects.get(id=1)
+        return render_to_response('registration/register.html', {'form': form, 'district':district, 'school':school}, context_instance=RequestContext(request))
 
 # 註冊學校
 def register_school(request):      
