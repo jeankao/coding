@@ -81,15 +81,6 @@ def lesson(request, lesson):
 def is_teacher(user, classroom_id):
     return  user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
 
-# 判斷是否開啟事件記錄
-def is_event_open(request):
-        enrolls = Enroll.objects.filter(student_id=request.user.id)
-        for enroll in enrolls:
-            classroom = Classroom.objects.get(id=enroll.classroom_id)
-            if classroom.event_open:
-                return True
-        return False
-
 # 查看班級學生
 def classmate(request, classroom_id):
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
@@ -219,12 +210,13 @@ def classroom_enroll(request, classroom_id):
                     try:
                         classroom = Classroom.objects.get(id=classroom_id)
                         if classroom.password == form.cleaned_data['password']:
+                            try:
+                                enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id)
+                            except ObjectDoesNotExist:
                                 enroll = Enroll(classroom_id=classroom_id, student_id=request.user.id, seat=form.cleaned_data['seat'])
-                                enroll.save()
-                              
+                            enroll.save()                              
                         else:
-                                return render_to_response('message.html', {'message':"選課密碼錯誤"}, context_instance=RequestContext(request))
-                      
+                            return render_to_response('message.html', {'message':"選課密碼錯誤"}, context_instance=RequestContext(request))
                     except Classroom.DoesNotExist:
                         pass
                     

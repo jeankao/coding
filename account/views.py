@@ -91,7 +91,10 @@ def user_login(request, role):
     message = None
     test = ""
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        if role == "0":
+            form = LoginForm(request.POST)
+        else:
+            form = LoginStudentForm(request.POST)
         if form.is_valid():
             teacher = request.POST['teacher']					
             username = request.POST['username']
