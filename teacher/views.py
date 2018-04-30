@@ -622,8 +622,10 @@ def make(request):
         assistant.save() 
             
         # create Message
+        group = Enroll.objects.get(classroom_id=classroom_id, student_id=assistant.student_id).group
         title = "<" + assistant.student.first_name.encode("utf-8") + u">擔任小老師<".encode("utf-8") + assignment + ">"
-        url = "/student/group/work/" + str(lesson) + "/" + str(index) + "/" + classroom_id 
+        url = "/teacher/score_peer/" + str(lesson) + "/" + index + "/"+ classroom_id + "/" + str(group) 
+
         message = Message(title=title, url=url, time=timezone.now())
         message.save()                        
       else:
@@ -632,10 +634,9 @@ def make(request):
             assistant.delete()     
         except ObjectDoesNotExist:
             pass
-        group = Enroll.objects.get(classroom_id=classroom_id, student_id=assistant.student_id).group
         # create Message
         title = "<" + assistant.student.first_name.encode("utf-8") + u">取消小老師<".encode("utf-8") + assignment + ">"
-        url = "/teacher/score_peer/" + str(lesson) + "/" + classroom_id + "/" + str(group) 
+        url = "/student/group/work/" + lesson + "/" + index + "/" + classroom_id 
         message = Message(title=title, url=url, time=timezone.now())
         message.save()                        
   
