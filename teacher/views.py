@@ -389,8 +389,8 @@ def scoring(request, lesson, classroom_id, user_id, index):
                         assistant.save()	
                         
                     # create Message
-                    title = "<" + assistant.student.first_name.encode("utf-8") + u">擔任小老師<".encode("utf-8") + queryset[int(index)][1] + ">"
-                    url = "/teacher/score_peer/" + lesson + "/" + str(index) + "/" + classroom_id + "/" + str(enroll.group) 
+                    title = "<" + assistant.student.first_name.encode("utf-8") + u">擔任小老師<".encode("utf-8") + queryset[int(index)-1][1] + ">"
+                    url = "/teacher/score_peer/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group) 
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()                        
                     
@@ -599,13 +599,17 @@ def make(request):
   index = request.POST.get('index')		
   if lesson == "1":
       queryset = lesson_list1
+      assignment = queryset[int(index)-1][2]	
   elif lesson == "2":
       queryset = lesson_list2		
+      assignment = queryset[int(index)-1][1]	      
   elif lesson == "3":
       queryset = lesson_list3	
+      assignment = queryset[int(index)-1][1]	      
   else:
       queryset = lesson_list1	
-  assignment = queryset[int(index)-1][2]		
+      assignment = queryset[int(index)-1][2]	
+	
 
   if is_teacher(request.user, classroom_id): 
     if user_id and action and lesson and index:
@@ -619,7 +623,7 @@ def make(request):
             
         # create Message
         title = "<" + assistant.student.first_name.encode("utf-8") + u">擔任小老師<".encode("utf-8") + assignment + ">"
-        url = "/student/group/work/" + str(lesson) + "/" + classroom_id 
+        url = "/student/group/work/" + str(lesson) + "/" + str(index) + "/" + classroom_id 
         message = Message(title=title, url=url, time=timezone.now())
         message.save()                        
       else:
