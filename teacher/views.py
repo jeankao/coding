@@ -443,6 +443,8 @@ def score_peer(request, lesson, index, classroom_id, group):
                     scorer_name = scorer.first_name
             except ObjectDoesNotExist:
                 work = Work(index=index, user_id=enroll.student.id, lesson_id=lesson)        
+            except MultipleObjectsReturned:
+                work = Work.objects.filter(user_id=enroll.student.id, index=index, lesson_id=lesson).order_by("-id")[0]
             classmate_work.append([enroll.student,work,1, scorer_name])
         lessons = queryset[int(index)-1]  
     return render_to_response('teacher/score_peer.html',{'enrolls':enrolls, 'classmate_work': classmate_work, 'classroom_id':classroom_id, 'lesson':lesson, 'index': index}, context_instance=RequestContext(request))
