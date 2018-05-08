@@ -59,7 +59,6 @@
 </button>
 <BR><BR>
   {% endif %}
-{{ work_dict|hash_picture:index }}
 <form name="myForm" id="form{{index}}" action="/student/work/submit/2/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
 <input type="hidden" name="lesson" value={{lesson}}>
 <div class="form-group">
