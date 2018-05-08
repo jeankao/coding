@@ -15,7 +15,8 @@
                         reader.onload = function(evt) {
                             var img = document.createElement('img');
                             img.src = evt.target.result;
-                            $(node).append(img);
+                            //$(node).append(img);
+                            $(node).empty().append(img);
                         };
                         reader.readAsDataURL(file);
                         return found = true;
@@ -58,6 +59,7 @@
 </button>
 <BR><BR>
   {% endif %}
+{{ work_dict|hash_picture:index }}
 <form name="myForm" id="form{{index}}" action="/student/work/submit/2/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
 <input type="hidden" name="lesson" value={{lesson}}>
 <div class="form-group">
@@ -83,7 +85,14 @@
 <div class="form-group">
     <label for="exampleFormControlTextarea1">執行結果：：</label>
   {% if work_dict|hash_scorer:index == 0 %}
-   <div id="edit-box{{index}}" class="form-control target" contenteditable="true">請在此貼上螢幕擷圖...</div>
+   <div id="edit-box{{index}}" class="form-control target" contenteditable="true">
+     {% if work_dict|hash_workid:index %}
+     如果變更擷圖，請刪除原圖後重貼...
+     <img width=880 src="/{{ work_dict|hash_picture:index }}" />
+     {% else %}
+     請在此貼上螢幕擷圖...
+     {% endif %}
+   </div>
    <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" /><BR> 
   </BR>
 <div class="form-group">           
@@ -93,7 +102,7 @@
   {% else %}
   <div>
      <div id="edit-box{{index}}"></div>
-    <img width=880 src="/static/work/{% if lesson_id == 2 %}vphysics{% else %}euler{% endif %}/{{request.user.id}}/{{index}}/{{work_dict|hash_workid:index}}.jpg">
+    <img width=880 src="/{{ work_dict|hash_picture:index }}">
   </div>
   {% endif %}
   </div>

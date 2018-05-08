@@ -385,23 +385,28 @@ def submit(request, lesson, index):
                         history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業', url="/student/work/show/"+lesson+"/"+index)
                         history.save()		
                 except MultipleObjectsReturned:
-                    pass				
+                    pass
                 work = Work(lesson_id=lesson, index=index, user_id=request.user.id)		
-                work.save()					
+                work.save()
                 dataURI = form.cleaned_data['screenshot']
-                head, data = dataURI.split(',', 1)
-                mime, b64 = head.split(';', 1)
-                mtype, fext = mime.split('/', 1)
-                binary_data = a2b_base64(data)
-                directory = "static/work/vphysics/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
-                image_file = "static/work/vphysics/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
-                with open(image_file, 'wb') as fd:
-                    fd.write(binary_data)
-                    fd.close()
+                try:
+                    head, data = dataURI.split(',', 1)
+                    mime, b64 = head.split(';', 1)
+                    mtype, fext = mime.split('/', 1)
+                    binary_data = a2b_base64(data)
+                    directory = "static/work/vphysics/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
+                    image_file = "static/work/vphysics/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)
+                    with open(image_file, 'wb') as fd:
+                        fd.write(binary_data)
+                        fd.close()
+                    work.picture=image_file
+                except ValueError:
+                    path = dataURI.split('/', 3)
+                    work.picture=path[3]
+                    pass
                 work.code=form.cleaned_data['code']
-                work.picture=image_file
                 work.memo=form.cleaned_data['memo']
                 work.helps=form.cleaned_data['helps']
                 work.save()

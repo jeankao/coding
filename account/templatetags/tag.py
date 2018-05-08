@@ -152,7 +152,13 @@ def hash_files(h, key):
       else:
         return None
     else:
-      return None   
+      return None
+
+@register.filter
+def hash_picture(h, key):
+    if key in h:
+        return h[key][0].picture
+    return None
     
 @register.filter
 def student_username(name):
