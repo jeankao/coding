@@ -66,7 +66,7 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
         <br>
         <font color=black>執行結果：</font><BR>
         {% if lesson == "2" %}
-        <img width=880 src="/static/work/vphysics/{{student.id}}/{{index}}/{{work.id}}.jpg">
+        <img width=880 src="/{{ work.picture }}">
         {% elif lesson == "3" %}
         <img width=880 src="/static/work/euler/{{student.id}}/{{index}}/{{work.id}}.jpg">          
         {% endif %}
