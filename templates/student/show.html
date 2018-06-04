@@ -1,15 +1,35 @@
 {% extends "base.html" %}
 {% load tag %}
-{% block content %}
-			{% if work %}
-            {% if work.score > 0 %}分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}{% endif %}
-			<BR>
-              <font color=black>心得感想：</font><BR>{{work.memo}}<BR>              
-			  <font color=black>創作過程：</font><BR>{{work.helps}}<BR>
-              <font color=black>程式碼：</font>{{work.code|code_highlight|safe}}<BR>
-            執行結果：<img width=880 src="/{{ work.picture }}"><BR>
-			{% else %}
-			尚未繳交
-			{% endif %}
 
+{% block content %}
+  {% if work %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    <div>心得感想：</div>
+    <div>{{ work.memo }}</div>
+    <div>創作過程：</div>
+    <div>{{ work.helps }}</div>
+    <div>程式碼：</div>
+    <div class="position-relative">
+      {{ work.code|code_highlight|safe }}
+      <button class="btn btn-sm btn-primary my-1 position-absolute p-1 mr-1 border border-light" id="copy" style="right: 0; top: 0">copy</button>
+    </div>
+    <div>執行結果</div>
+    <div><img src="/{{ work.picture }}" style="max-width: 100%"></div>
+  {% else %}
+    尚未繳交
+  {% endif %}
+{% endblock %}
+
+{% block domready %}
+// copy code to clipboard
+$('#copy').click(function() {
+  var selobj = window.getSelection();
+  var node = $('.code pre')[0];
+  var range = document.createRange();
+
+  selobj.empty();
+  range.selectNode(node);
+  selobj.addRange(range);
+  document.execCommand('copy');
+});
 {% endblock %}
