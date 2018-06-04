@@ -62,8 +62,10 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
         {{work.memo}}
         <br>
         <font color=black>程式碼：</font><BR>
-        <pre>{{work.code}}</pre>
-        <br>
+        <div class="position-relative">
+        {{work.code|code_highlight|safe}}</pre>
+      <button class="btn btn-sm btn-primary my-1 position-absolute p-1 mr-1 border border-light" id="copy" style="right: 0; top: 0">copy</button>          
+        </div>
         <font color=black>執行結果：</font><BR>
         {% if lesson == "2" %}
         <img width=880 src="/{{ work.picture }}">
@@ -153,4 +155,16 @@ $(function () {
         init();
     });
 });
+          
+// copy code to clipboard
+$('#copy').click(function() {
+  var selobj = window.getSelection();
+  var node = $('.code pre')[0];
+  var range = document.createRange();
+
+  selobj.empty();
+  range.selectNode(node);
+  selobj.addRange(range);
+  document.execCommand('copy');
+});          
 {% endblock %}
