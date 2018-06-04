@@ -7,6 +7,10 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
+
 register = template.Library()
 
 @register.filter
@@ -165,3 +169,8 @@ def student_username(name):
     start = "_"
     student = name[name.find(start)+1:]
     return student    
+  
+@register.filter
+def code_highlight(code):  
+    html_code = highlight(code, PythonLexer(), HtmlFormatter(linenos=True))
+    return html_code
