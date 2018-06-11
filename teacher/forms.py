@@ -2,7 +2,7 @@
 from django import forms
 from account.models import Message
 from teacher.models import Classroom
-from student.models import Work
+from student.models import Work, Enroll
 
 # 新增一個課程表單
 class ClassroomForm(forms.ModelForm):
@@ -58,3 +58,71 @@ class ScoreForm(forms.ModelForm):
 #上傳檔案
 class UploadFileForm(forms.Form):
     file = forms.FileField()
+
+Check_CHOICES = (
+    (100, "你好棒(100分)"),
+    (90, "90分"),
+    (80, "80分"),
+    (70, "70分"),
+    (60, "60分"),
+    (40, "40分"),
+    (20, "20分"),
+    (0, "0分"),			
+)    
+    
+class CheckForm1(forms.ModelForm):
+
+        score_memo1 = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        certificate = forms.BooleanField(required=False,label="核發證書",initial=True)
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo1']
+
+class CheckForm2(forms.ModelForm):
+
+        score_memo2 = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        certificate = forms.BooleanField(required=False,label="核發證書",initial=True)
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo2']
+
+class CheckForm3(forms.ModelForm):
+
+        score_memo3 = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        certificate = forms.BooleanField(required=False,label="核發證書",initial=True)
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo3']
+
+class CheckForm4(forms.ModelForm):
+        score_memo4 = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        certificate = forms.BooleanField(required=False,label="核發證書",initial=True)
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo4']
+            
+class CheckForm_vphysics(forms.ModelForm):
+        score_memo_vphysics = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        certificate = forms.BooleanField(required=False,label="核發證書",initial=True)
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo_vphysics']          
+
+class CheckForm_euler(forms.ModelForm):
+        score_memo_euler = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        certificate = forms.BooleanField(required=False,label="核發證書",initial=True)
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo_euler']          

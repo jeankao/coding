@@ -30,15 +30,23 @@ class Enroll(models.Model):
     # 實戰高手證書
     certificate4 = models.BooleanField(default=False)
     certificate4_date = models.DateTimeField(default=timezone.now)
-    # 12堂課 成績
+    # 12堂課 心得成績
     score_memo1 = models.IntegerField(default=0)
-    # 實戰入門成績
+    # 實戰入門心得成績
     score_memo2 = models.IntegerField(default=0)
-    # 實戰進擊成績
+    # 實戰進擊心得成績
     score_memo3 = models.IntegerField(default=0)
-    # 實戰高手成績
+    # 實戰高手心得成績
     score_memo4 = models.IntegerField(default=0)
-	
+    # Vphysics
+    certificate_vphysics = models.BooleanField(default=False)
+    certificate_vphysics_date = models.DateTimeField(default=timezone.now)
+    score_memo_vphysics =  models.IntegerField(default=0)
+    # Euler
+    certificate_euler = models.BooleanField(default=False)
+    certificate_euler_date = models.DateTimeField(default=timezone.now)
+    score_memo_euler =  models.IntegerField(default=0)    
+    
     @property
     def classroom(self):
         return Classroom.objects.get(id=self.classroom_id)  
