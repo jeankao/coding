@@ -71,6 +71,8 @@ def realname(user_id):
       
 @register.filter(takes_context=True)
 def school(school_id):
+    if not school_id:
+        return ""
     try: 
         school_name = School.objects.get(id=school_id).name
     except ObjectDoesNotExist:
