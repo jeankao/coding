@@ -8,10 +8,16 @@ class County(models.Model):
   name = models.CharField(max_length=20)
   mapx = models.IntegerField(default=0)	
   mapy = models.IntegerField(default=0)	
+  
+  def __unicode__(self):
+      return self.name
     
 class Zone(models.Model):
   name = models.CharField(max_length=20)
   county = models.IntegerField(default=0)
+  
+  def __unicode__(self):
+      return self.name  
 
 class School(models.Model):
   county = models.IntegerField(default=0)
@@ -19,6 +25,9 @@ class School(models.Model):
   system = models.IntegerField(default=0)
   name = models.CharField(max_length=50)
   online = models.BooleanField(default=True)
+
+  def __unicode__(self):
+      return self.name  
     
 # 個人檔案資料
 class Profile(models.Model):
