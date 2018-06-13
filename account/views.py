@@ -437,18 +437,7 @@ class LogListView(ListView):
     paginate_by = 20
     template_name = 'account/log_list.html'
 	
-    def get_queryset(self):
-        # 記錄系統事件
-        if self.kwargs['kind'] == "1" :
-            log = Log(user_id=self.kwargs['user_id'], event='查看積分--上傳作品')
-        elif  self.kwargs['kind'] == "2" :
-            log = Log(user_id=self.kwargs['user_id'], event='查看積分--小老師')      
-        elif  self.kwargs['kind'] == "3" :
-            log = Log(user_id=self.kwargs['user_id'], event='查看積分--創意秀')
-        else :
-            log = Log(user_id=self.kwargs['user_id'], event='查看全部積分')                        
-        if is_event_open(self.request) :               
-            log.save()                
+    def get_queryset(self):          
         if not self.kwargs['kind'] == "0" :
             queryset = PointHistory.objects.filter(user_id=self.kwargs['user_id'],kind=self.kwargs['kind']).order_by('-id')
         else :

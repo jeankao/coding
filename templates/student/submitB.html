@@ -59,7 +59,7 @@
 </button>
 <BR><BR>
   {% endif %}
-<form name="myForm" id="form{{index}}" action="/student/work/submit/2/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/{% if 'B' in lesson %}2{% else %}3{% endif%}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
 <input type="hidden" name="lesson" value={{lesson}}>
 <div class="form-group">
     <label for="exampleFormControlTextarea1">心得感想：</label>
