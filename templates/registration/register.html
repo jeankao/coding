@@ -1,88 +1,89 @@
 {% extends "base.html" %}
 {% block header %}
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>    
-    // 通常，當資料選項的變動性不大時，都會直接寫成 .js 檔含入即可。    
-    var county = new Array();          
+    <script>
+    // 通常，當資料選項的變動性不大時，都會直接寫成 .js 檔含入即可。
+    var county = new Array();
     var zone = new Array();
     var school_name = new Array();
     var school_id = new Array();
     {% for county, zone in district %}
        county[{{forloop.counter|add:-1}}] = [{{county.id}}, "{{county.name}}"];
        zone[{{forloop.counter|add:-1}}] = new Array();
-       school_name[{{forloop.counter|add:-1}}] = new Array();     
-       school_id[{{forloop.counter|add:-1}}] = new Array();      
+       school_name[{{forloop.counter|add:-1}}] = new Array();
+       school_id[{{forloop.counter|add:-1}}] = new Array();
        {% for q in zone %}
            zone[{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] =  [{{q.0.id}}, "{{q.0.name}}"];
            school_name[{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = new Array();
-           school_id[{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = new Array();        
+           school_id[{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = new Array();
            {% for r in q.1 %}
                school_name[{{forloop.parentloop.parentloop.counter|add:-1}}][{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = "{{r.name}}";
-               school_id[{{forloop.parentloop.parentloop.counter|add:-1}}][{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = "{{r.id}}";            
+               school_id[{{forloop.parentloop.parentloop.counter|add:-1}}][{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = "{{r.id}}";
            {% endfor %}
        {% endfor %}
     {% endfor %}
-    // 載入 master 選單，同時初始化 detail 選單內容    
-    function loadMaster( master, detail, school ) 
-    {    
-      master.options.length = county.length;    
-      for( i = 0; i < county.length; i++ ) 
-      {    
-        master.options[ i ] = new Option( county[i][1], county[i][0] );  
-        // Option( text , value );    
-      }    
-      master.selectedIndex = {{school.county}} - 1;    
-      doNewMaster( master, detail, school );    
+    // 載入 master 選單，同時初始化 detail 選單內容
+    function loadMaster( master, detail, school )
+    {
+      master.options.length = county.length;
+      for( i = 0; i < county.length; i++ )
+      {
+        master.options[ i ] = new Option( county[i][1], county[i][0] );
+        // Option( text , value );
+      }
+      master.selectedIndex = {{school.county}} - 1;
+      doNewMaster( master, detail, school );
       doNewDetail( master, detail, school );
-    }    
-    // 當 master 選單異動時，變更 detail 選單內容    
-    function doNewMaster( master, detail, school) {    
-      detail.options.length = zone[ master.selectedIndex ].length;    
-      for( i = 0; i < zone[ master.selectedIndex ].length; i++ ) 
-      {    
-        detail.options[ i ] = new Option( zone[ master.selectedIndex ][ i ][1],    
-                                          zone[ master.selectedIndex ][ i ][0] );    
+    }
+    // 當 master 選單異動時，變更 detail 選單內容
+    function doNewMaster( master, detail, school) {
+      detail.options.length = zone[ master.selectedIndex ].length;
+      for( i = 0; i < zone[ master.selectedIndex ].length; i++ )
+      {
+        detail.options[ i ] = new Option( zone[ master.selectedIndex ][ i ][1],
+                                          zone[ master.selectedIndex ][ i ][0] );
       }
-      detail.selectedIndex = {{school.zone}} - 1;         
-      doNewDetail( master, detail, school );      
-    }   
-    // 當 detail 選單異動時，變更 school 內容    
-    function doNewDetail( master, detail, schools) {     
-      schools.options.length = school_name[ master.selectedIndex ][ detail.selectedIndex ].length;          
-      for( i = 0; i < school_name[ master.selectedIndex ][ detail.selectedIndex ].length; i++ ) 
-      {         
-        schools.options[ i ] = new Option( school_name[ master.selectedIndex ][ detail.selectedIndex ][ i ],    
-                                          school_id[ master.selectedIndex ][ detail.selectedIndex ][ i ] );    
+      detail.selectedIndex = {{school.zone}} - 1;
+      doNewDetail( master, detail, school );
+    }
+    // 當 detail 選單異動時，變更 school 內容
+    function doNewDetail( master, detail, schools) {
+      schools.options.length = school_name[ master.selectedIndex ][ detail.selectedIndex ].length;
+      for( i = 0; i < school_name[ master.selectedIndex ][ detail.selectedIndex ].length; i++ )
+      {
+        schools.options[ i ] = new Option( school_name[ master.selectedIndex ][ detail.selectedIndex ][ i ],
+                                          school_id[ master.selectedIndex ][ detail.selectedIndex ][ i ] );
       }
-      schools.selectedIndex = {{school.id}} - 1;         
+      schools.selectedIndex = {{school.id}} - 1;
     }
 </script>
 {% endblock %}
+
 {% block content %}
   <h1>註冊新帳號</h1>
   <p>請填寫以下資料：</p>
   <form action="." method="post">
-        <p><label for="id_username">帳號：</label> <input id="id_username" maxlength="30" name="username" type="text" /></p>
-<p><label for="id_first_name">真實姓名：</label> <input id="id_first_name" maxlength="30" name="first_name" type="text" /></p>
-<p><label for="id_last_name">學校名稱：</label>   <select class="form-control" name="county" id="county"     
-        onChange="doNewMaster( document.getElementById( 'county' ),document.getElementById( 'zone' ), document.getElementById( 'schools' ));">    
-   </select>    
-   <select class="form-control" name="zone" id="zone" onChange="doNewDetail( document.getElementById( 'county' ),document.getElementById( 'zone' ), document.getElementById( 'schools' ));">    
-   </select> 
-    <select class="form-control" name="last_name" id="schools"><option value=0>請選擇</option>
-    </select>    
-    </p>
-<p><label for="id_email">電子郵件：</label> <input id="id_email" maxlength="254" name="email" type="email" /></p>
-<p><label for="id_password">密碼：</label> <input id="id_password" name="password" type="password" /></p>
-<p><label for="id_password2">再次確認密碼：</label> <input id="id_password2" name="password2" type="password" /></p>
-    <p>{{ form.captcha }}</p>
-            {% csrf_token %}    
-        <p><input class="btn-info" type="submit" value="建立帳號"></p>
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <p><input class="btn-info" type="submit" value="建立帳號"></p>
   </form>
   </form>
 {% endblock %}
 
 {% block domready %}
+  // Replace TextInput with 3 Select elements
+  $('#id_last_name').replaceWith(`
+<div class="form-inline">
+    <select class="form-control" name="county" id="county" onChange="doNewMaster(document.getElementById('county'), document.getElementById('zone'), document.getElementById('schools'));">
+    </select>
+    <select class="form-control" name="zone" id="zone" onChange="doNewDetail(document.getElementById('county'), document.getElementById('zone'), document.getElementById('schools'));">
+    </select>
+    <select class="form-control" name="last_name" id="schools" placeholder="請選擇...">
+    </select>
+</div>`);
+  //
   loadMaster( document.getElementById( 'county' ), document.getElementById( 'zone' ) , document.getElementById( 'schools' ) );
   school = location.href.match(/\?school=(\d+)\/(\d+)\/(\d+)/);
   if (school && school.length == 4) {
