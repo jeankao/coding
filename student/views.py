@@ -499,9 +499,9 @@ def progress(request, lesson, unit, classroom_id):
         works = filter(lambda u: u.index == index, student_works)
         index = index + 1
         if len(works) > 0:
-          bar.append(works[0])
+          bar.append([assignment, works[0]])
         else:
-          bar.append(False)
+          bar.append([assignment, False])
       bars.append([enroll, bar])
     return render_to_response('student/progress.html', {'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list}, context_instance=RequestContext(request))
 	

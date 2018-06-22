@@ -1,18 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-{{lesson}}--{{unit}}--
-{% for work in works %}
-{{work.index}}
-{% endfor %}
 	學生姓名：{{enroll.student.first_name}}
     <table>
     <tr>
         <td>編號</td>
         <td>作品</td>
-        <td>評分者</td>
-        <td>分數</td>
         <Td>日期</Td>
-        <td>小老師</td>
         <td>心得</td>
 
     </tr>
@@ -22,60 +15,32 @@
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
-            <td>{{list.5}}</td>
-            {% if list.3 == -1 %}
-                <td><a target=_blank href="/teacher/scoring/{{classroom_id}}/{{user.id}}/{{forloop.counter}}">已繳交</a></td>
-            {% else %}
-                <td>{{list.3}}</td>
-            {% endif %}
-            <td>{{list.4|date:"Y/m/d h:i:s" }}</td>
-            <td>{{list.7}}</td>            
-            <td>{{list.6}}</td>           
+             <td>{{list.1.2}}</td>      
+            <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}
                 {% if unit = "2" and forloop.counter > 17 and forloop.counter < 26 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
-            <td>{{list.5}}</td>
-            {% if list.3 == -1 %}
-                <td>已繳交</td>
-            {% else %}
-                <td>{{list.3}}</td>
-            {% endif %}
-            <td>{{list.4|date:"Y/m/d h:i:s" }}</td>
-            <td>{{list.7}}</td>            
-            <td>{{list.6}}</td>           
+             <td>{{list.1.2}}</td>      
+            <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}
                 {% if unit = "3" and forloop.counter > 25 and forloop.counter < 34 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
-            <td>{{list.5}}</td>
-            {% if list.3 == -1 %}
-                <td>已繳交</td>
-            {% else %}
-                <td>{{list.3}}</td>
-            {% endif %}
-            <td>{{list.4|date:"Y/m/d h:i:s" }}</td>
-            <td>{{list.7}}</td>            
-            <td>{{list.6}}</td>           
+             <td>{{list.1.2}}</td>      
+            <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}
                 {% if unit = "4" and forloop.counter > 33 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
-            <td>{{list.5}}</td>
-            {% if list.3 == -1 %}
-                <td>已繳交</td>
-            {% else %}
-                <td>{{list.3}}</td>
-            {% endif %}
-            <td>{{list.4|date:"Y/m/d h:i:s" }}</td>
-            <td>{{list.7}}</td>            
-            <td>{{list.6}}</td>           
+             <td>{{list.1.2}}</td>      
+            <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}                
 
@@ -85,14 +50,7 @@
         <tr align=left>
         <td align=right>{{list.0.0}}</td>
             <td nowrap>{{list.0.1}}</td>
-            {% if list.1 == -1 %}
-                <td><a target=_blank href="/teacher/scoring/{{classroom_id}}/{{user.id}}/{{forloop.counter}}">已繳交</a></td>
-            {% else %}
-                <td>{{list.3}}</td>
-            {% endif %}
-            <td>{{list.1}}</td>
             <td>{{list.2|date:"Y/m/d h:i:s" }}</td>
-            <td>{{list.7}}</td>            
             <td>{{list.4}}</td>           
         </tr>
     {% endfor %}

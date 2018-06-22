@@ -531,7 +531,7 @@ def check(request, lesson, unit, user_id, classroom_id):
             enroll.save()               
 						
             if form.cleaned_data['certificate']:		
-                return redirect('/certificate/make_certification/'+lesson+'/'+str(enroll.id)+'/certificate')
+                return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
                 #return redirect('/teacher/memo/'+classroom_id)
             else:
                 return redirect('/teacher/memo/'+lesson+"/"+classroom_id)

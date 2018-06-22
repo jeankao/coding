@@ -18,7 +18,7 @@
             <tr>
                 <Td></Td>
                 {% for assignment in lesson_list %}
-                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{forloop.counter}}</button></td>              
+                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{assignment.0}}</button></td>              
                 {% endfor %}
             </tr>          
             <tr>
@@ -33,7 +33,7 @@
             </tr>          
             {% for enroll, bar in bars %}
           <tr><td nowrap>{{enroll.seat}}){{enroll.student.first_name}}</td>
-            {% for work in bar %}
+            {% for assignment, work in bar %}
                 {% if work %}
                     {% if work.score > 0 %}
             <td style="padding:0px"><button type="button" class="btn btn-info btn-circle">{{work.score}}</button><BR><font size=-2>{{work.publication_date|date:"m/d"}}<BR>{{work.scorer|realname}}</td>
@@ -41,7 +41,7 @@
             <td style="padding:0px"><button type="button" class="btn btn-success btn-circle"></button><BR><font size=-2>{{work.publication_date|date:"m/d"}}</font></td>                   
                     {% endif %}
                 {% else %}
-           <td style="padding:0px"><button type="button" class="btn btn-default btn-circle">{{forloop.counter}}</button></td>            
+           <td style="padding:0px"><button type="button" class="btn btn-default btn-circle">{{assignment.0}}</button></td>            
                 {% endif %}
             {% endfor %}
           </tr>
