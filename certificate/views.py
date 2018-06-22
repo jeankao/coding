@@ -45,7 +45,7 @@ def writeFile(content, fileName, context):
 # 顯示證書
 def show(request, lesson, unit, enroll_id):
     enroll = Enroll.objects.get(id=enroll_id)
-    certificate_image = "static/certificate/" + lesson + "/" + unit + "/" + enroll_id + ".jpg"		
+    certificate_image = lesson + "/" + unit + "/" + enroll_id + ".jpg"		
     return render_to_response('certificate/show.html', {'certificate_image': certificate_image}, context_instance=RequestContext(request))
     
     
@@ -95,12 +95,14 @@ def make_image(lesson, unit, enroll_id, teacher_id):
     temp_handle.seek(0)
     
     # open file write mode  
-    if not os.path.exists(settings.BASE_DIR+"/static/certificate/"+lesson):
-        os.mkdir(settings.BASE_DIR+"/static/certificate/"+lesson)
-    if not os.path.exists(settings.BASE_DIR+"/static/certificate/"+lesson+"/"+unit):
-        os.mkdir(settings.BASE_DIR+"/static/certificate/"+lesson+"/"+unit) 
+    if not os.path.exists(settings.BASE_DIR+"/static/certification/"):
+        os.mkdir(settings.BASE_DIR+"/static/certification/")    
+    if not os.path.exists(settings.BASE_DIR+"/static/certification/"+lesson):
+        os.mkdir(settings.BASE_DIR+"/static/certification/"+lesson)
+    if not os.path.exists(settings.BASE_DIR+"/static/certification/"+lesson+"/"+unit):
+        os.mkdir(settings.BASE_DIR+"/static/certification/"+lesson+"/"+unit) 
     context = {'error':''}
-    fileName = settings.BASE_DIR+"/static/certificate/"+lesson+"/"+unit+"/"+enroll_id+".jpg"
+    fileName = settings.BASE_DIR+"/static/certification/"+lesson+"/"+unit+"/"+enroll_id+".jpg"
     writeFile(temp_handle.read(), fileName, context)
 
     #update and message
