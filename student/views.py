@@ -76,14 +76,17 @@ def lesson(request, lesson):
     work_dict = {}	
     hit = statics_lesson(request, lesson)
        
-    profile = Profile.objects.get(user=request.user)
+    if request.user.id > 0 :
+        profile = Profile.objects.get(user=request.user)
+    else:
+        profile = Profile()
     if lesson[0] == "A":
         lesson_id = 1
         profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
         # 限登入者
-        if not request.user.is_authenticated():
-            return redirect("/account/login/")    
+        if not request.user.id > 0:
+            return redirect("/")    
         else :
             lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16} 
         if lesson in lock:

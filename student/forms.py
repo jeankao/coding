@@ -52,7 +52,9 @@ class SubmitBForm(forms.Form):
             (1, "同學幫一點忙"),
             (2, "同學幫很多忙"),
             (3, "解答幫一點忙"),
-            (4, "解答幫很多忙"),			
+            (4, "解答幫很多忙"),		
+            (5, "老師幫一點忙"),
+            (6, "老師幫很多忙"),	          
 		    ]  
         code = forms.CharField(widget=forms.Textarea)
         screenshot = forms.CharField(widget=forms.HiddenInput())
