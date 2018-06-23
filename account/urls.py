@@ -54,5 +54,4 @@ urlpatterns = [
     url(r'^teacher/apply/$', login_required(views.teacher_apply)),   
     # 列所出有圖像
     url(r'^avatar/$', views.avatar),  
-    url(r'^temp/$', views.temp),
 ]
