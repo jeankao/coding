@@ -76,8 +76,8 @@ jQuery(function () {
 			<li><a href="/account/dashboard"><img src="/static/images/icon_message.png"> 訊息{% if request.user.id|unread > 0 %}({{request.user.id|unread}}){% endif %}</a></li>
 			<li><a href="/account/profile/{{request.user.id}}"><img  width=16 src="/static/images/icon_doc.png"> 檔案</a>
         <ul>
-            <li><a href="/account/profile/{{user.id}}#tab1">積分</a></li>
-              <li><a href="/account/profile/{{user.id}}#tab3">證書</a></li>
+            <li><a href="/account/profile/{{user.id}}/#tab1">積分</a></li>
+              <li><a href="/account/profile/{{user.id}}/#tab2">證書</a></li>
 		        <li><a href="/account/event/calendar/{{user.id}}">登入記錄</a></li>			
 		        <li><a href="/account/event/timeline/{{user.id}}">使用記錄</a></li>		
 			  </ul>
