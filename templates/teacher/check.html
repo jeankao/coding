@@ -45,7 +45,7 @@
                 {% endif %}                
 
     {% endfor %}
-    {% elif lesson == "2" %}
+    {% elif lesson == "2" or lesson == "3" %}
     {% for index, list in lesson_list %}
         <tr align=left>
         <td align=right>{{list.0.0}}</td>
@@ -56,8 +56,6 @@
     {% endfor %}
     {% endif %}
     </table>
-
-
 	 <BR>
         心得評分：
         <form action="" enctype="multipart/form-data"  method="post">
@@ -67,4 +65,5 @@
             {% csrf_token %}
             <input type="submit" value="Submit">
         </form>
+     
 {% endblock %}

@@ -52,6 +52,20 @@
         {% endfor %}
         </table>         
         {% elif lesson == "3" %}
+         <table>
+        <tr>   
+            <td>姓名</td>
+            <td>批閱心得</td>
+			      <td>證書</td>
+			</tr>
+        {% for enroll in enrolls %}
+            <tr>
+						<td>{{enroll.seat}})<a href="/student/memo_user/{{enroll.student_id}}">{{enroll.student.first_name}}</a></td>	
+            <td><a href="/teacher/check/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">Euler 20題{% if enroll.score_memo_euler > 0 %}({{enroll.score_memo_euler}}){% endif%}</a></td>
+			<td>{% if enroll.certificate_euler %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/3/1/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </table>            
         {% else %}
           1234
         {% endif %}
