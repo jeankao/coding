@@ -45,6 +45,14 @@ class Profile(models.Model):
   visitor_count = models.IntegerField(default=0)
 	# 開站時間
   open_time = models.DateTimeField(auto_now_add=True)
+  # 12堂課進度
+  lock1 = models.IntegerField(default=1)
+  # VPhysics進度
+  lock2 = models.IntegerField(default=1)
+  # Euler進度
+  lock3 = models.IntegerField(default=1)
+  
+  
 
 # 積分記錄 
 class PointHistory(models.Model):

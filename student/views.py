@@ -54,26 +54,66 @@ def statics_lesson(request, lesson):
 # 各種課程    
 def lessons(request, subject_id):
     hit = statics_lesson(request, subject_id)
-    return render_to_response('student/lessons.html', {'subject_id': subject_id, 'counter': hit}, context_instance=RequestContext(request))
+    if request.user.is_authenticated():
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        profile = Profile.objects.get(user=user)
+        if subject_id == "A":
+            lock = profile.lock1
+        elif subject_id == "B":
+            lock = profile.lock2
+        elif subject_id == "C":
+            lock = profile.lock3
+        else:
+            lock = profile.lock1
+    else :
+        user_id = 0
+        lock = 1  
+    return render_to_response('student/lessons.html', {'subject_id': subject_id, 'counter': hit, 'lock':lock}, context_instance=RequestContext(request))
 
 # 課程內容
 def lesson(request, lesson):  
     work_dict = {}	
     hit = statics_lesson(request, lesson)
+       
+    profile = Profile.objects.get(user=request.user)
     if lesson[0] == "A":
         lesson_id = 1
+        profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        # 限登入者
+        if not request.user.is_authenticated():
+            return redirect("/account/login/")    
+        else :
+            lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16} 
+        if lesson in lock:
+            if profile_lock < lock[lesson]:
+                if not request.user.groups.filter(name='teacher').exists():
+                    return redirect("/")    
         return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "B":
         lesson_id = 2     
+        profile_lock = profile.lock2
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        # 限登入者
+        if not request.user.is_authenticated():
+            return redirect("/account/login/")    
+        else :
+            lock = {'B02':3, 'B03':4, 'B04':5, 'B05':6, 'B06':7, 'B07':8, 'B08':9, 'B09':10, 'B10':11, 'B11':12, 'B12':13, 'B13':14, 'B14':15, 'B15':16, 'B16':17, 'B17':17, 'B18':17} 
+        if lesson in lock:
+            if profile_lock < lock[lesson]:
+                if not request.user.groups.filter(name='teacher').exists():
+                    return redirect("/")    
+
         return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
         lesson_id = 3      
+        profile_lock = profile.lock3
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
         return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
     else:
         lesson_id = 4
+        profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
         return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
 
@@ -313,6 +353,7 @@ def work_list(request, lesson, classroom_id):
 					
 			
 def submit(request, lesson, index):
+    profile = Profile.objects.get(user=request.user)
     work_dict = {}	
     work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson, user_id=request.user.id)))	
     if lesson == "1":
@@ -349,7 +390,10 @@ def submit(request, lesson, index):
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message='2分--繳交作業<'+lesson_list[int(index)-1][2]+'>', url=request.get_full_path().replace("submit", "submitall"))
                     history.save()
-					
+                    # lock
+                    profile.lock1 += 1
+                    profile.save()
+                    
             else:
                 if form.is_valid():
                     works.update(memo=form.cleaned_data['memo'],publication_date=timezone.localtime(timezone.now()))
@@ -378,7 +422,12 @@ def submit(request, lesson, index):
                             update_avatar(request.user.id, 1, 3)					
                             # History
                             history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業<'+lesson_list[int(index)][1]+'>', url="/student/work/show/"+lesson+"/"+index)
-                            history.save()	
+                            history.save()
+                            if lesson == "2":
+                                profile.lock2 +=1
+                            else:
+                                profile.lock3 +=1
+                            profile.save()
                     else :
                         update_avatar(request.user.id, 1, 3)					
                         # History
