@@ -576,6 +576,6 @@ def temp(request):
         profile.lock1 = 100
         profile.lock2 = 100
         profile.lock3 = 100
-        profile.svae()
+        profile.save()
     return render_to_response('account/avatar.html', {'avatar':profile.avatar}, context_instance=RequestContext(request))
   
