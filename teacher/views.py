@@ -576,17 +576,17 @@ def grade(request, lesson, classroom_id):
             total = 0
             for index,assignment in enumerate(lesson_list):
                 try :
-                    work = Work.objects.get(user_id=enroll.student_id, index=index, lesson_id=lesson)
+                    work = Work.objects.get(user_id=enroll.student_id, index=index+1, lesson_id=lesson)
                     enroll_score.append([work.score, index])
                     if work.score == -1:
-                        total += 75
+                        total += 80
                     else: 
                         total += work.score                
                 except ObjectDoesNotExist:
                     enroll_score.append([0, index])
                     total += 60
                 except MultipleObjectsReturned:
-                    work = Work.objects.filter(user_id=enroll.student_id, index=index).last()
+                    work = Work.objects.filter(user_id=enroll.student_id, index=index+1).last()
                     enroll_score.append([work.score, index]) 
                     if work.score == -1:
                         total += 75
