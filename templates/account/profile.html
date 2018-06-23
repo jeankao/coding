@@ -71,7 +71,19 @@
     </div>
   </div>
 {% endblock %}
-          
+{% block dormready %}
+$( window ).on( 'hashchange', function( e ) {
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-pills a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    //Change hash for page-reload
+    $('.nav-pills a[href="#' + url.split('#')[1] + '"]').on('shown', function (e) {
+        window.location.hash = e.target.hash;
+    }); 
+} );  
+{% endblock %}
 {% block footer_script %}
 <script>
 window.onload = function(){  
