@@ -563,36 +563,51 @@ def grade(request, lesson, classroom_id):
         if not request.user.id == classroom.teacher_id:
             return redirect("/")
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
-        Tworks = TWork.objects.filter(classroom_id=classroom_id)
-        data = []		
+        lesson_dict = {}
+        data = []
         if lesson == "1":
-
-            for enroll in enrolls:
-                enroll_score = []
-                # 17個作品
-                for index,assignment in enumerate(lesson_list):
-                    try :
-                        work = Work.objects.get(user_id=enroll.student_id, index=index, lesson_id=lesson)
-                        enroll_score.append([work.score, index])
-                    except ObjectDoesNotExist:
-                        enroll_score.append([0, index])
-                    except MultipleObjectsReturned:
-                        work = Work.objects.filter(user_id=enroll.student_id, index=index).last()
-                        enroll_score.append([work.score, index])
-        else :
-            for enroll in enrolls:
-                enroll_score = []
-                # 17個作品
-                for twork in Tworks:
-                    try :
-                        work = Work.objects.get(user_id=enroll.student_id, index=twork.id)
-                        enroll_score.append([work.score, twork.id])
-                    except ObjectDoesNotExist:
-                        enroll_score.append([0, twork.id])      
-
-        data.append([enroll, enroll_score, enroll.score_memo1])            
-
-        return render_to_response('teacher/grade.html', {'lesson':lesson, 'lesson_list':lesson_list, 'Tworks':Tworks, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
+            lesson_list = lesson_list1
+        elif lesson == "2" :
+            lesson_list = lesson_list2
+        elif lesson == "3" :
+            lesson_list = lesson_list3
+        for enroll in enrolls:
+            enroll_score = []
+            total = 0
+            for index,assignment in enumerate(lesson_list):
+                try :
+                    work = Work.objects.get(user_id=enroll.student_id, index=index, lesson_id=lesson)
+                    enroll_score.append([work.score, index])
+                    if work.score == -1:
+                        total += 75
+                    else: 
+                        total += work.score                
+                except ObjectDoesNotExist:
+                    enroll_score.append([0, index])
+                    total += 60
+                except MultipleObjectsReturned:
+                    work = Work.objects.filter(user_id=enroll.student_id, index=index).last()
+                    enroll_score.append([work.score, index]) 
+                    if work.score == -1:
+                        total += 75
+                    else: 
+                        total += work.score                
+                if lesson == "1":
+                    if unit == "1":
+                        memo = enroll.score_memo1
+                    elif unit == "2":
+                        memo = enroll.score_memo2
+                    elif unit == "3":
+                        memo = enroll.score_memo3
+                    elif unit == "4":
+                        memo = enroll.score_memo4                   
+                elif lesson == "2":
+                    memo = enroll.score_memo_vphysics
+                elif lesson == "3":
+                    memo = enroll.score_memo_euler
+                grade = total / len(lesson_list) * 0.6 + memo * 0.4
+            data.append([enroll, enroll_score, memo, grade])                  
+        return render_to_response('teacher/grade.html', {'lesson':lesson, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
 	
 # 列出分組所有作業
 @login_required

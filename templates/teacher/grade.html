@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+班級名稱：{{ classroom.name }}<BR>
+<table>
+  <tr>
+  <td>座號</td>
+  <td>姓名</td>
+  <td>成績</td>    
+                {% for assignment in lesson_list %}
+                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{assignment.0}}</button></td>              
+                {% endfor %}
+    <td><button type="button" class="btn btn-warning btn-circle">心得</button></td>
+</tr>
+{% for enroll, enroll_score, memo, grade in data %}
+<tr>
+  <td>{{enroll.seat}}</td>
+  <td>{{enroll.student.first_name}}</td>
+  <td>{{grade}}</td>
+  {% for score, index in enroll_score %}
+  <td align=center>{% if score == -1 %}V{% else %}{{score}}{% endif %}</td>
+  {% endfor %}
+  <td align=center>{{memo}}</td>
+</tr>
+{% endfor %}
+  </table>
+{% endblock %}
