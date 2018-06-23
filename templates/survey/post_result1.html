@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block header %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+{% block title %} 課後問卷 {% endblock %}
+{% block content %}
+<h1>
+{{classroom.name}}班的課後問卷：{{enrolls|length}}位學生，共{{questionaires|length}}份問卷 
+</h1>
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+{% for sections in result %}
+{% for question in sections.1 %}
+        var data{{forloop.parentloop.counter}}_{{forloop.counter}} = google.visualization.arrayToDataTable([
+          ['選項', '次數'],        
+          ['非常同意',     {{question.1}}],
+          ['同意',      {{question.2}}],
+          ['不同意',  {{question.3}}],
+          ['非常不同意', {{question.4}}],
+        ]);
+
+        var options = {
+          title: "{{question.0}}(N={{questionaires|length}})"
+        };
+
+        var chart{{forloop.parentloop.counter}}_{{forloop.counter}} = new google.visualization.PieChart(document.getElementById('piechart{{forloop.parentloop.counter}}_{{forloop.counter}}'));
+
+        chart{{forloop.parentloop.counter}}_{{forloop.counter}}.draw(data{{forloop.parentloop.counter}}_{{forloop.counter}}, options);
+{% endfor %}
+{% endfor %}        
+      }
+    </script>
+{% for sections in questions %}
+<table>
+  <tr>
+<th>{{sections.0}}</th>
+  </tr>
+</table>
+    {% for question in sections.1 %}
+    <div id="piechart{{forloop.parentloop.counter}}_{{forloop.counter}}" style="width: 900px; height: 500px;"></div>
+    {% endfor %}
+{% endfor %}
+<table>
+    <th>1.	請說說你在學習Scratch程式設計過程中，覺得最棒的三件事：</th>
+    {% for answer in questionaires %}
+    <tr><td>{{answer.p2_1}}</td></tr>
+    {% endfor %}
+</table>
+<table>
+    <th>2.	請說說你在學習Scratch程式設計過程中，覺得困難（或糟糕）的三件事：</th>
+    {% for answer in questionaires %}
+    <tr><td>{{answer.p2_2}}</td></tr>
+    {% endfor %}
+</table>
+<table>
+    <th>3.	此次用Scratch來做遊戲/動畫寫程式的經驗，與你學習電腦有相關嗎？有怎麼樣的相關？(例如：你與電腦互動的方式有改變了嗎？有哪些不同的互動方式？你用了哪些方式來創作你的動畫或故事？)</th>
+    {% for answer in questionaires %}
+    <tr><td>{{answer.p2_3}}</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

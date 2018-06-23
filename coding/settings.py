@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'teacher',
     'student',
     'certificate',
+    'survey',
     'nocaptcha_recaptcha',  
 ]
 

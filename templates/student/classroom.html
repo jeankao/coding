@@ -27,6 +27,8 @@
 {% endif %}
 
 			<BR><BR>師生互動：
+			<a href="/survey/pre_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課前問卷</a>
+			<a href="/survey/post_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課後問卷</a>        
 			<a href="/student/announce/{{enroll.classroom_id}}" role="button" class="btn btn-success">公告</a>
 		    <a href="/account/line/{{enroll.classroom_id}}" role="button" class="btn btn-success">我的私訊</a>
    			{% if request.user|has_group:"teacher" %}

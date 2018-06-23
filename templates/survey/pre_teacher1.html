@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>
+{{classroom.name}}班的課前問卷：{{questionaires|length}}位學生
+</h1>
+<table>
+{% for enroll, questionair in questionaires %}
+{% if forloop.counter|add:9|divisibleby:10 %}
+<tr>
+<td>學生</td>
+<td>我曾經學過程式設計</td>
+<Td>學習經驗</Td>
+{% for question in pre_questions %}
+<td>{{question}}</td>  
+{% endfor %}
+</tr>
+{% endif %}
+<tr>
+<td nowrap>({{enroll.seat}}){{enroll.student.first_name}}</td>
+{% if questionair.p %}
+<td>{% if questionair.p == 2 %}是{% else %}{% if questionair.p == 1 %}否{% endif %}{% endif %}</td>
+<td>{{questionair.p_t}}</td>
+<td>{{questionair.p1}}</td>  
+<td>{{questionair.p2}}</td> 
+<td>{{questionair.p3}}</td> 
+<td>{{questionair.p4}}</td> 
+<td>{{questionair.p5}}</td> 
+<td>{{questionair.p6}}</td>  
+<td>{{questionair.p7}}</td> 
+<td>{{questionair.p8}}</td> 
+<td>{{questionair.p9}}</td> 
+<td>{{questionair.p10}}</td>
+{% else %}
+<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+<td colspan=11></td>
+{% endif %}
+</tr>  
+{% endfor %}
+</table>
+{% endblock %}
