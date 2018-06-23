@@ -605,7 +605,7 @@ def grade(request, lesson, classroom_id):
                     memo = enroll.score_memo_vphysics
                 elif lesson == "3":
                     memo = enroll.score_memo_euler
-                grade = total / len(lesson_list) * 0.6 + memo * 0.4
+                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
             data.append([enroll, enroll_score, memo, grade])                  
         return render_to_response('teacher/grade.html', {'lesson':lesson, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
 	

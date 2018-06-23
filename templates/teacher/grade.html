@@ -14,8 +14,8 @@
 {% for enroll, enroll_score, memo, grade in data %}
 <tr>
   <td>{{enroll.seat}}</td>
-  <td>{{enroll.student.first_name}}</td>
-  <td>{{grade}}</td>
+  <td nowrap>{{enroll.student.first_name}}</td>
+  <td align=center>{{grade}}</td>
   {% for score, index in enroll_score %}
   <td align=center>{% if score == -1 %}V{% else %}{{score}}{% endif %}</td>
   {% endfor %}
