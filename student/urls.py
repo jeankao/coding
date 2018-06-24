@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^work/show/(?P<lesson>\d+)/(?P<index>\d+)/$', views.show),      
     url(r'^work/memo/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.memo), 
    	url(r'^work/rank/(?P<lesson>\d+)/(?P<index>\d+)/$', views.rank), 
-    url(r'^work/download/(?P<index>\d+)/(?P<user_id>\d+)/(?P<workfile_id>\d+)/$', views.work_download),  	
+    url(r'^work/download/(?P<index>\d+)/(?P<user_id>\d+)/(?P<workfile_id>\d+)/$', views.work_download), 
+   	url(r'^work/list/(?P<lesson>\d+)/$', views.WorkListView.as_view()),     
     #查詢該作業分組小老師
     url(r'^group/work/(?P<lesson>\d+)/(?P<index>\d+)/(?P<classroom_id>\d+)$', views.work_group),  		
 	  url(r'^work/answer/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer),

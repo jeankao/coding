@@ -21,7 +21,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import MultipleObjectsReturned
 from binascii import a2b_base64
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+from time import localtime
+import pytz
+from django.core.paginator import Paginator
 
 # 課程瀏覽記錄
 def statics_lesson(request, lesson):
@@ -485,7 +488,42 @@ def rank(request, lesson, index):
     works = Work.objects.filter(lesson_id=lesson, index=index).order_by("id")
     return render_to_response('student/rank.html', {'works':works}, context_instance=RequestContext(request))
 
+# 列出所有日期作品
+class WorkListView(ListView):
+    model = Work
+    context_object_name = 'queryset'
+    template_name = 'student/works_list.html'    
+    paginate_by = 20
+    
+    def get_queryset(self):       
+        works = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+        queryset = []
+        start = datetime(2018,4,1)
+        end = datetime.today()
+        daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
+        for day in reversed(daterange):
+            utc = pytz.UTC        
+            work_start = filter(lambda w: w.publication_date > utc.localize(day), works)
+            work_end = filter(lambda w: w.publication_date < utc.localize(day+timedelta(days=1)), work_start)
+            if len(work_end)>0 :
+                queryset.append([day, len(work_end)])
+        return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super(WorkListView, self).get_context_data(**kwargs)      
+        works = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+        queryset = []
+        start = datetime(2018,4,1)
+        end = datetime.today()
+        daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
+        for day in reversed(daterange):
+            utc = pytz.UTC        
+            work_start = filter(lambda w: w.publication_date > utc.localize(day), works)
+            work_end = filter(lambda w: w.publication_date < utc.localize(day+timedelta(days=1)), work_start)
+            queryset.append([day, len(work_end)])
+        context['height'] = 200+ (end.year-start.year)*200
+        context['total_works'] = queryset
+        return context	  
 	
 # 查詢某作業所有同學心得
 def memo(request, lesson, classroom_id, index):
