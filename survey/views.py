@@ -294,16 +294,16 @@ def post_survey2(request):
     except ObjectDoesNotExist :
         questionaire = PostSurvey2(student_id=request.user.id)
     questions = []
-    questions.append([pre_questions2[0], questionaire.p1])		
-    questions.append([pre_questions2[1], questionaire.p2])		
-    questions.append([pre_questions2[2], questionaire.p3])		
-    questions.append([pre_questions2[3], questionaire.p4])
-    questions.append([pre_questions2[4], questionaire.p5])		
-    questions.append([pre_questions2[5], questionaire.p6])		
-    questions.append([pre_questions2[6], questionaire.p7])		
-    questions.append([pre_questions2[7], questionaire.p8])		
-    questions.append([pre_questions2[8], questionaire.p9])		
-    questions.append([pre_questions2[9], questionaire.p10])		
+    questions.append([post_questions2[0], questionaire.p1])		
+    questions.append([post_questions2[1], questionaire.p2])		
+    questions.append([post_questions2[2], questionaire.p3])		
+    questions.append([post_questions2[3], questionaire.p4])
+    questions.append([post_questions2[4], questionaire.p5])		
+    questions.append([post_questions2[5], questionaire.p6])		
+    questions.append([post_questions2[6], questionaire.p7])		
+    questions.append([post_questions2[7], questionaire.p8])		
+    questions.append([post_questions2[8], questionaire.p9])		
+    questions.append([post_questions2[9], questionaire.p10])		
     if request.method == 'POST':
             questionaire.p1 = request.POST['p2_1']
             questionaire.p2 = request.POST['p2_2']
