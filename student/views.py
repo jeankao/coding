@@ -503,10 +503,9 @@ class WorkListView(ListView):
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
         for day in reversed(daterange):
             utc = pytz.UTC        
-            work_start = filter(lambda w: w.publication_date > utc.localize(day), works)
-            work_end = filter(lambda w: w.publication_date < utc.localize(day+timedelta(days=1)), work_start)
-            if len(work_end)>0 :
-                queryset.append([day, len(work_end)])
+            work = filter(lambda w: w.publication_date > utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
+            if len(work)>0 :
+                queryset.append([day, len(work)])
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -518,9 +517,10 @@ class WorkListView(ListView):
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
         for day in reversed(daterange):
             utc = pytz.UTC        
-            work_start = filter(lambda w: w.publication_date > utc.localize(day), works)
-            work_end = filter(lambda w: w.publication_date < utc.localize(day+timedelta(days=1)), work_start)
-            queryset.append([day, len(work_end)])
+            work = filter(lambda w: w.publication_date > utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
+            if len(work)>0 :
+                queryset.append([day, len(work)])
+
         context['height'] = 200+ (end.year-start.year)*200
         context['total_works'] = queryset
         return context	  
