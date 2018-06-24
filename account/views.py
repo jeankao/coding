@@ -50,32 +50,37 @@ def homepage(request):
 		
     teacher = User.objects.filter(groups__name='teacher').count()
     student = Enroll.objects.values('student_id').distinct().count()
-    work = Work.objects.all().count()
-    class_scratch_pool = [classroom for classroom in Classroom.objects.filter(lesson=1)]    
+    workss = Work.objects.all()
+    classrooms = Classroom.objects.all()
+    class_scratch_pool = [classroom for classroom in filter(lambda w: w.lesson == 1, classrooms)]    
     class_scratch_ids = map(lambda a: a.id, class_scratch_pool)    
     class_scratch = len(class_scratch_pool)    
-    class_vphysics_pool = [classroom for classroom in Classroom.objects.filter(lesson=2)]    
+    class_vphysics_pool = [classroom for classroom in filter(lambda w: w.lesson == 2, classrooms)]    
     class_vphysics_ids = map(lambda a: a.id, class_vphysics_pool)    
     class_vphysics = len(class_vphysics_pool)    
-    class_euler_pool = [classroom for classroom in Classroom.objects.filter(lesson=3)]    
+    class_euler_pool = [classroom for classroom in filter(lambda w: w.lesson == 3, classrooms)]    
     class_euler_ids = map(lambda a: a.id, class_euler_pool)    
     class_euler = len(class_euler_pool)      
-    work_scratch = Work.objects.filter(lesson_id=1).count()
-    work_vphysics = Work.objects.filter(lesson_id=2).count()
-    work_euler = Work.objects.filter(lesson_id=3).count()
-    works = [work, [class_scratch, work_scratch], [class_vphysics, work_vphysics], [class_euler, work_euler]]
-    certificate_scratch1 = Enroll.objects.filter(certificate1=True).count() 
-    certificate_scratch2 = Enroll.objects.filter(certificate2=True).count() 
-    certificate_scratch3 = Enroll.objects.filter(certificate3=True).count()
-    certificate_scratch4 = Enroll.objects.filter(certificate4=True).count() 
+    work_scratch = len(filter(lambda w: w.lesson_id == 1, workss))
+    work_vphysics = len(filter(lambda w: w.lesson_id == 2, workss))
+    work_euler = len(filter(lambda w: w.lesson_id == 3, workss))
+    works = [len(workss), [class_scratch, work_scratch], [class_vphysics, work_vphysics], [class_euler, work_euler]]
+    enrolls = Enroll.objects.filter(seat__gt=0)
+    certificate_scratch1 = len(filter(lambda w: w.certificate1 == True, enrolls))
+    certificate_scratch2 = len(filter(lambda w: w.certificate2 == True, enrolls))
+    certificate_scratch3 = len(filter(lambda w: w.certificate3 == True, enrolls))
+    certificate_scratch4 = len(filter(lambda w: w.certificate4 == True, enrolls))
     certificate_scratch = certificate_scratch1+certificate_scratch2+certificate_scratch3+certificate_scratch4
-    certificate_vphysics = Enroll.objects.filter(certificate_vphysics=True).count()
-    certificate_euler = Enroll.objects.filter(certificate_euler=True).count()
-    enroll_scratch = Enroll.objects.filter(classroom_id__in=class_scratch_ids, seat__gt=0).count()
-    enroll_vphhysics = Enroll.objects.filter(classroom_id__in=class_vphysics_ids, seat__gt=0).count()
-    enroll_euler = Enroll.objects.filter(classroom_id__in=class_euler_ids, seat__gt=0).count()
+    certificate_vphysics =  len(filter(lambda w: w.certificate_vphysics == True, enrolls))
+    certificate_euler =  len(filter(lambda w: w.certificate_euler == True, enrolls))
+    classroom_scratch = [enroll for enroll in enrolls if enroll.classroom_id in class_scratch_ids]
+    enroll_scratch =  len(filter(lambda w: w.classroom_id, classroom_scratch))
+    classroom_vphysics = [enroll for enroll in enrolls if enroll.classroom_id in class_vphysics_ids]
+    enroll_vphysics =  len(filter(lambda w: w.classroom_id, classroom_vphysics))    
+    classroom_euler = [enroll for enroll in enrolls if enroll.classroom_id in class_euler_ids]
+    enroll_euler =  len(filter(lambda w: w.classroom_id, classroom_euler))
     certificate = certificate_scratch+certificate_vphysics+certificate_euler
-    certificates = [certificate, [enroll_scratch, certificate_scratch], [enroll_vphhysics, certificate_vphysics], [enroll_euler, certificate_euler]]
+    certificates = [certificate, [enroll_scratch, certificate_scratch], [enroll_vphysics, certificate_vphysics], [enroll_euler, certificate_euler]]
     return render_to_response('homepage.html', {'certificates':certificates, 'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
   
 # 網站大廳
