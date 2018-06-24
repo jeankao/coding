@@ -10,4 +10,10 @@ urlpatterns = [
     url(r'^post_result1/(?P<classroom_id>\d+)/$', views.post_result1),  
     url(r'^pre_survey1/teacher/(?P<classroom_id>\d+)/$', views.pre_teacher1),  
     url(r'^post_survey1/teacher/(?P<classroom_id>\d+)/$', views.post_teacher1),    
+    url(r'^pre_survey2/$', views.pre_survey2),
+    url(r'^post_survey2/$', views.post_survey2), 
+    url(r'^pre_result2/(?P<classroom_id>\d+)/$', views.pre_result2),
+    url(r'^post_result2/(?P<classroom_id>\d+)/$', views.post_result2),   
+    url(r'^pre_survey2/teacher/(?P<classroom_id>\d+)/$', views.pre_teacher2),  
+    url(r'^post_survey2/teacher/(?P<classroom_id>\d+)/$', views.post_teacher2),      
 ]

@@ -86,7 +86,7 @@ def lesson(request, lesson):
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
         # 限登入者
         if not request.user.id > 0:
-            return redirect("/")    
+            return redirect("/account/login/0")    
         else :
             lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16} 
         if lesson in lock:

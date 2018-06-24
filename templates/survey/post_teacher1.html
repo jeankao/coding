@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>
-{{classroom.name}}班的課前問卷：{{questionaires|length}}位學生
+{{classroom.name}}班的課後問卷：{{questionaires|length}}位學生
 </h1>
 <table>
 {% for enroll, questionair in questionaires %}

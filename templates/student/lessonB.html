@@ -9,6 +9,9 @@
       <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="/survey/pre_survey2" role="tab" aria-selected="false">問卷</a>
+    </li>    
+    <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
     </li>
     {% if user.is_authenticated %}
@@ -485,7 +488,7 @@
   <ul class="nav nav-pills" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
-    </li>
+    </li>   
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
     </li>
@@ -494,6 +497,9 @@
       <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：行星公轉</a>
     </li>
     {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="/survey/post_survey2" role="tab" aria-selected="false">問卷</a>
+    </li>    
   </ul>
   <br />
   <div class="tab-content" id="myTabContent">
