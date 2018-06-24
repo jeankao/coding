@@ -493,19 +493,9 @@ class WorkListView(ListView):
     model = Work
     context_object_name = 'queryset'
     template_name = 'student/works_list.html'    
-    paginate_by = 20
     
     def get_queryset(self):       
-        works = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         queryset = []
-        start = datetime(2018,4,1)
-        end = datetime.today()
-        daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
-        for day in reversed(daterange):
-            utc = pytz.UTC        
-            work = filter(lambda w: w.publication_date > utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
-            if len(work)>0 :
-                queryset.append([day, len(work)])
         return queryset
 
     def get_context_data(self, **kwargs):

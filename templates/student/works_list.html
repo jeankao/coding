@@ -36,18 +36,4 @@
 {% endblock %}
 {% block content %}
     <div id="calendar_basic" style="width: 1000px;"></div>
-<table class="table" style="width:100%">
-            <tr>
-                <td>日期</td>
-                <td>上傳作品數</td>                
-            </tr>
-        {% for day, count in queryset %}
-            <tr>
-            <td>{{day|date:"Y M, d"}}--{{day|date:"l"}}</td>
-            <td>{{count}}</td>
-            </tr>
-        {% endfor %}
-        </table>    
-        {% load pagination %}
-        {% get_pagination %}
 {% endblock %}
