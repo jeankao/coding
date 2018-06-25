@@ -11,7 +11,11 @@
             </tr>
         {% for work in works %}
             <tr>
+							  {% if request.user.is_superuser %}
+                <td nowrap><a href="/account/profile/{{log.user_id}}">{{log.user_id|realname}}</a></td>
+							  {% else %}              
               <td>{{work.user_id|realname2}}</td>
+                {% endif %}
               <td>{{work.user.last_name|school}}</td>
               <td>{{work.publication_date}}</td>
               <td>{{work.index|work_name:lesson}}</td>
