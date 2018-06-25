@@ -532,6 +532,7 @@ class WorkDayListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(WorkDayListView, self).get_context_data(**kwargs)      
         context['lesson'] = self.kwargs['lesson']
+        context['date'] = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
         return context    
     
 	
