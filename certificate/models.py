@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 def upload_path_handler(instance, filename):
-    return "static/certificate/0/user_{id}/{filename}".format(id=instance.student_id, filename=filename)
+    return "static/1/0/user_{id}/{filename}".format(id=instance.student_id, filename=filename)
 
 # Hour of code證書
 class Certificate(models.Model):

@@ -453,7 +453,7 @@ def score_peer(request, lesson, index, classroom_id, group):
 def memo(request, lesson, classroom_id):
     # 限本班任課教師
     if not is_teacher(request.user, classroom_id):
-        return redirect("homepage")
+        return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom_name = Classroom.objects.get(id=classroom_id).name
     return render_to_response('teacher/memo.html', {'lesson':lesson, 'enrolls':enrolls, 'classroom_name':classroom_name}, context_instance=RequestContext(request))

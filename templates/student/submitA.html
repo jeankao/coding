@@ -10,7 +10,7 @@ function checkvalue() {
     }
 }
 $(function () {
-    $('input[type=file]').change(function () {
+    $('input[type=file][name="file"]').change(function () {
         var val = $(this).val().toLowerCase(),
             regex = new RegExp("(.*?)\.(sb2)$");
 

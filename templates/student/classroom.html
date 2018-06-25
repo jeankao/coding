@@ -25,7 +25,15 @@
 			<a href="/student/progress/{{enroll.classroom.lesson}}/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
 			<a href="/student/progress/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
 {% endif %}
-
+      <BR><BR>修業證書：
+{% if enroll.classroom.lesson == 1 %}			
+			<a href="/certificate/cert/classroom/1/0/{{enroll.classroom.id}}/" role="button" class="btn btn-success">Hour of Code</a>        
+			<a href="/certificate/cert/classroom/1/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>        
+			<a href="/certificate/cert/classroom/1/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>
+			<a href="/certificate/cert/classroom/1/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
+			<a href="/certificate/cert/classroom/1/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
+{% endif %}        
+        
 			<BR><BR>師生互動：
 			<a href="/survey/pre_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課前問卷</a>
 			<a href="/survey/post_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課後問卷</a>        

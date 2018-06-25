@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from account.models import Message, MessagePoll, Profile, School
+from certificate.forms import ImageUploadForm
 from teacher.models import Classroom
 from student.models import Enroll
 from PIL import Image,ImageDraw,ImageFont
@@ -15,6 +16,48 @@ import cStringIO as StringIO
 import os
 from django.utils import timezone
 from django.http import JsonResponse
+
+# 上傳 Hour of code 證書
+def upload_pic(request):
+    m = []
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            # open file write mode  
+            if not os.path.exists(settings.BASE_DIR+"/static/certification/"):
+                os.mkdir(settings.BASE_DIR+"/static/certification/")    
+            if not os.path.exists(settings.BASE_DIR+"/static/certification/1"):
+                os.mkdir(settings.BASE_DIR+"/static/certification/1")
+            if not os.path.exists(settings.BASE_DIR+"/static/certification/1/0"):
+                os.mkdir(settings.BASE_DIR+"/static/certification/1/0")           
+            try:
+                m = Certificate.objects.get(student_id=request.user.id)
+                m.picture = form.cleaned_data['image']
+                
+                image_field = form.cleaned_data.get('image')
+                image_file = StringIO.StringIO(image_field.read())
+                image = Image.open(image_file)
+                image = image.resize((800, 600), Image.ANTIALIAS)
+
+                image_file = StringIO.StringIO()
+                image.save('static/certification/1/0/'+str(request.user.id)+'.jpg', 'JPEG', quality=90)
+
+                image_field.file = image_file                
+                m.save()                
+
+            except ObjectDoesNotExist:
+                m = Certificate(picture=form.cleaned_data['image'], student_id=request.user.id)
+                m.save()
+            classroom_id = Enroll.objects.filter(student_id=request.user.id).order_by('-id')[0].classroom.id           
+            return redirect('/certificate/cert/classroom/1/0/'+str(classroom_id))
+    else :
+        try:
+            m = Certificate.objects.get(student_id=request.user.id)   
+        except ObjectDoesNotExist:
+            pass
+        form = ImageUploadForm()
+    return render_to_response('certificate/certificate.html', {'form':form, 'certificate': m}, context_instance=RequestContext(request))
+
 
 def openFile(fileName, mode, context):
 	# open file using python's open method
@@ -45,7 +88,10 @@ def writeFile(content, fileName, context):
 # 顯示證書
 def show(request, lesson, unit, enroll_id):
     enroll = Enroll.objects.get(id=enroll_id)
-    certificate_image = lesson + "/" + unit + "/" + enroll_id + ".jpg"		
+    if lesson == "1" and unit == "0":
+        certificate_image = lesson + "/" + unit + "/" + str(request.user.id) + ".jpg"        
+    else :
+        certificate_image = lesson + "/" + unit + "/" + enroll_id + ".jpg"		
     return render_to_response('certificate/show.html', {'certificate_image': certificate_image}, context_instance=RequestContext(request))
     
     
@@ -167,6 +213,74 @@ def make(request):
     else:
         return JsonResponse({'status':'ko'}, safe=False)
 	
+
+
+# 顯示班級證書    
+def classroom(request, lesson, unit, classroom_id):
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    classroom_name = Classroom.objects.get(id=classroom_id).name
+    datas = []
+    nodatas = []
+    for enroll in enrolls:	
+        if lesson == "1":
+            if unit == "0" :
+                try :
+                    certificate = Certificate.objects.get(student_id=enroll.student_id)
+                    datas.append([enroll, certificate])
+                except ObjectDoesNotExist:
+                    certificate = []
+                    nodatas.append([enroll, []])
+		
+                def getKey(custom):
+                    return custom[1].publish
+                datas = sorted(datas, key=getKey)	
+            elif unit == "1" :
+                    if enroll.certificate1:
+	                    datas.append(enroll)
+                    else :
+                        nodatas.append(enroll)	
+            elif unit == "2" :
+                    if enroll.certificate2:
+       	                datas.append(enroll)
+                    else :
+                        nodatas.append(enroll)	
+            elif unit == "3" :
+                    if enroll.certificate3:
+	                      datas.append(enroll)
+                    else :
+                        nodatas.append(enroll)	
+            elif unit == "4" :
+                    if enroll.certificate4:
+	                      datas.append(enroll)
+                    else :
+		                    nodatas.append(enroll)						
+            if unit =="1" :
+                def getKey1(custom):
+                    return custom.certificate1_date
+                datas = sorted(datas, key=getKey1)				
+            elif unit == "2":
+                def getKey2(custom):
+                    return custom.certificate2_date
+                datas = sorted(datas, key=getKey2)	
+            elif unit == "3":
+                def getKey3(custom):
+                    return custom.certificate3_date
+                datas = sorted(datas, key=getKey3)		
+            elif unit == "4":
+                def getKey4(custom):
+                    return custom.certificate4_date
+                datas = sorted(datas, key=getKey4)		
+
+            def getKey5(custom):
+                if unit=="0" :
+                    return custom[0].seat
+                else :
+                    return custom.seat
+            nodatas = sorted(nodatas, key=getKey5)
+        for data in nodatas:
+		    datas.append(data)			
+    return render_to_response('certificate/classroom.html', {'enrolls':nodatas,'datas': datas, 'unit':unit}, context_instance=RequestContext(request))
+      
 def certificate(request, lesson, unit, enroll_id, action):
     if enroll_id and action :
         try :
@@ -208,5 +322,5 @@ def certificate(request, lesson, unit, enroll_id, action):
                     enroll.certificate_euler = False                    
             enroll.save()
         except ObjectDoesNotExist :
-            pass
-        return redirect('/teacher/memo/'+lesson+"/"+str(enroll.classroom_id))
+            enroll = Enroll()
+        return redirect('/teacher/memo/'+lesson+"/"+str(enroll.classroom_id))    
