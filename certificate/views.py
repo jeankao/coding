@@ -43,11 +43,12 @@ def upload_pic(request):
                 image.save('static/certification/1/0/'+str(request.user.id)+'.jpg', 'JPEG', quality=90)
 
                 image_field.file = image_file                
-                m.save()                
-
+                m.save()                              
             except ObjectDoesNotExist:
                 m = Certificate(picture=form.cleaned_data['image'], student_id=request.user.id)
                 m.save()
+            if os.path.isfile(str(m.picture)):
+                os.remove(str(m.picture))
             classroom_id = Enroll.objects.filter(student_id=request.user.id).order_by('-id')[0].classroom.id           
             return redirect('/certificate/cert/classroom/1/0/'+str(classroom_id))
     else :
