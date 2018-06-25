@@ -298,7 +298,7 @@ class UserListView(ListView):
                         queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
                 else :
                         if self.kwargs['group'] == "1":
-                            queryset = User.objects.filter(groups__name='apply')
+                            queryset = User.objects.filter(groups__name='apply').order_by("-id")
                         else :
                             queryset = User.objects.all().order_by('-id')
                 return queryset
