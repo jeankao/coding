@@ -473,16 +473,17 @@ def submit(request, lesson, index):
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))	
         return render_to_response('student/submit.html', {'form':form, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
 
-def show(request, lesson, index):
-    work = []
-    try:
-        work = Work.objects.get(lesson_id=lesson, index=index, user_id=request.user.id)
-    except ObjectDoesNotExist:
-        pass
-    except MultipleObjectsReturned:
-        work = Work.objects.filter(lesson_id=lesson, index=index, user_id=request.user.id).last()		
-    return render_to_response('student/show.html', {'work':work}, context_instance=RequestContext(request))
-
+def show(request, lesson, index, user_id):
+    if user_id == request.user.id or request.user.is_superuser:
+        try:
+            work = Work.objects.get(lesson_id=lesson, index=index, user_id=user_id)
+        except ObjectDoesNotExist:
+            work = None
+        except MultipleObjectsReturned:
+            work = Work.objects.filter(lesson_id=lesson, index=index, user_id=user_id).last()		
+        return render_to_response('student/show.html', {'work':work}, context_instance=RequestContext(request))
+    else :
+        return redirect("/") 
     
 def rank(request, lesson, index):
     works = Work.objects.filter(lesson_id=lesson, index=index).order_by("id")

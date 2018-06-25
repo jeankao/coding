@@ -26,7 +26,7 @@ urlpatterns = [
     #作業
     url(r'^work/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.work_list)),  
     url(r'^work/submit/(?P<lesson>\d+)/(?P<index>\d+)/$', views.submit),
-    url(r'^work/show/(?P<lesson>\d+)/(?P<index>\d+)/$', views.show),      
+    url(r'^work/show/(?P<lesson>\d+)/(?P<index>\d+)/(?P<user_id>\d+)/$', views.show),      
     url(r'^work/memo/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.memo), 
    	url(r'^work/rank/(?P<lesson>\d+)/(?P<index>\d+)/$', views.rank), 
     url(r'^work/download/(?P<index>\d+)/(?P<user_id>\d+)/(?P<workfile_id>\d+)/$', views.work_download), 

@@ -468,8 +468,7 @@ class LogListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(LogListView, self).get_context_data(**kwargs)
-        user_name = User.objects.get(id=self.kwargs['user_id']).first_name
-        context.update({'user_name': user_name})
+        context['user_id'] = self.kwargs['user_id']
         return context		
         	
 # 顯示個人檔案

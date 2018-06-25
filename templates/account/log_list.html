@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+{{user_id|realname}}
+        <table>
+        <tr>
+            <td>記錄</td>
+            <td>時間</td>
+        </tr>
+        {% for log in logs %}
+            <tr>
+                <td>{% if user.is_superuser %}<a href="{{log.url}}/{{user_id}}">{% endif %}{{log.message}}{% if user.is_superuser %}</a>{% endif %}</td>
+				<td>{{log.publish}}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% include "pagination.html" with page=page_obj %}
+{% endblock %}
