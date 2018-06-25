@@ -9,6 +9,17 @@ function checkvalue() {
         return true;
     }
 }
+$(function () {
+    $('input[type=file]').change(function () {
+        var val = $(this).val().toLowerCase(),
+            regex = new RegExp("(.*?)\.(sb2)$");
+
+        if (!(regex.test(val))) {
+            $(this).val('');
+            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2)');
+        }
+    });
+});  
 </script>
             <form action="/student/work/submit/1/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this);">      
               <input type="hidden" name="lesson" value={{lesson}}>
