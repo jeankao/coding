@@ -422,12 +422,12 @@ def submit(request, lesson, index):
                         if len(answers)>0:
                             update_avatar(request.user.id, 1, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message='1分--繳交作業<'+lesson_list[int(index)][1]+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=1, message='1分--繳交作業<'+lesson_list[int(index)-1][1]+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()								
                         else :
                             update_avatar(request.user.id, 1, 3)					
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業<'+lesson_list[int(index)][1]+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業<'+lesson_list[int(index)-1][1]+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
                             if lesson == "2":
                                 profile.lock2 +=1
