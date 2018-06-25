@@ -11,12 +11,12 @@
         </tr>
         {% for log in visitorlogs %}
             <tr>
-							  {% if request.user.id == 1 %}
+							  {% if request.user.is_superuser %}
                 <td nowrap><a href="/account/profile/{{log.user_id}}">{{log.user_id|realname}}</a></td>
 							  {% else %}
-							  <td nowrap>{{log.user_id|realname}}</td>
+							  <td nowrap>{{log.user_id|realname2}}</td>
 							  {% endif %}
-              <td>{{log.user_id|school}}</td>
+              <td>{{log.user.last_name|school}}</td>
 							  <td>{{log.user_id|classroom}}</td>							
 				<td nowrap>{{log.time}}</td>
               <td nowrap>{{log.IP}}</td>

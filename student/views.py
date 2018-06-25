@@ -491,15 +491,10 @@ def rank(request, lesson, index):
 # 列出所有日期作品
 class WorkListView(ListView):
     model = Work
-    context_object_name = 'queryset'
+    context_object_name = 'total_works'
     template_name = 'student/works_list.html'    
     
     def get_queryset(self):       
-        queryset = []
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(WorkListView, self).get_context_data(**kwargs)      
         works = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         queryset = []
         start = datetime(2018,4,1)
@@ -507,13 +502,38 @@ class WorkListView(ListView):
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
         for day in reversed(daterange):
             utc = pytz.UTC        
-            work = filter(lambda w: w.publication_date > utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
+            work = filter(lambda w: w.publication_date >= utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
             if len(work)>0 :
                 queryset.append([day, len(work)])
+        return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super(WorkListView, self).get_context_data(**kwargs)      
+        start = datetime(2018,4,1)
+        end = datetime.today()
         context['height'] = 200+ (end.year-start.year)*200
-        context['total_works'] = queryset
-        return context	  
+        context['lesson'] = self.kwargs['lesson']
+        return context	 
+      
+# 列出某日所有作品
+class WorkDayListView(ListView):
+    model = Work
+    context_object_name = 'works'
+    template_name = 'student/works_day.html'    
+    paginate_by = 20    
+    
+    def get_queryset(self):       
+        work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])        
+        day = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
+        utc = pytz.UTC        
+        works = filter(lambda w: w.publication_date >= utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), work_pool)
+        return works
+    
+    def get_context_data(self, **kwargs):
+        context = super(WorkDayListView, self).get_context_data(**kwargs)      
+        context['lesson'] = self.kwargs['lesson']
+        return context    
+    
 	
 # 查詢某作業所有同學心得
 def memo(request, lesson, classroom_id, index):

@@ -119,6 +119,10 @@ class VisitorLog(models.Model):
     user_id = models.IntegerField(default=0)
     IP = models.CharField(max_length=20, default="")
     time = models.DateTimeField(auto_now_add=True)		    
+    
+    @property        
+    def user(self):
+        return User.objects.get(id=self.user_id)       
 		
 #課程計數器
 class LessonCounter(models.Model):

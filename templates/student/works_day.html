@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+    <div id="calendar_basic" style="width: 1000px;"></div>
+<table class="table" style="width:100%">
+            <tr>
+               <td>姓名</td>
+               <td>學校</td>
+               <td>日期</td>
+               <td>作業</td>
+            </tr>
+        {% for work in works %}
+            <tr>
+              <td>{{work.user_id|realname2}}</td>
+              <td>{{work.user.last_name|school}}</td>
+              <td>{{work.publication_date}}</td>
+              <td>{{work.index|work_name:lesson}}</td>
+            </tr>
+        {% endfor %}
+        </table>    
+        {% load pagination %}
+        {% get_pagination %}
+{% endblock %}

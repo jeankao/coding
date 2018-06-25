@@ -111,6 +111,10 @@ class Work(models.Model):
         index = self.index
         return user.first_name+"("+str(index)+")"
 
+    @property        
+    def user(self):
+        return User.objects.get(id=self.user_id)       
+
 class WorkFile(models.Model):
     work_id = models.IntegerField(default=0) 
     filename = models.TextField()

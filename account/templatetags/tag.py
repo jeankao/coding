@@ -3,6 +3,7 @@ from django import template
 from account.models import MessagePoll, School
 from student.models import Enroll, Work, WorkFile
 from teacher.models import Classroom
+from student.lesson import *
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
@@ -56,7 +57,7 @@ def classroom(user_id):
             classroom_name = Classroom.objects.get(id=enrolls[0].classroom_id).name
         else :
             classroom_name = ""
-        return str(len(enrolls)) + ":" + classroom_name
+        return classroom_name
     else : 
         return "匿名"
       
@@ -68,6 +69,24 @@ def realname(user_id):
     except ObjectDoesNotExist:
         pass
         return ""      
+
+@register.filter(takes_context=True)
+def realname2(user_id):
+    try: 
+        user = User.objects.get(id=user_id)
+        return user.first_name.replace(user.first_name[1], "O")
+    except ObjectDoesNotExist:
+        pass
+        return ""  
+      
+@register.filter(takes_context=True)
+def work_name(index, lesson):
+    if lesson == "1":
+        return lesson_list1[index-1][2]
+    elif lesson == "2":
+        return lesson_list2[index-1][1]
+    elif lesson == "3":
+        return lesson_list3[index-1][1]
       
 @register.filter(takes_context=True)
 def school(school_id):
