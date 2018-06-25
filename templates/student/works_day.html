@@ -12,7 +12,7 @@
         {% for work in works %}
             <tr>
 							  {% if request.user.is_superuser %}
-                <td nowrap><a href="/account/profile/{{log.user_id}}">{{log.user_id|realname}}</a></td>
+                <td nowrap><a href="/account/profile/{{work.user_id}}">{{work.user_id|realname}}</a></td>
 							  {% else %}              
               <td>{{work.user_id|realname2}}</td>
                 {% endif %}
