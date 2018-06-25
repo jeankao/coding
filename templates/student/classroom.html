@@ -15,6 +15,7 @@
 	        <a href="/student/work/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">作業</a>
 {% if not enroll.classroom.lesson == 1 %}
 			<a href="/student/progress/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度</a>
+			<a href="/certificate/cert/classroom/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">證書</a>          
 {% endif %}
 			<a href="/student/work1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">小老師</a>
       <a href="/student/work/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">詞頻</a>
@@ -25,8 +26,8 @@
 			<a href="/student/progress/{{enroll.classroom.lesson}}/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
 			<a href="/student/progress/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
 {% endif %}
-      <BR><BR>修業證書：
 {% if enroll.classroom.lesson == 1 %}			
+      <BR><BR>修業證書：        
 			<a href="/certificate/cert/classroom/1/0/{{enroll.classroom.id}}/" role="button" class="btn btn-success">Hour of Code</a>        
 			<a href="/certificate/cert/classroom/1/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>        
 			<a href="/certificate/cert/classroom/1/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>

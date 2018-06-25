@@ -3,6 +3,7 @@ from django import template
 from account.models import MessagePoll, School
 from student.models import Enroll, Work, WorkFile
 from teacher.models import Classroom
+from certificate.models import Certificate
 from student.lesson import *
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -195,3 +196,4 @@ def student_username(name):
 def code_highlight(code):  
     html_code = highlight(code, PythonLexer(), HtmlFormatter(linenos=True))
     return html_code
+  

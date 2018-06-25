@@ -218,7 +218,7 @@ def make(request):
 
 # 顯示班級證書    
 def classroom(request, lesson, unit, classroom_id):
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom_name = Classroom.objects.get(id=classroom_id).name
     datas = []
     nodatas = []
@@ -278,9 +278,19 @@ def classroom(request, lesson, unit, classroom_id):
                 else :
                     return custom.seat
             nodatas = sorted(nodatas, key=getKey5)
-        for data in nodatas:
-		    datas.append(data)			
-    return render_to_response('certificate/classroom.html', {'enrolls':nodatas,'datas': datas, 'unit':unit}, context_instance=RequestContext(request))
+        elif lesson == "2":
+            if enroll.certificate_vphysics:
+	              datas.append(enroll)
+            else :
+                nodatas.append(enroll)	            
+        elif lesson == "3":
+            if enroll.certificate_euler:
+	              datas.append(enroll)
+            else :
+                nodatas.append(enroll)	                       
+    for student in nodatas:
+		    datas.append(student)
+    return render_to_response('certificate/classroom.html', {'nodatas':nodatas, 'enrolls':enrolls,'datas': datas, 'unit':unit, 'lesson':lesson}, context_instance=RequestContext(request))
       
 def certificate(request, lesson, unit, enroll_id, action):
     if enroll_id and action :
