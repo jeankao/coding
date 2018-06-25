@@ -197,3 +197,10 @@ def code_highlight(code):
     html_code = highlight(code, PythonLexer(), HtmlFormatter(linenos=True))
     return html_code
   
+@register.filter
+def hoc(user_id):  
+    try:
+        certificate = Certificate.objects.get(student_id=user_id)
+        return "<img src=/static/certification/1/0/"+str(user_id)+".jpg>"
+    except ObjectDoesNotExist:     
+        return ""

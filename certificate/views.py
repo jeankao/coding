@@ -37,7 +37,7 @@ def upload_pic(request):
                 image_field = form.cleaned_data.get('image')
                 image_file = StringIO.StringIO(image_field.read())
                 image = Image.open(image_file)
-                image = image.resize((800, 600), Image.ANTIALIAS)
+                image = image.resize((900, 640), Image.ANTIALIAS)
 
                 image_file = StringIO.StringIO()
                 image.save('static/certification/1/0/'+str(request.user.id)+'.jpg', 'JPEG', quality=90)
@@ -202,11 +202,7 @@ def make(request):
                 try :
                     os.remove(settings.BASE_DIR+"/static/certificate/"+unit+"/"+enroll_id+".jpg")	
                 except:
-                    pass
-                # 記錄系統事件
-                if is_event_open(request) :                  
-                    log = Log(user_id=request.user.id, event=u'取消證書<'+unit+'><'+enroll.student.first_name+'>')
-                    log.save() 	                
+                    pass               
             enroll.save()
         except ObjectDoesNotExist :
             pass
