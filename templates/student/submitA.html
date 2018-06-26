@@ -1,7 +1,7 @@
 {% load tag %}
 <script type="text/javascript">
-function checkvalue() { 
-    var mystring = document.getElementById('id_memo{{index}}').value; 
+function checkvalue(a, index) { 
+    var mystring = document.getElementById('id_memo'+index).value; 
     if(!mystring.match(/\S/)) {
         alert ('請填寫心得~~');
         return false;
@@ -21,7 +21,7 @@ $(function () {
     });
 });  
 </script>
-            <form action="/student/work/submit/1/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this);">      
+            <form action="/student/work/submit/1/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this, {{index}});">      
               <input type="hidden" name="lesson" value={{lesson}}>
               <table class="table">            
         {% if not work_dict|hash_memo:index %}                      

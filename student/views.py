@@ -676,3 +676,77 @@ def answer_watch(request, lesson, index):
     answer = Answer(lesson_id=lesson, index=index, student_id=request.user.id)
     answer.save()
     return redirect("/student/work/answer/"+lesson+"/"+index)	
+  
+# 測驗卷
+def exam(request):
+    # 限登入者
+    if not request.user.is_authenticated():
+        return redirect("/account/login/")    
+    else :
+        return render_to_response('student/exam.html', context_instance=RequestContext(request))
+
+# 測驗卷得分
+def exam_score(request):
+        exams = Exam.objects.filter(student_id=request.user.id)
+        return render_to_response('student/exam_score.html', {'exams':exams} , context_instance=RequestContext(request))
+
+# 測驗卷檢查答案		
+def exam_check(request):
+    exam_id = request.POST.get('examid')
+    user_answer = request.POST.get('answer').split(",")
+    # 記錄系統事件
+    if is_event_open(request) :      
+        log = Log(user_id=request.user.id, event=u'繳交測驗卷<'+exam_id+'>')
+        log.save()      
+    if exam_id == "1":
+        answer = "C,A,D,C,C,A,B,B,D,D"
+        answer_list = answer.split(",")
+        ''' 儲存答案 '''
+        ua_test = ""
+        score = 0
+        for i in range(10) :
+            if user_answer[i] == answer_list[i] :
+                score = score + 10
+            i = i + 1
+            ua_test = "".join(user_answer)
+            '''ua_test = ua_test + user_answer[i]
+            '''
+        exam = Exam(exam_id=1, student_id=request.user.id, answer=ua_test, score=score)
+        exam.save()
+        ''' 回傳正確答案 '''
+        return JsonResponse({'status':'ok','answer':answer}, safe=False)	
+    elif exam_id == "2":
+        answer = "B,C,C,A,D,B,A,D,B,C"
+        answer_list = answer.split(",")
+        ''' 儲存答案 '''
+        ua_test = ""
+        score = 0
+        for i in range(10) :
+            if user_answer[i] == answer_list[i] :
+                score = score + 10
+            i = i + 1
+            ua_test = "".join(user_answer)
+            '''ua_test = ua_test + user_answer[i]
+            '''
+        exam = Exam(exam_id=2, student_id=request.user.id, answer=ua_test, score=score)
+        exam.save()	
+        return JsonResponse({'status':'ok','answer':answer}, safe=False)
+    elif exam_id == "3":
+        answer = "D,C,A,B,D,C,D,A,D,B"
+        answer_list = answer.split(",")
+        ''' 儲存答案 '''
+        ua_test = ""
+        score = 0
+        for i in range(10) :
+            if user_answer[i] == answer_list[i] :
+                score = score + 10
+            i = i + 1
+            ua_test = "".join(user_answer)
+            '''ua_test = ua_test + user_answer[i]
+            '''
+        exam = Exam(exam_id=3, student_id=request.user.id, answer=ua_test, score=score)
+        exam.save()	
+        return JsonResponse({'status':'ok','answer':answer}, safe=False)
+    else:
+        return JsonResponse({'status':'ko'}, safe=False)
+          

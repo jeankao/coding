@@ -38,5 +38,9 @@ urlpatterns = [
 	  url(r'^work/answer_watch/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer_watch),	
     #url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),  	
     # 作業進度查詢
-    url(r'^progress/(?P<lesson>\d+)/(?P<unit>\d+)/(?P<classroom_id>\d+)/$', views.progress),   
+    url(r'^progress/(?P<lesson>\d+)/(?P<unit>\d+)/(?P<classroom_id>\d+)/$', views.progress),  
+    #測驗
+    url(r'^exam/$', views.exam),      
+    url(r'^exam_check/$', views.exam_check),     
+    url(r'^exam/score/$', views.exam_score),   
 ]
