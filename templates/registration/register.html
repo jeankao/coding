@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block header %}
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script src="/static/register_helper.js" async defer></script>
+  <script src="/static/register_helper.js"></script>
   <script>
   //---------------------------------------------------------------------------
   var school_pool = [
@@ -20,7 +20,6 @@
     {{ form.as_table }}
     </table>
     <p><input class="btn-info" type="submit" value="建立帳號"></p>
-  </form>
   </form>
 {% endblock %}
 

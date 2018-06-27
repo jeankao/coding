@@ -230,6 +230,7 @@ def register(request):
     else:
             form = RegistrationForm()
     school_pool = School.objects.filter(online=True)
+    '''
     county_pool = County.objects.all()
     zone_pool = Zone.objects.all()
     district = []
@@ -247,6 +248,8 @@ def register(request):
         index = index + 1      
     school = School.objects.get(id=1)
     return render_to_response('registration/register.html', {'form': form, 'district':district, 'school':school, 'schools': school_pool, 'zones': zone_pool}, context_instance=RequestContext(request))
+    '''
+    return render_to_response('registration/register.html', {'form': form, 'schools': school_pool}, context_instance=RequestContext(request))
 
 # 註冊學校
 def register_school(request):      
