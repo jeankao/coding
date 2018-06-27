@@ -175,3 +175,9 @@ div.wrapper h1, div.wrapper h2, div.wrapper h3, div.wrapper h4, div.wrapper h5, 
 table.tablesorter tr:hover td {
     background: #faffbc;
 }
+
+.answer_list>input[name="ans"] {
+    font-size: 72px;
+    width: 100px;
+    text-align: center;
+}

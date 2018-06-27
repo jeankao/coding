@@ -2,12 +2,12 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 #from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from student.lesson import *
 from django.views.generic import ListView, CreateView
-from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer
+from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam
 from teacher.models import Classroom
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
@@ -35,26 +35,26 @@ def statics_lesson(request, lesson):
 			counter = LessonCounter(name=lesson, hit=1)
 		except MultipleObjectsReturned:
 			counters = LessonCounter.objects.filter(name=lesson)
-			counter = counter[0] 
+			counter = counter[0]
 			counter.hit = counter.hit + 1
 		counter.save()
 		day = str(datetime.now())[0:4]+str(datetime.now())[5:7]+str(datetime.now())[8:10]
 		try :
 			daycounter = DayCounter.objects.get(day=day)
-			daycounter.hit = daycounter.hit + 1			
+			daycounter.hit = daycounter.hit + 1
 		except ObjectDoesNotExist:
 			daycounter = DayCounter(day=day, hit=1)
 		except MultipleObjectsReturned:
 			daycounters = DayCounter.objects.filter(day=day)
 			daycounter = daycounters[0]
 			daycounter.hit = daycounter.hit + 1
-		daycounter.save()		
+		daycounter.save()
 		log = LogCounter(counter_id=counter.id, counter_ip=request.META['REMOTE_ADDR'])
 		log.save()
 		return counter.hit
 
 
-# 各種課程    
+# 各種課程
 def lessons(request, subject_id):
     hit = statics_lesson(request, subject_id)
     if request.user.is_authenticated():
@@ -71,14 +71,14 @@ def lessons(request, subject_id):
             lock = profile.lock1
     else :
         user_id = 0
-        lock = 1  
+        lock = 1
     return render_to_response('student/lessons.html', {'subject_id': subject_id, 'counter': hit, 'lock':lock}, context_instance=RequestContext(request))
 
 # 課程內容
-def lesson(request, lesson):  
-    work_dict = {}	
+def lesson(request, lesson):
+    work_dict = {}
     hit = statics_lesson(request, lesson)
-       
+
     if request.user.id > 0 :
         profile = Profile.objects.get(user=request.user)
     else:
@@ -86,42 +86,42 @@ def lesson(request, lesson):
     if lesson[0] == "A":
         lesson_id = 1
         profile_lock = profile.lock1
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
         if not request.user.id > 0:
-            return redirect("/account/login/0")    
+            return redirect("/account/login/0")
         else :
-            lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16} 
+            lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16}
         if lesson in lock:
             if profile_lock < lock[lesson]:
                 if not request.user.groups.filter(name='teacher').exists():
-                    return redirect("/")    
+                    return redirect("/")
         return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "B":
-        lesson_id = 2     
+        lesson_id = 2
         profile_lock = profile.lock2
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
         if not request.user.is_authenticated():
-            return redirect("/account/login/")    
+            return redirect("/account/login/")
         else :
-            lock = {'B02':3, 'B03':4, 'B04':5, 'B05':6, 'B06':7, 'B07':8, 'B08':9, 'B09':10, 'B10':11, 'B11':12, 'B12':13, 'B13':14, 'B14':15, 'B15':16, 'B16':17, 'B17':17, 'B18':17} 
+            lock = {'B02':3, 'B03':4, 'B04':5, 'B05':6, 'B06':7, 'B07':8, 'B08':9, 'B09':10, 'B10':11, 'B11':12, 'B12':13, 'B13':14, 'B14':15, 'B15':16, 'B16':17, 'B17':17, 'B18':17}
         if lesson in lock:
             if profile_lock < lock[lesson]:
                 if not request.user.groups.filter(name='teacher').exists():
-                    return redirect("/")    
+                    return redirect("/")
 
         return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
-        lesson_id = 3      
+        lesson_id = 3
         profile_lock = profile.lock3
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
-        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
+        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
     else:
         lesson_id = 4
         profile_lock = profile.lock1
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))	
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))			
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -138,39 +138,39 @@ def classmate(request, classroom_id):
                 enroll_group.append([enroll, EnrollGroup.objects.get(id=enroll.group).name, login_times])
             else :
                 enroll_group.append([enroll, "沒有組別", login_times])
-                       
+
         return render_to_response('student/classmate.html', {'classroom':classroom, 'enrolls':enroll_group}, context_instance=RequestContext(request))
 
 # 顯示所有組別
 def group(request, classroom_id):
         student_groups = []
         classroom = Classroom.objects.get(id=classroom_id)
-        group_open = Classroom.objects.get(id=classroom_id).group_open        
+        group_open = Classroom.objects.get(id=classroom_id).group_open
         groups = EnrollGroup.objects.filter(classroom_id=classroom_id)
         try:
                 student_group = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).group
         except ObjectDoesNotExist :
-                student_group = []		
+                student_group = []
         for group in groups:
             enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group.id)
             student_groups.append([group, enrolls, classroom.group_size-len(enrolls)])
-            
+
         #找出尚未分組的學生
         def getKey(custom):
-            return custom.seat	
+            return custom.seat
         enrolls = Enroll.objects.filter(classroom_id=classroom_id)
         nogroup = []
         for enroll in enrolls:
             if enroll.group == 0 :
-		        nogroup.append(enroll)		
+		        nogroup.append(enroll)
 	    nogroup = sorted(nogroup, key=getKey)
-      
+
         return render_to_response('student/group.html', {'nogroup': nogroup, 'group_open': group_open, 'student_groups':student_groups, 'classroom':classroom, 'student_group':student_group, 'teacher': is_teacher(request.user, classroom_id)}, context_instance=RequestContext(request))
 
 # 新增組別
 def group_add(request, classroom_id):
         if request.method == 'POST':
-            classroom_name = Classroom.objects.get(id=classroom_id).name            
+            classroom_name = Classroom.objects.get(id=classroom_id).name
             form = GroupForm(request.POST)
             if form.is_valid():
                 group = EnrollGroup(name=form.cleaned_data['name'],classroom_id=int(classroom_id))
@@ -180,7 +180,7 @@ def group_add(request, classroom_id):
         else:
             form = GroupForm()
         return render_to_response('form.html', {'form':form}, context_instance=RequestContext(request))
-        
+
 # 設定組別人數
 def group_size(request, classroom_id):
         if request.method == 'POST':
@@ -189,12 +189,12 @@ def group_size(request, classroom_id):
                 classroom = Classroom.objects.get(id=classroom_id)
                 classroom.group_size = form.cleaned_data['group_size']
                 classroom.save()
-       
+
                 return redirect('/student/group/'+classroom_id)
         else:
             classroom = Classroom.objects.get(id=classroom_id)
             form = GroupSizeForm(instance=classroom)
-        return render_to_response('form.html', {'form':form}, context_instance=RequestContext(request))        
+        return render_to_response('form.html', {'form':form}, context_instance=RequestContext(request))
 
 # 加入組別
 def group_enroll(request, classroom_id,  group_id):
@@ -204,7 +204,7 @@ def group_enroll(request, classroom_id,  group_id):
             group_name = EnrollGroup.objects.get(id=group_id).name
             enroll = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
             enroll.update(group=group_id)
-       
+
         return redirect('/student/group/'+classroom_id)
 
 # 刪除組別
@@ -213,27 +213,27 @@ def group_delete(request, group_id, classroom_id):
     group.delete()
     classroom_name = Classroom.objects.get(id=classroom_id).name
 
-    return redirect('/student/group/'+classroom_id)  
-    
+    return redirect('/student/group/'+classroom_id)
+
 # 是否開放選組
 def group_open(request, classroom_id, action):
     classroom = Classroom.objects.get(id=classroom_id)
     if action == "1":
         classroom.group_open=True
         classroom.save()
-          
+
     else :
         classroom.group_open=False
         classroom.save()
-               
-    return redirect('/student/group/'+classroom_id)  	
-	
+
+    return redirect('/student/group/'+classroom_id)
+
 # 列出選修的班級
 def classroom(request):
         enrolls = Enroll.objects.filter(student_id=request.user.id).order_by("-id")
-         
-        return render_to_response('student/classroom.html',{'enrolls': enrolls}, context_instance=RequestContext(request))    
-    
+
+        return render_to_response('student/classroom.html',{'enrolls': enrolls}, context_instance=RequestContext(request))
+
 # 查看可加入的班級
 def classroom_add(request):
         classrooms = Classroom.objects.all().order_by('-id')
@@ -243,10 +243,10 @@ def classroom_add(request):
             if enroll.exists():
                 classroom_teachers.append([classroom,classroom.teacher.first_name,1])
             else:
-                classroom_teachers.append([classroom,classroom.teacher.first_name,0])   
+                classroom_teachers.append([classroom,classroom.teacher.first_name,0])
 
         return render_to_response('student/classroom_add.html', {'classroom_teachers':classroom_teachers}, context_instance=RequestContext(request))
-    
+
 # 加入班級
 def classroom_enroll(request, classroom_id):
         scores = []
@@ -260,18 +260,18 @@ def classroom_enroll(request, classroom_id):
                                 enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id)
                             except ObjectDoesNotExist:
                                 enroll = Enroll(classroom_id=classroom_id, student_id=request.user.id, seat=form.cleaned_data['seat'])
-                            enroll.save()                              
+                            enroll.save()
                         else:
                             return render_to_response('message.html', {'message':"選課密碼錯誤"}, context_instance=RequestContext(request))
                     except Classroom.DoesNotExist:
                         pass
-                    
-                    
+
+
                     return redirect("/student/group/" + str(classroom.id))
         else:
             form = EnrollForm()
         return render_to_response('form.html', {'form':form}, context_instance=RequestContext(request))
-        
+
 # 修改座號
 def seat_edit(request, enroll_id, classroom_id):
     enroll = Enroll.objects.get(id=enroll_id)
@@ -285,7 +285,7 @@ def seat_edit(request, enroll_id, classroom_id):
     else:
         form = SeatForm(instance=enroll)
 
-    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))  
+    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))
 
 # 登入記錄
 class LoginLogListView(ListView):
@@ -295,36 +295,36 @@ class LoginLogListView(ListView):
     def get_queryset(self):
         visitorlogs = VisitorLog.objects.filter(user_id=self.kwargs['user_id']).order_by("-id")
         return visitorlogs
-        
+
     def get_context_data(self, **kwargs):
         context = super(LoginLogListView, self).get_context_data(**kwargs)
         if self.request.GET.get('page') :
             context['page'] = int(self.request.GET.get('page')) * 20 - 20
         else :
             context['page'] = 0
-        return context        
-      
+        return context
+
 # 列出所有公告
 class AnnounceListView(ListView):
     model = Message
     context_object_name = 'messages'
-    template_name = 'student/announce_list.html'    
+    template_name = 'student/announce_list.html'
     paginate_by = 20
-    
+
     def get_queryset(self):
         classroom = Classroom.objects.get(id=self.kwargs['classroom_id'])
-      
+
         messages = Message.objects.filter(classroom_id=self.kwargs['classroom_id'], author_id=classroom.teacher_id).order_by("-id")
         queryset = []
         for message in messages:
             messagepoll = MessagePoll.objects.get(message_id=message.id, reader_id=self.request.user.id)
             queryset.append([messagepoll, message])
         return queryset
-        
+
     def get_context_data(self, **kwargs):
         context = super(AnnounceListView, self).get_context_data(**kwargs)
         context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
-        return context	    
+        return context
 
     # 限本班同學
     def render_to_response(self, context):
@@ -332,10 +332,10 @@ class AnnounceListView(ListView):
             enroll = Enroll.objects.get(student_id=self.request.user.id, classroom_id=self.kwargs['classroom_id'])
         except ObjectDoesNotExist :
             return redirect('/')
-        return super(AnnounceListView, self).render_to_response(context)    
+        return super(AnnounceListView, self).render_to_response(context)
 
 # 列出個人所有作業
-def work_list(request, lesson, classroom_id):  
+def work_list(request, lesson, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     lessons = []
 
@@ -354,14 +354,14 @@ def work_list(request, lesson, classroom_id):
             lessons.append([assignment, None])
         else:
             lessons.append([assignment, work_dict[index]])
-        index = index + 1        
+        index = index + 1
     return render_to_response('student/work_list.html', {'lesson':lesson, 'lessons':lessons, 'classroom':classroom}, context_instance=RequestContext(request))
-					
-			
+
+
 def submit(request, lesson, index):
     profile = Profile.objects.get(user=request.user)
-    work_dict = {}	
-    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson, user_id=request.user.id)))	
+    work_dict = {}
+    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson, user_id=request.user.id)))
     if lesson == "1":
         lesson_list = lesson_list1
     elif lesson == "2":
@@ -369,7 +369,7 @@ def submit(request, lesson, index):
     elif lesson == "3":
         lesson_list = lesson_list3
     else :
-        lesson_list = lesson_list1	
+        lesson_list = lesson_list1
     if lesson == "1":
         works = Work.objects.filter(index=index, user_id=request.user.id, lesson_id=lesson)
         try:
@@ -382,7 +382,7 @@ def submit(request, lesson, index):
                 fs = FileSystemStorage()
                 filename = uuid4().hex
                 fs.save("static/work/scratch/"+str(request.user.id)+"/"+filename, myfile)
-						
+
             form = SubmitAForm(request.POST, request.FILES)
 
             if not works.exists():
@@ -399,16 +399,16 @@ def submit(request, lesson, index):
                     # lock
                     profile.lock1 += 1
                     profile.save()
-                    
+
             else:
                 if form.is_valid():
                     works.update(memo=form.cleaned_data['memo'],publication_date=timezone.localtime(timezone.now()))
                     workfile = WorkFile(work_id=works[0].id, filename=filename)
                     workfile.save()
-                    
+
                 else :
-                    works.update(memo=form.cleaned_data['memo'])           
-            return redirect('/student/lesson/'+request.POST.get("lesson", ""))									
+                    works.update(memo=form.cleaned_data['memo'])
+            return redirect('/student/lesson/'+request.POST.get("lesson", ""))
     elif lesson == "2" or lesson == "3":
         if request.method == 'POST':
             form = SubmitBForm(request.POST, request.FILES)
@@ -423,9 +423,9 @@ def submit(request, lesson, index):
                             update_avatar(request.user.id, 1, 1)
                             # History
                             history = PointHistory(user_id=request.user.id, kind=1, message='1分--繳交作業<'+lesson_list[int(index)-1][1]+'>', url="/student/work/show/"+lesson+"/"+index)
-                            history.save()								
+                            history.save()
                         else :
-                            update_avatar(request.user.id, 1, 3)					
+                            update_avatar(request.user.id, 1, 3)
                             # History
                             history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業<'+lesson_list[int(index)-1][1]+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
@@ -435,13 +435,13 @@ def submit(request, lesson, index):
                                 profile.lock3 +=1
                             profile.save()
                     else :
-                        update_avatar(request.user.id, 1, 3)					
+                        update_avatar(request.user.id, 1, 3)
                         # History
                         history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業', url="/student/work/show/"+lesson+"/"+index)
-                        history.save()		
+                        history.save()
                 except MultipleObjectsReturned:
                     pass
-                work = Work(lesson_id=lesson, index=index, user_id=request.user.id)		
+                work = Work(lesson_id=lesson, index=index, user_id=request.user.id)
                 work.save()
                 dataURI = form.cleaned_data['screenshot']
                 try:
@@ -454,7 +454,7 @@ def submit(request, lesson, index):
                         image_file = "static/work/vphysics/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
                     elif lesson == "3":
                         directory = "static/work/euler/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
-                        image_file = "static/work/euler/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)                      
+                        image_file = "static/work/euler/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
                     if not os.path.exists(directory):
                         os.makedirs(directory)
                     with open(image_file, 'wb') as fd:
@@ -470,7 +470,7 @@ def submit(request, lesson, index):
                 work.helps=form.cleaned_data['helps']
                 work.save()
                 return redirect("/student/work/show/"+lesson+"/"+index)
-            return redirect('/student/lesson/'+request.POST.get("lesson", ""))	
+            return redirect('/student/lesson/'+request.POST.get("lesson", ""))
         return render_to_response('student/submit.html', {'form':form, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
 
 def show(request, lesson, index, user_id):
@@ -480,11 +480,11 @@ def show(request, lesson, index, user_id):
         except ObjectDoesNotExist:
             work = None
         except MultipleObjectsReturned:
-            work = Work.objects.filter(lesson_id=lesson, index=index, user_id=user_id).last()		
+            work = Work.objects.filter(lesson_id=lesson, index=index, user_id=user_id).last()
         return render_to_response('student/show.html', {'work':work}, context_instance=RequestContext(request))
     else :
-        return redirect("/") 
-    
+        return redirect("/")
+
 def rank(request, lesson, index):
     works = Work.objects.filter(lesson_id=lesson, index=index).order_by("id")
     return render_to_response('student/rank.html', {'works':works}, context_instance=RequestContext(request))
@@ -493,50 +493,50 @@ def rank(request, lesson, index):
 class WorkListView(ListView):
     model = Work
     context_object_name = 'total_works'
-    template_name = 'student/works_list.html'    
-    
-    def get_queryset(self):       
+    template_name = 'student/works_list.html'
+
+    def get_queryset(self):
         works = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         queryset = []
         start = datetime(2018,4,1)
         end = datetime.today()
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
         for day in reversed(daterange):
-            utc = pytz.UTC        
+            utc = pytz.UTC
             work = filter(lambda w: w.publication_date >= utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
             if len(work)>0 :
                 queryset.append([day, len(work)])
         return queryset
 
     def get_context_data(self, **kwargs):
-        context = super(WorkListView, self).get_context_data(**kwargs)      
+        context = super(WorkListView, self).get_context_data(**kwargs)
         start = datetime(2018,4,1)
         end = datetime.today()
         context['height'] = 200+ (end.year-start.year)*200
         context['lesson'] = self.kwargs['lesson']
-        return context	 
-      
+        return context
+
 # 列出某日所有作品
 class WorkDayListView(ListView):
     model = Work
     context_object_name = 'works'
-    template_name = 'student/works_day.html'    
-    paginate_by = 20    
-    
-    def get_queryset(self):       
-        work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])        
+    template_name = 'student/works_day.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         day = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
-        utc = pytz.UTC        
+        utc = pytz.UTC
         works = filter(lambda w: w.publication_date >= utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), work_pool)
         return works
-    
+
     def get_context_data(self, **kwargs):
-        context = super(WorkDayListView, self).get_context_data(**kwargs)      
+        context = super(WorkDayListView, self).get_context_data(**kwargs)
         context['lesson'] = self.kwargs['lesson']
         context['date'] = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
-        return context    
-    
-	
+        return context
+
+
 # 查詢某作業所有同學心得
 def memo(request, lesson, classroom_id, index):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
@@ -548,10 +548,10 @@ def memo(request, lesson, classroom_id, index):
         if works :
             datas.append([enroll, works[0].memo])
         else:
-            datas.append([enroll, ""])                
-    
+            datas.append([enroll, ""])
+
     return render_to_response('student/memo.html', {'datas': datas}, context_instance=RequestContext(request))
-    
+
 def work_download(request, index, user_id, workfile_id):
     workfile = WorkFile.objects.get(id=workfile_id)
     username = User.objects.get(id=user_id).first_name
@@ -565,21 +565,21 @@ def work_download(request, index, user_id, workfile_id):
     # You can also set any other required headers: Cache-Control, etc.
     return response
     #return render_to_response('student/download.html', {'download':download})
-		
+
 # 查詢作業進度
 def progress(request, lesson, unit, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
-    bars = []	
+    bars = []
 
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
     student_ids = map(lambda a: a.student_id, enroll_pool)
     work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=lesson).order_by("-id")
-	
+
     for enroll in enroll_pool:
       student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
-      bar = [] 
+      bar = []
       index = 1
-      if lesson == "1":  
+      if lesson == "1":
         if unit == "1":
             lesson_list = lesson_list1[0:17]
         elif unit == "2":
@@ -587,7 +587,7 @@ def progress(request, lesson, unit, classroom_id):
             index = 17
         elif unit == "3":
             lesson_list = lesson_list1[25:33]
-            index = 25						
+            index = 25
         elif unit == "4":
             lesson_list = lesson_list1[33:41]
             index = 33
@@ -606,8 +606,8 @@ def progress(request, lesson, unit, classroom_id):
           bar.append([assignment, False])
       bars.append([enroll, bar])
     return render_to_response('student/progress.html', {'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list}, context_instance=RequestContext(request))
-	
-# 查詢某作業分組小老師    
+
+# 查詢某作業分組小老師
 def work_group(request, lesson, index, classroom_id):
         if lesson == "1":
             lesson_list = lesson_list1
@@ -616,21 +616,21 @@ def work_group(request, lesson, index, classroom_id):
         elif lesson == "3":
             lesson_list = lesson_list3
         else :
-            lesson_list = lesson_list1		
+            lesson_list = lesson_list1
         student_groups = []
         lesson = Classroom.objects.get(id=classroom_id).lesson
         groups = EnrollGroup.objects.filter(classroom_id=classroom_id)
         try:
                 student_group = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).group
         except ObjectDoesNotExist :
-                student_group = []		
+                student_group = []
         for group in groups:
             enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group.id)
             group_assistants = []
             works = []
             scorer_name = ""
-            for enroll in enrolls: 
-                try:    
+            for enroll in enrolls:
+                try:
                     work = Work.objects.get(user_id=enroll.student_id, index=index, lesson_id=lesson)
                     if work.scorer > 0 :
                         scorer = User.objects.get(id=work.scorer)
@@ -648,12 +648,12 @@ def work_group(request, lesson, index, classroom_id):
                 except ObjectDoesNotExist:
 				    pass
             student_groups.append([group, works, group_assistants])
-        lesson_dict = {}			
+        lesson_dict = {}
         c = 0
         for assignment in lesson_list:
             c = c + 1
-            lesson_dict[c] = assignment[0]    
-        assignment = lesson_dict[int(index)]	     
+            lesson_dict[c] = assignment[0]
+        assignment = lesson_dict[int(index)]
         return render_to_response('student/work_group.html', {'lesson':lesson, 'assignment':assignment, 'student_groups':student_groups, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
 
 # 解答
@@ -670,83 +670,42 @@ def answer(request, lesson, index):
     except MultipleObjectsReturned:
         work = Work.objects.filter(lesson_id=lesson, index=index, user_id=request.user.id).last()
     return render_to_response('student/answer.html', {'lesson':lesson, 'index':index, 'answer':answer, 'work':work}, context_instance=RequestContext(request))
-	
+
 # 解答
 def answer_watch(request, lesson, index):
     answer = Answer(lesson_id=lesson, index=index, student_id=request.user.id)
     answer.save()
-    return redirect("/student/work/answer/"+lesson+"/"+index)	
-  
+    return redirect("/student/work/answer/"+lesson+"/"+index)
+
 # 測驗卷
 def exam(request):
     # 限登入者
     if not request.user.is_authenticated():
-        return redirect("/account/login/")    
+        return redirect("/account/login/")
     else :
         return render_to_response('student/exam.html', context_instance=RequestContext(request))
 
 # 測驗卷得分
 def exam_score(request):
-        exams = Exam.objects.filter(student_id=request.user.id)
-        return render_to_response('student/exam_score.html', {'exams':exams} , context_instance=RequestContext(request))
+    exams = Exam.objects.filter(student_id=request.user.id)
+    return render_to_response('student/exam_score.html', {'exams':exams} , context_instance=RequestContext(request))
 
-# 測驗卷檢查答案		
+# 測驗卷檢查答案
 def exam_check(request):
     exam_id = request.POST.get('examid')
     user_answer = request.POST.get('answer').split(",")
-    # 記錄系統事件
-    if is_event_open(request) :      
-        log = Log(user_id=request.user.id, event=u'繳交測驗卷<'+exam_id+'>')
-        log.save()      
-    if exam_id == "1":
-        answer = "C,A,D,C,C,A,B,B,D,D"
-        answer_list = answer.split(",")
-        ''' 儲存答案 '''
-        ua_test = ""
-        score = 0
-        for i in range(10) :
-            if user_answer[i] == answer_list[i] :
-                score = score + 10
-            i = i + 1
-            ua_test = "".join(user_answer)
-            '''ua_test = ua_test + user_answer[i]
-            '''
-        exam = Exam(exam_id=1, student_id=request.user.id, answer=ua_test, score=score)
-        exam.save()
-        ''' 回傳正確答案 '''
-        return JsonResponse({'status':'ok','answer':answer}, safe=False)	
-    elif exam_id == "2":
-        answer = "B,C,C,A,D,B,A,D,B,C"
-        answer_list = answer.split(",")
-        ''' 儲存答案 '''
-        ua_test = ""
-        score = 0
-        for i in range(10) :
-            if user_answer[i] == answer_list[i] :
-                score = score + 10
-            i = i + 1
-            ua_test = "".join(user_answer)
-            '''ua_test = ua_test + user_answer[i]
-            '''
-        exam = Exam(exam_id=2, student_id=request.user.id, answer=ua_test, score=score)
-        exam.save()	
-        return JsonResponse({'status':'ok','answer':answer}, safe=False)
-    elif exam_id == "3":
-        answer = "D,C,A,B,D,C,D,A,D,B"
-        answer_list = answer.split(",")
-        ''' 儲存答案 '''
-        ua_test = ""
-        score = 0
-        for i in range(10) :
-            if user_answer[i] == answer_list[i] :
-                score = score + 10
-            i = i + 1
-            ua_test = "".join(user_answer)
-            '''ua_test = ua_test + user_answer[i]
-            '''
-        exam = Exam(exam_id=3, student_id=request.user.id, answer=ua_test, score=score)
-        exam.save()	
-        return JsonResponse({'status':'ok','answer':answer}, safe=False)
-    else:
+    if not exam_id in ["1", "2", "3"]:
         return JsonResponse({'status':'ko'}, safe=False)
-          
+
+    correct_answer_list = ["C,A,D,C,C,A,B,B,D,D", "B,C,C,A,D,B,A,D,B,C", "D,C,A,B,D,C,D,A,D,B"]
+    answer = correct_answer_list[int(exam_id)-1]
+    correct_answer = answer.split(",")
+    ua_test = ""
+    score = 0
+    for i in range(10) :
+        if user_answer[i] == correct_answer[i] :
+            score = score + 10
+    ua_test = "".join(user_answer)
+    exam = Exam(exam_id=int(exam_id)+1, student_id=request.user.id, answer=ua_test, score=score)
+    exam.save()
+    return JsonResponse({'status':'ok','answer':answer}, safe=False)

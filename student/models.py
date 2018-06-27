@@ -22,8 +22,8 @@ class Enroll(models.Model):
     certificate1 = models.BooleanField(default=False)
     certificate1_date = models.DateTimeField(default=timezone.now)
     # 實戰入門證書
-    certificate2 = models.BooleanField(default=False) 
-    certificate2_date = models.DateTimeField(default=timezone.now)	
+    certificate2 = models.BooleanField(default=False)
+    certificate2_date = models.DateTimeField(default=timezone.now)
     # 實戰進擊證書
     certificate3 = models.BooleanField(default=False)
     certificate3_date = models.DateTimeField(default=timezone.now)
@@ -45,88 +45,96 @@ class Enroll(models.Model):
     # Euler
     certificate_euler = models.BooleanField(default=False)
     certificate_euler_date = models.DateTimeField(default=timezone.now)
-    score_memo_euler =  models.IntegerField(default=0)    
-    
+    score_memo_euler =  models.IntegerField(default=0)
+
     @property
     def classroom(self):
-        return Classroom.objects.get(id=self.classroom_id)  
+        return Classroom.objects.get(id=self.classroom_id)
 
-    @property        
+    @property
     def student(self):
-        return User.objects.get(id=self.student_id)      
+        return User.objects.get(id=self.student_id)
 
     def __str__(self):
         return str(self.id) + ":" + str(self.classroom_id)
 
     class Meta:
-        unique_together = ('student_id', 'classroom_id',)		
-    
-# 學生組別    
+        unique_together = ('student_id', 'classroom_id',)
+
+# 學生組別
 class EnrollGroup(models.Model):
     name = models.CharField(max_length=30)
     classroom_id = models.IntegerField(default=0)
-		
-# 小老師        
+
+# 小老師
 class WorkAssistant(models.Model):
     student_id = models.IntegerField(default=0)
     classroom_id = models.IntegerField(default=0)
     index = models.IntegerField(default=0)
     lesson_id = models.IntegerField(default=0)
-    
-    @property        
+
+    @property
     def student(self):
-        return User.objects.get(id=self.student_id)   
-			
+        return User.objects.get(id=self.student_id)
+
 def upload_path_handler(instance, filename):
     return "static/certificate/0/{filename}".format(filename=instance.id+".jpg")
-			
+
 class Work(models.Model):
     HELP_CHOICES = [
             (0, "全部靠自己想"),
             (1, "同學幫一點忙"),
             (2, "同學幫很多忙"),
             (3, "解答幫一點忙"),
-            (4, "解答幫很多忙"),			
+            (4, "解答幫很多忙"),
             (5, "老師幫一點忙"),
-            (6, "老師幫很多忙"),		      
+            (6, "老師幫很多忙"),
 		]
-	
-    user_id = models.IntegerField(default=0) 
+
+    user_id = models.IntegerField(default=0)
     lesson_id = models.IntegerField(default=0)
     index = models.IntegerField()
     memo = models.TextField()
     publication_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=-1)
-    scorer = models.IntegerField(default=0)		
+    scorer = models.IntegerField(default=0)
 		# scratch
     file = models.FileField()
 		#python
     picture = models.ImageField(upload_to = upload_path_handler, default = '/static/python/null.jpg')
-    code = models.TextField(default='')		
+    code = models.TextField(default='')
     helps = models.IntegerField(default=0, choices=HELP_CHOICES)
-    answer = models.BooleanField(default=False)	
-	    
+    answer = models.BooleanField(default=False)
+
     def __unicode__(self):
         user = User.objects.filter(id=self.user_id)[0]
         index = self.index
         return user.first_name+"("+str(index)+")"
 
-    @property        
+    @property
     def user(self):
-        return User.objects.get(id=self.user_id)       
+        return User.objects.get(id=self.user_id)
 
 class WorkFile(models.Model):
-    work_id = models.IntegerField(default=0) 
+    work_id = models.IntegerField(default=0)
     filename = models.TextField()
     upload_date = models.DateTimeField(default=timezone.now)
-		
+
 #解答
 class Answer(models.Model):
     student_id = models.IntegerField(default=0)
     lesson_id = models.IntegerField(default=0)
     index = models.IntegerField()
-	
+
     def __unicode__(self):
         user = User.objects.filter(id=self.student_id)[0]
         index = self.index
-        return user.first_name+"("+str(index)+")"	
+        return user.first_name+"("+str(index)+")"
+
+# 測驗
+class Exam(models.Model):
+    exam_id = models.IntegerField()
+    student_id = models.IntegerField()
+    answer = models.TextField()
+    score = models.IntegerField()
+    test_time = models.DateTimeField(default=timezone.now)
