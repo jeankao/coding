@@ -197,117 +197,117 @@ def user_login(request, role):
 
 # 註冊帳號
 def register(request):
-        if request.method == 'POST':
-                form = RegistrationForm(request.POST)
-                if form.is_valid():
-                        # Create a new user object but avoid saving it yet
-                        new_user = form.save(commit=False)
-                        # Set the chosen password
-                        new_user.set_password(form.cleaned_data['password'])
-                        # Save the User object
-                        new_user.save()
-                        try :
-                            group = Group.objects.get(name="apply")	
-                        except ObjectDoesNotExist :
-                            group = Group(name="apply")
-                            group.save()                                         
-                        group.user_set.add(new_user)													
-                       
-                        profile = Profile(user=new_user)
-                        profile.save()
-						
-                        # create Message
-                        title = "申請成為教師以進行開班授課"
-                        url = "/account/teacher/apply"
-                        message = Message(title=title, url=url, time=timezone.now())
-                        message.save()                        
+    if request.method == 'POST':
+            form = RegistrationForm(request.POST)
+            if form.is_valid():
+                    # Create a new user object but avoid saving it yet
+                    new_user = form.save(commit=False)
+                    # Set the chosen password
+                    new_user.set_password(form.cleaned_data['password'])
+                    # Save the User object
+                    new_user.save()
+                    try :
+                        group = Group.objects.get(name="apply")	
+                    except ObjectDoesNotExist :
+                        group = Group(name="apply")
+                        group.save()                                         
+                    group.user_set.add(new_user)													
                     
-                        # message for member
-                        messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
-                        messagepoll.save() 	      						
-									
-                        return render_to_response('registration/register_done.html',{'new_user': new_user}, context_instance=RequestContext(request))
-        else:
-                form = RegistrationForm()
-        school_pool = School.objects.filter(online=True)
-        county_pool = County.objects.all()
-        zone_pool = Zone.objects.all()
-        district = []
-        index = 0
-        for p in county_pool:
-            district.append([p, []])
-            index2 = 0
-            zones = filter(lambda u: u.county == p.id, zone_pool)
-            for q in zones:                
-                district[index][1].append([q, []])
-                schools = filter(lambda u: u.zone == q.id, school_pool)
-                for school in schools :
-                    district[index][1][index2][1].append(school)
-                index2 = index2 + 1
-            index = index + 1      
-        school = School.objects.get(id=1)
-        return render_to_response('registration/register.html', {'form': form, 'district':district, 'school':school}, context_instance=RequestContext(request))
+                    profile = Profile(user=new_user)
+                    profile.save()
+                    
+                    # create Message
+                    title = "申請成為教師以進行開班授課"
+                    url = "/account/teacher/apply"
+                    message = Message(title=title, url=url, time=timezone.now())
+                    message.save()                        
+                
+                    # message for member
+                    messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
+                    messagepoll.save() 	      						
+                                
+                    return render_to_response('registration/register_done.html',{'new_user': new_user}, context_instance=RequestContext(request))
+    else:
+            form = RegistrationForm()
+    school_pool = School.objects.filter(online=True)
+    county_pool = County.objects.all()
+    zone_pool = Zone.objects.all()
+    district = []
+    index = 0
+    for p in county_pool:
+        district.append([p, []])
+        index2 = 0
+        zones = filter(lambda u: u.county == p.id, zone_pool)
+        for q in zones:                
+            district[index][1].append([q, []])
+            schools = filter(lambda u: u.zone == q.id, school_pool)
+            for school in schools :
+                district[index][1][index2][1].append(school)
+            index2 = index2 + 1
+        index = index + 1      
+    school = School.objects.get(id=1)
+    return render_to_response('registration/register.html', {'form': form, 'district':district, 'school':school, 'schools': school_pool, 'zones': zone_pool}, context_instance=RequestContext(request))
 
 # 註冊學校
 def register_school(request):      
-        if request.method == 'POST':
-                form = RegistrationSchoolForm(request.POST)    
-                if form.is_valid():
-                    school = form.save()
-                    return redirect("/account/register?school="+str(school.county)+"/"+str(school.zone)+"/"+str(school.id))
-        else:
-                form = RegistrationSchoolForm()
-        school_pool = School.objects.filter(online=True)
-        county_pool = County.objects.all()
-        zone_pool = Zone.objects.all()
-        district = []
-        index = 0
-        for p in county_pool:
-            district.append([p, []])
-            index2 = 0
-            zones = filter(lambda u: u.county == p.id, zone_pool)
-            for q in zones:                
-                district[index][1].append([q, []])
-                schools = filter(lambda u: u.zone == q.id, school_pool)
-                for school in schools :
-                    district[index][1][index2][1].append(school)
-                index2 = index2 + 1
-            index = index + 1
-        return render_to_response('registration/register_school.html', {'form': form, 'district':district}, context_instance=RequestContext(request))
+    if request.method == 'POST':
+            form = RegistrationSchoolForm(request.POST)    
+            if form.is_valid():
+                school = form.save()
+                return redirect("/account/register?school="+str(school.county)+"/"+str(school.zone)+"/"+str(school.id))
+    else:
+            form = RegistrationSchoolForm()
+    school_pool = School.objects.filter(online=True)
+    county_pool = County.objects.all()
+    zone_pool = Zone.objects.all()
+    district = []
+    index = 0
+    for p in county_pool:
+        district.append([p, []])
+        index2 = 0
+        zones = filter(lambda u: u.county == p.id, zone_pool)
+        for q in zones:                
+            district[index][1].append([q, []])
+            schools = filter(lambda u: u.zone == q.id, school_pool)
+            for school in schools :
+                district[index][1][index2][1].append(school)
+            index2 = index2 + 1
+        index = index + 1
+    return render_to_response('registration/register_school.html', {'form': form, 'district':district}, context_instance=RequestContext(request))
   
 # 申請教師
 def teacher_apply(request):      
-        if request.method == 'POST':
-                form = TeacherApplyForm(request.POST)    
-                if form.is_valid():
-                    form.save()
-                    return redirect("/account/register")
-        else:
-                form = TeacherApplyForm()
-        return render_to_response('account/teacher_apply.html', {'form': form}, context_instance=RequestContext(request))
+    if request.method == 'POST':
+            form = TeacherApplyForm(request.POST)    
+            if form.is_valid():
+                form.save()
+                return redirect("/account/register")
+    else:
+            form = TeacherApplyForm()
+    return render_to_response('account/teacher_apply.html', {'form': form}, context_instance=RequestContext(request))
 
 # 超級管理員可以查看所有帳號
 class UserListView(ListView):
-        context_object_name = 'users'
-        paginate_by = 20
-        template_name = 'account/user_list.html'
+    context_object_name = 'users'
+    paginate_by = 20
+    template_name = 'account/user_list.html'
 
-        def get_queryset(self):
-                if self.request.GET.get('account') != None:
-                        keyword = self.request.GET.get('account')
-                        queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
-                else :
-                        if self.kwargs['group'] == "1":
-                            queryset = User.objects.filter(groups__name='apply').order_by("-id")
-                        else :
-                            queryset = User.objects.all().order_by('-id')
-                return queryset
-							
-        def get_context_data(self, **kwargs):
-            context = super(UserListView, self).get_context_data(**kwargs)
-            context['group'] = self.kwargs['group']
-            context['account'] = self.request.GET.get('account')
-            return context								
+    def get_queryset(self):
+            if self.request.GET.get('account') != None:
+                    keyword = self.request.GET.get('account')
+                    queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
+            else :
+                    if self.kwargs['group'] == "1":
+                        queryset = User.objects.filter(groups__name='apply').order_by("-id")
+                    else :
+                        queryset = User.objects.all().order_by('-id')
+            return queryset
+                        
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        context['group'] = self.kwargs['group']
+        context['account'] = self.request.GET.get('account')
+        return context								
 							
 # 訊息
 class MessageListView(ListView):
