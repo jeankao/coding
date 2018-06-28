@@ -1,88 +1,85 @@
 {% extends "base.html" %}
+
 {% block header %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>    
-    // 通常，當資料選項的變動性不大時，都會直接寫成 .js 檔含入即可。    
-    var county = new Array();          
-    var zone = new Array();
-    var school = new Array();
-    {% for county, zone, mapx, mapy in district %}
-       county[{{forloop.counter|add:-1}}] = [{{county.id}}, "{{county.name}}"];
-       zone[{{forloop.counter|add:-1}}] = new Array();
-       school[{{forloop.counter|add:-1}}] = new Array();     
-       {% for q in zone %}
-           zone[{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = [ {{q.0.id}}, "{{q.0.name}}"];
-           school[{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = new Array();
-           {% for r in q.1 %}
-               school[{{forloop.parentloop.parentloop.counter|add:-1}}][{{forloop.parentloop.counter|add:-1}}][{{forloop.counter|add:-1}}] = "{{r.name}}";
-           {% endfor %}
-       {% endfor %}
-    {% endfor %}
-    // 載入 master 選單，同時初始化 detail 選單內容    
-    function loadMaster( master, detail ) 
-    {    
-      master.options.length = county.length;    
-      for( i = 0; i < county.length; i++ ) 
-      {    
-        master.options[ i ] = new Option( county[i][1], county[i][0] );  
-        // Option( text , value );    
-      }    
-      master.selectedIndex = 0;    
-      doNewMaster( master, detail );    
-      doNewDetail( master, detail );
-    }    
-    // 當 master 選單異動時，變更 detail 選單內容    
-    function doNewMaster( master, detail) {    
-      detail.options.length = zone[ master.selectedIndex ].length;    
-      for( i = 0; i < zone[ master.selectedIndex ].length; i++ ) 
-      {    
-        detail.options[ i ] = new Option( zone[ master.selectedIndex ][ i ][1],    
-                                          zone[ master.selectedIndex ][ i ][0]);    
-      }
-      doNewDetail( master, detail );      
-    }   
-    // 當 detail 選單異動時，變更 school 內容    
-    function doNewDetail( master, detail) {
-      $("#schools").html("");
-      for( i = 0; i < school[ master.selectedIndex ][ detail.selectedIndex ].length; i++ ) 
-      {         
-      $("#schools").append("<li class=comment_odd>"+school[ master.selectedIndex ][ detail.selectedIndex][i]+"</li>");
-      }
-    }          
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="/static/register_helper.js"></script>
+<script>
+var school_pool = [
+  {% for s in schools %}{id: {{ s.id }}, zid: {{ s.zone }}, name: "{{ s.name }}"}, 
+  {% endfor %}
+];
+//---------------------------------------------------------------------------
+function update_school_list() {
+  var zid = parseInt($('#zone').val());
+  var html = '';
+  for (sid in school_pool) {
+    school = school_pool[sid];
+    if (school.zid == zid) {
+      html += '<li class="btn btn-light">' + school.name + '</li> ';
+    }
+  }
+  $('#school_list').html(html);
+}
+//---------------------------------------------------------------------------
+$(document).ready(function() {
+  reset_county();
+})
 </script>
-
 {% endblock %}
-    
-{% block content %}
-<body onload="loadMaster( document.getElementById( 'county' ), document.getElementById( 'zone' ) );">
-  
-  <form action="" method="post">
-    <p><label for="id_county">縣市：</label>
-   <select class="form-control" name="county" id="county"     
-        onChange="doNewMaster( document.getElementById( 'county' ),document.getElementById( 'zone' ));">    
-   </select>    
-   <select class="form-control" name="zone" id="zone" onChange="doNewDetail( document.getElementById( 'county' ),document.getElementById( 'zone' ));">    
-   </select>    
-      </p>
-    <p><label for="id_system">學制：</label>      
-   <select class="form-control" name="system" id="id_system">
-     <option value=0>國小</option>
-     <option value=1>國中</option>
-     <option value=2>高中</option>
-     <option value=3>大學</option>     
-   </select>
-      </p>
-<p><label for="id_name">學校名稱：</label> <input class="form-control" id="id_name" maxlength="50" name="name" type="text" /></p><input type='hidden' name='csrfmiddlewaretoken' value='ijNhpy7KEuPr639O6zzhEUgpPA5EQ5Te' />
-    {{ form.captcha }}
-    <input class="form-control btn-info" type="submit" value="送出" />
-     {% csrf_token %}
-    </form>
-  <BR>
-        <div id="comments">
-          <h2>已註冊學校：</h2>
-          <ul class="commentlist">
- <div id=schools></div>           
-          </ul>
 
-        </div>
+{% block content %}
+<form action="." method="post">
+  {% csrf_token %}
+  <table>
+    <tbody>
+      <tr>
+        <th>
+          <label for="id_county">縣市:</label>
+        </th>
+        <td>
+          <select class="form-control" name="county" id="county" onchange="reset_zone(); update_school_list();"></select>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="id_zone">區域:</label>
+        </th>
+        <td>
+          <select class="form-control" name="zone" id="zone" onchange="update_school_list();"></select>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="id_system">學制:</label>
+        </th>
+        <td>
+          <select class="form-control" name="system" id="id_system">
+            <option value=0>國小</option>
+            <option value=1>國中</option>
+            <option value=2>高中</option>
+            <option value=3>大學</option>     
+          </select>       
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="id_name">學校名稱:</label>
+        </th>
+        <td>
+          <input id="id_name" maxlength="50" name="name" class="form-control" type="text">
+        </td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>{{ form.captcha }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <input class="form-control btn-info" type="submit" value="送出" />
+</form>
+<div id="comments">
+  <h2>已註冊學校：</h2>
+  <ul id="school_list" class="commentlist">
+  </ul>
+</div>
 {% endblock %}
