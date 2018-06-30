@@ -2,6 +2,7 @@
 lesson_list1 = []
 lesson_list2 = []
 lesson_list3 = []
+lesson_list4 = []
 
 def reset():
     lesson_list1.append(["1","第1堂課：Scratch基本介紹","範例：綜合應用"])
@@ -85,5 +86,16 @@ def reset():
     lesson_list3.append(["15","格子路徑"])  	
     lesson_list3.append(["18","最大路徑和"])
     lesson_list3.append(["17","英文字母數"])  
-    lesson_list3.append(["14","考拉茲猜想"])      
+    lesson_list3.append(["14","考拉茲猜想"])   
+    
+    lesson_list4.append(["1","迴圈與物件控制"])
+    lesson_list4.append(["2","F=ma的數值解"])   
+    lesson_list4.append(["3","圓周運動"])  
+    lesson_list4.append(["4","克卜勒定律"])  
+    lesson_list4.append(["5","三行星運動"])  
+    lesson_list4.append(["6","一維碰撞"])  
+    lesson_list4.append(["7","多物件控制"])  
+    lesson_list4.append(["8","進階多物件控制"])  
+    lesson_list4.append(["9","電力線與磁力線"])  
+    lesson_list4.append(["10","鍵盤與滑鼠控制"])      
 reset()

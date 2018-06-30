@@ -59,7 +59,7 @@
 </button>
 <BR><BR>
   {% endif %}
-<form name="myForm" id="form{{index}}" action="/student/work/submit/{% if typing == "0" %}0{% else %}1{% endif %}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}3{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/{{typing}}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}{% elif 'D' in lesson %}4{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
     <input type="hidden" name="lesson" value={{lesson}}>
     <div class="form-group">
         <label for="exampleFormControlTextarea1">心得感想：</label>
@@ -69,13 +69,13 @@
         {% with helps=work_dict|hash_helps:index %}
         <label for="exampleFormControlSelect2">創作過程：</label>
         <select class="form-control" name="helps">
-            <option value=0 {% if helps==0 %} selected {% endif %}>全部靠自己想</option>
-            <option value=1 {% if helps==1 %} selected {% endif %}>同學幫一點忙</option>
-            <option value=2 {% if helps==2 %} selected {% endif %}>同學幫很多忙</option>
-            <option value=3 {% if helps==3 %} selected {% endif %}>解答幫一點忙</option>
-            <option value=4 {% if helps==4 %} selected {% endif %}>解答幫很多忙</option>
-            <option value=5 {% if helps==5 %} selected {% endif %}>老師幫一點忙</option>
-            <option value=6 {% if helps==6 %} selected {% endif %}>老師幫很多忙</option>
+            <option value=0 {% if helps == 0 %} selected {% endif %}>全部靠自己想</option>
+            <option value=1 {% if helps == 1 %} selected {% endif %}>同學幫一點忙</option>
+            <option value=2 {% if helps == 2 %} selected {% endif %}>同學幫很多忙</option>
+            <option value=3 {% if helps == 3 %} selected {% endif %}>解答幫一點忙</option>
+            <option value=4 {% if helps == 4 %} selected {% endif %}>解答幫很多忙</option>
+            <option value=5 {% if helps == 5 %} selected {% endif %}>老師幫一點忙</option>
+            <option value=6 {% if helps == 6 %} selected {% endif %}>老師幫很多忙</option>
         </select>
         {% endwith %}
     </div>

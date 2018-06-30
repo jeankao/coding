@@ -282,6 +282,8 @@ class WorkListView(ListView):
             queryset = lesson_list2
         elif self.kwargs['lesson'] == "3":
             queryset = lesson_list3
+        elif self.kwargs['lesson'] == "4":
+            queryset = lesson_list4            
         else:
             queryset = lesson_list1
         return queryset
@@ -581,7 +583,7 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
 
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
-def grade(request, typing, lesson, classroom_id):
+def grade(request, typing, lesson, unit, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     if not request.user.id == classroom.teacher_id:
         return redirect("/")
@@ -592,10 +594,22 @@ def grade(request, typing, lesson, classroom_id):
     data = []
     lesson_list = [lesson_list1, lesson_list2, lesson_list3][int(lesson)-1]
     for enroll in enrolls:
-        enroll_score = []
-        total = 0
-        stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
-        for index, assignment in enumerate(lesson_list):
+      enroll_score = []
+      total = 0
+      stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+      if typing == "0":
+        if lesson == "1":
+            if unit == "1":
+                lesson_list = lesson_list[0:17]
+            elif unit == "2":
+                lesson_list = lesson_list[17:25]
+            elif unit == "3":
+                lesson_list = lesson_list[25:33]
+            elif unit == "4":
+                lesson_list = lesson_list[33:41]
+      else :
+        lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+      for index, assignment in enumerate(lesson_list):
             works = filter(lambda w: w.index == index+1, stu_works)
             works_count = len(works)
             if works_count == 0:
@@ -619,8 +633,8 @@ def grade(request, typing, lesson, classroom_id):
             elif lesson == "3":
                 memo = enroll.score_memo_euler
             grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
-        data.append([enroll, enroll_score, memo, grade])
-    return render_to_response('teacher/grade.html', {'typing':typing, 'lesson':lesson, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
+      data.append([enroll, enroll_score, memo, grade])
+    return render_to_response('teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
 
 # 列出分組所有作業
 @login_required

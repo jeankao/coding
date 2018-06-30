@@ -67,6 +67,8 @@ def lessons(request, subject_id):
             lock = profile.lock2
         elif subject_id == "C":
             lock = profile.lock3
+        elif subject_id == "D":
+            lock = profile.lock4           
         else:
             lock = profile.lock1
     else :
@@ -111,17 +113,22 @@ def lesson(request, lesson):
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
 
-        return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
         lesson_id = 3
         profile_lock = profile.lock3
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
+    elif lesson[0] == "D":
+        lesson_id = 4
+        profile_lock = profile.lock4
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
+        return render_to_response('student/lessonD.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
     else:
         lesson_id = 4
         profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -344,6 +351,8 @@ def work_list(request, typing, lesson, classroom_id):
             assignments = lesson_list2
         elif lesson == "3":
             assignments = lesson_list3
+        elif lesson == "4":
+            assignments = lesson_list4            
         else :
             assignments = lesson_list1
     elif typing == "1":
@@ -352,7 +361,7 @@ def work_list(request, typing, lesson, classroom_id):
 
     for idx, assignment in enumerate(assignments):
         if typing == "0":
-            index = idx
+            index = idx+1
         elif typing == "1":
             index = assignment.id
         if not index in work_dict:
@@ -361,15 +370,14 @@ def work_list(request, typing, lesson, classroom_id):
            lessons.append([assignment, work_dict[index]])
     return render_to_response('student/work_list.html', {'typing':typing, 'lesson':lesson, 'lessons':lessons, 'classroom':classroom}, context_instance=RequestContext(request))
 
-
 def submit(request, typing, lesson, index):
     profile = Profile.objects.get(user=request.user)
     work_dict = {}
     form = None
     work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if typing == "0":
-        if lesson in ["2", "3"]:
-            lesson_name = [lesson_list2, lesson_list3][int(lesson)-2][int(index)-1][1]
+        if lesson in ["2", "3", "4"]:
+            lesson_name = [lesson_list2, lesson_list3, lesson_list4][int(lesson)-2][int(index)-1][1]
         else:
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
@@ -413,7 +421,7 @@ def submit(request, typing, lesson, index):
                 else :
                     works.update(memo=form.cleaned_data['memo'])
             return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
-    elif lesson == "2" or lesson == "3":
+    elif lesson == "2" or lesson == "3" or lesson == "4":
         if request.method == 'POST':
             form = SubmitBForm(request.POST, request.FILES)
             if form.is_valid():
@@ -430,6 +438,10 @@ def submit(request, typing, lesson, index):
                     if len(answers) == 0 and typing == "0":
                         if lesson == "2":
                             profile.lock2 += 1
+                        elif lesson == "3":
+                            profile.lock3 +=1
+                        elif lesson == "4":
+                            profile.lock4 +=1
                         else:
                             profile.lock3 += 1
                         profile.save()
@@ -445,7 +457,7 @@ def submit(request, typing, lesson, index):
                     mtype, fext = mime.split('/', 1)
                     binary_data = a2b_base64(data)
 
-                    prefix = ['static/work/vphysics', 'static/work/euler'][int(lesson == 3)]
+                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck'][int(lesson - 2)]
                     directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                     image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
@@ -592,6 +604,10 @@ def progress(request, typing, lesson, unit, classroom_id):
                   lesson_list = lesson_list1[0:17]
           elif lesson == "2":
               lesson_list = lesson_list2
+          elif lesson == "3":
+              lesson_list = lesson_list3
+          elif lesson == "4":
+              lesson_list = lesson_list4
           else:
               lesson_list = lesson_list3
           for assignment in lesson_list:
