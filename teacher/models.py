@@ -8,6 +8,7 @@ class Classroom(models.Model):
     Lesson_CHOICES = [				
         (1, '程式設計輕鬆學：使用Scratch2.X'),
         (2, 'VPhyscis物理模擬：使用Python2'),
+        (4, 'VPhyscis物理模擬：建中特色課程'),            
         (3, 'Euler數學解題：使用Python3'),
 		]	
 		
@@ -15,6 +16,7 @@ class Classroom(models.Model):
         (1, 'Scratch'),
         (2, 'VPhyscis'),
         (3, 'Euler'),
+        (4, 'VPhysics'),      
 		]		
     # 班級名稱
     name = models.CharField(max_length=30)

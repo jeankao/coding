@@ -8,7 +8,7 @@
                 <td colspan=2>功能</td>		
         {% for work in works %}
             <tr>
-            <td>{{work.title}}</td>
+            <td>{{forloop.revcounter}}){{work.title}}</td>
 			<td>{{work.time}}</td>
             <td><a href="/teacher/work2/class/{{classroom.lesson}}/{{classroom.id}}/{{work.id}}">評分</a></td>
             <td><a href="/student/work/memo/1/{{classroom.lesson}}/{{classroom.id}}/{{work.id}}">心得</a></td>			

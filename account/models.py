@@ -51,6 +51,8 @@ class Profile(models.Model):
   lock2 = models.IntegerField(default=1)
   # Euler進度
   lock3 = models.IntegerField(default=1)
+  # ck進度
+  lock4 = models.IntegerField(default=1)  
   
   
 

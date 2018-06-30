@@ -67,6 +67,8 @@ def lessons(request, subject_id):
             lock = profile.lock2
         elif subject_id == "C":
             lock = profile.lock3
+        elif subject_id == "D":
+            lock = profile.lock4           
         else:
             lock = profile.lock1
     else :
@@ -111,17 +113,22 @@ def lesson(request, lesson):
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
 
-        return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
     elif lesson[0] == "C":
         lesson_id = 3
         profile_lock = profile.lock3
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
+    elif lesson[0] == "D":
+        lesson_id = 4
+        profile_lock = profile.lock4
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
+        return render_to_response('student/lessonD.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
     else:
         lesson_id = 4
         profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -346,6 +353,8 @@ def work_list(request, typing, lesson, classroom_id):
             assignments = lesson_list2
         elif lesson == "3":
             assignments = lesson_list3
+        elif lesson == "4":
+            assignments = lesson_list4            
         else :
             assignments = lesson_list1
     elif typing == "1":
@@ -354,7 +363,7 @@ def work_list(request, typing, lesson, classroom_id):
     
     for idx, assignment in enumerate(assignments):
         if typing == "0":
-            index = idx
+            index = idx+1
         elif typing == "1":
             index = assignment.id
         if not index in work_dict:
@@ -376,6 +385,8 @@ def submit(request, typing, lesson, index):
             lesson_name = lesson_list2[int(index)-1][1]
         elif lesson == "3":
             lesson_name = lesson_list3[int(index)-1][1]
+        elif lesson == "4":
+            lesson_name = lesson_list4[int(index)-1][1]            
         else :
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
@@ -421,7 +432,7 @@ def submit(request, typing, lesson, index):
                 else :
                     works.update(memo=form.cleaned_data['memo'])
             return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
-    elif lesson == "2" or lesson == "3":           
+    elif lesson == "2" or lesson == "3" or lesson == "4":           
         if request.method == 'POST':        
             form = SubmitBForm(request.POST, request.FILES)
             if form.is_valid():         
@@ -433,12 +444,12 @@ def submit(request, typing, lesson, index):
                         if len(answers)>0:
                             update_avatar(request.user.id, 1, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message=u'1分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=1, message='1分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
                         else :
                             update_avatar(request.user.id, 1, 3)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message=u'3分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
                             if typing == "0":
                                 if lesson == "2":
@@ -463,6 +474,9 @@ def submit(request, typing, lesson, index):
                     elif lesson == "3":
                         directory = "static/work/euler/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
                         image_file = "static/work/euler/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
+                    elif lesson == "4":
+                        directory = "static/work/ck/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
+                        image_file = "static/work/ck/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
                     if not os.path.exists(directory):
                         os.makedirs(directory)
                     with open(image_file, 'wb') as fd:
@@ -606,6 +620,10 @@ def progress(request, typing, lesson, unit, classroom_id):
                   lesson_list = lesson_list1[0:17]
           elif lesson == "2":
               lesson_list = lesson_list2
+          elif lesson == "3":
+              lesson_list = lesson_list3
+          elif lesson == "4":
+              lesson_list = lesson_list4
           else:
               lesson_list = lesson_list3
           for assignment in lesson_list:        

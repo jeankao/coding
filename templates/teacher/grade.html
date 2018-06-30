@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="/teacher/grade/0/1/1/{{classroom.id}}" role="btn" class='btn {% if typing == "0" and lesson == "1" and unit == "1" %}btn-info active{% endif %}'>12堂課</a>
+<a href="/teacher/grade/0/1/2/{{classroom.id}}" role="btn" class='btn {% if typing == "0" and lesson == "1" and unit == "2" %}btn-info active{% endif %}'>實戰入門</a>
+<a href="/teacher/grade/0/1/3/{{classroom.id}}" role="btn" class='btn {% if typing == "0" and lesson == "1" and unit == "3" %}btn-info active{% endif %}'>實戰進擊</a>
+<a href="/teacher/grade/0/1/4/{{classroom.id}}" role="btn" class='btn {% if typing == "0" and lesson == "1" and unit == "4" %}btn-info active{% endif %}'>實戰高手</a>
+<a href="/teacher/grade/1/1/1/{{classroom.id}}" role="btn" class='btn {% if typing == "1" and lesson == "1" %}btn-info active{% endif %}'>自訂作業</a>
+<BR>
 班級名稱：{{ classroom.name }}<BR>
 <table>
   <tr>
   <td>座號</td>
   <td>姓名</td>
   <td>成績</td>    
-                {% for assignment in lesson_list %}
-                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{assignment.0}}</button></td>              
+                {% for assignment in lesson_list %}                    
+                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{forloop.counter}}{% endif %}</button></td>              
                 {% endfor %}
     <td><button type="button" class="btn btn-warning btn-circle">心得</button></td>
 </tr>
