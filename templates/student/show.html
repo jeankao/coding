@@ -2,6 +2,38 @@
 {% load tag %}
 
 {% block content %}
+{% if lesson == "1" %}
+  {% if work %}
+<script type="text/javascript" src="/static/sb2/swfobject.js"></script>
+ 
+<script type="text/javascript">   
+var flashvars = {
+project: "/static/work/scratch/{{request.user.id}}/{{work_dict|hash_file:index}}" ,
+autostart: "false"
+};
+var params = {
+bgcolor: "#FFFFFF",
+allowScriptAccess: "always",
+allowFullScreen: "true",
+wmode: "window",
+menu:"‘false"
+};
+var attributes = {};
+swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.2.0","expressInstall.swf", flashvars, params, attributes);
+</script>
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    <div>心得感想：</div>
+    <div>{{ work.memo }}</div>
+    <div>程式：</div>
+    <div id="flashContent" >
+    </div>  
+  {% else %}
+    尚未繳交
+  {% endif %}
+
+
+
+{% elif lesson == "2" or lesson == "3" %}
   {% if work %}
     {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
     <div>心得感想：</div>
@@ -18,6 +50,7 @@
   {% else %}
     尚未繳交
   {% endif %}
+{% endif %}
 {% endblock %}
 
 {% block domready %}

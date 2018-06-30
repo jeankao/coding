@@ -405,7 +405,7 @@ def submit(request, typing, lesson, index):
 										# credit
                     update_avatar(request.user.id, 1, 2)
                     # History
-                    history = PointHistory(user_id=request.user.id, kind=1, message='2分--繳交作業<'+lesson_name+'>', url=request.get_full_path().replace("submit", "submitall"))
+                    history = PointHistory(user_id=request.user.id, kind=1, message=u'2分--繳交作業<'+lesson_name+'>', url=request.get_full_path().replace("submit", "submitall"))
                     history.save()
                     if typing == "0":
                         # lock
@@ -420,7 +420,7 @@ def submit(request, typing, lesson, index):
 
                 else :
                     works.update(memo=form.cleaned_data['memo'])
-            return redirect('/student/lesson/'+request.POST.get("lesson", ""))
+            return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
     elif lesson == "2" or lesson == "3":           
         if request.method == 'POST':        
             form = SubmitBForm(request.POST, request.FILES)
@@ -479,9 +479,10 @@ def submit(request, typing, lesson, index):
                 work.save()
                 return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))
-        return render_to_response('student/submit.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
+    return render_to_response('student/submit.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
 
 def show(request, typing, lesson, index, user_id):
+    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if int(user_id) == request.user.id or request.user.is_superuser:
         try:
             work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=user_id)
@@ -489,13 +490,13 @@ def show(request, typing, lesson, index, user_id):
             work = None
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=typing, lesson_id=lesson, index=index, user_id=user_id).last()
-        return render_to_response('student/show.html', {'work':work}, context_instance=RequestContext(request))
+        return render_to_response('student/show.html', {'work':work, 'lesson':lesson, 'work_dict':work_dict, 'index':index}, context_instance=RequestContext(request))
     else :
         return redirect("/")
 
 def rank(request, typing, lesson, index):
     works = Work.objects.filter(typing=typing, lesson_id=lesson, index=index).order_by("id")
-    return render_to_response('student/rank.html', {'works':works}, context_instance=RequestContext(request))
+    return render_to_response('student/rank.html', {'works':works, 'lesson':lesson}, context_instance=RequestContext(request))
 
 # 列出所有日期作品
 class WorkListView(ListView):

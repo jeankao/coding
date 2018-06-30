@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% load tag %}
 {% block content %}
+{% if lesson == "1" %}
+      {% include "student/submitA.html" with index=index %}
+{% elif lesson == "2" or lesson == "3" %}
       {% include "student/submitB.html" with index=index %}
+{% endif %}
 {% endblock %}

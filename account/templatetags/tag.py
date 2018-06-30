@@ -162,6 +162,7 @@ def hash_workid(h, key):
     
 @register.filter
 def hash_file(h, key):
+    key = int(key)
     if key in h:
       if len(h[key][1])>0:
         return h[key][1][0].filename
