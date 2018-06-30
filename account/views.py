@@ -62,7 +62,7 @@ def homepage(request):
     class_euler_ids = map(lambda a: a.id, class_euler_pool)    
     class_euler = len(class_euler_pool)      
     work_scratch = len(filter(lambda w: w.lesson_id == 1, workss))
-    work_vphysics = len(filter(lambda w: w.lesson_id == 2, workss))
+    work_vphysics = len(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4), workss))
     work_euler = len(filter(lambda w: w.lesson_id == 3, workss))
     works = [len(workss), [class_scratch, work_scratch], [class_vphysics, work_vphysics], [class_euler, work_euler]]
     enrolls = Enroll.objects.filter(seat__gt=0)
