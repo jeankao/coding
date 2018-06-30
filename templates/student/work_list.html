@@ -8,7 +8,7 @@
           </tr>
         {% for lesson, work in lessons %}
 				<tr>
-								<td>{% if typing == "0" %}{{forloop.counter}}{% else %}{{forloop.revcounter}}{% endif %}){% if typing == "0" %}{% if classroom.lesson == 1%}{{lesson.0.2}}{% else %}{{lesson.0.1}}{% endif %}{% else %}{{lesson.title}}{% endif %}</td>
+								<td>{% if typing == "0" %}{{forloop.counter}}{% else %}{{forloop.revcounter}}{% endif %}){% if typing == "0" %}{% if classroom.lesson == 1%}{{lesson.2}}{% else %}{{lesson.1}}{% endif %}{% else %}{{lesson.title}}{% endif %}</td>
 				  <td>{% if not work.score or work.score == -1 %}<a href="/student/work/submit/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">繳交</a>{% endif %}</td>
 				  <td><a href="/student/work/show/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}/{{user.id}}">觀看({{work.publication_date}}){% if work.score > -1 %}--{{work.score}}{% endif %}</a></td>							
 								<td><a href="/student/work/rank/{{typing}}/{{classroom.lesson}}/{{forloop.counter}}">排行榜</a></td>  
