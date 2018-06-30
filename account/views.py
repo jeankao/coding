@@ -264,7 +264,7 @@ class UserListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('account') != None:
             keyword = self.request.GET.get('account')
-            queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
+            queryset = User.objects.filter(Q(username__icontains=keyword) | Q(firs__icontains=keyword)).order_by('-id')
         else :
             if self.kwargs['group'] == "1":
                 queryset = User.objects.filter(groups__name='apply').order_by("-id")
@@ -337,7 +337,7 @@ def adminrealname(request, user_id):
             user.first_name =form.cleaned_data['first_name']
             user.save()
                 
-            return redirect('/account/userlist/')
+            return redirect('/')
     else:
         teacher = False
         enrolls = Enroll.objects.filter(student_id=user_id)

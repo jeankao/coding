@@ -351,13 +351,16 @@ def work_list(request, typing, lesson, classroom_id):
     elif typing == "1":
         assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
     work_dict = dict(((work.index, work) for work in Work.objects.filter(typing=typing, user_id=request.user.id, lesson_id=lesson)))
-    index = 0
-    for assignment in assignments:
+    
+    for idx, assignment in enumerate(assignments):
+        if typing == "0":
+            index = idx
+        elif typing == "1":
+            index = assignment.id
         if not index in work_dict:
             lessons.append([assignment, None])
         else:
-            lessons.append([assignment, work_dict[index]])
-        index = index + 1
+           lessons.append([assignment, work_dict[index]])
     return render_to_response('student/work_list.html', {'typing':typing, 'lesson':lesson, 'lessons':lessons, 'classroom':classroom}, context_instance=RequestContext(request))
 
 
@@ -479,7 +482,7 @@ def submit(request, typing, lesson, index):
         return render_to_response('student/submit.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
 
 def show(request, typing, lesson, index, user_id):
-    if user_id == request.user.id or request.user.is_superuser:
+    if int(user_id) == request.user.id or request.user.is_superuser:
         try:
             work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=user_id)
         except ObjectDoesNotExist:
