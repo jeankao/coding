@@ -13,19 +13,22 @@
 			<a href="/student/group/{{enroll.classroom_id}}" role="button" class="btn btn-success">組別</a>
 			<a href="/student/classmate/{{enroll.classroom_id}}" role="button" class="btn btn-success">同學</a>
 	        <a href="/student/work/0/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">作業1</a>
-	        <a href="/student/work/1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">作業2</a>      
 {% if not enroll.classroom.lesson == 1 %}
-			<a href="/student/progress/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度</a>
-			<a href="/certificate/cert/classroom/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">證書</a>          
+			<a href="/student/progress/0/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度1</a>
+{% endif %}
+	        <a href="/student/work/1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">作業2</a>
+{% if not enroll.classroom.lesson == 1 %}
+     	<a href="/student/progress/1/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度2</a>
+			<a href="/certificate/cert/classroom/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">證書</a>         
 {% endif %}
 			<a href="/student/work1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">小老師</a>
       <a href="/student/work/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">詞頻</a>
 {% if enroll.classroom.lesson == 1 %}
 			<BR><BR>作業進度：
-			<a href="/student/progress/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>
-			<a href="/student/progress/{{enroll.classroom.lesson}}/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>
-			<a href="/student/progress/{{enroll.classroom.lesson}}/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
-			<a href="/student/progress/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
+			<a href="/student/progress/0/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>
+			<a href="/student/progress/0/{{enroll.classroom.lesson}}/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>
+			<a href="/student/progress/0/{{enroll.classroom.lesson}}/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
+			<a href="/student/progress/0/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
 {% endif %}
 {% if enroll.classroom.lesson == 1 %}			
       <BR><BR>修業證書：        

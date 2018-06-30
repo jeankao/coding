@@ -575,36 +575,40 @@ def work_download(request, index, user_id, workfile_id):
     #return render_to_response('student/download.html', {'download':download})
 
 # 查詢作業進度
-def progress(request, lesson, unit, classroom_id):
+def progress(request, typing, lesson, unit, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     bars = []
 
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
     student_ids = map(lambda a: a.student_id, enroll_pool)
-    work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=lesson).order_by("-id")
+    work_pool = Work.objects.filter(typing=typing, user_id__in=student_ids, lesson_id=lesson).order_by("-id")
 
     for enroll in enroll_pool:
       student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
       bar = []
       index = 1
-      if lesson == "1":
-        if unit == "1":
-            lesson_list = lesson_list1[0:17]
-        elif unit == "2":
-            lesson_list = lesson_list1[17:25]
-            index = 17
-        elif unit == "3":
-            lesson_list = lesson_list1[25:33]
-            index = 25
-        elif unit == "4":
-            lesson_list = lesson_list1[33:41]
-            index = 33
-        else:
-            lesson_list = lesson_list1[0:17]
-      elif lesson == "2":
-        lesson_list = lesson_list2
-      else:
-        lesson_list = lesson_list3
+      lesson_list = []
+      if typing == "0":
+          if lesson == "1":
+              if unit == "1":
+                  lesson_list = lesson_list1[0:17]
+              elif unit == "2":
+                  lesson_list = lesson_list1[17:25]
+                  index = 17
+              elif unit == "3":
+                  lesson_list = lesson_list1[25:33]
+                  index = 25
+              elif unit == "4":
+                  lesson_list = lesson_list1[33:41]
+                  index = 33
+              else:
+                  lesson_list = lesson_list1[0:17]
+          elif lesson == "2":
+              lesson_list = lesson_list2
+          else:
+              lesson_list = lesson_list3
+      elif typing == "1":
+          lesson_list = TWork.objects.filter(classroom_id=classroom_id)
       for assignment in lesson_list:
         works = filter(lambda u: u.index == index, student_works)
         index = index + 1
@@ -613,7 +617,7 @@ def progress(request, lesson, unit, classroom_id):
         else:
           bar.append([assignment, False])
       bars.append([enroll, bar])
-    return render_to_response('student/progress.html', {'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list}, context_instance=RequestContext(request))
+    return render_to_response('student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list}, context_instance=RequestContext(request))
 
 # 查詢某作業分組小老師
 def work_group(request, lesson, index, classroom_id):

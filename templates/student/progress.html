@@ -5,16 +5,24 @@
             <tr>
                 <Td></Td>
                 {% for assignment in lesson_list %}
+                     {% if typing == "0" %}
                      <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{assignment.0}}</button></td>              
+                     {% elif typing == "1" %}
+                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{forloop.counter}}</button></td>                           
+                     {% endif %}
                 {% endfor %}
             </tr>          
             <tr>
                 <Td></Td>
                 {% for assignment in lesson_list %}
+                    {% if typing == "0" %}
                     {% if lesson == "1" %}
                      <td><font size=-2>{{assignment.2}}</font></td>
                     {% else %}
                      <td><font size=-2>{{assignment.1}}</font></td>              
+                    {% endif %}
+                    {% elif typing == "1" %}
+                     <td><font size=-2>{{assignment.title}}</font></td>              
                     {% endif %}
                 {% endfor %}
             </tr>          
