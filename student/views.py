@@ -68,7 +68,7 @@ def lessons(request, subject_id):
         elif subject_id == "C":
             lock = profile.lock3
         elif subject_id == "D":
-            lock = profile.lock4           
+            lock = profile.lock4
         else:
             lock = profile.lock1
     else :
@@ -345,15 +345,9 @@ def work_list(request, typing, lesson, classroom_id):
     lessons = []
 
     if typing == "0":
-        if lesson == "1":
-            assignments = lesson_list1
-        elif lesson == "2":
-            assignments = lesson_list2
-        elif lesson == "3":
-            assignments = lesson_list3
-        elif lesson == "4":
-            assignments = lesson_list4            
-        else :
+        if lesson in ["2", "3", "4"]:
+            assignments = [lesson_list2, lesson_list3, lesson_list4][int(lesson)-2]
+        else:
             assignments = lesson_list1
     elif typing == "1":
         assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
@@ -395,9 +389,7 @@ def submit(request, typing, lesson, index):
                 fs = FileSystemStorage()
                 filename = uuid4().hex
                 fs.save("static/work/scratch/"+str(request.user.id)+"/"+filename, myfile)
-
             form = SubmitAForm(request.POST, request.FILES)
-
             if not works.exists():
                 if form.is_valid():
                     work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id, memo=form.cleaned_data['memo'])
