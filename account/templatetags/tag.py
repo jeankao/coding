@@ -113,6 +113,7 @@ def subtract(a, b):
   
 @register.filter
 def hash_memo(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].memo
     else:
@@ -120,6 +121,7 @@ def hash_memo(h, key):
     
 @register.filter
 def hash_code(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].code
     else:
@@ -127,6 +129,7 @@ def hash_code(h, key):
     
 @register.filter
 def hash_helps(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].helps
     else:
@@ -134,6 +137,7 @@ def hash_helps(h, key):
     
 @register.filter
 def hash_score(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].score
     else:
@@ -141,6 +145,7 @@ def hash_score(h, key):
     
 @register.filter
 def hash_date(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].publication_date
     else:
@@ -148,6 +153,7 @@ def hash_date(h, key):
     
 @register.filter
 def hash_scorer(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].scorer
     else:
@@ -155,6 +161,7 @@ def hash_scorer(h, key):
     
 @register.filter
 def hash_workid(h, key):
+    key = int(key)
     if key in h:
       return h[key][0].id
     else:
@@ -173,6 +180,7 @@ def hash_file(h, key):
     
 @register.filter
 def hash_files(h, key):
+    key = int(key)
     if key in h:
       if len(h[key][1])>0:
         return h[key][1]
@@ -183,6 +191,7 @@ def hash_files(h, key):
 
 @register.filter
 def hash_picture(h, key):
+    key = int(key)
     if key in h:
         return h[key][0].picture
     return None

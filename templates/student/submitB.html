@@ -60,67 +60,63 @@
 <BR><BR>
   {% endif %}
 <form name="myForm" id="form{{index}}" action="/student/work/submit/{% if typing == "0" %}0{% else %}1{% endif %}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}3{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
-<input type="hidden" name="lesson" value={{lesson}}>
-<div class="form-group">
-    <label for="exampleFormControlTextarea1">心得感想：</label>
-    <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
-  </div>    
-  <div class="form-group">
-    {% with helps=work_dict|hash_helps:index %}
-    <label for="exampleFormControlSelect2">創作過程：</label>
-    <select class="form-control" name="helps">
-      <option value=0 {% if helps == 0 %} selected {% endif %}>全部靠自己想</option>
-      <option value=1 {% if helps == 1 %} selected {% endif %}>同學幫一點忙</option>
-      <option value=2 {% if helps == 2 %} selected {% endif %}>同學幫很多忙</option>
-      <option value=3 {% if helps == 3 %} selected {% endif %}>解答幫一點忙</option>
-      <option value=4 {% if helps == 4 %} selected {% endif %}>解答幫很多忙</option>
-      <option value=5 {% if helps == 5 %} selected {% endif %}>老師幫一點忙</option>
-      <option value=6 {% if helps == 6 %} selected {% endif %}>老師幫很多忙</option>      
-    </select>
-    {% endwith %}
-  </div>  
-<div class="form-group">
-    <label for="exampleFormControlTextarea1">程式碼：</label>
-    <textarea class="form-control" id="id_code{{index}}" rows="5" name="code">{{work_dict|hash_code:index}}</textarea>
-  </div>
-<div class="form-group">
-    <label for="exampleFormControlTextarea1">執行結果：</label>
-  {% if work_dict|hash_scorer:index == 0 %}
-   <div id="edit-box{{index}}" class="form-control target" contenteditable="true">
-     {% if work_dict|hash_workid:index %}
-     如果變更擷圖，請刪除原圖後重貼...
-     <img width=880 src="/{{ work_dict|hash_picture:index }}" />
-     {% else %}
-     請在此貼上螢幕擷圖...
-     {% endif %}
-   </div>
-   <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" /><BR> 
-  </BR>
-<div class="form-group">           
-        <input id="submit" type="submit" class="btn-info" value="送出" />
-</div> 
-             
-  {% else %}
-  <div>
-     <div id="edit-box{{index}}"></div>
-    <img width=880 src="/{{ work_dict|hash_picture:index }}">
-  </div>
-  {% endif %}
-  </div>
-            </form>
-        <br>
-  
-        <table class="table">
-        <tr>
-          {% if work_dict|hash_date:index %}
-          <td>
+    <input type="hidden" name="lesson" value={{lesson}}>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">心得感想：</label>
+        <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
+    </div>
+    <div class="form-group">
+        {% with helps=work_dict|hash_helps:index %}
+        <label for="exampleFormControlSelect2">創作過程：</label>
+        <select class="form-control" name="helps">
+            <option value=0 {% if helps==0 %} selected {% endif %}>全部靠自己想</option>
+            <option value=1 {% if helps==1 %} selected {% endif %}>同學幫一點忙</option>
+            <option value=2 {% if helps==2 %} selected {% endif %}>同學幫很多忙</option>
+            <option value=3 {% if helps==3 %} selected {% endif %}>解答幫一點忙</option>
+            <option value=4 {% if helps==4 %} selected {% endif %}>解答幫很多忙</option>
+            <option value=5 {% if helps==5 %} selected {% endif %}>老師幫一點忙</option>
+            <option value=6 {% if helps==6 %} selected {% endif %}>老師幫很多忙</option>
+        </select>
+        {% endwith %}
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">程式碼：</label>
+        <textarea class="form-control" id="id_code{{index}}" rows="5" name="code">{{work_dict|hash_code:index}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">執行結果：</label>
+        {% if work_dict|hash_scorer:index == 0 %}
+        <div id="edit-box{{index}}" class="form-control target" contenteditable="true">
+            {% if work_dict|hash_workid:index %} 如果變更擷圖，請刪除原圖後重貼...
+            <img width=880 src="/{{ work_dict|hash_picture:index }}" /> 
+            {% else %}
+            請在此貼上螢幕擷圖... 
+            {% endif %}
+        </div>
+        <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" />
+        <div class="form-group">
+            <input id="submit" type="submit" class="btn-info" value="送出" />
+        </div>
+        {% else %}
+        <div>
+            <div id="edit-box{{index}}"></div>
+            <img width=880 src="/{{ work_dict|hash_picture:index }}">
+        </div>
+        {% endif %}
+    </div>
+</form>
+<br>
+<table class="table">
+    <tr>
+        {% if work_dict|hash_date:index %}
+        <td>
             <a href="/student/work/show/{{lesson_id}}/{{index}}/{{user.id}}">觀看({{work_dict|hash_date:index}})</a>
-          </td>
-          {% endif %}
-          {% if lesson_id == 2 %}
-          <td>
+        </td>
+        {% endif %}
+        {% if lesson_id == 2 %}
+        <td>
             <a href="/student/work/answer/{{lesson_id}}/{{index}}">解答</a>
-          </td>
-          {% endif %}
-        </tr>
-      </table>
+        </td>
+        {% endif %}
+    </tr>
+</table>

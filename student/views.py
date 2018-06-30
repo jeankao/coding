@@ -251,23 +251,21 @@ def classroom_add(request):
 def classroom_enroll(request, classroom_id):
         scores = []
         if request.method == 'POST':
-                form = EnrollForm(request.POST)
-                if form.is_valid():
-                    try:
-                        classroom = Classroom.objects.get(id=classroom_id)
-                        if classroom.password == form.cleaned_data['password']:
-                            try:
-                                enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id)
-                            except ObjectDoesNotExist:
-                                enroll = Enroll(classroom_id=classroom_id, student_id=request.user.id, seat=form.cleaned_data['seat'])
-                            enroll.save()
-                        else:
-                            return render_to_response('message.html', {'message':"選課密碼錯誤"}, context_instance=RequestContext(request))
-                    except Classroom.DoesNotExist:
-                        pass
-
-
-                    return redirect("/student/group/" + str(classroom.id))
+            form = EnrollForm(request.POST)
+            if form.is_valid():
+                try:
+                    classroom = Classroom.objects.get(id=classroom_id)
+                    if classroom.password == form.cleaned_data['password']:
+                        try:
+                            enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id)
+                        except ObjectDoesNotExist:
+                            enroll = Enroll(classroom_id=classroom_id, student_id=request.user.id, seat=form.cleaned_data['seat'])
+                        enroll.save()
+                    else:
+                        return render_to_response('message.html', {'message':"選課密碼錯誤"}, context_instance=RequestContext(request))
+                except Classroom.DoesNotExist:
+                    pass
+                return redirect("/student/group/" + str(classroom.id))
         else:
             form = EnrollForm()
         return render_to_response('form.html', {'form':form}, context_instance=RequestContext(request))
@@ -351,7 +349,7 @@ def work_list(request, typing, lesson, classroom_id):
     elif typing == "1":
         assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
     work_dict = dict(((work.index, work) for work in Work.objects.filter(typing=typing, user_id=request.user.id, lesson_id=lesson)))
-    
+
     for idx, assignment in enumerate(assignments):
         if typing == "0":
             index = idx
@@ -368,19 +366,15 @@ def submit(request, typing, lesson, index):
     profile = Profile.objects.get(user=request.user)
     work_dict = {}
     form = None
-    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
+    work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if typing == "0":
-        if lesson == "1":
-            lesson_name = lesson_list1[int(index)-1][2]
-        elif lesson == "2":
-            lesson_name = lesson_list2[int(index)-1][1]
-        elif lesson == "3":
-            lesson_name = lesson_list3[int(index)-1][1]
-        else :
+        if lesson in ["2", "3"]:
+            lesson_name = [lesson_list2, lesson_list3][int(lesson)-2][int(index)-1][1]
+        else:
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
         lesson_name = TWork.objects.get(id=index).title
-        
+
     if lesson == "1":
         works = Work.objects.filter(typing=typing, index=index, user_id=request.user.id, lesson_id=lesson)
         try:
@@ -402,7 +396,7 @@ def submit(request, typing, lesson, index):
                     work.save()
                     workfile = WorkFile(work_id=work.id, filename=filename)
                     workfile.save()
-										# credit
+                    # credit
                     update_avatar(request.user.id, 1, 2)
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message=u'2分--繳交作業<'+lesson_name+'>', url=request.get_full_path().replace("submit", "submitall"))
@@ -411,58 +405,50 @@ def submit(request, typing, lesson, index):
                         # lock
                         profile.lock1 += 1
                         profile.save()
-
             else:
                 if form.is_valid():
                     works.update(memo=form.cleaned_data['memo'],publication_date=timezone.localtime(timezone.now()))
                     workfile = WorkFile(work_id=works[0].id, filename=filename)
                     workfile.save()
-
                 else :
                     works.update(memo=form.cleaned_data['memo'])
             return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
-    elif lesson == "2" or lesson == "3":           
-        if request.method == 'POST':        
+    elif lesson == "2" or lesson == "3":
+        if request.method == 'POST':
             form = SubmitBForm(request.POST, request.FILES)
-            if form.is_valid():         
+            if form.is_valid():
                 try:
                     work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
                 except ObjectDoesNotExist:
-                        # credit
-                        answers = Answer.objects.filter(lesson_id=lesson, index=index, student_id=request.user.id)
-                        if len(answers)>0:
-                            update_avatar(request.user.id, 1, 1)
-                            # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message=u'1分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
-                            history.save()
-                        else :
-                            update_avatar(request.user.id, 1, 3)
-                            # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message=u'3分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
-                            history.save()
-                            if typing == "0":
-                                if lesson == "2":
-                                    profile.lock2 +=1
-                                else:
-                                    profile.lock3 +=1
-                                profile.save()
+                    # credit
+                    answers = Answer.objects.filter(lesson_id=lesson, index=index, student_id=request.user.id)
+                    points = 3
+                    update_avatar(request.user.id, 1, points)
+                    # History
+                    history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                    history.save()
+                    if len(answers) == 0 and typing == "0":
+                        if lesson == "2":
+                            profile.lock2 += 1
+                        else:
+                            profile.lock3 += 1
+                        profile.save()
                 except MultipleObjectsReturned:
                     pass
                 work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
                 work.save()
-                
+
                 dataURI = form.cleaned_data['screenshot']
                 try:
                     head, data = dataURI.split(',', 1)
                     mime, b64 = head.split(';', 1)
                     mtype, fext = mime.split('/', 1)
                     binary_data = a2b_base64(data)
-                    if lesson == "2":
-                        directory = "static/work/vphysics/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
-                        image_file = "static/work/vphysics/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
-                    elif lesson == "3":
-                        directory = "static/work/euler/{uid}/{index}".format(uid=request.user.id, id=work.id, index=index)
-                        image_file = "static/work/euler/{uid}/{index}/{id}.jpg".format(uid=request.user.id, id=work.id, index=index)
+
+                    prefix = ['static/work/vphysics', 'static/work/euler'][int(lesson == 3)]
+                    directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
+                    image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
+
                     if not os.path.exists(directory):
                         os.makedirs(directory)
                     with open(image_file, 'wb') as fd:
@@ -608,17 +594,17 @@ def progress(request, typing, lesson, unit, classroom_id):
               lesson_list = lesson_list2
           else:
               lesson_list = lesson_list3
-          for assignment in lesson_list:        
+          for assignment in lesson_list:
             works = filter(lambda u: u.index == index, student_works)
             index = index + 1
             if len(works) > 0:
               bar.append([assignment, works[0]])
             else:
               bar.append([assignment, False])
-          bars.append([enroll, bar])              
+          bars.append([enroll, bar])
       elif typing == "1":
           lesson_list = TWork.objects.filter(classroom_id=classroom_id)
-          for assignment in lesson_list:        
+          for assignment in lesson_list:
             works = filter(lambda u: u.index == assignment.id, student_works)
             index = index + 1
             if len(works) > 0:
