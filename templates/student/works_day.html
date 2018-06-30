@@ -19,7 +19,7 @@
                 {% endif %}
               <td>{{work.user.last_name|school}}</td>
               <td>{{work.publication_date}}</td>
-              <td>{{work.index|work_name:lesson}}</td>
+              <td>{{work.index|work_name:work.lesson_id}}</td>
             </tr>
         {% endfor %}
         </table>    

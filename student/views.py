@@ -495,14 +495,17 @@ class WorkListView(ListView):
     template_name = 'student/works_list.html'
 
     def get_queryset(self):
-        works = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+        if self.kwargs['lesson'] == "2":
+            work_pool = Work.objects.filter(lesson_id__in=[2,4])
+        else:
+            work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         queryset = []
-        start = datetime(2018,4,1)
-        end = datetime.today()
-        daterange = [start + timedelta(days=x) for x in range(0, (end-start).days)]
+        timezone = pytz.timezone("Asia/Taipei")
+        start = timezone.localize(datetime(2018,4,1))
+        end = timezone.localize(datetime.now())     
+        daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
-            utc = pytz.UTC
-            work = filter(lambda w: w.publication_date >= utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), works)
+            work = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
             if len(work)>0 :
                 queryset.append([day, len(work)])
         return queryset
@@ -523,10 +526,13 @@ class WorkDayListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
-        day = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
-        utc = pytz.UTC
-        works = filter(lambda w: w.publication_date >= utc.localize(day) and  w.publication_date < utc.localize(day+timedelta(days=1)), work_pool)
+        if self.kwargs['lesson'] == "2":
+            work_pool = Work.objects.filter(lesson_id__in=[2,4])
+        else:
+            work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+        timezone = pytz.timezone("Asia/Taipei")    
+        day = timezone.localize(datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date'])))
+        works = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
         return works
 
     def get_context_data(self, **kwargs):

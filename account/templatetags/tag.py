@@ -82,12 +82,16 @@ def realname2(user_id):
       
 @register.filter(takes_context=True)
 def work_name(index, lesson):
-    if lesson == "1":
+    if lesson == 1:
         return lesson_list1[index-1][2]
-    elif lesson == "2":
+    elif lesson == 2:
         return lesson_list2[index-1][1]
-    elif lesson == "3":
+    elif lesson == 3:
         return lesson_list3[index-1][1]
+    elif lesson == 4:
+        return lesson_list4[index-1][1]
+    else :
+        return lesson_list1[index-1][2]
       
 @register.filter(takes_context=True)
 def school(school_id):
