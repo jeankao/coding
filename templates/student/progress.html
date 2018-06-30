@@ -35,8 +35,8 @@
                     {% else %}
             <td style="padding:0px"><button type="button" class="btn btn-success btn-circle"></button><BR><font size=-2>{{work.publication_date|date:"m/d"}}</font></td>                   
                     {% endif %}
-                {% else %}
-           <td style="padding:0px"><button type="button" class="btn btn-default btn-circle">{{assignment.0}}</button></td>            
+                {% else %}              
+           <td style="padding:0px"><button type="button" class="btn btn-default btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{assign.title}}{% endif %}</button></td>            
                 {% endif %}
             {% endfor %}
           </tr>

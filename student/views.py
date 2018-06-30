@@ -608,16 +608,24 @@ def progress(request, typing, lesson, unit, classroom_id):
               lesson_list = lesson_list2
           else:
               lesson_list = lesson_list3
+          for assignment in lesson_list:        
+            works = filter(lambda u: u.index == index, student_works)
+            index = index + 1
+            if len(works) > 0:
+              bar.append([assignment, works[0]])
+            else:
+              bar.append([assignment, False])
+          bars.append([enroll, bar])              
       elif typing == "1":
           lesson_list = TWork.objects.filter(classroom_id=classroom_id)
-      for assignment in lesson_list:
-        works = filter(lambda u: u.index == index, student_works)
-        index = index + 1
-        if len(works) > 0:
-          bar.append([assignment, works[0]])
-        else:
-          bar.append([assignment, False])
-      bars.append([enroll, bar])
+          for assignment in lesson_list:        
+            works = filter(lambda u: u.index == assignment.id, student_works)
+            index = index + 1
+            if len(works) > 0:
+              bar.append([assignment, works[0]])
+            else:
+              bar.append([assignment, False])
+          bars.append([enroll, bar])
     return render_to_response('student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list}, context_instance=RequestContext(request))
 
 # 查詢某作業分組小老師
