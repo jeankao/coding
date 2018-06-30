@@ -8,11 +8,11 @@
           </tr>
         {% for lesson in lessons %}
 				<tr>
-								<td>{{forloop.counter}}){% if classroom.lesson == 1%}{{lesson.0.2}}{% else %}{{lesson.0.1}}{% endif %}</td>
-				  <td>{% if not work.score %}<a href="/student/work/submit/{{classroom.lesson}}/{{forloop.counter}}">繳交</a>{% endif %}</td>
-				  <td><a href="/student/work/show/{{classroom.lesson}}/{{forloop.counter}}/{{user.id}}">觀看({{work.date}}){{work.score}}</a></td>							
-								<td><a href="/student/work/rank/{{classroom.lesson}}/{{forloop.counter}}">排行榜</a></td>  
-								<td><a href="/student/work/memo/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>
+								<td>{% if typing == "0" %}{{forloop.counter}}{% else %}{{forloop.revcounter}}{% endif %}){% if typing == "0" %}{% if classroom.lesson == 1%}{{lesson.0.2}}{% else %}{{lesson.0.1}}{% endif %}{% else %}{{lesson.0.title}}{% endif %}</td>
+				  <td>{% if not work.score %}<a href="/student/work/submit/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.0.id}}{% endif %}">繳交</a>{% endif %}</td>
+				  <td><a href="/student/work/show/{{typing}}/{{classroom.lesson}}/{{forloop.counter}}/{{user.id}}">觀看({{work.date}}){{work.score}}</a></td>							
+								<td><a href="/student/work/rank/{{typing}}/{{classroom.lesson}}/{{forloop.counter}}">排行榜</a></td>  
+								<td><a href="/student/work/memo/{{typing}}/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}">心得</a></td>
 				</tr>				
           {% endfor %}		
         </table>

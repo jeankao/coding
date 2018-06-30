@@ -8,7 +8,7 @@ from django.template import RequestContext
 from student.lesson import *
 from django.views.generic import ListView, CreateView
 from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam
-from teacher.models import Classroom
+from teacher.models import Classroom, TWork
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
 from student.forms import EnrollForm, GroupForm, SeatForm, GroupSizeForm, SubmitAForm, SubmitBForm
@@ -335,19 +335,22 @@ class AnnounceListView(ListView):
         return super(AnnounceListView, self).render_to_response(context)
 
 # 列出個人所有作業
-def work_list(request, lesson, classroom_id):
+def work_list(request, typing, lesson, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     lessons = []
 
-    if lesson == "1":
-        assignments = lesson_list1
-    elif lesson == "2":
-        assignments = lesson_list2
-    elif lesson == "3":
-        assignments = lesson_list3
-    else :
-        assignments = lesson_list1
-    work_dict = dict(((work.index, work) for work in Work.objects.filter(user_id=request.user.id, lesson_id=lesson)))
+    if typing == "0":
+        if lesson == "1":
+            assignments = lesson_list1
+        elif lesson == "2":
+            assignments = lesson_list2
+        elif lesson == "3":
+            assignments = lesson_list3
+        else :
+            assignments = lesson_list1
+    elif typing == "1":
+        assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
+    work_dict = dict(((work.index, work) for work in Work.objects.filter(typing=typing, user_id=request.user.id, lesson_id=lesson)))
     index = 0
     for assignment in assignments:
         if not index in work_dict:
@@ -355,23 +358,28 @@ def work_list(request, lesson, classroom_id):
         else:
             lessons.append([assignment, work_dict[index]])
         index = index + 1
-    return render_to_response('student/work_list.html', {'lesson':lesson, 'lessons':lessons, 'classroom':classroom}, context_instance=RequestContext(request))
+    return render_to_response('student/work_list.html', {'typing':typing, 'lesson':lesson, 'lessons':lessons, 'classroom':classroom}, context_instance=RequestContext(request))
 
 
-def submit(request, lesson, index):
+def submit(request, typing, lesson, index):
     profile = Profile.objects.get(user=request.user)
     work_dict = {}
-    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson, user_id=request.user.id)))
+    form = None
+    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
+    if typing == "0":
+        if lesson == "1":
+            lesson_name = lesson_list1[int(index)-1][2]
+        elif lesson == "2":
+            lesson_name = lesson_list2[int(index)-1][1]
+        elif lesson == "3":
+            lesson_name = lesson_list3[int(index)-1][1]
+        else :
+            lesson_name = lesson_list1[int(index)-1][2]
+    elif typing == "1":
+        lesson_name = TWork.objects.get(id=index).title
+        
     if lesson == "1":
-        lesson_list = lesson_list1
-    elif lesson == "2":
-        lesson_list = lesson_list2
-    elif lesson == "3":
-        lesson_list = lesson_list3
-    else :
-        lesson_list = lesson_list1
-    if lesson == "1":
-        works = Work.objects.filter(index=index, user_id=request.user.id, lesson_id=lesson)
+        works = Work.objects.filter(typing=typing, index=index, user_id=request.user.id, lesson_id=lesson)
         try:
             filepath = request.FILES['file']
         except :
@@ -387,18 +395,19 @@ def submit(request, lesson, index):
 
             if not works.exists():
                 if form.is_valid():
-                    work = Work(lesson_id=lesson, index=index, user_id=request.user.id, memo=form.cleaned_data['memo'])
+                    work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id, memo=form.cleaned_data['memo'])
                     work.save()
                     workfile = WorkFile(work_id=work.id, filename=filename)
                     workfile.save()
 										# credit
                     update_avatar(request.user.id, 1, 2)
                     # History
-                    history = PointHistory(user_id=request.user.id, kind=1, message='2分--繳交作業<'+lesson_list[int(index)-1][2]+'>', url=request.get_full_path().replace("submit", "submitall"))
+                    history = PointHistory(user_id=request.user.id, kind=1, message='2分--繳交作業<'+lesson_name+'>', url=request.get_full_path().replace("submit", "submitall"))
                     history.save()
-                    # lock
-                    profile.lock1 += 1
-                    profile.save()
+                    if typing == "0":
+                        # lock
+                        profile.lock1 += 1
+                        profile.save()
 
             else:
                 if form.is_valid():
@@ -409,40 +418,36 @@ def submit(request, lesson, index):
                 else :
                     works.update(memo=form.cleaned_data['memo'])
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))
-    elif lesson == "2" or lesson == "3":
-        if request.method == 'POST':
+    elif lesson == "2" or lesson == "3":           
+        if request.method == 'POST':        
             form = SubmitBForm(request.POST, request.FILES)
-            if form.is_valid():
+            if form.is_valid():         
                 try:
-                    work = Work.objects.get(lesson_id=lesson, index=index, user_id=request.user.id)
+                    work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
                 except ObjectDoesNotExist:
-                    if lesson == "2" or lesson == "3":
                         # credit
                         answers = Answer.objects.filter(lesson_id=lesson, index=index, student_id=request.user.id)
                         if len(answers)>0:
                             update_avatar(request.user.id, 1, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message='1分--繳交作業<'+lesson_list[int(index)-1][1]+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=1, message=u'1分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
                         else :
                             update_avatar(request.user.id, 1, 3)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業<'+lesson_list[int(index)-1][1]+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=1, message=u'3分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
-                            if lesson == "2":
-                                profile.lock2 +=1
-                            else:
-                                profile.lock3 +=1
-                            profile.save()
-                    else :
-                        update_avatar(request.user.id, 1, 3)
-                        # History
-                        history = PointHistory(user_id=request.user.id, kind=1, message='3分--繳交作業', url="/student/work/show/"+lesson+"/"+index)
-                        history.save()
+                            if typing == "0":
+                                if lesson == "2":
+                                    profile.lock2 +=1
+                                else:
+                                    profile.lock3 +=1
+                                profile.save()
                 except MultipleObjectsReturned:
                     pass
-                work = Work(lesson_id=lesson, index=index, user_id=request.user.id)
+                work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
                 work.save()
+                
                 dataURI = form.cleaned_data['screenshot']
                 try:
                     head, data = dataURI.split(',', 1)
@@ -469,24 +474,24 @@ def submit(request, lesson, index):
                 work.memo=form.cleaned_data['memo']
                 work.helps=form.cleaned_data['helps']
                 work.save()
-                return redirect("/student/work/show/"+lesson+"/"+index)
+                return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))
-        return render_to_response('student/submit.html', {'form':form, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
+        return render_to_response('student/submit.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'work_dict':work_dict}, context_instance=RequestContext(request))
 
-def show(request, lesson, index, user_id):
+def show(request, typing, lesson, index, user_id):
     if user_id == request.user.id or request.user.is_superuser:
         try:
-            work = Work.objects.get(lesson_id=lesson, index=index, user_id=user_id)
+            work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=user_id)
         except ObjectDoesNotExist:
             work = None
         except MultipleObjectsReturned:
-            work = Work.objects.filter(lesson_id=lesson, index=index, user_id=user_id).last()
+            work = Work.objects.filter(typing=typing, lesson_id=lesson, index=index, user_id=user_id).last()
         return render_to_response('student/show.html', {'work':work}, context_instance=RequestContext(request))
     else :
         return redirect("/")
 
-def rank(request, lesson, index):
-    works = Work.objects.filter(lesson_id=lesson, index=index).order_by("id")
+def rank(request, typing, lesson, index):
+    works = Work.objects.filter(typing=typing, lesson_id=lesson, index=index).order_by("id")
     return render_to_response('student/rank.html', {'works':works}, context_instance=RequestContext(request))
 
 # 列出所有日期作品
@@ -538,10 +543,10 @@ class WorkDayListView(ListView):
 
 
 # 查詢某作業所有同學心得
-def memo(request, lesson, classroom_id, index):
+def memo(request, typing, lesson, classroom_id, index):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
     student_ids = map(lambda a: a.student_id, enroll_pool)
-    work_pool = Work.objects.filter(lesson_id=lesson, user_id__in=student_ids, index=index)
+    work_pool = Work.objects.filter(typing=typing, lesson_id=lesson, user_id__in=student_ids, index=index).order_by("-id")
     datas = []
     for enroll in enroll_pool:
         works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
@@ -556,7 +561,7 @@ def work_download(request, index, user_id, workfile_id):
     workfile = WorkFile.objects.get(id=workfile_id)
     username = User.objects.get(id=user_id).first_name
     filename = username + "_" + lesson_list1[int(index)-1][2].decode("utf-8")  + ".sb2"
-    download =  settings.BASE_DIR + "/static/work/" + str(user_id) + "/" + workfile.filename
+    download =  settings.BASE_DIR + "/static/work/scratch/" + str(user_id) + "/" + workfile.filename
     wrapper = FileWrapper(file( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')

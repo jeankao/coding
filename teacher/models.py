@@ -53,4 +53,11 @@ class ImportUser(models.Model):
 	first_name = models.CharField(max_length=50, default="")
 	password = models.CharField(max_length=50, default="")
 	email = models.CharField(max_length=100, default="")	
+  
+#作業
+class TWork(models.Model):
+    title = models.CharField(max_length=250)	
+    classroom_id = models.IntegerField(default=0)
+    time = models.DateTimeField(default=timezone.now)
+
 				

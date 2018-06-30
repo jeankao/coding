@@ -69,6 +69,7 @@ class EnrollGroup(models.Model):
 # 小老師
 class WorkAssistant(models.Model):
     student_id = models.IntegerField(default=0)
+    typing = models.IntegerField(default=0)
     classroom_id = models.IntegerField(default=0)
     index = models.IntegerField(default=0)
     lesson_id = models.IntegerField(default=0)
@@ -93,6 +94,7 @@ class Work(models.Model):
 
     user_id = models.IntegerField(default=0)
     lesson_id = models.IntegerField(default=0)
+    typing = models.IntegerField(default=0)
     index = models.IntegerField()
     memo = models.TextField()
     publication_date = models.DateTimeField(default=timezone.now)

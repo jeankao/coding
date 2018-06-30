@@ -52,14 +52,14 @@
 	}
 </script>
 {% endblock %}
-   <br>
+  <br>
   {% if work_dict|hash_scorer:index > 0 %}
   <button class="btn">
     分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index|realname}}
 </button>
 <BR><BR>
   {% endif %}
-<form name="myForm" id="form{{index}}" action="/student/work/submit/{% if 'B' in lesson %}2{% else %}3{% endif%}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/{% if typing == "0" %}0{% else %}1{% endif %}/{% if 'B' in lesson %}2{% else %}3{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
 <input type="hidden" name="lesson" value={{lesson}}>
 <div class="form-group">
     <label for="exampleFormControlTextarea1">心得感想：</label>
@@ -67,7 +67,7 @@
   </div>    
   <div class="form-group">
     {% with helps=work_dict|hash_helps:index %}
-    <label for="exampleFormControlSelect2">創作過程</label>
+    <label for="exampleFormControlSelect2">創作過程：</label>
     <select class="form-control" name="helps">
       <option value=0 {% if helps == 0 %} selected {% endif %}>全部靠自己想</option>
       <option value=1 {% if helps == 1 %} selected {% endif %}>同學幫一點忙</option>
@@ -80,11 +80,11 @@
     {% endwith %}
   </div>  
 <div class="form-group">
-    <label for="exampleFormControlTextarea1">程式碼：：</label>
+    <label for="exampleFormControlTextarea1">程式碼：</label>
     <textarea class="form-control" id="id_code{{index}}" rows="5" name="code">{{work_dict|hash_code:index}}</textarea>
   </div>
 <div class="form-group">
-    <label for="exampleFormControlTextarea1">執行結果：：</label>
+    <label for="exampleFormControlTextarea1">執行結果：</label>
   {% if work_dict|hash_scorer:index == 0 %}
    <div id="edit-box{{index}}" class="form-control target" contenteditable="true">
      {% if work_dict|hash_workid:index %}

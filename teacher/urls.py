@@ -34,12 +34,18 @@ urlpatterns = [
     #設定小教師
     url(r'^work/assistant/make/$', login_required(views.make)), 
 	  #評分
-    url(r'^score_peer/(?P<lesson>[^/]+)/(?P<index>\d+)/(?P<classroom_id>\d+)/(?P<group>\d+)/$', views.score_peer),     
-    url(r'^scoring/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/(?P<user_id>\d+)/(?P<index>\d+)/$', views.scoring), 
+    url(r'^score_peer/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<index>\d+)/(?P<classroom_id>\d+)/(?P<group>\d+)/$', views.score_peer),     
+    url(r'^scoring/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/(?P<user_id>\d+)/(?P<index>\d+)/$', views.scoring), 
 	  #心得
 	  url(r'^memo/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/$', views.memo), 
     url(r'^check/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<user_id>\d+)/(?P<classroom_id>[^/]+)/$', views.check), 
 	  #成績
 	  url(r'^grade/(?P<lesson>[^/]+)/(?P<classroom_id>\d+)/$', views.grade),	
+    # 作業
+    url(r'^work2/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView2.as_view())),
+    url(r'^work2/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView2.as_view())),
+    url(r'^work2/edit/(?P<lesson>\d+)(?P<classroom_id>\d+)/$', views.work_edit),  
+    url(r'^work2/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class2),  
+  
 		 
 ]

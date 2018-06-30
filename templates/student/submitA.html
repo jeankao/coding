@@ -21,8 +21,8 @@ $(function () {
     });
 });  
 </script>
-            <form action="/student/work/submit/1/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this, {{index}});">      
-              <input type="hidden" name="lesson" value={{lesson}}>
+            <form action="/student/work/submit/0/1/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this, {{index}});">      
+              <input type="hidden" name="lesson" value={{lesson}}>             
               <table class="table">            
         {% if not work_dict|hash_memo:index %}                      
             <tr><td>狀態</td><td>尚未繳交</td></tr>

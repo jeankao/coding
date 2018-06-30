@@ -3,11 +3,12 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from teacher.models import Classroom, ImportUser
+from teacher.models import Classroom, ImportUser, TWork
 from student.models import Enroll, EnrollGroup, Work, WorkAssistant, WorkFile
 from account.models import Message, MessagePoll, MessageContent, PointHistory
 from account.avatar import *
 from .forms import ClassroomForm, AnnounceForm, ScoreForm, UploadFileForm, CheckForm1, CheckForm2, CheckForm3, CheckForm4, CheckForm_vphysics, CheckForm_euler
+from .forms import WorkForm
 from django.contrib.auth.decorators import login_required
 from student.lesson import *
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -316,7 +317,7 @@ def work_class(request, lesson, classroom_id, index):
             group_name = EnrollGroup.objects.get(id=enroll.group).name
         except ObjectDoesNotExist:
             group_name = "沒有組別"
-        assistant = WorkAssistant.objects.filter(classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=index)
+        assistant = WorkAssistant.objects.filter(typing=0, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=index)
         if assistant.exists():
             classmate_work.append([enroll,work,1, scorer_name, group_name])
         else :
@@ -328,39 +329,42 @@ def work_class(request, lesson, classroom_id, index):
     return render_to_response('teacher/work_class.html',{'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson}, context_instance=RequestContext(request))
 
 # (小)教師評分
-def scoring(request, lesson, classroom_id, user_id, index):
+def scoring(request, lesson, classroom_id, user_id, index, typing):
     teacher = is_teacher(User.objects.get(id=request.user.id), classroom_id)
     if not teacher:
-        if not WorkAssistant.objects.filter(lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id).exists():
+        if not WorkAssistant.objects.filter(typing=typing, lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id).exists():
             return redirect("/")
-    if lesson == "1":
-        queryset = lesson_list1
-    elif lesson == "2":
-        queryset = lesson_list2
-    elif lesson == "3":
-        queryset = lesson_list3
-    else:
-        queryset = lesson_list1
+    if typing == "0":
+        if lesson == "1":
+            lesson_name = lesson_list1[index-1][2]
+        elif lesson == "2":
+            lesson_name = lesson_list2[index-1][1]
+        elif lesson == "3":
+            lesson_name = lesson_list3[index-1][1]
+        else:
+            lesson_name = lesson_list1[index-1][1]
+    elif typing == "1":
+        lesson_name = TWork.objects.get(id=index).title
     user = User.objects.get(id=user_id)
     enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=user_id)
     workfiles = []
     try:
-        assistant = WorkAssistant.objects.filter(classroom_id=classroom_id,lesson_id=lesson, index=index,student_id=request.user.id)
+        assistant = WorkAssistant.objects.filter(typing=typing, classroom_id=classroom_id,lesson_id=lesson, index=index,student_id=request.user.id)
     except ObjectDoesNotExist:
         if not is_teacher(request.user, classroom_id):
             return render_to_response('message.html', {'message':"您沒有權限"}, context_instance=RequestContext(request))
 
     try:
-        work3 = Work.objects.get(user_id=user_id, index=index, lesson_id=lesson)
+        work3 = Work.objects.get(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
     except ObjectDoesNotExist:
-        work3 = Work(index=index, user_id=user_id, lesson_id=lesson)
+        work3 = Work(typing=typing, index=index, user_id=user_id, lesson_id=lesson)
     except MultipleObjectsReturned:
-        work3 = Work.objects.filter(user_id=user_id, index=index, lesson_id=lesson).last()
+        work3 = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson).last()
 
     if request.method == 'POST':
         form = ScoreForm(request.user, request.POST)
         if form.is_valid():
-            works = Work.objects.filter(index=index, user_id=user_id, lesson_id=lesson)
+            works = Work.objects.filter(typing=typing, index=index, user_id=user_id, lesson_id=lesson)
             if works.exists():
                 if works[0].score < 0 :
                         # 小老師
@@ -368,13 +372,13 @@ def scoring(request, lesson, classroom_id, user_id, index):
                             # credit
                             update_avatar(request.user.id, 2, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=2, message='1分--小老師:<'+queryset[int(index)][1]+'><'+enroll.student.first_name.encode('utf-8')+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name.encode('utf-8')+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
 
                         # credit
                         update_avatar(enroll.student_id, 1, 1)
-                        # History
-                        history = PointHistory(user_id=user_id, kind=1, message='1分--作業受評<'+queryset[int(index)][1]+'><'+request.user.first_name.encode('utf-8')+'>', url="/student/work/show/"+lesson+"/"+index)
+                        # History                        
+                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name+u'><'+request.user.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
                         history.save()		                        
 
                 works.update(score=form.cleaned_data['score'])
@@ -383,13 +387,13 @@ def scoring(request, lesson, classroom_id, user_id, index):
             if is_teacher(request.user, classroom_id):
                 if form.cleaned_data['assistant']:
                     try :
-                        assistant = WorkAssistant.objects.get(student_id=user_id, classroom_id=classroom_id, index=index, lesson_id=lesson)
+                        assistant = WorkAssistant.objects.get(typing=typing, student_id=user_id, classroom_id=classroom_id, index=index, lesson_id=lesson)
                     except ObjectDoesNotExist:
-                        assistant = WorkAssistant(student_id=user_id, classroom_id=classroom_id, index=index, lesson_id=lesson)
+                        assistant = WorkAssistant(typing=typing, student_id=user_id, classroom_id=classroom_id, index=index, lesson_id=lesson)
                         assistant.save()
 
                     # create Message
-                    title = "<" + assistant.student.first_name.encode("utf-8") + u">擔任小老師<".encode("utf-8") + queryset[int(index)-1][1] + ">"
+                    title = u"<" + assistant.student.first_name + u">擔任小老師<" + lesson_name + u">"
                     url = "/teacher/score_peer/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group)
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()
@@ -401,13 +405,15 @@ def scoring(request, lesson, classroom_id, user_id, index):
                             # message for group member
                             messagepoll = MessagePoll(message_id = message.id,reader_id=enroll.student_id)
                             messagepoll.save()
-
-                return redirect('/teacher/work/class/'+lesson+"/"+classroom_id+'/'+index)
+                if typing == "0":
+                    return redirect('/teacher/work/class/'+lesson+"/"+classroom_id+'/'+index)
+                elif typing == "1":
+                    return redirect('/teacher/work2/class/'+lesson+"/"+classroom_id+'/'+index)                  
             else:
-                return redirect('/teacher/score_peer/'+lesson+"/"+index+'/'+classroom_id+'/'+str(enroll.group))
+                return redirect('/teacher/score_peer/'+typing+"/"+lesson+"/"+index+'/'+classroom_id+'/'+str(enroll.group))
 
     else:
-        works = Work.objects.filter(index=index, user_id=user_id)
+        works = Work.objects.filter(typing=typing, index=index, user_id=user_id)
         if not works.exists():
             form = ScoreForm(user=request.user)
         else:
@@ -416,20 +422,25 @@ def scoring(request, lesson, classroom_id, user_id, index):
     return render_to_response('teacher/scoring.html', {'form': form,'work':work3, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index}, context_instance=RequestContext(request))
 
 # 小老師評分名單
-def score_peer(request, lesson, index, classroom_id, group):
-    if lesson == "1":
-        queryset = lesson_list1
-    elif lesson == "2":
-        queryset = lesson_list2
-    elif lesson == "3":
-        queryset = lesson_list3
-    else:
-        queryset = lesson_list1
+def score_peer(request, typing, lesson, index, classroom_id, group):
+    if typing == "0":
+        if lesson == "1":
+            queryset = lesson_list1
+        elif lesson == "2":
+            queryset = lesson_list2
+        elif lesson == "3":
+            queryset = lesson_list3
+        else:
+            queryset = lesson_list1
+    elif typing == "1":
+        queryset = TWork.objects.filter(classroom_id=classroom_id)
     try:
-        assistant = WorkAssistant.objects.get(lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id)
+        assistant = WorkAssistant.objects.get(typing=typing, lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id)
     except ObjectDoesNotExist:
-        return redirect("/student/group/work/"+lesson+"/"+index+"/"+classroom_id)
-
+        if typing == "0":
+            return redirect("/student/group/work/"+lesson+"/"+index+"/"+classroom_id)
+        elif typing == "1":
+            return redirect("/student/group/work2/"+lesson+"/"+index+"/"+classroom_id)
     enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
     lessons = ""
     classmate_work = []
@@ -437,14 +448,14 @@ def score_peer(request, lesson, index, classroom_id, group):
         if not enroll.student_id == request.user.id :
             scorer_name = ""
             try:
-                work = Work.objects.get(user_id=enroll.student.id, index=index, lesson_id=lesson)
+                work = Work.objects.get(typing=typing, user_id=enroll.student.id, index=index, lesson_id=lesson)
                 if work.scorer > 0 :
                     scorer = User.objects.get(id=work.scorer)
                     scorer_name = scorer.first_name
             except ObjectDoesNotExist:
-                work = Work(index=index, user_id=enroll.student.id, lesson_id=lesson)
+                work = Work(typing=typing, index=index, user_id=enroll.student.id, lesson_id=lesson)
             except MultipleObjectsReturned:
-                work = Work.objects.filter(user_id=enroll.student.id, index=index, lesson_id=lesson).order_by("-id")[0]
+                work = Work.objects.filter(typing=typing, user_id=enroll.student.id, index=index, lesson_id=lesson).order_by("-id")[0]
             classmate_work.append([enroll.student,work,1, scorer_name])
         lessons = queryset[int(index)-1]
     return render_to_response('teacher/score_peer.html',{'enrolls':enrolls, 'classmate_work': classmate_work, 'classroom_id':classroom_id, 'lesson':lesson, 'index': index}, context_instance=RequestContext(request))
@@ -839,3 +850,89 @@ def realname(request, user_id):
             return redirect("/")
 
     return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))
+  
+# 列出所有課程
+class WorkListView2(ListView):
+    model = TWork
+    context_object_name = 'works'
+    template_name = 'teacher/twork_list.html'  	
+    paginate_by = 20
+	
+    def get_queryset(self):
+        queryset = TWork.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-id")
+        return queryset
+			
+    def get_context_data(self, **kwargs):
+        context = super(WorkListView2, self).get_context_data(**kwargs)
+        context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
+        context['lesson'] = self.kwargs['lesson']
+        return context	
+        
+#新增一個課程
+class WorkCreateView2(CreateView):
+    model = TWork
+    form_class = WorkForm
+    template_name = 'form.html'  	    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.teacher_id = self.request.user.id
+        self.object.classroom_id = self.kwargs['classroom_id']
+        self.object.save()              
+        return redirect("/teacher/work2/"+self.kwargs['lesson']+"/"+self.kwargs['classroom_id'])        
+        
+# 修改選課密碼
+def work_edit(request, classroom_id):
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id):
+        return redirect("homepage")
+    classroom = Classroom.objects.get(id=classroom_id)
+    if request.method == 'POST':
+        form = ClassroomForm(request.POST)
+        if form.is_valid():
+            classroom.name =form.cleaned_data['name']
+            classroom.password = form.cleaned_data['password']
+            classroom.save()
+            # 記錄系統事件
+            if is_event_open(request) :                
+                log = Log(user_id=request.user.id, event=u'修改選課密碼<'+classroom.name+'>')
+                log.save()                    
+            return redirect('/teacher/classroom')
+    else:
+        form = ClassroomForm(instance=classroom)
+
+    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))        
+  
+# 列出某作業所有同學名單
+def work_class2(request, lesson, classroom_id, work_id):
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    classmate_work = []
+    scorer_name = ""
+    for enroll in enrolls:
+        try:    
+            work = Work.objects.get(typing=1, user_id=enroll.student_id, index=work_id, lesson_id=lesson)
+            if work.scorer > 0 :
+                scorer = User.objects.get(id=work.scorer)
+                scorer_name = scorer.first_name
+            else :
+                scorer_name = "1"
+        except ObjectDoesNotExist:
+            work = Work(typing=1, index=work_id, user_id=0, lesson_id=lesson)
+        except MultipleObjectsReturned:
+            work = Work.objects.filter(typing=1, user_id=enroll.student_id, index=work_id, lesson_id=lesson).last()			
+        try:
+            group_name = EnrollGroup.objects.get(id=enroll.group).name
+        except ObjectDoesNotExist:
+            group_name = "沒有組別"
+        assistant = WorkAssistant.objects.filter(classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=work_id)
+        if assistant.exists():
+            classmate_work.append([enroll,work,1, scorer_name, group_name])
+        else :
+            classmate_work.append([enroll,work,0, scorer_name, group_name])   
+    def getKey(custom):
+        return custom[0].seat
+	
+    classmate_work = sorted(classmate_work, key=getKey)    
+       
+    return render_to_response('teacher/work_class.html',{'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
+	
