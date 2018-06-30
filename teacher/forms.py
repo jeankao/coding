@@ -69,6 +69,14 @@ Check_CHOICES = (
     (20, "20分"),
     (0, "0分"),			
 )    
+
+    
+class CheckForm(forms.ModelForm):
+        score_memo = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo']
     
 class CheckForm1(forms.ModelForm):
 
@@ -78,7 +86,7 @@ class CheckForm1(forms.ModelForm):
     
         class Meta:
            model = Enroll
-           fields = ['score_memo1']
+           fields = ['score_memo']
 
 class CheckForm2(forms.ModelForm):
 

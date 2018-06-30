@@ -30,6 +30,8 @@ class Enroll(models.Model):
     # 實戰高手證書
     certificate4 = models.BooleanField(default=False)
     certificate4_date = models.DateTimeField(default=timezone.now)
+    # 自訂作業
+    score_memo = models.IntegerField(default=0)
     # 12堂課 心得成績
     score_memo1 = models.IntegerField(default=0)
     # 實戰入門心得成績

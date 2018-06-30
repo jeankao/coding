@@ -12,27 +12,25 @@
             <td>姓名</td>
             <td>批閱心得</td>
 			<td>證書</td>
-            <td>姓名</td>
             <td>批閱心得</td>
 			<td>證書</td>
-            <td>姓名</td>
             <td>批閱心得</td>			
 			<td>證書</td>
+            <td>批閱心得</td>	          
 			</tr>
         {% for enroll in enrolls %}
             <tr>
 						<td>{{enroll.seat}})<a href="/student/memo_user/{{enroll.student_id}}">{{enroll.student.first_name}}</a></td>	
-            <td><a href="/teacher/check/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">12堂課{% if enroll.score_memo1 > 0 %}({{enroll.score_memo1}}){% endif%}</a></td>
+            <td><a href="/teacher/check/0/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">12堂課{% if enroll.score_memo1 > 0 %}({{enroll.score_memo1}}){% endif%}</a></td>
 			<td>{% if enroll.certificate1 %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/1/1/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
-            <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
-            <td><a href="/teacher/check/{{lesson}}/2/{{enroll.student_id}}/{{enroll.classroom_id}}">實戰入門{% if enroll.score_memo2 > 0 %}({{enroll.score_memo2}}){% endif%}</a></td>
+            <td><a href="/teacher/check/0/{{lesson}}/2/{{enroll.student_id}}/{{enroll.classroom_id}}">實戰入門{% if enroll.score_memo2 > 0 %}({{enroll.score_memo2}}){% endif%}</a></td>
 			<td>{% if enroll.certificate2 %}<a href="#" data-unit="2" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/1/2/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="2" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
-            <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
-            <td><a href="/teacher/check/{{lesson}}/3/{{enroll.student_id}}/{{enroll.classroom_id}}">實戰進擊{% if enroll.score_memo3 > 0 %}({{enroll.score_memo3}}){% endif%}</a></td>
+            <td><a href="/teacher/check/0/{{lesson}}/3/{{enroll.student_id}}/{{enroll.classroom_id}}">實戰進擊{% if enroll.score_memo3 > 0 %}({{enroll.score_memo3}}){% endif%}</a></td>
 			<td>{% if enroll.certificate3 %}<a href="#" data-unit="3" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/1/3/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="3" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
-            <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
-            <td><a href="/teacher/check/{{lesson}}/4/{{enroll.student_id}}/{{enroll.classroom_id}}">實戰高手{% if enroll.score_memo4 > 0 %}({{enroll.score_memo4}}){% endif%}</a></td>
+            <td><a href="/teacher/check/0/{{lesson}}/4/{{enroll.student_id}}/{{enroll.classroom_id}}">實戰高手{% if enroll.score_memo4 > 0 %}({{enroll.score_memo4}}){% endif%}</a></td>
 			<td>{% if enroll.certificate4 %}<a href="#" data-unit="4" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/1/4/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="4" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
+            <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
+            <td><a href="/teacher/check/1/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">自訂作業{% if enroll.score_memo > 0 %}({{enroll.score_memo}}){% endif%}</a></td>
             </tr>
         {% endfor %}
         </table>
@@ -42,12 +40,16 @@
             <td>姓名</td>
             <td>批閱心得</td>
 			      <td>證書</td>
+            <td>姓名</td>
+            <td>批閱心得</td>	
 			</tr>
         {% for enroll in enrolls %}
             <tr>
 						<td>{{enroll.seat}})<a href="/student/memo_user/{{enroll.student_id}}">{{enroll.student.first_name}}</a></td>	
             <td><a href="/teacher/check/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">VPhysics 18堂課{% if enroll.score_memo_vphysics > 0 %}({{enroll.score_memo_vphysics}}){% endif%}</a></td>
 			<td>{% if enroll.certificate_vphysics %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/2/1/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
+            <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
+            <td><a href="/teacher/check/1/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">自訂作業{% if enroll.score_memo > 0 %}({{enroll.score_memo}}){% endif%}</a></td>
             </tr>
         {% endfor %}
         </table>         
@@ -57,12 +59,16 @@
             <td>姓名</td>
             <td>批閱心得</td>
 			      <td>證書</td>
+            <td>姓名</td>
+            <td>批閱心得</td>	          
 			</tr>
         {% for enroll in enrolls %}
             <tr>
 						<td>{{enroll.seat}})<a href="/student/memo_user/{{enroll.student_id}}">{{enroll.student.first_name}}</a></td>	
             <td><a href="/teacher/check/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">Euler 20題{% if enroll.score_memo_euler > 0 %}({{enroll.score_memo_euler}}){% endif%}</a></td>
 			<td>{% if enroll.certificate_euler %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="uncertificate" class="certificate">取消<a target="certView" href="/certificate/show/3/1/{{enroll.id }}"> <img src="/static/images/certificate.png"></a></a>{% else %}<a href="#" data-unit="1" data-classroomid="{{enroll.classroom_id}}" data-enrollid="{{ enroll.id }}" data-action="certificate" class="certificate">核發</a>{% endif %}</td>
+            <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
+            <td><a href="/teacher/check/1/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">自訂作業{% if enroll.score_memo > 0 %}({{enroll.score_memo}}){% endif%}</a></td>
             </tr>
         {% endfor %}
         </table>            

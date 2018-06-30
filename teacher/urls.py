@@ -38,9 +38,9 @@ urlpatterns = [
     url(r'^scoring/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/(?P<user_id>\d+)/(?P<index>\d+)/$', views.scoring), 
 	  #心得
 	  url(r'^memo/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/$', views.memo), 
-    url(r'^check/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<user_id>\d+)/(?P<classroom_id>[^/]+)/$', views.check), 
+    url(r'^check/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<user_id>\d+)/(?P<classroom_id>[^/]+)/$', views.check), 
 	  #成績
-	  url(r'^grade/(?P<lesson>[^/]+)/(?P<classroom_id>\d+)/$', views.grade),	
+	  url(r'^grade/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<classroom_id>\d+)/$', views.grade),	
     # 作業
     url(r'^work2/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView2.as_view())),
     url(r'^work2/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView2.as_view())),

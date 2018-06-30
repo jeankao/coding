@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 	學生姓名：{{enroll.student.first_name}}
-    <table>
+    <table class="table">
     <tr>
         <td>編號</td>
         <td>作品</td>
@@ -9,6 +9,7 @@
         <td>心得</td>
 
     </tr>
+  {% if typing == "0" %}
     {% if lesson == "1" %}
     {% for list in lesson_list %}
             {% if unit = "1" and forloop.counter < 18 %}
@@ -59,11 +60,30 @@
 	 <BR>
         心得評分：
         <form action="" enctype="multipart/form-data"  method="post">
-            <table>
+            <table class="table">
                 {{ form.as_table }}
             </table>
             {% csrf_token %}
             <input type="submit" value="Submit">
         </form>
-     
+  {% else %}
+    {% for index, list in lesson_list %}
+        <tr align=left>
+        <td align=right>{{forloop.counter}}</td>
+            <td nowrap>{{list.0.title}}</td>
+            <td>{{list.2|date:"Y/m/d h:i:s" }}</td>
+            <td>{{list.4}}</td>           
+        </tr>
+    {% endfor %}
+    </table>
+	 <BR>
+        心得評分：
+        <form action="" enctype="multipart/form-data"  method="post">
+            <table>
+                {{ form.as_table }}
+            </table>
+            {% csrf_token %}
+            <input type="submit" value="Submit">
+        </form>     
+  {% endif %}   
 {% endblock %}

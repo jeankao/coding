@@ -7,7 +7,7 @@ from teacher.models import Classroom, ImportUser, TWork
 from student.models import Enroll, EnrollGroup, Work, WorkAssistant, WorkFile
 from account.models import Message, MessagePoll, MessageContent, PointHistory
 from account.avatar import *
-from .forms import ClassroomForm, AnnounceForm, ScoreForm, UploadFileForm, CheckForm1, CheckForm2, CheckForm3, CheckForm4, CheckForm_vphysics, CheckForm_euler
+from .forms import ClassroomForm, AnnounceForm, ScoreForm, UploadFileForm, CheckForm, CheckForm1, CheckForm2, CheckForm3, CheckForm4, CheckForm_vphysics, CheckForm_euler
 from .forms import WorkForm
 from django.contrib.auth.decorators import login_required
 from student.lesson import *
@@ -472,40 +472,47 @@ def memo(request, lesson, classroom_id):
 # 評分某同學某進度心得
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
-def check(request, lesson, unit, user_id, classroom_id):
+def check(request, typing, lesson, unit, user_id, classroom_id):
     # 限本班任課教師
     if not is_teacher(request.user, classroom_id):
         return redirect("homepage")
 
     user_name = User.objects.get(id=user_id).first_name
     lesson_dict = {}
-    works = Work.objects.filter(user_id=user_id, lesson_id=lesson)
-    if lesson == "1":
-        for index,assignment in enumerate(lesson_list1):
-            lesson_dict[index] = [assignment]
-    elif lesson == "2" :
-        for index,assignment in enumerate(lesson_list2):
-            lesson_dict[index] = [assignment]
-    elif lesson == "3" :
-        for index,assignment in enumerate(lesson_list3):
-            lesson_dict[index] = [assignment]
+    works = Work.objects.filter(typing=typing, user_id=user_id, lesson_id=lesson)
+    
+    if typing == "0":
+        if lesson == "1":
+            for index,assignment in enumerate(lesson_list1):
+                lesson_dict[index] = [assignment]
+        elif lesson == "2" :
+            for index,assignment in enumerate(lesson_list2):
+                lesson_dict[index] = [assignment]
+        elif lesson == "3" :
+            for index,assignment in enumerate(lesson_list3):
+                lesson_dict[index] = [assignment]
     else :
         assignments = TWork.objects.filter(classroom_id=classroom_id)
         for assignment in assignments:
             lesson_dict[assignment.id] = [assignment]
 
     for work in works:
-        if work.index - 1 in lesson_dict:
-            lesson_dict[work.index - 1].append(work.score)
-            lesson_dict[work.index - 1].append(work.publication_date)
+        if typing == "0":
+            index = work.index - 1
+        else:
+            index = work.index
+        if index in lesson_dict:
+            lesson_dict[index].append(work.score)
+            lesson_dict[index].append(work.publication_date)
             if work.score > 0:
                 score_name = User.objects.get(id=work.scorer).first_name
-                lesson_dict[work.index - 1].append(score_name)
+                lesson_dict[index].append(score_name)
             else :
-                lesson_dict[work.index - 1].append("尚未評分!")
-            lesson_dict[work.index - 1].append(work.memo)
+                lesson_dict[index].append("尚未評分!")
+            lesson_dict[index].append(work.memo)
 
     if request.method == 'POST':
+      if typing == "0":
         if lesson == "1":
             if unit == "1":
                 form = CheckForm1(request.POST)
@@ -521,33 +528,37 @@ def check(request, lesson, unit, user_id, classroom_id):
             form = CheckForm_euler(request.POST)
         else :
             form =  CheckForm1(request.POST)
-        if form.is_valid():
-            enroll = Enroll.objects.get(student_id=user_id, classroom_id=classroom_id)
-            if lesson == "1":
-                if unit == "1":
-                    enroll.score_memo1=form.cleaned_data['score_memo1']
-                elif unit == "2":
-                    enroll.score_memo2=form.cleaned_data['score_memo2']
-                elif unit == "3":
-                    enroll.score_memo3=form.cleaned_data['score_memo3']
-                elif unit == "4":
-                    enroll.score_memo4=form.cleaned_data['score_memo4']
-            elif lesson == "2":
-                enroll.score_memo_vphysics=form.cleaned_data['score_memo_vphysics']
-            elif lesson == "3":
-                enroll.score_memo_euler=form.cleaned_data['score_memo_euler']
-            else :
-                enroll.score_memo1=form.cleaned_data['score_memo1']
-
-            enroll.save()
-
-            if form.cleaned_data['certificate']:
-                return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
-                #return redirect('/teacher/memo/'+classroom_id)
-            else:
-                return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
-    else:
+      else:      
+        form = CheckForm(request.POST)       
+      if form.is_valid():
         enroll = Enroll.objects.get(student_id=user_id, classroom_id=classroom_id)
+        if typing == "0":
+          if lesson == "1":
+              if unit == "1":
+                  enroll.score_memo1=form.cleaned_data['score_memo1']
+              elif unit == "2":
+                  enroll.score_memo2=form.cleaned_data['score_memo2']
+              elif unit == "3":
+                  enroll.score_memo3=form.cleaned_data['score_memo3']
+              elif unit == "4":
+                  enroll.score_memo4=form.cleaned_data['score_memo4']
+          elif lesson == "2":
+              enroll.score_memo_vphysics=form.cleaned_data['score_memo_vphysics']
+          elif lesson == "3":
+              enroll.score_memo_euler=form.cleaned_data['score_memo_euler']
+          else :
+              enroll.score_memo1=form.cleaned_data['score_memo1']
+        else :
+          enroll.score_memo = form.cleaned_data['score_memo']
+        enroll.save()
+        if typing == "0" and form.cleaned_data['certificate']:
+          return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
+        #return redirect('/teacher/memo/'+classroom_id)
+        else:
+          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
+    else:
+      enroll = Enroll.objects.get(student_id=user_id, classroom_id=classroom_id)
+      if typing == "0":  
         if lesson == "1":
             if unit == "1":
                 form = CheckForm1(instance=enroll)
@@ -563,18 +574,20 @@ def check(request, lesson, unit, user_id, classroom_id):
             form = CheckForm_euler(instance=enroll)
         else :
             form =  CheckForm1(instance=enroll)
+      else :
+        form =  CheckForm(instance=enroll)
 
-    return render_to_response('teacher/check.html', {'works':works, 'lesson': lesson, 'unit':unit, 'form':form, 'works':works, 'lesson_list':sorted(lesson_dict.items()), 'enroll': enroll, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
+    return render_to_response('teacher/check.html', {'typing':typing, 'works':works, 'lesson': lesson, 'unit':unit, 'form':form, 'works':works, 'lesson_list':sorted(lesson_dict.items()), 'enroll': enroll, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
 
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
-def grade(request, lesson, classroom_id):
+def grade(request, typing, lesson, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     if not request.user.id == classroom.teacher_id:
         return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
     user_ids = [enroll.student_id for enroll in enrolls]
-    work_pool = Work.objects.filter(user_id__in=user_ids, lesson_id=lesson).order_by('id')
+    work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
     lesson_list = [lesson_list1, lesson_list2, lesson_list3][int(lesson)-1]
@@ -607,7 +620,7 @@ def grade(request, lesson, classroom_id):
                 memo = enroll.score_memo_euler
             grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
         data.append([enroll, enroll_score, memo, grade])
-    return render_to_response('teacher/grade.html', {'lesson':lesson, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
+    return render_to_response('teacher/grade.html', {'typing':typing, 'lesson':lesson, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
 
 # 列出分組所有作業
 @login_required
