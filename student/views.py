@@ -86,7 +86,7 @@ def lesson(request, lesson):
     if lesson[0] == "A":
         lesson_id = 1
         profile_lock = profile.lock1
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
         if not request.user.id > 0:
             return redirect("/account/login/0")
@@ -100,7 +100,7 @@ def lesson(request, lesson):
     elif lesson[0] == "B":
         lesson_id = 2
         profile_lock = profile.lock2
-        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
         if not request.user.is_authenticated():
             return redirect("/account/login/")
