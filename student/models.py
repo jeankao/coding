@@ -48,6 +48,10 @@ class Enroll(models.Model):
     certificate_euler = models.BooleanField(default=False)
     certificate_euler_date = models.DateTimeField(default=timezone.now)
     score_memo_euler =  models.IntegerField(default=0)
+    # Vphysics CK
+    certificate_vphysics2 = models.BooleanField(default=False)
+    certificate_vphysics2_date = models.DateTimeField(default=timezone.now)
+    score_memo_vphysics2 =  models.IntegerField(default=0)
 
     @property
     def classroom(self):

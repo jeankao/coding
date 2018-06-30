@@ -172,25 +172,32 @@ def make(request):
         try :
             enroll = Enroll.objects.get(id=enroll_id)	
             if action == 'certificate':
+              if leson == "1":
                 if unit == "1":
                     enroll.certificate1 = True
-                    enroll.certificate1_date = timezone.now()
+                    enroll.certificate1_date = timezone.now()                    
                 elif unit == "2":
                     enroll.certificate2 = True
-                    enroll.certificate2_date = timezone.now()					
+                    enroll.certificate2_date = timezone.now()                    
                 elif unit == "3":
                     enroll.certificate3 = True
-                    enroll.certificate3_date = timezone.now()					
+                    enroll.certificate3_date = timezone.now()                    
                 elif unit == "4":
                     enroll.certificate4 = True
-                    enroll.certificate4_date = timezone.now()					
-                classroom = Classroom.objects.get(id=classroom_id)
-                make_image(unit,enroll_id,classroom.teacher_id)
-                # 記錄系統事件
-                if is_event_open(request) :                  
-                    log = Log(user_id=request.user.id, event=u"核發證書<"+unit+'><'+enroll.student.first_name+'>')
-                    log.save() 	                
+                    enroll.certificate4_date = timezone.now()
+              elif lesson == "2":
+                  enroll.certificate_vphysics = True
+                  enroll.certificate_vphysics_date = timezone.now()
+              elif lesson == "3":
+                  enroll.certificate_euler = True
+                  enroll.certificate_euler_date = timezone.now()
+              elif lesson == "4":
+                  enroll.certificate_vphysics2 = True
+                  enroll.certificate_vphysics2_date = timezone.now()                  
+              classroom = Classroom.objects.get(id=classroom_id)
+              make_image(unit,enroll_id,classroom.teacher_id)              
             else:
+              if lesson == "1":
                 if unit == "1":
                     enroll.certificate1 = False
                 elif unit == "2":
@@ -198,11 +205,17 @@ def make(request):
                 elif unit == "3":
                     enroll.certificate3 = False
                 elif unit == "4":
-                    enroll.certificate4 = False	
-                try :
-                    os.remove(settings.BASE_DIR+"/static/certificate/"+unit+"/"+enroll_id+".jpg")	
-                except:
-                    pass               
+                    enroll.certificate4 = False
+              elif lesson == "2":
+                enroll.certificate_vphysics = False
+              elif lesson == "3":
+                enroll.certificate_euler = False
+              elif lesson == "4":
+                enroll.certificate_vphysics2 = False                
+              try :
+                  os.remove(settings.BASE_DIR+"/static/certificate/"+unit+"/"+enroll_id+".jpg")	
+              except:
+                  pass               
             enroll.save()
         except ObjectDoesNotExist :
             pass
@@ -311,6 +324,9 @@ def certificate(request, lesson, unit, enroll_id, action):
                 elif lesson=="3":
                     enroll.certificate_euler = True
                     enroll.certificate_euler_date = timezone.now()	
+                elif lesson=="4":
+                    enroll.certificate_vphysics2 = True
+                    enroll.certificate_vphysics2_date = timezone.now()                    
                 classroom = Classroom.objects.get(id=enroll.classroom_id)
                 make_image(lesson, unit,enroll_id,classroom.teacher_id)
              
@@ -326,7 +342,9 @@ def certificate(request, lesson, unit, enroll_id, action):
                 elif lesson=="2":
                     enroll.certificate_vphysics = False
                 elif lesson=="3":
-                    enroll.certificate_euler = False                    
+                    enroll.certificate_euler = False  
+                elif lesson=="4":
+                    enroll.certificate_vphysics = False                        
             enroll.save()
         except ObjectDoesNotExist :
             enroll = Enroll()

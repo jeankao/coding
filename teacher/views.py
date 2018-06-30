@@ -477,12 +477,12 @@ def memo(request, lesson, classroom_id):
 def check(request, typing, lesson, unit, user_id, classroom_id):
     # 限本班任課教師
     if not is_teacher(request.user, classroom_id):
-        return redirect("homepage")
+        return redirect("/")
 
     user_name = User.objects.get(id=user_id).first_name
     lesson_dict = {}
     works = Work.objects.filter(typing=typing, user_id=user_id, lesson_id=lesson)
-    
+    enroll = Enroll.objects.get(student_id=user_id, classroom_id=classroom_id)    
     if typing == "0":
         if lesson == "1":
             for index,assignment in enumerate(lesson_list1):
@@ -493,6 +493,9 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
         elif lesson == "3" :
             for index,assignment in enumerate(lesson_list3):
                 lesson_dict[index] = [assignment]
+        elif lesson == "4" :
+            for index,assignment in enumerate(lesson_list4):
+                lesson_dict[index] = [assignment]                
     else :
         assignments = TWork.objects.filter(classroom_id=classroom_id)
         for assignment in assignments:
@@ -512,7 +515,6 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             else :
                 lesson_dict[index].append("尚未評分!")
             lesson_dict[index].append(work.memo)
-
     if request.method == 'POST':
       if typing == "0":
         if lesson == "1":
@@ -528,12 +530,12 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             form = CheckForm_vphysics(request.POST)
         elif lesson == "3":
             form = CheckForm_euler(request.POST)
-        else :
-            form =  CheckForm1(request.POST)
-      else:      
-        form = CheckForm(request.POST)       
+        elif lesson == "4":
+            form = CheckForm_vphysics(request.POST)            
+        else:      
+            form = CheckForm(request.POST)        
+      
       if form.is_valid():
-        enroll = Enroll.objects.get(student_id=user_id, classroom_id=classroom_id)
         if typing == "0":
           if lesson == "1":
               if unit == "1":
@@ -548,18 +550,16 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
               enroll.score_memo_vphysics=form.cleaned_data['score_memo_vphysics']
           elif lesson == "3":
               enroll.score_memo_euler=form.cleaned_data['score_memo_euler']
-          else :
-              enroll.score_memo1=form.cleaned_data['score_memo1']
+          elif lesson == "4":
+              enroll.score_memo_vphysics2=form.cleaned_data['score_memo_vphysics']           
         else :
           enroll.score_memo = form.cleaned_data['score_memo']
         enroll.save()
-        if typing == "0" and form.cleaned_data['certificate']:
+        if form.cleaned_data['certificate']:
           return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
-        #return redirect('/teacher/memo/'+classroom_id)
         else:
           return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
     else:
-      enroll = Enroll.objects.get(student_id=user_id, classroom_id=classroom_id)
       if typing == "0":  
         if lesson == "1":
             if unit == "1":
@@ -570,10 +570,12 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
                 form = CheckForm3(instance=enroll)
             elif unit == "4":
                 form = CheckForm4(instance=enroll)
-        elif lesson == "2":
+        elif lesson == "2" or lesson == "4":
             form = CheckForm_vphysics(instance=enroll)
         elif lesson == "3":
             form = CheckForm_euler(instance=enroll)
+        elif lesson == "4":
+            form = CheckForm_vphysics(instance=enroll)            
         else :
             form =  CheckForm1(instance=enroll)
       else :

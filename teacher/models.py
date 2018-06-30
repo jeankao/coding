@@ -16,7 +16,7 @@ class Classroom(models.Model):
         (1, 'Scratch'),
         (2, 'VPhyscis'),
         (3, 'Euler'),
-        (4, 'VPhysics'),      
+        (4, 'VPhysics-CK'),      
 		]		
     # 班級名稱
     name = models.CharField(max_length=30)

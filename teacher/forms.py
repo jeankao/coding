@@ -86,7 +86,7 @@ class CheckForm1(forms.ModelForm):
     
         class Meta:
            model = Enroll
-           fields = ['score_memo']
+           fields = ['score_memo1']
 
 class CheckForm2(forms.ModelForm):
 
