@@ -83,7 +83,7 @@ function checkvalue() {
             <table class="table">
 			<TR><TD>組別：</td><td>{{object.name}}</td></tr>
 			<TR><TD>組員：</td><td>{% for member in members %}({{member.seat}}){{member.student.first_name}}{% endfor %}</td></tr>			
-
+     {% if not show_id|show_category == 1 %} 
       <TR><TD colspan=2>
              <label for="exampleFormControlTextarea1">執行結果：</label>
         <div id="edit-box" class="form-control target" contenteditable="true">
@@ -94,6 +94,7 @@ function checkvalue() {
             {% endif %}
         </div>
         </TD></TR>
+      {% endif %}
               {{ form.as_table }}
         </table>
             {% csrf_token %}

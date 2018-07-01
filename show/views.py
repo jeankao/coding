@@ -193,7 +193,7 @@ class ShowUpdateView(UpdateView):
         members = Enroll.objects.filter(groupshow__icontains=self.kwargs['group_show'])
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        context = self.get_context_data(object=self.object, form=form, members=members)
+        context = self.get_context_data(object=self.object, form=form, members=members, show_id=self.object.id)
         return self.render_to_response(context)
 
     def get_object(self, queryset=None):
