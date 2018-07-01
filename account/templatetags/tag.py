@@ -3,6 +3,7 @@ from django import template
 from account.models import MessagePoll, School
 from student.models import Enroll, Work, WorkFile
 from teacher.models import Classroom
+from show.models import ShowGroup, Round, ShowReview
 from certificate.models import Certificate
 from student.lesson import *
 from datetime import datetime
@@ -218,3 +219,35 @@ def hoc(user_id):
         return "<img src=/static/certification/1/0/"+str(user_id)+".jpg>"
     except ObjectDoesNotExist:     
         return ""
+      
+@register.filter()
+def show_member(show_id):
+    members = Enroll.objects.filter(groupshow__icontains=str(show_id)+",")
+    name = ""
+    for member in members:
+        name = name + '<' + member.student.first_name + '>'
+    return name
+  
+@register.filter()
+def show_teacher(show_id):
+    show = ShowGroup.objects.get(id=show_id)
+    round = Round.objects.get(id=show.round_id)
+    classroom = Classroom.objects.get(id=round.classroom_id)
+    teacher = User.objects.get(id=classroom.teacher_id)
+    school = School.objects.get(id=teacher.last_name).name
+    return "<" + school + "><" + teacher.first_name + u"老師>"
+  
+@register.filter()
+def show_category(show_id):
+    show = ShowGroup.objects.get(id=show_id)
+    round = Round.objects.get(id=show.round_id)
+    classroom = Classroom.objects.get(id=round.classroom_id)
+    if classroom.lesson == 1:
+        return 1
+    else :
+        return 2
+      
+@register.filter()
+def review_score(show_id, user_id):
+    show_review = ShowReview.objects.get(show_id=show_id, student_id=user_id)
+    return show_review.score

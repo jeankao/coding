@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header0 %}
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+<style>
+  .nav > li > a { display: inline; }
+</style>
+{% endblock %}
+{% block header %}
+{% if show.id|show_category == 1 %}
+<!-- bootstrap slide library: BEGIN -->
+<link href="/static/layout/styles/bootstrap-slider.css" rel="stylesheet" type="text/css">
+<script src="/static/layout/scripts/bootstrap-slider.js"></script>
+<!-- bootstrap slide library: END -->
+{% else %}
+<link href="/static/layout/styles/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+<script src="/static/layout/scripts/star-rating.js" type="text/javascript"></script>
+<script>
+// initialize with defaults
+$("#id_score").rating();
+ 
+// with plugin options
+$("#id_score").rating({min:1, max:5, step:1, size:'lg'});
+</script>
+{% endif %}
+{% endblock %}
+{% load tz %}
+{% block content %}
+            {% if form.errors %}
+            <h1>表單資料有誤</h1>
+            {% endif %}
+
+  <h1>組別：{{show.name}}</h1>
+  <h1>組員：{% for member in members %}<A href="/account/profile/{{member.student.id}}"><img src="/static/avatar/s{{ member.student.profile.avatar }}.png"></a>({{member.seat}}){{member.student.first_name}}{% endfor %}</h1>
+  <h1>{{ show.title }}</h1>
+{% if show.file %}
+<script type="text/javascript" src="/static/sb2/swfobject.js"></script>
+ 
+<script >   
+var flashvars = {
+project: "/{{show.file}}" ,
+autostart: "false"
+};
+
+var params = {
+bgcolor: "#FFFFFF",
+allowScriptAccess: "always",
+allowFullScreen: "true",
+wmode: "window",
+menu:"‘false"
+
+};
+var attributes = {};
+
+swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.2.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+	
+  <p class="date">
+    {{ show.publish|timezone:'Asia/Taipei' }}
+  </p>
+  {{ show.body|linebreaks }}              
+    作品：<BR>
+<div id="flashContent" >
+ 
+</div> 
+
+        {% for showfile in showfiles %}
+              <BR>第{{showfiles|length|subtract:forloop.counter|add:1}}版：<A href="/show/download/{{show.id}}/{{showfile.id}}">{{showfile.upload_date}}</A>
+        {% endfor %}
+<BR><BR>
+  {% endif %}
+	{% if show.youtube %}
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/{{show.youtube}}" frameborder="0" allowfullscreen></iframe>
+	{% endif %}
+  {% if show.picture %}
+  <img width="900" src="/static/show/pic/{{show.id}}.jpg">
+  {% endif %}
+
+  <form action="." method="post" onsubmit="return checkRegistration()">
+    <table class="table">
+  {% if show.id|show_category  == 1 %}
+<tr><th><label for="id_score1">美工設計:</label></th><th>{{form.score1}}</th></tr>
+<tr><th><label for="id_score2">程式難度:</label></th><th>{{form.score2}}</</th></tr>
+<tr><th><label for="id_score3">創意表現:</label></th><th>{{form.score3}}</</th></tr>
+  {% else %}
+  	<tr><td colspan=2>
+<label for="id_score" class="control-label">評價：</label>
+<input id="id_score" name="score" class="rating rating-loading" data-min="0" data-max="5" data-step="1" value={{show.id|review_score:user.id}}>
+      </td></tr>
+{% endif %}
+<tr><td><label for="id_comment">評語:</label></td><td>{{form.comment}}</td></tr>
+<!--
+   {{ form.as_table }}
+-->
+   {% csrf_token %}
+   <tr><td></td><td><input type="submit" value="送出"></td></tr>
+
+</table>
+  </form>  
+<H1>評分結果({{scores.3}}人)<a href="/show/score/{{show.id}}">[查看]</a></h1>
+{% if show.id|show_category == 1 %}  
+美工設計：{{scores.0}}  程式難度：{{scores.1}} 創意表現：{{scores.2}}<BR>
+{% else %}
+評價：{{scores.0}}<BR>
+{% endif %}
+評語：<BR>
+{% for review in reviews %}
+{% if teacher %}
+	{{review.student.first_name}}:
+{% endif %}
+	{{review.comment}}<BR>
+{% endfor %}
+<BR>
+  {% if show.code %}
+    <div class="position-relative">
+      {{ show.code|code_highlight|safe }}
+      <button class="btn btn-sm btn-primary my-1 position-absolute p-1 mr-1 border border-light" id="copy" style="right: 0; top: 0">copy</button>
+    </div>
+
+  {% endif %}  
+{% endblock %}
+{% block footer_script %}
+<script>
+
+  
+
+
+var content = document.getElementById('id_comment').value;    
+
+function checkRegistration(){
+    var form_valid = (document.getElementById('id_comment').value != '');
+    if(!form_valid){
+        alert('評語不能留白');
+        document.getElementById("id_comment").focus();
+        return false;
+    }
+    return true;
+}  
+  {% if show.id|show_category == 1 %}
+  
+  var scoreInputList = [
+	{id: 'id_score1', val: {{ score.0 }} }, 
+	{id: 'id_score2', val: {{ score.1 }} }, 
+	{id: 'id_score3', val: {{ score.2 }} }, 
+];
+var i, slsize = scoreInputList.length;
+for (i = 0; i < slsize; ++i) {
+	var si = scoreInputList[i];
+	$('#'+si.id).slider({
+		ticks: [60, 65, 70, 75, 80, 85, 90, 95, 100],
+		ticks_labels: [60, 65, 70, 75, 80, 85, 90, 95, 100],
+		step: 5,
+		value: si.val,
+	});
+}
+   {% endif %}
+</script>
+
+{% endblock %}

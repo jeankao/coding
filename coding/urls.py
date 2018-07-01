@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^student/', include('student.urls')),  
     url(r'^survey/', include('survey.urls')),  
     url(r'^certificate/', include('certificate.urls')),
+    url(r'^show/', include('show.urls')),  
 ]

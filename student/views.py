@@ -9,6 +9,7 @@ from student.lesson import *
 from django.views.generic import ListView, CreateView
 from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam
 from teacher.models import Classroom, TWork
+from show.models import Round
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
 from student.forms import EnrollForm, GroupForm, SeatForm, GroupSizeForm, SubmitAForm, SubmitBForm
@@ -237,9 +238,12 @@ def group_open(request, classroom_id, action):
 
 # 列出選修的班級
 def classroom(request):
+        classrooms = []
         enrolls = Enroll.objects.filter(student_id=request.user.id).order_by("-id")
-
-        return render_to_response('student/classroom.html',{'enrolls': enrolls}, context_instance=RequestContext(request))
+        for enroll in enrolls :
+            shows = Round.objects.filter(classroom_id=enroll.classroom_id).order_by("-id")
+            classrooms.append([enroll, shows])
+        return render_to_response('student/classroom.html',{'classrooms':classrooms}, context_instance=RequestContext(request))
 
 # 查看可加入的班級
 def classroom_add(request):

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My Blog{% endblock %}
+{% load tz %}
+{% load tag %}
+{% block content %}
+<table>
+{% for show in lists %}
+{% if forloop.counter|add:1|divisibleby:2 %} 
+<tr><td>
+{% endif %}
+    <h2>
+      <a href="/show/gallery/detail/{{show.id}}">
+        {{ show.title }}
+      </a>
+    </h2>
+{% if category == "1" %}  
+<script type="text/javascript" src="/static/sb2/swfobject.js"></script>
+ 
+<script >   
+var flashvars = {
+project: "/{{show.file}}" ,
+autostart: "false"
+};
+
+var params = {
+bgcolor: "#FFFFFF",
+allowScriptAccess: "always",
+allowFullScreen: "true",
+wmode: "window",
+menu:"‘false"
+
+};
+var attributes = {};
+
+swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent{{forloop.counter}}", "430", "310", "10.2.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+         
+<div id="flashContent{{forloop.counter}}" >
+ 
+</div>   
+{% else %}
+	{% if show.youtube %}
+	<iframe width="420" height="280" src="https://www.youtube.com/embed/{{show.youtube}}" frameborder="0" allowfullscreen></iframe>
+	{% endif %}  
+{% endif %}
+<BR></BR>    <p class="date">
+      Published {{ show.publish}} by {{ show.id|show_member }}<BR>
+      本作品由{{show.id|show_teacher}}推薦
+    </p>
+{% if forloop.counter|add:1|divisibleby:2 %}
+  </td><td>
+{% endif %}
+  {% empty %}
+  目前藝廊尚無作品
+  {% endfor %}
+</td></tr>  
+</table>  
+ {% include "pagination.html" with page=page_obj %}
+  
+{% endblock %}

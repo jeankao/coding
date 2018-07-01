@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+<script language="javascript">
+    window.addEventListener('load', function (e) {
+        var node = document.getElementById('edit-box');
+        node.onpaste = function (e) {
+            if (e.clipboardData && e.clipboardData.types) {
+                // Loop the data store in type and display it
+                for (var i = 0; i < e.clipboardData.types.length; ++i) {
+                    var key = e.clipboardData.types[i];
+                    var item = e.clipboardData.items[i];
+                    if (key === 'Files') {
+                        var file = item.getAsFile();
+                        var reader = new FileReader();
+                        reader.onload = function(evt) {
+                            var img = document.createElement('img');
+                            img.src = evt.target.result;
+                            //$(node).append(img);
+                            $(node).empty().append(img);
+                        };
+                        reader.readAsDataURL(file);
+                        return found = true;
+                    }
+                }
+            }
+        };
+        //$("#edit-box").focus();
+        $("#form").submit(function(event) {
+            var img = $("img", $("#edit-box"));
+            if (img.length < 1) {
+                alert("請先貼上螢幕擷圖後再按上傳");
+                event.preventDefault();
+            } else {
+                $("#id_screenshot").val(img[0].src);
+            }
+        });
+    });
+	
+	function validateForm() {
+    /*
+	    if ($('input[name=help]:checked').length == 0) {
+            // do something here
+			      alert("請填寫創作過程!")
+            var row = document.getElementById('trp1')
+            row.style.backgroundColor = "#ffb0aa";       
+            top = row.offsetTop
+            window.scrollTo( 0, top );			
+			return false;
+        }
+       */
+	}
+</script>
+<script>
+function checkvalue() { 
+    var mystring = document.getElementById('id_title').value; 
+    var mystring2 = document.getElementById('id_body').value; 
+    if(!mystring.match(/\S/)) {
+        alert ('請填寫主旨~~');
+        return false;
+    } else {
+        if(!mystring2.match(/\S/)) { 
+            alert ('請填寫說明~~');
+            return false;          
+        } else {
+            return true;
+        }
+    }
+}
+
+    $('input[type=file][name="file"]').change(function () {
+        var val = $(this).val().toLowerCase(),
+            regex = new RegExp("(.*?)\.(sb2)$");
+        if (!(regex.test(val))) {
+            $(this).val('');
+            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2)');
+        }
+    });
+</script>
+{% endblock %}
+{% block content %}
+      <form id="form" onsubmit="return checkvalue(this)" action="" enctype="multipart/form-data"  method="post">
+            <table class="table">
+			<TR><TD>組別：</td><td>{{object.name}}</td></tr>
+			<TR><TD>組員：</td><td>{% for member in members %}({{member.seat}}){{member.student.first_name}}{% endfor %}</td></tr>			
+
+      <TR><TD colspan=2>
+             <label for="exampleFormControlTextarea1">執行結果：</label>
+        <div id="edit-box" class="form-control target" contenteditable="true">
+            {% if work_dict|hash_workid:index %} 如果變更擷圖，請刪除原圖後重貼...
+            <img width=880 src="" /> 
+            {% else %}
+            請在此貼上螢幕擷圖... 
+            {% endif %}
+        </div>
+        </TD></TR>
+              {{ form.as_table }}
+        </table>
+            {% csrf_token %}
+            <input type="submit" value="Submit">
+        </form>
+{% endblock %}

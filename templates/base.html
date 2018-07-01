@@ -11,7 +11,9 @@ Licence URI: http://www.os-templates.com/template-terms
 <head>
 <title>Joy of Code</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">  
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block header0 %}
+{% endblock %}	
 <!-- Superfish Menu -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>  
 <script type="text/javascript" src="/static/layout/scripts/superfish/jquery.hoverIntent.js"></script>
@@ -71,6 +73,12 @@ jQuery(function () {
           <li><a href="/student/lessons/D">VPhysics物理模擬：建中特色課程</a></li>                  
         </ul>
       </li>
+      <li><a href="#"><img src="/static/images/icon_lesson.png"> 藝廊</a>    
+        <ul>
+          <li><a href="/show/gallery/1">Scratch創意秀</a></li>
+          <li><a href="/show/gallery/2">VPhysics創意秀</a></li>                
+        </ul>
+      </li>           
       {% if user.is_authenticated %}  
 			<li><a href="/account/dashboard"><img src="/static/images/icon_message.png"> 訊息{% if request.user.id|unread > 0 %}({{request.user.id|unread}}){% endif %}</a></li>
 			<li><a href="/account/profile/{{request.user.id}}"><img  width=16 src="/static/images/icon_doc.png"> 檔案</a>

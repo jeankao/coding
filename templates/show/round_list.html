@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+{% load tag %}
+<a href="/show/teacher/add/{{classroom_id}}" onclick = "if (! confirm('確定要新增嗎?')) { return false; }" role="btn" class="btn btn-info active">新增創意秀</a>
+<BR><BR>
+<table class="table">
+{% for round in round_list %}
+<tr>
+  <td><a href="/show/group/{{round.id}}"><img src="/static/images/icon_group_new.png">創意秀({{forloop.revcounter}})</a></td>
+  <td>關閉互評</td>
+  <td>評分情形</td>
+  <td>評分結果</td>
+  <td>個人評語</td>
+  </tr>
+
+{% endfor %}
+</table>
+{% endblock %}

@@ -3,7 +3,7 @@
 {% block content %}
         <a href="/student/classroom/add" role="button" class="btn btn-info active">加入班級</a><BR><BR>
         
-        {% for enroll in enrolls %}
+        {% for enroll, shows in classrooms %}
 <div class="card">
   <h5 class="card-header">{{enroll.classroom}} ({{enroll.classroom.lesson_choice}})：{{enroll.seat}}號</h5>
   <div class="card-body">
@@ -49,10 +49,22 @@
 		    <a href="/account/line/class/{{enroll.classroom_id}}" role="button" class="btn btn-success">私訊同學</a>
 			{% endif %}
 			<a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.classroom.teacher_id}}" role="button" class="btn btn-success">私訊老師</a>
+      <BR><BR>
+      {% for show in shows %}
+      創意秀({{forloop.revcounter}})：
+			<a href="/show/group/{{show.id}}" role="button" class="btn btn-success">組別</a>
+			{% if enroll.group_show > 0 %}
+			<a href="/show/group/submit/{{show.id}}/{{enroll.group_show}}/" role="button" class="btn btn-success">繳交</a>
+			{% endif %}
+			<a href="/show/rank/1/{{show.id}}/" role="button" class="btn btn-success">美工王</a>
+			<a href="/show/rank/2/{{show.id}}/" role="button" class="btn btn-success">程式王</a>
+			<a href="/show/rank/3/{{show.id}}/" role="button" class="btn btn-success">創意王</a>			
+			<BR><BR>
+			{% endfor %}
     </p>
   </div>
 </div>
-<BR>
+<BR>        
         {% endfor %}
 
 {% endblock %}

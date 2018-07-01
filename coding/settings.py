@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'certificate',
     'survey',
     'nocaptcha_recaptcha',  
+    'show'
 ]
 
 MIDDLEWARE_CLASSES = [

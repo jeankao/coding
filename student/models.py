@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from teacher.models import Classroom
 from django.utils import timezone
+from django.core.validators import RegexValidator
 
 # 學生選課資料
 class Enroll(models.Model):
@@ -17,7 +18,7 @@ class Enroll(models.Model):
     # 組別
     group = models.IntegerField(default=0)
     # 創意秀組別
-    group_show = models.IntegerField(default=0)
+    groupshow = models.CommaSeparatedIntegerField(max_length=200)
     # 12堂課證書
     certificate1 = models.BooleanField(default=False)
     certificate1_date = models.DateTimeField(default=timezone.now)
@@ -66,6 +67,12 @@ class Enroll(models.Model):
 
     class Meta:
         unique_together = ('student_id', 'classroom_id',)
+        
+    def set_foo(self, x):
+        self.groupshow = json.dumps(x)
+
+    def get_groupshow(self):
+        return json.loads(self.groupshow)
 
 # 學生組別
 class EnrollGroup(models.Model):

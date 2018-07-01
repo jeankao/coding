@@ -28,10 +28,10 @@ urlpatterns = [
     url(r'^work/submit/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/$', views.submit),
     url(r'^work/show/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<user_id>\d+)/$', views.show),      
     url(r'^work/memo/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.memo), 
-     url(r'^work/rank/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/$', views.rank), 
+    url(r'^work/rank/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/$', views.rank), 
     url(r'^work/download/(?P<index>\d+)/(?P<user_id>\d+)/(?P<workfile_id>\d+)/$', views.work_download), 
-     url(r'^work/list/(?P<lesson>\d+)/$', views.WorkListView.as_view()),     
-     url(r'^work/day/(?P<lesson>\d+)/(?P<year>\d+)/(?P<month>\d+)/(?P<date>\d+)/$', views.WorkDayListView.as_view()),       
+    url(r'^work/list/(?P<lesson>\d+)/$', views.WorkListView.as_view()),     
+    url(r'^work/day/(?P<lesson>\d+)/(?P<year>\d+)/(?P<month>\d+)/(?P<date>\d+)/$', views.WorkDayListView.as_view()),       
     #查詢該作業分組小老師
     url(r'^group/work/(?P<lesson>\d+)/(?P<index>\d+)/(?P<classroom_id>\d+)$', views.work_group),  		
     url(r'^work/answer/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer),
