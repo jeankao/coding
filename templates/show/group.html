@@ -71,11 +71,12 @@
 				<a href="/show/score/{{group.0.id}}">查閱</a>
 				</td>
                 {% if request.user|has_group:"teacher" %} 			
-				<td>{% if group.0.gallery %}<a href="#" data-showid="{{ group.0.id }}" data-action="close" class="open">取消</a>{% else %}<a href="#" data-showid="{{  group.0.id }}" data-action="open" class="open">開放</a>{% endif %}</td>
+				<td>{% if group.0.gallery %}<a href="#" data-showid="{{ group.0.id }}" data-action="close" class="close">取消</a>{% else %}<a href="#" data-showid="{{  group.0.id }}" data-action="open" class="open">開放</a>{% endif %}</td>
 			    {% else %}
 			    <td>{% if group.0.open %}已分享{% else %}無{% endif %}</t>
 			    {% endif %}
-                </tr>        
+                </tr>
+        {{group.0.gallery}}--
         {% endfor %}
 </table>
 尚未分組名單

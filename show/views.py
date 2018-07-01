@@ -546,6 +546,7 @@ def make(request):
     show_id = request.POST.get('showid')
     action = request.POST.get('action')
     if show_id and action :
+        show = ShowGroup.objects.get(id=show_id)	      
         try :
             show = ShowGroup.objects.get(id=show_id)	
             if action == 'open':
