@@ -232,27 +232,28 @@ class ShowUpdateView(UpdateView):
             obj.done = True
             obj.save()
             
-            dataURI = form.cleaned_data['screenshot']
-            try:
-                head, data = dataURI.split(',', 1)
-                mime, b64 = head.split(';', 1)
-                mtype, fext = mime.split('/', 1)
-                binary_data = a2b_base64(data)
+            if not classroom.lesson == 1:
+                dataURI = form.cleaned_data['screenshot']
+                try:
+                    head, data = dataURI.split(',', 1)
+                    mime, b64 = head.split(';', 1)
+                    mtype, fext = mime.split('/', 1)
+                    binary_data = a2b_base64(data)
 
-                prefix = 'static/show/pic/'
-                directory = "{prefix}/".format(prefix=prefix)
-                image_file = "{path}/{id}.jpg".format(path=directory, id=obj.id)
+                    prefix = 'static/show/pic/'
+                    directory = "{prefix}/".format(prefix=prefix)
+                    image_file = "{path}/{id}.jpg".format(path=directory, id=obj.id)
 
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
-                with open(image_file, 'wb') as fd:
-                    fd.write(binary_data)
-                    fd.close()
-                obj.picture=image_file
-            except ValueError:
-                path = dataURI.split('/')
-                obj.picture=path[0]
-            obj.save()
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)
+                    with open(image_file, 'wb') as fd:
+                        fd.write(binary_data)
+                        fd.close()
+                    obj.picture=image_file
+                except ValueError:
+                    path = dataURI.split('/')
+                    obj.picture=path[0]
+                obj.save()
             
 							
 								
