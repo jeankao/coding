@@ -240,8 +240,9 @@ def group_open(request, classroom_id, action):
 def classroom(request):
         classrooms = []
         enrolls = Enroll.objects.filter(student_id=request.user.id).order_by("-id")
+        round_pool = Round.objects.all().order_by("-id")
         for enroll in enrolls :
-            shows = Round.objects.filter(classroom_id=enroll.classroom_id).order_by("-id")
+            shows = filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool)
             classrooms.append([enroll, shows])
         return render_to_response('student/classroom.html',{'classrooms':classrooms}, context_instance=RequestContext(request))
 
