@@ -508,7 +508,7 @@ class GalleryListView(ListView):
         if self.kwargs['category'] == "1":
             classroom_pool = [classroom for classroom in Classroom.objects.filter(lesson=1)]
         # VPhysics創意秀
-        elif self.kwargs['category'] == "2":
+        else:
             classroom_pool = [classroom for classroom in Classroom.objects.filter(lesson__in=[2,4])]
         classroom_ids = map(lambda a: a.id, classroom_pool)
         round_pool = [round for round in Round.objects.filter(classroom_id__in=classroom_ids)]
