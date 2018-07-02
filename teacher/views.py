@@ -298,7 +298,7 @@ class WorkListView(ListView):
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
 # 列出某作業所有同學名單
-def work_class(request, lesson, classroom_id, index):
+def work_class(request, typing, lesson, classroom_id, index):
     enrolls = Enroll.objects.filter(classroom_id=classroom_id)
     classroom = Classroom.objects.get(id=classroom_id)
     classmate_work = []
@@ -328,7 +328,7 @@ def work_class(request, lesson, classroom_id, index):
         return custom[0].seat
 
     classmate_work = sorted(classmate_work, key=getKey)
-    return render_to_response('teacher/work_class.html',{'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson}, context_instance=RequestContext(request))
+    return render_to_response('teacher/work_class.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson}, context_instance=RequestContext(request))
 
 # (小)教師評分
 def scoring(request, lesson, classroom_id, user_id, index, typing):
@@ -338,13 +338,13 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
             return redirect("/")
     if typing == "0":
         if lesson == "1":
-            lesson_name = lesson_list1[index-1][2]
+            lesson_name = lesson_list1[int(index)-1][2]
         elif lesson == "2":
-            lesson_name = lesson_list2[index-1][1]
+            lesson_name = lesson_list2[int(index)-1][1]
         elif lesson == "3":
-            lesson_name = lesson_list3[index-1][1]
+            lesson_name = lesson_list3[int(index)-1][1]
         else:
-            lesson_name = lesson_list1[index-1][1]
+            lesson_name = lesson_list1[int(index)-1][1]
     elif typing == "1":
         lesson_name = TWork.objects.get(id=index).title
     user = User.objects.get(id=user_id)
