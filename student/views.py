@@ -370,7 +370,6 @@ def work_list(request, typing, lesson, classroom_id):
     return render_to_response('student/work_list.html', {'typing':typing, 'lesson':lesson, 'lessons':lessons, 'classroom':classroom}, context_instance=RequestContext(request))
 
 def submit(request, typing, lesson, index):
-    profile = Profile.objects.get(user=request.user)
     work_dict = {}
     form = None
     work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
@@ -408,6 +407,7 @@ def submit(request, typing, lesson, index):
                     history.save()
                     if typing == "0":
                         # lock
+                        profile = Profile.objects.get(user=request.user)
                         profile.lock1 += 1
                         profile.save()
             else:
@@ -427,12 +427,16 @@ def submit(request, typing, lesson, index):
                 except ObjectDoesNotExist:
                     # credit
                     answers = Answer.objects.filter(lesson_id=lesson, index=index, student_id=request.user.id)
-                    points = 3
+                    if len(answers)>0 :
+                        points = 1
+                    else :
+                        points = 3                    
                     update_avatar(request.user.id, 1, points)
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                     history.save()
-                    if len(answers) == 0 and typing == "0":
+                    profile = Profile.objects.get(user=request.user)
+                    if typing == "0":
                         if lesson == "2":
                             profile.lock2 += 1
                         elif lesson == "3":
