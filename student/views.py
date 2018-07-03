@@ -536,9 +536,9 @@ class WorkDayListView(ListView):
 
     def get_queryset(self):
         if self.kwargs['lesson'] == "2":
-            work_pool = Work.objects.filter(lesson_id__in=[2,4])
+            work_pool = Work.objects.filter(lesson_id__in=[2,4]).order_by("-id")
         else:
-            work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+            work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson']).order_by("-id")
         timezone = pytz.timezone("Asia/Taipei")    
         day = timezone.localize(datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date'])))
         works = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
