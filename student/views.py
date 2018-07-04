@@ -99,7 +99,7 @@ def lesson(request, lesson):
             if profile_lock < lock[lesson]:
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
-        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit}, context_instance=RequestContext(request))
+        return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0 }, context_instance=RequestContext(request))
     elif lesson[0] == "B":
         lesson_id = 2
         profile_lock = profile.lock2
@@ -433,7 +433,7 @@ def submit(request, typing, lesson, index):
                         points = 3                    
                     update_avatar(request.user.id, 1, points)
                     # History
-                    history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                    history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+u'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                     history.save()
                     profile = Profile.objects.get(user=request.user)
                     if typing == "0":

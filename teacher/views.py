@@ -374,7 +374,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                             # credit
                             update_avatar(request.user.id, 2, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name.encode('utf-8')+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
 
                         # credit
@@ -395,7 +395,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                         assistant.save()
 
                     # create Message
-                    title = u"<" + assistant.student.first_name + u">擔任小老師<" + lesson_name + u">"
+                    title = "<" + assistant.student.first_name.encode('utf-8')+ ">擔任小老師<" + lesson_name.encode('utf-8') + ">"
                     url = "/teacher/score_peer/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group)
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()
@@ -407,10 +407,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                             # message for group member
                             messagepoll = MessagePoll(message_id = message.id,reader_id=enroll.student_id)
                             messagepoll.save()
-                if typing == "0":
-                    return redirect('/teacher/work/class/'+lesson+"/"+classroom_id+'/'+index)
-                elif typing == "1":
-                    return redirect('/teacher/work2/class/'+lesson+"/"+classroom_id+'/'+index)                  
+                return redirect('/teacher/work/class/'+typing+ "/" + lesson+"/"+classroom_id+'/'+index)
             else:
                 return redirect('/teacher/score_peer/'+typing+"/"+lesson+"/"+index+'/'+classroom_id+'/'+str(enroll.group))
 
