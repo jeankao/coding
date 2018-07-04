@@ -374,13 +374,13 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                             # credit
                             update_avatar(request.user.id, 2, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name.encode('utf-8')+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name.decode('utf8')+u'><'+enroll.student.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
 
                         # credit
                         update_avatar(enroll.student_id, 1, 1)
                         # History                        
-                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name+u'><'+request.user.first_name.encode('utf-8')+u'>', url="/student/work/show/"+lesson+"/"+index)
+                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name.decode('utf8')+u'><'+request.user.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)                                               
                         history.save()		                        
 
                 works.update(score=form.cleaned_data['score'])
@@ -395,7 +395,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                         assistant.save()
 
                     # create Message
-                    title = "<" + assistant.student.first_name.encode('utf-8')+ ">擔任小老師<" + lesson_name.encode('utf-8') + ">"
+                    title = u"<" + assistant.student.first_name+ u">擔任小老師<" + lesson_name.decode('utf8') + u">"
                     url = "/teacher/score_peer/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group)
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()
