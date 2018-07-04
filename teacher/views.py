@@ -374,13 +374,13 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                             # credit
                             update_avatar(request.user.id, 2, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name.encode('utf-8')+'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
 
                         # credit
                         update_avatar(enroll.student_id, 1, 1)
                         # History                        
-                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name+u'><'+request.user.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
+                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name+u'><'+request.user.first_name.encode('utf-8')+u'>', url="/student/work/show/"+lesson+"/"+index)
                         history.save()		                        
 
                 works.update(score=form.cleaned_data['score'])
