@@ -529,8 +529,8 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             form = CheckForm_euler(request.POST)
         elif lesson == "4":
             form = CheckForm_vphysics(request.POST)            
-        else:      
-            form = CheckForm(request.POST)        
+      else:      
+          form = CheckForm(request.POST)        
       
       if form.is_valid():
         if typing == "0":
@@ -548,14 +548,16 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
           elif lesson == "3":
               enroll.score_memo_euler=form.cleaned_data['score_memo_euler']
           elif lesson == "4":
-              enroll.score_memo_vphysics2=form.cleaned_data['score_memo_vphysics']           
+              enroll.score_memo_vphysics2=form.cleaned_data['score_memo_vphysics']
+          enroll.save()
+          if form.cleaned_data['certificate']:
+              return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
+          else:
+              return redirect('/teacher/memo/'+lesson+"/"+classroom_id)              
         else :
-          enroll.score_memo = form.cleaned_data['score_memo']
-        enroll.save()
-        if form.cleaned_data['certificate']:
-          return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
-        else:
-          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
+          enroll.score_memo = form.cleaned_data['score_memo'] 
+          enroll.save()
+          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)          
     else:
       if typing == "0":  
         if lesson == "1":
@@ -960,5 +962,5 @@ def work_class2(request, lesson, classroom_id, work_id):
 	
     classmate_work = sorted(classmate_work, key=getKey)    
        
-    return render_to_response('teacher/work_class.html',{'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
+    return render_to_response('teacher/work_class.html',{'typing':1, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
 	
