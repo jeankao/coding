@@ -53,6 +53,9 @@ class Profile(models.Model):
   lock3 = models.IntegerField(default=1)
   # ck進度
   lock4 = models.IntegerField(default=1)  
+  # VPhysics(P3)進度
+  lock5 = models.IntegerField(default=1)    
+  
  
   def __unicode__(self):
     return str(self.user.username)

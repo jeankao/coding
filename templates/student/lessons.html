@@ -401,6 +401,110 @@ function MM_swapImage() { //v3.0
   </table> 
 <img src="/static/images/ck/certificate.png">	
 <BR>本單元課程自2018.7.1日起已被瀏覽 <a href="/student/counter/{{lesson}}" target="_blank">{{counter}}</a> 次	
-
+{% elif subject_id == "E" %}
+<img src="/static/images/vphysics/vphysics.png">
+<BR><BR>
+<a href="/static/files/programming_vphysics.pdf" target=_blank role="button" class="btn btn-info">教材簡介</a>
+<a href="http://vphysics.ntu.edu.tw" target=_blank role="button" class="btn btn-info">更多VPhysics課程</a>
+		<table style="border:0px; width:900px;">
+  <tr>
+  <td>
+    {% if not user.is_authenticated %}
+		  <img name="menu01" src="/static/images/vphysics/vphysics013.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu01','','/static/images/vphysics/vphysics012.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E01"><img name=menu01 src="/static/images/vphysics/vphysics01.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 4 %}
+		  <img name="menu03" src="/static/images/vphysics/vphysics033.png"><BR><BR>
+    {% else %}	     
+<a onmouseover="MM_swapImage('menu03','','/static/images/vphysics/vphysics032.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E03"><img name=menu03 src="/static/images/vphysics/vphysics03.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 6 %}
+		  <img name="menu05" src="/static/images/vphysics/vphysics053.png"><BR><BR>
+    {% else %}	 
+    <a onmouseover="MM_swapImage('menu05','','/static/images/vphysics/vphysics052.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E05"><img name=menu05 src="/static/images/vphysics/vphysics05.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 8 %}
+		  <img name="menu07" src="/static/images/vphysics/vphysics073.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu07','','/static/images/vphysics/vphysics072.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E07"><img name=menu07 src="/static/images/vphysics/vphysics07.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 10 %}
+		  <img name="menu09" src="/static/images/vphysics/vphysics093.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu09','','/static/images/vphysics/vphysics092.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E09"><img name=menu09 src="/static/images/vphysics/vphysics09.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 12 %}
+		  <img name="menu11" src="/static/images/vphysics/vphysics113.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu11','','/static/images/vphysics/vphysics112.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E11"><img name=menu11 src="/static/images/vphysics/vphysics11.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 14 %}
+		  <img name="menu13" src="/static/images/vphysics/vphysics133.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu13','','/static/images/vphysics/vphysics132.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E13"><img name=menu13 src="/static/images/vphysics/vphysics13.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 16 %}
+		  <img name="menu15" src="/static/images/vphysics/vphysics153.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu15','','/static/images/vphysics/vphysics152.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E15"><img name=menu15 src="/static/images/vphysics/vphysics15.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 17 %}
+		  <img name="menu17" src="/static/images/vphysics/vphysics173.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu17','','/static/images/vphysics/vphysics172.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E17"><img name=menu17 src="/static/images/vphysics/vphysics17.png"></a><br><br>
+    {% endif %}
+    </td>
+  <td>
+    {% if not user|has_group:"teacher" and lock < 3 %}
+		  <img name="menu02" src="/static/images/vphysics/vphysics023.png"><BR><BR>
+    {% else %}	 
+    <a onmouseover="MM_swapImage('menu02','','/static/images/vphysics/vphysics022.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E02"><img name=menu02 src="/static/images/vphysics/vphysics02.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 5 %}
+		  <img name="menu04" src="/static/images/vphysics/vphysics043.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu04','','/static/images/vphysics/vphysics042.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E04"><img name=menu04 src="/static/images/vphysics/vphysics04.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 7 %}
+		  <img name="menu06" src="/static/images/vphysics/vphysics063.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu06','','/static/images/vphysics/vphysics062.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E06"><img name=menu06 src="/static/images/vphysics/vphysics06.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 9 %}
+		  <img name="menu08" src="/static/images/vphysics/vphysics083.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu08','','/static/images/vphysics/vphysics082.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E08"><img name=menu08 src="/static/images/vphysics/vphysics08.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 11 %}
+		  <img name="menu10" src="/static/images/vphysics/vphysics103.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu10','','/static/images/vphysics/vphysics102.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E10"><img name=menu10 src="/static/images/vphysics/vphysics10.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 13 %}
+		  <img name="menu12" src="/static/images/vphysics/vphysics123.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu12','','/static/images/vphysics/vphysics122.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E12"><img name=menu12 src="/static/images/vphysics/vphysics12.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 15 %}
+		  <img name="menu14" src="/static/images/vphysics/vphysics143.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu14','','/static/images/vphysics/vphysics142.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E14"><img name=menu14 src="/static/images/vphysics/vphysics14.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 17 %}
+		  <img name="menu16" src="/static/images/vphysics/vphysics163.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu16','','/static/images/vphysics/vphysics162.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E16"><img name=menu16 src="/static/images/vphysics/vphysics16.png"></a><br><br>
+    {% endif %}
+    {% if not user|has_group:"teacher" and lock < 17 %}
+		  <img name="menu18" src="/static/images/vphysics/vphysics183.png"><BR><BR>
+    {% else %}	     
+    <a onmouseover="MM_swapImage('menu18','','/static/images/vphysics/vphysics182.png',1);" onmouseout=MM_swapImgRestore() href="/student/lesson/E18"><img name=menu18 src="/static/images/vphysics/vphysics18.png"></a><br><br>
+    {% endif %}
+    </td>
+  </tr>
+  </table>
+<img src="/static/images/vphysics/certificate.png">
+<BR>本單元課程自2018.7.5日起已被瀏覽 <a href="/student/counter/{{lesson}}" target="_blank">{{counter}}</a> 次	    
 {% endif %}    
 {% endblock %}

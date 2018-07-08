@@ -1,0 +1,641 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% if lesson == "E01" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/survey/pre_survey2" role="tab" aria-selected="false">問卷</a>
+    </li>    
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業1：VPhycis移動</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">作業2：繞邊邊跑一圈</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br/>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/E01.html" %}
+    </div>
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/Pp2bOHmi3XU?autoplay=0&autostart=0&enablejsapi=1" frameborder="0"
+        allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      作業1：VPhycis移動
+      <BR>
+	{% include "student/submitB.html" with index=1 %}
+    </div>
+    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+      作業2：繞邊邊跑一圈
+      <BR>
+	{% include "student/submitB.html" with index=2 %}
+    </div>
+    {% endif %}    
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E02" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：一維等速運動</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E02.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/Av0qy_BQl0E?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	作業：一維等速運動
+	<BR>
+	{% include "student/submitB.html" with index=3 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E03" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：自由落體</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E03.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/OW-bdZr5wck?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=4 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E04" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：兩牆間反彈</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E04.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/Sq45ylKkT4o?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=5 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E05" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：向量合成</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E05.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/wz6GALVLmFE?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=6 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E06" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：速度視覺化</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E06.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/tZanWkGdkCo?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=7 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E07" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：等速率圓周運動</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E07.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/sFpevGswSoE?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=8 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E08" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：畫時間位置圖</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E08.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/Rj3zs0ySvGw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=9 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E09" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：虎克定律</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E09.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/UBsSdcAO7RM?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=10 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E10" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：垂直簡諧運動</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E10.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/TNspyvfjpiA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=11 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E11" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：滾動的球</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E11.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/OI1V5kKvHl8?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=12 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E12" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：動量</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E12.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/nfDXK4ZB524?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=13 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E13" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：彈性碰撞</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E13.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/Oiam3SIYGHA?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=14 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E14" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：三顆球追撞</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E14.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/6sTq51UJYZM?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=15 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E15" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：簡易牛頓擺</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E15.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/gyOmdt9Fb3M?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=16 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E16" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>   
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：行星公轉</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="/survey/post_survey2" role="tab" aria-selected="false">問卷</a>
+    </li>    
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E16.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/U_RKv6WSdsc?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=17 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E17" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業：單擺運動</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      {% include "student/lesson/E17.html" %}
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=18 %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% elif lesson == "E18" %}
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">影片1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">影片3</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">影片4</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#taba" role="tab" aria-selected="false">程式1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tabb" role="tab" aria-selected="false">程式2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tabc" role="tab" aria-selected="false">程式3</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tabd" role="tab" aria-selected="false">程式4</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tabe" role="tab" aria-selected="false">程式5</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tabf" role="tab" aria-selected="false">完整程式</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">作業：月球進動</a>
+    </li>
+    {% endif %}	
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/o1tz99j1Uu4?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab2" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/N_a0_TZVD2Q?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/VxcAvVZWQDQ?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="tab4" role="tabpanel">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/TlTw4mcObVQ?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="tab-pane fade show" id="taba" role="tabpanel">
+      {% include "student/lesson/E18a.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tabb" role="tabpanel">
+      <div>
+        <a href="http://tcjd71.wixsite.com/vpython/modu" target=_blank>VPhysics模組</a>
+      </div>
+      {% include "student/lesson/E18b.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tabc" role="tabpanel">
+      <div>
+        <a href="http://tcjd71.wixsite.com/vpython/modu" target=_blank>VPhysics模組</a>
+      </div>
+      {% include "student/lesson/E18c.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tabd" role="tabpanel">
+      <div>
+        <a href="http://tcjd71.wixsite.com/vpython/modu" target=_blank>VPhysics模組</a>
+      </div>
+      {% include "student/lesson/E18d.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tabe" role="tabpanel">
+      <div>
+        <a href="http://tcjd71.wixsite.com/vpython/modu" target=_blank>VPhysics模組</a>
+      </div>
+      {% include "student/lesson/E18e.html" %}
+    </div>
+    <div class="tab-pane fade show" id="tabf" role="tabpanel">
+      {% include "student/lesson/E18f.html" %}
+    </div>
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade show" id="tab3" role="tabpanel">
+	{% include "student/submitB.html" with index=19 %}
+    </div>
+    {% endif %}	
+  </div>
+</section>
+{% else %}
+<section>
+  無此課程
+</section>
+{% endif %}
+<BR>本單元課程自2018.7.5日起已被瀏覽 <a href="/student/counter/{{lesson}}" target="_blank">{{counter}}</a> 次
+{% endblock %}
