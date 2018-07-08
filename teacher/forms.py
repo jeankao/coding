@@ -133,7 +133,7 @@ class CheckForm_euler(forms.ModelForm):
     
         class Meta:
            model = Enroll
-           fields = ['score_memo_euler']    
+           fields = ['score_memo_euler']                
 
 # 新增一個作業
 class WorkForm(forms.ModelForm):
@@ -144,3 +144,5 @@ class WorkForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super(WorkForm, self).__init__(*args, **kwargs)
             self.fields['title'].label = "作業名稱"
+
+            

@@ -499,7 +499,10 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
                 lesson_dict[index] = [assignment]
         elif lesson == "4" :
             for index,assignment in enumerate(lesson_list4):
-                lesson_dict[index] = [assignment]                
+                lesson_dict[index] = [assignment]      
+        elif lesson == "5" :
+            for index,assignment in enumerate(lesson_list2):
+                lesson_dict[index] = [assignment]                  
     else :
         assignments = TWork.objects.filter(classroom_id=classroom_id)
         for assignment in assignments:
@@ -535,6 +538,8 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
         elif lesson == "3":
             form = CheckForm_euler(request.POST)
         elif lesson == "4":
+            form = CheckForm_vphysics(request.POST)    
+        elif lesson == "5":
             form = CheckForm_vphysics(request.POST)            
       else:      
           form = CheckForm(request.POST)        
@@ -550,12 +555,14 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
                   enroll.score_memo3=form.cleaned_data['score_memo3']
               elif unit == "4":
                   enroll.score_memo4=form.cleaned_data['score_memo4']
-          elif lesson == "2":
+          elif lesson == "2" :
               enroll.score_memo_vphysics=form.cleaned_data['score_memo_vphysics']
           elif lesson == "3":
-              enroll.score_memo_euler=form.cleaned_data['score_memo_euler']
-          elif lesson == "4":
+              enroll.score_memo_euler=form.cleaned_data['score_memo_euler']   
+          elif lesson == "4" :
               enroll.score_memo_vphysics2=form.cleaned_data['score_memo_vphysics']
+          elif lesson == "5" :
+              enroll.score_memo_vphysics3=form.cleaned_data['score_memo_vphysics']              
           enroll.save()
           if form.cleaned_data['certificate']:
               return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
@@ -576,12 +583,10 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
                 form = CheckForm3(instance=enroll)
             elif unit == "4":
                 form = CheckForm4(instance=enroll)
-        elif lesson == "2" or lesson == "4":
+        elif lesson == "2" or lesson == "4" or lesson == "5":
             form = CheckForm_vphysics(instance=enroll)
         elif lesson == "3":
-            form = CheckForm_euler(instance=enroll)
-        elif lesson == "4":
-            form = CheckForm_vphysics(instance=enroll)            
+            form = CheckForm_euler(instance=enroll)       
         else :
             form =  CheckForm1(instance=enroll)
       else :

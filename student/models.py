@@ -30,7 +30,8 @@ class Enroll(models.Model):
     certificate3_date = models.DateTimeField(default=timezone.now)
     # 實戰高手證書
     certificate4 = models.BooleanField(default=False)
-    certificate4_date = models.DateTimeField(default=timezone.now)
+    certificate4_date = models.DateTimeField(default=timezone.now)  
+    
     # 自訂作業
     score_memo = models.IntegerField(default=0)
     # 12堂課 心得成績
@@ -41,7 +42,7 @@ class Enroll(models.Model):
     score_memo3 = models.IntegerField(default=0)
     # 實戰高手心得成績
     score_memo4 = models.IntegerField(default=0)
-    # Vphysics
+    # Vphysics2
     certificate_vphysics = models.BooleanField(default=False)
     certificate_vphysics_date = models.DateTimeField(default=timezone.now)
     score_memo_vphysics =  models.IntegerField(default=0)
@@ -53,7 +54,11 @@ class Enroll(models.Model):
     certificate_vphysics2 = models.BooleanField(default=False)
     certificate_vphysics2_date = models.DateTimeField(default=timezone.now)
     score_memo_vphysics2 =  models.IntegerField(default=0)
-
+    # Vphysics3
+    certificate_vphysics3 = models.BooleanField(default=False)
+    certificate_vphysics3_date = models.DateTimeField(default=timezone.now)
+    score_memo_vphysics3 =  models.IntegerField(default=0)
+    
     @property
     def classroom(self):
         return Classroom.objects.get(id=self.classroom_id)

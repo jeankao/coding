@@ -193,7 +193,10 @@ def make(request):
                   enroll.certificate_euler_date = timezone.now()
               elif lesson == "4":
                   enroll.certificate_vphysics2 = True
-                  enroll.certificate_vphysics2_date = timezone.now()                  
+                  enroll.certificate_vphysics2_date = timezone.now()             
+              elif lesson == "5":
+                  enroll.certificate_vphysics3 = True
+                  enroll.certificate_vphysics3_date = timezone.now()                     
               classroom = Classroom.objects.get(id=classroom_id)
               make_image(unit,enroll_id,classroom.teacher_id)              
             else:
@@ -211,7 +214,9 @@ def make(request):
               elif lesson == "3":
                 enroll.certificate_euler = False
               elif lesson == "4":
-                enroll.certificate_vphysics2 = False                
+                enroll.certificate_vphysics2 = False        
+              elif lesson == "5":
+                enroll.certificate_vphysics3 = False                    
               try :
                   os.remove(settings.BASE_DIR+"/static/certificate/"+unit+"/"+enroll_id+".jpg")	
               except:
@@ -326,7 +331,10 @@ def certificate(request, lesson, unit, enroll_id, action):
                     enroll.certificate_euler_date = timezone.now()	
                 elif lesson=="4":
                     enroll.certificate_vphysics2 = True
-                    enroll.certificate_vphysics2_date = timezone.now()                    
+                    enroll.certificate_vphysics2_date = timezone.now()
+                elif lesson=="5":
+                    enroll.certificate_vphysics3 = True
+                    enroll.certificate_vphysics3_date = timezone.now()                       
                 classroom = Classroom.objects.get(id=enroll.classroom_id)
                 make_image(lesson, unit,enroll_id,classroom.teacher_id)
              
