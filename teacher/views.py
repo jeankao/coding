@@ -605,7 +605,7 @@ def grade(request, typing, lesson, unit, classroom_id):
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
-    lesson_list = [lesson_list1, lesson_list2, lesson_list3][int(lesson)-1]
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
       total = 0
@@ -620,6 +620,7 @@ def grade(request, typing, lesson, unit, classroom_id):
                 lesson_list = lesson_list[25:33]
             elif unit == "4":
                 lesson_list = lesson_list[33:41]
+            
       else :
         lesson_list = TWork.objects.filter(classroom_id=classroom_id)
       for index, assignment in enumerate(lesson_list):
@@ -645,6 +646,10 @@ def grade(request, typing, lesson, unit, classroom_id):
                 memo = enroll.score_memo_vphysics
             elif lesson == "3":
                 memo = enroll.score_memo_euler
+            elif lesson == "4":
+                memo = enroll.score_memo_vphysics2
+            elif lesson == "5":
+                memo = enroll.score_memo_vphysics3            
             grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
       data.append([enroll, enroll_score, memo, grade])
     return render_to_response('teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
