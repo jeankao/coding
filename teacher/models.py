@@ -7,16 +7,18 @@ from django.utils import timezone
 class Classroom(models.Model):
     Lesson_CHOICES = [				
         (1, '程式設計輕鬆學：使用Scratch2.X'),
-        (2, 'VPhyscis物理模擬：使用Python2'),
-        (4, 'VPhyscis物理模擬：建中特色課程'),            
+        (2, 'VPhyscis物理模擬：使用Python2'),        
         (3, 'Euler數學解題：使用Python3'),
+        (4, 'VPhyscis物理模擬：建中特色課程'),   
+        (5, 'VPhyscis物理模擬：使用Python3'),          
 		]	
 		
     LessonShort_CHOICES = [	
         (1, 'Scratch'),
-        (2, 'VPhyscis'),
+        (2, 'VPhyscis2'),
         (3, 'Euler'),
-        (4, 'VPhysics-CK'),      
+        (4, 'VPhysics-CK'),     
+        (5, 'VPhysics3'),            
 		]		
     # 班級名稱
     name = models.CharField(max_length=30)

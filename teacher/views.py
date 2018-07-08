@@ -25,6 +25,11 @@ from wsgiref.util import FileWrapper
 from collections import OrderedDict
 import django_excel as excel
 from account.forms import PasswordForm, RealnameForm
+import sys
+
+reload(sys)
+
+sys.setdefaultencoding('utf-8')
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -283,7 +288,9 @@ class WorkListView(ListView):
         elif self.kwargs['lesson'] == "3":
             queryset = lesson_list3
         elif self.kwargs['lesson'] == "4":
-            queryset = lesson_list4            
+            queryset = lesson_list4      
+        elif self.kwargs['lesson'] == "5":
+            queryset = lesson_list2         
         else:
             queryset = lesson_list1
         return queryset
@@ -952,7 +959,7 @@ def work_class2(request, lesson, classroom_id, work_id):
             group_name = EnrollGroup.objects.get(id=enroll.group).name
         except ObjectDoesNotExist:
             group_name = "沒有組別"
-        assistant = WorkAssistant.objects.filter(classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=work_id)
+        assistant = WorkAssistant.objects.filter(typing=1, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=work_id)
         if assistant.exists():
             classmate_work.append([enroll,work,1, scorer_name, group_name])
         else :

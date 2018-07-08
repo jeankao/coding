@@ -367,8 +367,8 @@ def work_list(request, typing, lesson, classroom_id):
     lessons = []
 
     if typing == "0":
-        if lesson in ["2", "3", "4"]:
-            assignments = [lesson_list2, lesson_list3, lesson_list4][int(lesson)-2]
+        if lesson in ["2", "3", "4", "5"]:
+            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-2]
         else:
             assignments = lesson_list1
     elif typing == "1":
@@ -392,7 +392,7 @@ def submit(request, typing, lesson, index):
     work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if typing == "0":
         if lesson in ["2", "3", "4", "5"]:
-            lesson_name = [lesson_list2, lesson_list3, lesson_list4][int(lesson)-2][int(index)-1][1]
+            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-2][int(index)-1][1]
         else:
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
@@ -450,7 +450,7 @@ def submit(request, typing, lesson, index):
                         points = 3                    
                     update_avatar(request.user.id, 1, points)
                     # History
-                    history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+u'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                    history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                     history.save()
                     profile = Profile.objects.get(user=request.user)
                     if typing == "0":
@@ -477,7 +477,7 @@ def submit(request, typing, lesson, index):
                     mtype, fext = mime.split('/', 1)
                     binary_data = a2b_base64(data)
 
-                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck'][int(lesson) - 2]
+                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
                     directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                     image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
@@ -657,13 +657,17 @@ def progress(request, typing, lesson, unit, classroom_id):
     return render_to_response('student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list}, context_instance=RequestContext(request))
 
 # 查詢某作業分組小老師
-def work_group(request, lesson, index, classroom_id):
+def work_group(request, typing, lesson, index, classroom_id):
         if lesson == "1":
             lesson_list = lesson_list1
         elif lesson == "2":
             lesson_list = lesson_list2
         elif lesson == "3":
             lesson_list = lesson_list3
+        elif lesson == "4":
+            lesson_list = lesson_list4
+        elif lesson == "5":
+            lesson_list = lesson_list2            
         else :
             lesson_list = lesson_list1
         student_groups = []
@@ -692,10 +696,10 @@ def work_group(request, lesson, index, classroom_id):
                     work = Work.objects.filter(user_id=enroll.student_id, index=index, lesson_id=lesson).order_by("-id")[0]
                 works.append([enroll, work.score, scorer_name, work.file])
                 try :
-                    assistant = WorkAssistant.objects.get(student_id=enroll.student.id, classroom_id=classroom_id, lesson_id=lesson, index=index)
+                    assistant = WorkAssistant.objects.get(typing=typing, student_id=enroll.student.id, classroom_id=classroom_id, lesson_id=lesson, index=index)
                     group_assistants.append(enroll)
                 except ObjectDoesNotExist:
-				    pass
+                    pass
             student_groups.append([group, works, group_assistants])
         lesson_dict = {}
         c = 0

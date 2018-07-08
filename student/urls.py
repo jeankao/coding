@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^work/list/(?P<lesson>\d+)/$', views.WorkListView.as_view()),     
     url(r'^work/day/(?P<lesson>\d+)/(?P<year>\d+)/(?P<month>\d+)/(?P<date>\d+)/$', views.WorkDayListView.as_view()),       
     #查詢該作業分組小老師
-    url(r'^group/work/(?P<lesson>\d+)/(?P<index>\d+)/(?P<classroom_id>\d+)$', views.work_group),  		
+    url(r'^group/work/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<classroom_id>\d+)$', views.work_group),  		
     url(r'^work/answer/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer),
     url(r'^work/answer_watch/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer_watch),	
     #url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),  	
