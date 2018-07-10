@@ -26,6 +26,7 @@ from datetime import datetime, timedelta
 from time import localtime
 import pytz
 from django.core.paginator import Paginator
+import copy
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -777,18 +778,19 @@ def memo_user(request, lesson, classroom_id, user_id):
     if not is_classmate(user, classroom_id):
         return redirect("/")
     lesson_list = []
+    del lesson_list[:]
     if lesson == "1":
-        lesson_list = lesson_list1
+        lesson_list = copy.deepcopy(lesson_list1)
     elif lesson == "2":
-        lesson_list = lesson_list2
+        lesson_list = copy.deepcopy(lesson_list2)
     elif lesson == "3":
-        lesson_list = lesson_list3
+        lesson_list = copy.deepcopy(lesson_list3)
     elif lesson == "4":
-        lesson_list = lesson_list4
+        lesson_list = copy.deepcopy(lesson_list4)
     elif lesson == "5":
-        lesson_list = lesson_list2            
+        lesson_list = copy.deepcopy(lesson_list2)      
     else :
-        lesson_list = lesson_list1
+        lesson_list = copy.deepcopy(lesson_list1)   
     works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=0).order_by("-id")
     for work in works:
         lesson_list[work.index-1].append(work.memo)
