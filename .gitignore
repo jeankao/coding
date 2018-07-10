@@ -6,3 +6,5 @@ staticfiles
 db.sqlite3
 static/work/
 static/certification/
+static/upload/
+static/attach/
