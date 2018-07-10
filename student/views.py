@@ -32,10 +32,10 @@ def is_teacher(user, classroom_id):
     return  user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
 
 # 判斷是否為同班同學
-def is_classmate(user_id, classroom_id):
+def is_classmate(user, classroom_id):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
     student_ids = map(lambda a: a.student_id, enroll_pool)
-    if int(user_id) in student_ids:
+    if user.id in student_ids:
         return True
     else:
         return False
@@ -773,10 +773,11 @@ def exam_check(request):
     return JsonResponse({'status':'ok','answer':answer}, safe=False)
   
 def memo_user(request, lesson, classroom_id, user_id):
-    if not is_classmate(user_id, classroom_id):
-        return redirect("/")
     user = User.objects.get(id=user_id)
+    if not is_classmate(user, classroom_id):
+        return redirect("/")
     lesson_list = []
+    del lesson_list[:]
     if lesson == "1":
         lesson_list = lesson_list1
     elif lesson == "2":
