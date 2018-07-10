@@ -27,6 +27,19 @@ from time import localtime
 import pytz
 from django.core.paginator import Paginator
 
+# 判斷是否為授課教師
+def is_teacher(user, classroom_id):
+    return  user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
+
+# 判斷是否為同班同學
+def is_classmate(user_id, classroom_id):
+    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+    student_ids = map(lambda a: a.student_id, enroll_pool)
+    if int(user_id) in student_ids:
+        return True
+    else:
+        return False
+
 # 課程瀏覽記錄
 def statics_lesson(request, lesson):
 		try :
@@ -147,10 +160,6 @@ def lesson(request, lesson):
         profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
         return render_to_response('student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0}, context_instance=RequestContext(request))
-
-# 判斷是否為授課教師
-def is_teacher(user, classroom_id):
-    return  user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
 
 # 查看班級學生
 def classmate(request, classroom_id):
@@ -764,6 +773,8 @@ def exam_check(request):
     return JsonResponse({'status':'ok','answer':answer}, safe=False)
   
 def memo_user(request, lesson, classroom_id, user_id):
+    if not is_classmate(user_id, classroom_id):
+        return redirect("/")
     user = User.objects.get(id=user_id)
     lesson_list = []
     if lesson == "1":

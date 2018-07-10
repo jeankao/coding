@@ -11,14 +11,14 @@
     </tr>
     {% for lesson in lesson_list %}
         <tr align=left>
-        <td align=right>{{lesson.0}}</td>
+        <td align=right nowrap>{{lesson.0}}</td>
             <td nowrap>{{lesson.1}}</td>      
             <td>{{lesson.2}}</td>           
         </tr>      
   {% endfor %}
     {% for assignment in assignments %}
         <tr align=left>
-        <td align=right>{{forloop.counter}}</td>
+        <td align=right nowrap>{{forloop.counter}}</td>
             <td nowrap>{{assignment.0.title}}</td>      
             <td>{{assignment.1}}</td>          
         </tr>      
