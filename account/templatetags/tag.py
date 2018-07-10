@@ -251,3 +251,18 @@ def show_category(show_id):
 def review_score(show_id, user_id):
     show_review = ShowReview.objects.get(show_id=show_id, student_id=user_id)
     return show_review.score
+  
+@register.filter()
+def is_pic(title):   
+    if title[-3:].upper() == "PNG":
+        return True
+    if title[-3:].upper() == "JPG":
+        return True   
+    if title[-3:].upper() == "GIF":
+        return True            
+    return False
+ 
+	
+@register.filter(name='abs_filter')
+def abs_filter(value):
+    return abs(value)

@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 {% load tz %}
 {% load tag %}
-
+{% block title %}Dashboard{% endblock %}
 {% block content %}
-  <h1>訊息</h1>
-  <Table>
-{% for messagepoll, message in messages %}<Tr><td><img src="/static/images/scratch{{forloop.counter|modulo:3}}.png"> {{ message.time }}
-<a href="/account/message/{{ messagepoll.id }}">
-{% if message.title|img == "line"%}
+<a href="/account/dashboard/0" class="btn btn-info{% if action == '0' %} active{% endif %}" role="btn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 所有訊息</a>
+<a href="/account/dashboard/1" class="btn btn-info{% if action == '1' %} active{% endif %}" role="btn"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> 課程公告</a>
+<a href="/account/dashboard/2" class="btn btn-info{% if action == '2' %} active{% endif %}" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 我的私訊</a>
+<a href="/account/line/" class="btn btn-info" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 寄出私訊</a>
+<Table class="table">
+{% for messagepoll, message in messages %}<Tr><td>
+ <button class="btn btn-info">
+{{ message.time| date:"Y/m/d H:i"}}
+  </button>
+<a href="/account/line/detail/0/{{ message.id }}">
+{% if message.type == 2 %}
 <img src="/static/images/line.png">
-{% elif message.title|img == "announce" %}
+{% elif message.type == 1 %}
 <img src="/static/images/announce.png">
+{% elif message.type == 3 %}
+<img src="/static/images/system.png">
 {% endif %}
 {{ message.title}}
 {% if message.title|img == "assistant"%}

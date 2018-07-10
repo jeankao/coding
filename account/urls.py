@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 urlpatterns = [
     # post views
-    url(r'^dashboard/$',  views.MessageListView.as_view()),
+    url(r'^dashboard/(?P<action>\d+)/$',  views.MessageListView.as_view()),  
     #登入
     url(r'^login/(?P<role>\d+)/$', views.user_login),  
     #註冊帳號
@@ -54,4 +54,13 @@ urlpatterns = [
     url(r'^teacher/apply/$', login_required(views.teacher_apply)),   
     # 列所出有圖像
     url(r'^avatar/$', views.avatar),  
+    # 私訊
+    url(r'^line/$', login_required(views.LineListView.as_view())),    
+    url(r'^line/class/(?P<classroom_id>\d+)/$', login_required(views.LineClassListView.as_view())),        
+    url(r'^line/add/(?P<classroom_id>\d+)/(?P<user_id>\d+)/$', login_required(views.LineCreateView.as_view())),
+    url(r'^line/reply/(?P<classroom_id>\d+)/(?P<user_id>\d+)/(?P<message_id>\d+)/$', login_required(views.LineReplyView.as_view())),	
+    url(r'^line/detail/(?P<classroom_id>\d+)/(?P<message_id>\d+)/$', login_required(views.line_detail)),
+	  url(r'^line/download/(?P<file_id>\d+)/$', views.line_download, name='forum-download'), 
+	  url(r'^line/showpic/(?P<file_id>\d+)/$', login_required(views.line_showpic), name='forum-showpic'), 
+    #url(r'^teacher/$', login_required(views.TeacherPostCreateView.as_view())),	  
 ]

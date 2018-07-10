@@ -583,7 +583,7 @@ def memo(request, typing, lesson, classroom_id, index):
         else:
             datas.append([enroll, ""])
 
-    return render_to_response('student/memo.html', {'datas': datas}, context_instance=RequestContext(request))
+    return render_to_response('student/memo.html', {'lesson':lesson, 'datas': datas}, context_instance=RequestContext(request))
 
 def work_download(request, index, user_id, workfile_id):
     workfile = WorkFile.objects.get(id=workfile_id)
@@ -762,3 +762,23 @@ def exam_check(request):
     exam = Exam(exam_id=int(exam_id)+1, student_id=request.user.id, answer=ua_test, score=score)
     exam.save()
     return JsonResponse({'status':'ok','answer':answer}, safe=False)
+  
+def memo_user(request, lesson, user_id):
+    user = User.objects.get(id=user_id)
+    lesson_list = []
+    if lesson == "1":
+        lesson_list = lesson_list1
+    elif lesson == "2":
+        lesson_list = lesson_list2
+    elif lesson == "3":
+        lesson_list = lesson_list3
+    elif lesson == "4":
+        lesson_list = lesson_list4
+    elif lesson == "5":
+        lesson_list = lesson_list2            
+    else :
+        lesson_list = lesson_list1
+    works = Work.objects.filter(lesson_id=lesson, user_id=user_id)
+    for work in works:
+        lesson_list[work.index-1].append(work.memo)
+    return render_to_response('student/memo_user.html', {'lesson_list':lesson_list, 'student': user}, context_instance=RequestContext(request))

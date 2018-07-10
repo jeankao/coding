@@ -83,7 +83,7 @@ jQuery(function () {
         </ul>
       </li>           
       {% if user.is_authenticated %}  
-			<li><a href="/account/dashboard"><img src="/static/images/icon_message.png"> 訊息{% if request.user.id|unread > 0 %}({{request.user.id|unread}}){% endif %}</a></li>
+			<li><a href="/account/dashboard/0"><img src="/static/images/icon_message.png"> 訊息{% if request.user.id|unread > 0 %}({{request.user.id|unread}}){% endif %}</a></li>
 			<li><a href="/account/profile/{{request.user.id}}"><img  width=16 src="/static/images/icon_doc.png"> 檔案</a>
         <ul>
             <li><a href="/account/profile/{{user.id}}/#tab1">積分</a></li>

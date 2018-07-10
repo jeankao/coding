@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %} Teachers {% endblock %}
+{% load tag %}
+{% block content %}
+{% if message.type == 2 %}
+        <h1>私訊來源：<a href="/account/profile/{{message.author_id}}">{{message.author_id|realname}}</a></h1>
+        <h1>私訊對象：{{messagepoll.reader_id|realname}}{% if messagepoll.read %}(已讀){% else %}(未讀){% endif %}</h1>
+{% endif %} 
+<table class="table">
+            <tr>
+                <td>時間</td><td>{{message.time| date:"Y/m/d H:i"}}</td>
+            </tr>
+            <tr>
+                <td>主旨</td> <td>{{message.title}}</td>
+            </tr>
+            <tr>
+                <td>內容</td><td>{% if message.content %}{{message.content|safe}}{% else %}無{% endif %}</td>
+            </tr>
+           
+        </table>
+		      {% for file in files %}
+		  <BR><button class="btn btn-info">
+              {{forloop.revcounter}}
+        </button> 
+		          {{file.publication_date}}	
+			        {% if file.title|is_pic %}
+		<a href="/account/line/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+			        {% else %}
+			<a href="/account/line/download/{{file.id}}" target="_blank">{{file.title}}</a>
+			        {% endif %}
+		      {% endfor %}
+
+{% if not request.user.id == message.author_id %}
+<h1><a href="/account/line/reply/{{message.classroom_id|abs_filter}}/{{message.author_id}}/{{message.id}}">回覆訊息</a></h1>
+{% endif %}
+{% if lists and message.type == 2 %}
+        <h1>歷史私訊</h1>
+        <table class="table">
+        {% for list in lists %}
+        <tr><td>{{list.time}}<a href="/account/line/detail/{{list.classroom_id|abs_filter}}/{{list.id}}">{{list.title}}</a></td></tr>
+        {% empty %}
+        <tr><td>無</td></tr>
+        {% endfor %}
+        </table>
+{% endif %}
+{% endblock %}

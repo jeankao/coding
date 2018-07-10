@@ -26,6 +26,7 @@ from collections import OrderedDict
 import django_excel as excel
 from account.forms import PasswordForm, RealnameForm
 import sys
+from uuid import uuid4
 
 reload(sys)
 
@@ -234,13 +235,30 @@ class AnnounceCreateView(CreateView):
         self.object.title = u"[公告]" + self.object.title
         self.object.author_id = self.request.user.id
         self.object.classroom_id = self.kwargs['classroom_id']
+        self.object.type = 1
         self.object.save()
         self.object.url = "/teacher/announce/detail/" + str(self.object.id)
         self.object.save()
+        
+        #附件
+        files = []
+        if self.request.FILES.getlist('files'):
+             for file in self.request.FILES.getlist('files'):
+                fs = FileSystemStorage()
+                filename = uuid4().hex							
+                fs.save("static/attach/"+str(self.request.user.id)+"/"+filename, file)								
+                files.append([filename, file.name])
+        if files:
+            for file, name in files:
+                content = MessageContent()
+                content.title = name
+                content.message_id = self.object.id
+                content.filename = str(self.request.user.id)+"/"+file
+                content.save()        
         # 班級學生訊息
         enrolls = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'])
         for enroll in enrolls:
-            messagepoll = MessagePoll(message_id=self.object.id, reader_id=enroll.student_id)
+            messagepoll = MessagePoll(message_id=self.object.id, reader_id=enroll.student_id, message_type=1)
             messagepoll.save()
         return redirect("/teacher/announce/"+self.kwargs['classroom_id'])
 
@@ -253,6 +271,7 @@ class AnnounceCreateView(CreateView):
 # 公告
 def announce_detail(request, message_id):
     message = Message.objects.get(id=message_id)
+    files = MessageContent.objects.filter(message_id=message_id)
     classroom = Classroom.objects.get(id=message.classroom_id)
 
     announce_reads = []
@@ -268,7 +287,7 @@ def announce_detail(request, message_id):
     def getKey(custom):
         return custom[0]
     announce_reads = sorted(announce_reads, key=getKey)
-    return render_to_response('teacher/announce_detail.html', {'message':message, 'classroom':classroom, 'announce_reads':announce_reads}, context_instance=RequestContext(request))
+    return render_to_response('teacher/announce_detail.html', {'files':files,'message':message, 'classroom':classroom, 'announce_reads':announce_reads}, context_instance=RequestContext(request))
 
 # 列出所有課程
 class WorkListView(ListView):

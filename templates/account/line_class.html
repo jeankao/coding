@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} Teachers {% endblock %}
+{% load tag %}
+{% block content %}
+<h1>私訊同學</h1>
+
+{% for enroll in enrolls %}
+    <a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.student_id}}" class="btn btn-default" role="btn">({{enroll.seat}}){{enroll.student_id|realname}}</a>
+{% endfor %}
+
+{% endblock %}

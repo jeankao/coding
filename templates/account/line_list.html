@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %} Teachers {% endblock %}
+{% load tag %}
+{% block content %}
+        <table class="table">
+            <tr>
+                <td>時間</td>
+                <td>對象</td>                
+                <td>主旨</td>
+            </tr>
+        {% for message in messages %}
+            <tr>
+            <td>{{message.time|date:"Y/m/d H:i"}}</td>
+              <td><a href="/account/profile/{{message.reader_id}}">{{message.reader_id|realname}}</a></td>
+            <td><a href="/account/line/detail/{{message.classroom_id|abs_filter}}/{{message.id}}">{{message.title}}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% load pagination %}
+        {% get_pagination %}           
+{% endblock %}

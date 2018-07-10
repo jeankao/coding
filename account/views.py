@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
 from zone import *
-from account.models import County, Zone, School, Profile, PointHistory, Message, MessagePoll, Visitor, VisitorLog, LessonCounter
+from account.models import County, Zone, School, Profile, PointHistory, Message, MessageContent, MessagePoll, Visitor, VisitorLog, LessonCounter
 from student.models import Work
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
@@ -19,6 +19,9 @@ from teacher.models import Classroom
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
 from django.contrib.auth.models import Group
+from django.core.files.storage import FileSystemStorage
+from uuid import uuid4
+
 
 # 判斷是否為任教學生
 def is_student(user_id, request):
@@ -183,7 +186,7 @@ def user_login(request, role):
                     visitorlog.save()
                     # 登入成功，導到大廳
                     login(request, user)                                  
-                    return redirect('/account/dashboard')                                        
+                    return redirect('/account/dashboard/0')                                        
                 else:
                     message = "帳號未啟用!"
             else:
@@ -284,13 +287,28 @@ class MessageListView(ListView):
     paginate_by = 20
     template_name = 'account/dashboard.html'
 
-    def get_queryset(self):         
+    def get_queryset(self):             
         query = []
-        messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
+        #公告
+        if self.kwargs['action'] == "1":
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=1).order_by('-message_id')
+        #私訊
+        elif self.kwargs['action'] == "2":
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=2).order_by('-message_id')
+        #系統
+        elif self.kwargs['action'] == "3":
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=3).order_by('-message_id')						
+        else :
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
         for messagepoll in messagepolls:
             query.append([messagepoll, messagepoll.message])
         return query
-            
+        
+    def get_context_data(self, **kwargs):
+        context = super(MessageListView, self).get_context_data(**kwargs)
+        context['action'] = self.kwargs['action']
+        return context
+
 def message(request, messagepoll_id):
     messagepoll = MessagePoll.objects.get(id=messagepoll_id)
     messagepoll.read = True
@@ -559,3 +577,164 @@ def make(request):
 def avatar(request):
     profile = Profile.objects.get(user = request.user)      
     return render_to_response('account/avatar.html', {'avatar':profile.avatar}, context_instance=RequestContext(request))
+  
+# 列出所有私訊
+class LineListView(ListView):
+    model = Message
+    context_object_name = 'messages'
+    template_name = 'account/line_list.html'    
+    paginate_by = 20
+    
+    def get_queryset(self):     
+        queryset = Message.objects.filter(author_id=self.request.user.id).order_by("-id")
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(LineListView, self).get_context_data(**kwargs)
+        return context	 
+        
+# 列出同學以私訊
+class LineClassListView(ListView):
+    model = Enroll
+    context_object_name = 'enrolls'
+    template_name = 'account/line_class.html'   
+    
+    def get_queryset(self):     
+        queryset = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("seat")
+        return queryset
+        
+    # 限本班同學
+    def render_to_response(self, context):
+        if not is_classmate(self.request.user.id, self.kwargs['classroom_id']):
+            return redirect('/')
+        return super(LineClassListView, self).render_to_response(context)            
+                
+#新增一個私訊
+class LineCreateView(CreateView):
+    model = Message
+    context_object_name = 'messages'    
+    form_class = LineForm
+    template_name = 'account/line_form.html'     
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        user_name = User.objects.get(id=self.request.user.id).first_name
+        self.object.title = u"[私訊]" + user_name + ":" + self.object.title
+        self.object.author_id = self.request.user.id
+        self.object.reader_id = self.kwargs['user_id']
+        self.object.type = 2
+        self.object.save()
+        self.object.url = "/account/line/detail/" + self.kwargs['classroom_id'] + "/" + str(self.object.id)
+        self.object.classroom_id = 0 - int(self.kwargs['classroom_id'])
+        self.object.save()
+        if self.request.FILES:
+            for file in self.request.FILES.getlist('files'):
+                content = MessageContent()
+                fs = FileSystemStorage()
+                filename = uuid4().hex
+                content.title = file.name
+                content.message_id = self.object.id
+                content.filename = str(self.request.user.id)+"/"+filename
+                fs.save("static/upload/"+str(self.request.user.id)+"/"+filename, file)
+                content.save()
+        # 訊息
+        messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
+        messagepoll.save()              
+        return redirect("/account/line/")      
+        
+    def get_context_data(self, **kwargs):
+        context = super(LineCreateView, self).get_context_data(**kwargs)
+        context['user_id'] = self.kwargs['user_id']
+        context['classroom_id'] = self.kwargs['classroom_id']
+        messagepolls = MessagePoll.objects.filter(reader_id=self.kwargs['user_id'],  classroom_id=0 - int(self.kwargs['classroom_id'])).order_by('-id')
+        messages = []
+        for messagepoll in messagepolls:
+            message = Message.objects.get(id=messagepoll.message_id)
+            if message.author_id == self.request.user.id :
+                messages.append([message, messagepoll.read])
+        context['messages'] = messages
+        return context	 
+        
+#回覆一個私訊
+class LineReplyView(CreateView):
+    model = Message
+    context_object_name = 'messages'    
+    form_class = LineForm
+    template_name = 'account/line_form_reply.html'     
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        user_name = User.objects.get(id=self.request.user.id).first_name
+        self.object.title = u"[私訊]" + user_name + ":" + self.object.title
+        self.object.author_id = self.request.user.id
+        self.object.reader_id = self.kwargs['user_id']
+        self.object.type = 2
+        self.object.save()
+        self.object.url = "/account/line/detail/" + self.kwargs['classroom_id'] + "/" + str(self.object.id)
+        self.object.classroom_id = 0 - int(self.kwargs['classroom_id'])
+        self.object.save()
+        if self.request.FILES:
+            for file in self.request.FILES.getlist('files'):
+                content = MessageContent()
+                fs = FileSystemStorage()
+                filename = uuid4().hex
+                content.title = file.name
+                content.message_id = self.object.id
+                content.filename = str(self.request.user.id)+"/"+filename
+                fs.save("static/upload/"+str(self.request.user.id)+"/"+filename, file)
+                content.save()
+        # 訊息
+        messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
+        messagepoll.save()              
+        return redirect("/account/line/")      
+        
+    def get_context_data(self, **kwargs):
+        context = super(LineReplyView, self).get_context_data(**kwargs)
+        context['user_id'] = self.kwargs['user_id']
+        context['classroom_id'] = self.kwargs['classroom_id']
+        message = Message.objects.get(id=self.kwargs['message_id'])
+        title = "RE:" + message.title[message.title.find(":")+1:]
+        context['title'] = title
+        messagepolls = MessagePoll.objects.filter(reader_id=self.kwargs['user_id'],  classroom_id=0 - int(self.kwargs['classroom_id'])).order_by('-id')
+        messages = []
+        for messagepoll in messagepolls:
+            message = Message.objects.get(id=messagepoll.message_id)
+            if message.author_id == self.request.user.id :
+                messages.append([message, messagepoll.read])
+        context['messages'] = messages
+        return context	 
+			
+# 查看私訊內容
+def line_detail(request, classroom_id, message_id):
+    message = Message.objects.get(id=message_id)
+    files = MessageContent.objects.filter(message_id=message_id)
+    messes = Message.objects.filter(author_id=message.author_id, reader_id=request.user.id).order_by("-id")
+    try:
+        if message.type == 2:
+            messagepoll = MessagePoll.objects.get(message_id=message_id)
+        else:
+            messagepoll = MessagePoll.objects.get(message_id=message_id, reader_id=request.user.id)
+        if request.user.id == messagepoll.reader_id:
+            messagepoll.read = True
+        messagepoll.save()
+    except :
+        messagepoll = MessagePoll()
+    return render_to_response('account/line_detail.html', {'files':files, 'lists':messes, 'classroom_id':classroom_id, 'message':message, 'messagepoll':messagepoll}, context_instance=RequestContext(request))
+
+# 下載檔案
+def line_download(request, file_id):
+    content = MessageContent.objects.get(id=file_id)
+    filename = content.title
+    download =  settings.BASE_DIR + "/static/upload/" + content.filename
+    wrapper = FileWrapper(file( download, "r" ))
+    response = HttpResponse(wrapper, content_type = 'application/force-download')
+    #response = HttpResponse(content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
+    # It's usually a good idea to set the 'Content-Length' header too.
+    # You can also set any other required headers: Cache-Control, etc.
+    return response
+	
+# 顯示圖片
+def line_showpic(request, file_id):
+        content = MessageContent.objects.get(id=file_id)
+        return render_to_response('student/forum_showpic.html', {'content':content}, context_instance=RequestContext(request))

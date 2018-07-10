@@ -12,6 +12,20 @@
             <tr>
                 <td>內容</td><td>{{message.content|safe}}</td>
             </tr>
+          <tr><td>附件</td><Td>
+               {% for file in files %}
+		  <BR><button class="btn btn-info">
+              {{forloop.revcounter}}
+        </button> 
+		          {{file.publication_date}}	
+			        {% if file.title|is_pic %}
+		<a href="/account/line/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+			        {% else %}
+			<a href="/account/line/download/{{file.id}}" target="_blank">{{file.title}}</a>
+			        {% endif %}
+		      {% endfor %}
+            </Td></tr>
+
            
         </table>
         <table> 

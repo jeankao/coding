@@ -80,19 +80,25 @@ class PointHistory(models.Model):
 # 大廳訊息	
 class Message(models.Model):
     author_id = models.IntegerField(default=0)
+    reader_id = models.IntegerField(default=0)
+    type = models.IntegerField(default=0)
     classroom_id = models.IntegerField(default=0)
     title = models.CharField(max_length=250)
     content = models.TextField(default='')
     url = models.CharField(max_length=250)
     time = models.DateTimeField(auto_now_add=True)
-	
+
+    #def __str__(self):
+    #    return self.title
+		
     @classmethod
     def create(cls, title, url, time):
         message = cls(title=title, url=url, time=time)
         return message
-
+      
 # 訊息    
 class MessagePoll(models.Model):
+    message_type = models.IntegerField(default=0)  
     message_id = models.IntegerField(default=0)
     reader_id = models.IntegerField(default=0)
     classroom_id = models.IntegerField(default=0)
