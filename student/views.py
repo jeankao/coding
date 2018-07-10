@@ -777,7 +777,6 @@ def memo_user(request, lesson, classroom_id, user_id):
     if not is_classmate(user, classroom_id):
         return redirect("/")
     lesson_list = []
-    del lesson_list[:]
     if lesson == "1":
         lesson_list = lesson_list1
     elif lesson == "2":
@@ -790,7 +789,7 @@ def memo_user(request, lesson, classroom_id, user_id):
         lesson_list = lesson_list2            
     else :
         lesson_list = lesson_list1
-    works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=0)
+    works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=0).order_by("-id")
     for work in works:
         lesson_list[work.index-1].append(work.memo)
         
@@ -798,7 +797,7 @@ def memo_user(request, lesson, classroom_id, user_id):
     assignments = []
     for twork in tworks:
       assignments.append([twork])
-    works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=1)
-    for work in works:
+    works2 = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=1).order_by("-id")
+    for work in works2:
         assignments[0].append(work.memo)    
-    return render_to_response('student/memo_user.html', {'lesson_list':lesson_list, 'assignments':assignments, 'student': user}, context_instance=RequestContext(request))
+    return render_to_response('student/memo_user.html', {'works':works, 'lesson_list':lesson_list, 'assignments':assignments, 'student': user}, context_instance=RequestContext(request))
