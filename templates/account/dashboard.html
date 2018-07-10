@@ -9,7 +9,7 @@
 <a href="/account/line/" class="btn btn-info" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 寄出私訊</a>
 <Table class="table">
 {% for messagepoll, message in messages %}<Tr><td>
- <button class="btn btn-info">
+ <button class="btn btn-default">
 {{ message.time| date:"Y/m/d H:i"}}
   </button>
 <a href="/account/line/detail/0/{{ message.id }}">
