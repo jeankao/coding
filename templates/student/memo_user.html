@@ -16,5 +16,12 @@
             <td>{{lesson.2}}</td>           
         </tr>      
   {% endfor %}
+    {% for assignment in assignments %}
+        <tr align=left>
+        <td align=right>{{forloop.counter}}</td>
+            <td nowrap>{{assignment.0.title}}</td>      
+            <td>{{assignment.1}}</td>          
+        </tr>      
+  {% endfor %}      
 </table>
   {% endblock %}

@@ -583,7 +583,7 @@ def memo(request, typing, lesson, classroom_id, index):
         else:
             datas.append([enroll, ""])
 
-    return render_to_response('student/memo.html', {'lesson':lesson, 'datas': datas}, context_instance=RequestContext(request))
+    return render_to_response('student/memo.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas}, context_instance=RequestContext(request))
 
 def work_download(request, index, user_id, workfile_id):
     workfile = WorkFile.objects.get(id=workfile_id)
@@ -763,7 +763,7 @@ def exam_check(request):
     exam.save()
     return JsonResponse({'status':'ok','answer':answer}, safe=False)
   
-def memo_user(request, lesson, user_id):
+def memo_user(request, lesson, classroom_id, user_id):
     user = User.objects.get(id=user_id)
     lesson_list = []
     if lesson == "1":
@@ -778,7 +778,15 @@ def memo_user(request, lesson, user_id):
         lesson_list = lesson_list2            
     else :
         lesson_list = lesson_list1
-    works = Work.objects.filter(lesson_id=lesson, user_id=user_id)
+    works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=0)
     for work in works:
         lesson_list[work.index-1].append(work.memo)
-    return render_to_response('student/memo_user.html', {'lesson_list':lesson_list, 'student': user}, context_instance=RequestContext(request))
+        
+    tworks = TWork.objects.filter(classroom_id=classroom_id)
+    assignments = []
+    for twork in tworks:
+      assignments.append([twork])
+    works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=1)
+    for work in works:
+        assignments[0].append(work.memo)    
+    return render_to_response('student/memo_user.html', {'lesson_list':lesson_list, 'assignments':assignments, 'student': user}, context_instance=RequestContext(request))

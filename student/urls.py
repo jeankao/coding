@@ -44,5 +44,5 @@ urlpatterns = [
     url(r'^exam_check/$', views.exam_check),     
     url(r'^exam/score/$', views.exam_score),  
     #心得
-    url(r'^memo_user/(?P<lesson>\d+)/(?P<user_id>\d+)/$', views.memo_user),	
+    url(r'^memo_user/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<user_id>\d+)/$', views.memo_user),	
 ]
