@@ -21,7 +21,9 @@ from django.http import JsonResponse
 from django.contrib.auth.models import Group
 from django.core.files.storage import FileSystemStorage
 from uuid import uuid4
-
+from django.conf import settings
+from wsgiref.util import FileWrapper
+from django.http import HttpResponse
 
 # 判斷是否為任教學生
 def is_student(user_id, request):
@@ -635,7 +637,7 @@ class LineCreateView(CreateView):
                 content.title = file.name
                 content.message_id = self.object.id
                 content.filename = str(self.request.user.id)+"/"+filename
-                fs.save("static/upload/"+str(self.request.user.id)+"/"+filename, file)
+                fs.save("static/attach/"+str(self.request.user.id)+"/"+filename, file)
                 content.save()
         # 訊息
         messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
@@ -681,7 +683,7 @@ class LineReplyView(CreateView):
                 content.title = file.name
                 content.message_id = self.object.id
                 content.filename = str(self.request.user.id)+"/"+filename
-                fs.save("static/upload/"+str(self.request.user.id)+"/"+filename, file)
+                fs.save("static/attach/"+str(self.request.user.id)+"/"+filename, file)
                 content.save()
         # 訊息
         messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
@@ -725,7 +727,7 @@ def line_detail(request, classroom_id, message_id):
 def line_download(request, file_id):
     content = MessageContent.objects.get(id=file_id)
     filename = content.title
-    download =  settings.BASE_DIR + "/static/upload/" + content.filename
+    download =  settings.BASE_DIR + "/static/attach/" + content.filename
     wrapper = FileWrapper(file( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
