@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Create a question{% endblock %}
+{% load tag %}
+{% block header %}
+<script type="text/javascript" src="//cdn.ckeditor.com/4.5.9/standard-all/ckeditor.js"></script>
+<script>
+CKEDITOR.plugins.add('dreamerpasteimage', {
+    init: function(editor) {
+        editor.on('paste', function(e) {
+            var reader = new FileReader();
+            reader.onload = function(evt) {
+                var img = CKEDITOR.dom.element.createFromHtml("<img src='"+evt.target.result+"' />");
+                e.editor.insertElement(img);
+            }
+            e.data.dataTransfer._.files.forEach(function(file, index) {
+                console.log('paste: '+index);
+                reader.readAsDataURL(file);
+            });
+        });
+    },
+});
+</script>
+{% endblock %}
+{% block content %}
+        <h1>對象：{{user_id|realname}}</h1>
+         <form action="" enctype="multipart/form-data"  method="post">
+            <table class="table">
+            <table class="table">
+                <tr><th><label for="id_title">主旨:</label></th><td><input class="form-control list-group-item-text" id="id_title" maxlength="250" name="title" size="50" type="text" value="{{title}}"/></td></tr>
+<tr><th><label for="id_content">內容:</label></th><td><textarea cols="50" id="id_content" name="content" rows="20">
+</textarea></td></tr>         
+           <tr><th>檔案:</td><td><input id="file" name="files" type="file"  multiple/><input id="submit" type="submit" value="送出"><td</tr>
+            </table>
+            {% csrf_token %}
+
+        </form>
+        <BR>
+        <h1>歷史私訊</h1>
+        <table class="table">
+        {% for message, read in messages %}
+        <tr><td>{{message.time}}<a href="/account/line/detail/{{classroom_id}}/{{message.id}}">{{message.title}}{% if not read %}(未讀){% endif %}</a></td></tr>
+        {% empty %}
+        <tr><td>無</td></tr>
+        {% endfor %}
+        </table>
+{% endblock %}
+{% block domready %}
+    CKEDITOR.replace("id_content", {
+        extraPlugins: 'colorbutton,colordialog,dreamerpasteimage',
+    } );	
+
+         
+{% endblock %}
