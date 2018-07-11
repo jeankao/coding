@@ -27,7 +27,7 @@
                 {% endfor %}
             </tr>          
             {% for enroll, bar in bars %}
-          <tr><td nowrap>{{enroll.seat}}){{enroll.student.first_name}}</td>
+          <tr><td nowrap>{{enroll.seat}})<a href="/account/profile/{{enroll.student_id}}">{{enroll.student.first_name}}</a></td>
             {% for assignment, work in bar %}
                 {% if work %}
                     {% if work.score > 0 %}
