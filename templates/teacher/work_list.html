@@ -20,7 +20,7 @@
                 <td colspan=2>功能</td>		
 		{% for work in works %}
             <tr>
-            <td>{{forloop.counter}}){{work.1}}</td>			
+            <td>{{work.0}}){{work.1}}</td>			
             <td><a href="/teacher/work/class/0/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}" target="_blank">評分</a></td>
             <td><a href="/student/work/memo/0/{{classroom.lesson}}/{{classroom.id}}/{{forloop.counter}}" target="_blank">心得</a></td>			
             </tr>
