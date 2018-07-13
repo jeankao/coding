@@ -113,7 +113,7 @@
             <a href="/student/work/show/{{typing}}/{{lesson_id}}/{{index}}/{{user.id}}">觀看({{work_dict|hash_date:index}})</a>
         </td>
         {% endif %}
-        {% if lesson_id == 2 %}
+        {% if lesson_id == 2 and index < 18 %}
         <td>
             <a href="/student/work/answer/{{lesson_id}}/{{index}}">解答</a>
         </td>
