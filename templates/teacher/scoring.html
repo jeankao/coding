@@ -4,6 +4,7 @@
 {% endblock %}
 {% load tag %}
 {% block content %}
+{{teacher}}-{{pic}}--
   {% if lesson == "1" %}
         學生：{{student.first_name}}
         <br>
@@ -68,7 +69,7 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
         </div>
         <font color=black>執行結果：</font><BR>
         {% if lesson == "2" %}
-        <img width=880 src="/static/work/vphysics/{{student.id}}/{{index}}/{{work.id}}.jpg">
+        <img width=880 src="/static/work/vphysics/{{student.id}}/{{index}}/{{pic}}.jpg">
         {% elif lesson == "3" %}
         <img width=880 src="/static/work/euler/{{student.id}}/{{index}}/{{work.id}}.jpg">     
         {% elif lesson == "4" %}

@@ -27,6 +27,7 @@ import django_excel as excel
 from account.forms import PasswordForm, RealnameForm
 import sys
 from uuid import uuid4
+import os
 
 reload(sys)
 
@@ -384,10 +385,21 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
 
     try:
         work3 = Work.objects.get(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
+        pic = work3.id
     except ObjectDoesNotExist:
         work3 = Work(typing=typing, index=index, user_id=user_id, lesson_id=lesson)
+        pic = 0
     except MultipleObjectsReturned:
-        work3 = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson).last()
+        works = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
+        work3 = works.last()
+        if lesson > 1 :
+            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
+            directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
+            for work in works:
+                image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)        
+                if os.path.exists(image_file):
+                    pic = work.id
+                    break
 
     if request.method == 'POST':
         form = ScoreForm(request.user, request.POST)
@@ -444,7 +456,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
         else:
             form = ScoreForm(instance=works[0], user=request.user)
             workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")
-    return render_to_response('teacher/scoring.html', {'form': form,'work':work3, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index}, context_instance=RequestContext(request))
+    return render_to_response('teacher/scoring.html', {'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index}, context_instance=RequestContext(request))
 
 # 小老師評分名單
 def score_peer(request, typing, lesson, index, classroom_id, group):
