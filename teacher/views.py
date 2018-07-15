@@ -396,6 +396,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
     except MultipleObjectsReturned:
         works = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
         work3 = works.last()
+        pic = 0
         if int(lesson) > 1 :
             prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
@@ -404,8 +405,6 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                 if os.path.exists(image_file):
                     pic = work.id
                     break
-        else :
-            pic = 0
 
     if request.method == 'POST':
         form = ScoreForm(request.user, request.POST)
