@@ -389,7 +389,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
 
     try:
         work3 = Work.objects.get(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
-        pic = work.id
+        pic = work3.id
     except ObjectDoesNotExist:
         work3 = Work(typing=typing, index=index, user_id=user_id, lesson_id=lesson)
         pic = 0
