@@ -404,6 +404,8 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                 if os.path.exists(image_file):
                     pic = work.id
                     break
+        else :
+            pic = 0
 
     if request.method == 'POST':
         form = ScoreForm(request.user, request.POST)
