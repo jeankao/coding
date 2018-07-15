@@ -370,6 +370,10 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
             lesson_name = lesson_list2[int(index)-1][1]
         elif lesson == "3":
             lesson_name = lesson_list3[int(index)-1][1]
+        elif lesson == "4":
+            lesson_name = lesson_list4[int(index)-1][1]
+        elif lesson == "5":
+            lesson_name = lesson_list2[int(index)-1][1]            
         else:
             lesson_name = lesson_list1[int(index)-1][1]
     elif typing == "1":
@@ -392,7 +396,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
     except MultipleObjectsReturned:
         works = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
         work3 = works.last()
-        if lesson > 1 :
+        if int(lesson) > 1 :
             prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
             for work in works:
