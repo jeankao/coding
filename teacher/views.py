@@ -396,7 +396,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
     except MultipleObjectsReturned:
         works = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson).order_by("-id")
         work3 = works[0]
-        pic = -1
+        pic = work3.id
         if int(lesson) > 1 :
             prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=user_id, index=index)
