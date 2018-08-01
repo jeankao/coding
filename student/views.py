@@ -644,6 +644,8 @@ def progress(request, typing, lesson, unit, classroom_id):
               lesson_list = lesson_list3
           elif lesson == "4":
               lesson_list = lesson_list4
+          elif lesson == "5":
+              lesson_list = lesson_list2              
           else:
               lesson_list = lesson_list3
           for assignment in lesson_list:
