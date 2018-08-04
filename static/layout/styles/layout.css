@@ -57,7 +57,7 @@ img{/*display:block;*/ margin:0; padding:0; border:none;}
 /* ----------------------------------------------Wrapper------------------------------------- */
 
 div.wrapper{display:block; margin:0 0 1px 0; text-align:left;}
-div.wrapper h1, div.wrapper h2, div.wrapper h3, div.wrapper h4, div.wrapper h5, div.wrapper h6{margin:0 0 15px 0; padding:10; font-size:20px; font-weight:normal; line-height:normal;}
+div.wrapper h1, div.wrapper h2, div.wrapper h3, div.wrapper h4, div.wrapper h5, div.wrapper h6{margin:0 0 15px 0; padding:10; line-height:normal;}
 
 /* ----------------------------------------------Generalise------------------------------------- */
 

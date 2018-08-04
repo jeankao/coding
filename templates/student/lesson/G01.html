@@ -1,0 +1,373 @@
+
+{% block content %}
+<div id="doc" class="markdown-body container-fluid">
+<h1 id="HTML基礎"><a class="anchor hidden-xs" href="#HTML基礎" title="HTML基礎"><span class="octicon octicon-link"></span></a>HTML基礎</h1><h2 id="什麼是HTML"><a class="anchor hidden-xs" href="#什麼是HTML" title="什麼是HTML"><span class="octicon octicon-link"></span></a>什麼是HTML</h2><p>HTML的全名是HyperText Markup Language，是編寫網頁的基本語言，而它並不是一個程式，只是一些插在普通文件內的標籤語言，這些標籤可以控制我們的瀏覽器要怎樣把文件顯示出來, 它可控制字體的大小，也可以插入圖像或連結。</p><p>HTML文件存檔的副檔名為htm或html，編寫的方式有很多種，最原始的方法是用windows內建的記事本或各種純文字編輯軟體。</p><p>若是你想看一個網頁的HTML檔，只要在瀏覽器內按下滑鼠右鍵，再選擇檢視原始檔(view)即可。</p><h2 id="HTML文件的結構"><a class="anchor hidden-xs" href="#HTML文件的結構" title="HTML文件的結構"><span class="octicon octicon-link"></span></a>HTML文件的結構</h2><p>HTML文件有一固定的格式，瀏覽器才可以辨識及分析，進而顯示在你的眼前，而基本格式為：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span></div><div class="code"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>    
+    <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p>大部份的標籤會成對出現，包含開啟碼與關閉碼，每一個開啟碼是由 <code>&lt;&gt;</code> 兩個符號所框住的，而關閉碼是由 <code>&lt;/&gt;</code> 所框住的。</p><h2 id="ltHTMLgt-與-ltHTMLgt"><a class="anchor hidden-xs" href="#ltHTMLgt-與-ltHTMLgt" title="ltHTMLgt-與-ltHTMLgt"><span class="octicon octicon-link"></span></a><code>&lt;HTML&gt;</code> 與 <code>&lt;/HTML&gt;</code></h2><p>表示「文件開始」與「文件結束」</p><p>在文件中分為「頭部」與「身體」兩個部份。</p><p>頭部元件 <code>&lt;head&gt;</code>…<code>&lt;/head&gt;</code></p><p>頭部元件包含檔案相關資訊，例如：網頁的標題 <code>&lt;title&gt;</code>…<code>&lt;/title&gt;</code>。</p><p>身體元件 <code>&lt;body&gt;</code>…<code>&lt;/body&gt;</code></p><p>身體元件顯示網頁的內容，可以在 <code>&lt;body&gt;</code> 標籤中加入網頁相關的屬性設定，例如：背景顏色(bgcolor)、背景圖(background)、文字顏色(text)、超連結文字顏色(atext)等。</p><p>靜態網頁通常使用「.html」或「.htm」作為檔案的副檔名。透過瀏覽器 (例如：Internet Explorer、Chrome、Firefox) 閱讀 Hyper-Text Markup Language (簡稱HTML)，形成我們所看到的網頁。</p><h2 id="文字的排版"><a class="anchor hidden-xs" href="#文字的排版" title="文字的排版"><span class="octicon octicon-link"></span></a>文字的排版</h2><p>HTML是一種結構性的標籤語言，利用不同的標籤來定義文件的外觀，並完成網頁的排版。</p><p>HTML文件是由元件組合而成，包括容器元件和空元件兩種。容器元件使用「起始標籤」與「結束標籤」，在兩個標籤之間，可以加入敘述。</p><p>例如：</p><pre><code>&lt;font color="blue"&gt;歡迎光臨&lt;/font&gt;
+</code></pre><p>說明：</p><ul>
+<li><code>&lt;font&gt;</code> 稱為「起始標籤」、<code>&lt;/font&gt;</code> 稱為「結束標籤」，這兩者通常會成對出現。</li>
+<li><code>font</code> 稱為「標籤名稱」</li>
+<li><code>color</code> 稱為「屬性名稱」</li>
+<li><code>blue</code> 稱為「屬性值」。</li>
+</ul><p>容器元件可以放在另一個容器元件中，就如同把小盒子放在大盒子中。例如：</p><pre><code>&lt;font color="blue"&gt;歡迎&lt;B&gt;光&lt;/B&gt;臨&lt;/font&gt;
+</code></pre><p><font color="blue">歡迎<b>光</b>臨</font></p><p>其中第三個字（光）會以粗體呈現。</p><p>空元件是用來執行一個特定的動作，例如： <code>&lt;HR&gt;</code> 標籤會在瀏覽器中顯示一條水平線，不需要 <code>&lt;/HR&gt;</code> 來表示結束。</p><h2 id="段落的排版"><a class="anchor hidden-xs" href="#段落的排版" title="段落的排版"><span class="octicon octicon-link"></span></a>段落的排版</h2><p>用來分隔不同的段落，即除了換行之外﹐還會與上一行間多加一行空白</p><p>標籤：<code>&lt;p&gt;...&lt;/p&gt;</code></p><p>常用屬性：</p><table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>align</td>
+<td>對齊方式：left(靠左)，center(置中)，right(靠右)</td>
+</tr>
+</tbody>
+</table><p>段落的排版範例：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">align</span>=<span class="hljs-string">"left"</span>&gt;</span>白日依山盡<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">align</span>=<span class="hljs-string">"center"</span>&gt;</span>黃河入海流<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">align</span>=<span class="hljs-string">"right"</span>&gt;</span>欲窮千里目<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">align</span>=<span class="hljs-string">"center"</span>&gt;</span>更上一層樓<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</div></div></code></pre><p>瀏覽器會忽略你在HTML文件中所輸入的空格與換行，文件中若是要換行，須在要換行的位置上必須加上<code>&lt;BR&gt;</code>標籤﹐如此才能達到換行的效果。</p><h2 id="標題的排版"><a class="anchor hidden-xs" href="#標題的排版" title="標題的排版"><span class="octicon octicon-link"></span></a>標題的排版</h2><p>HTML 包含不同重要程度的標題標籤，從最重要的標題<code>&lt;h1&gt;</code> 開始到最不重要的 <code>&lt;h6&gt;</code> 標題，在瀏覽器預設情況下，h1 的字體最大，h6 的字體最小。</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>這裡是標題一<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>這裡是標題二<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>這裡是標題三<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>這裡是標題四<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h5</span>&gt;</span>這裡是標題五<span class="hljs-tag">&lt;/<span class="hljs-name">h5</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h6</span>&gt;</span>這裡是標題六<span class="hljs-tag">&lt;/<span class="hljs-name">h6</span>&gt;</span>
+</div></div></code></pre><p>以下範例輸出結果：</p><h1 id="這裡是標題一"><a class="anchor hidden-xs" href="#這裡是標題一" title="這裡是標題一"><span class="octicon octicon-link"></span></a>這裡是標題一</h1><h2 id="這裡是標題二"><a class="anchor hidden-xs" href="#這裡是標題二" title="這裡是標題二"><span class="octicon octicon-link"></span></a>這裡是標題二</h2><h3 id="這裡是標題三"><a class="anchor hidden-xs" href="#這裡是標題三" title="這裡是標題三"><span class="octicon octicon-link"></span></a>這裡是標題三</h3><h4 id="這裡是標題四"><a class="anchor hidden-xs" href="#這裡是標題四" title="這裡是標題四"><span class="octicon octicon-link"></span></a>這裡是標題四</h4><h5 id="這裡是標題五"><a class="anchor hidden-xs" href="#這裡是標題五" title="這裡是標題五"><span class="octicon octicon-link"></span></a>這裡是標題五</h5><h6 id="這裡是標題六"><a class="anchor hidden-xs" href="#這裡是標題六" title="這裡是標題六"><span class="octicon octicon-link"></span></a>這裡是標題六</h6><h2 id="圖片的排版"><a class="anchor hidden-xs" href="#圖片的排版" title="圖片的排版"><span class="octicon octicon-link"></span></a>圖片的排版</h2><p><strong>標籤：</strong> <code>&lt;img&gt;</code></p><p><strong>常用屬性：</strong></p><table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>src</td>
+<td>圖片的資源位址</td>
+</tr>
+<tr>
+<td>width</td>
+<td>顯示時的圖片寬度</td>
+</tr>
+<tr>
+<td>height</td>
+<td>顯示時的圖片高度</td>
+</tr>
+<tr>
+<td>border</td>
+<td>圖片的外框</td>
+</tr>
+</tbody>
+</table><p><strong>圖片的排版示範：</strong></p><pre><code>&lt;img src="https://openclipart.org/image/300px/svg_to_png/288017/happy_python.png" /&gt;
+</code></pre><img src="https://openclipart.org/image/300px/svg_to_png/288017/happy_python.png"><p>在不指定寬度與高度的情況下，會以圖片的原始尺寸來顯示。</p><pre><code>&lt;img src="https://openclipart.org/image/300px/svg_to_png/288017/happy_python.png" width="100" /&gt;
+</code></pre><img src="https://openclipart.org/image/300px/svg_to_png/288017/happy_python.png" width="100"><p>在僅指定寬度或僅指定高度的情況下，會等比例進行縮放。</p><h2 id="超連結"><a class="anchor hidden-xs" href="#超連結" title="超連結"><span class="octicon octicon-link"></span></a>超連結</h2><p>超連結的標籤語言。</p><p><strong>標籤：</strong> <code>&lt;a&gt;</code>…<code>&lt;/a&gt;</code></p><p><strong>屬性：</strong></p><table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>href</td>
+<td>超連結的位置</td>
+</tr>
+<tr>
+<td>target</td>
+<td>開啟的目標視窗</td>
+</tr>
+</tbody>
+</table><p><strong>語法示範</strong></p><p>以文字做為連結點：</p><pre><code>&lt;a href="food.htm"&gt;美食&lt;/a&gt;
+</code></pre><p>以圖片做為連結點：</p><pre><code>&lt;a href="food.htm&gt;&lt;img src="food.png"&gt;&lt;/a&gt;
+</code></pre><h2 id="表格的排版"><a class="anchor hidden-xs" href="#表格的排版" title="表格的排版"><span class="octicon octicon-link"></span></a>表格的排版</h2><p>表格排版的標籤語言。</p><p><strong>標籤：</strong><code>&lt;table&gt;</code> <code>&lt;tr&gt;</code> <code>&lt;th&gt;</code> <code>&lt;td&gt;</code></p><ul>
+<li>表格 <code>&lt;table&gt;</code>…<code>&lt;/table&gt;</code></li>
+<li>列 <code>&lt;tr&gt;</code>…<code>&lt;/tr&gt;</code></li>
+<li>儲存格
+<ul>
+<li>標題儲存格 <code>&lt;th&gt;</code>…<code>&lt;/th&gt;</code></li>
+<li>內容儲存格 <code>&lt;td&gt;</code>…<code>&lt;/td&gt;</code></li>
+</ul>
+</li>
+</ul><p><strong>語法示範</strong></p><p>範例</p><table>
+    <tbody><tr>
+        <th>地區</th>
+        <th>溫度</th>
+    </tr>
+    <tr>
+        <td>台北</td>
+        <td>18~20</td>
+    </tr>
+    <tr>
+        <td>彰化</td>
+        <td>20~24</td>
+    </tr>
+</tbody></table><p>語法</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>地區<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>溫度<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>台北<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>18~20<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>彰化<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>20~24<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+</div></div></code></pre><h2 id="項目符號"><a class="anchor hidden-xs" href="#項目符號" title="項目符號"><span class="octicon octicon-link"></span></a>項目符號</h2><p>在 HTML 文件中，常用的資料列表有下列二種：</p><p>1.無序列表 <code>&lt;ul&gt;</code><br>
+2.有序列表 <code>&lt;ol&gt;</code></p><p>無序列表：每一筆資料之前都有個小黑點代表提示符號。</p><ul>
+<li>香蕉</li>
+<li>蘋果</li>
+<li>檸檬</li>
+</ul><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>香蕉<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>蘋果<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>檸檬<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+</div></div></code></pre><p>type=“disc” （預設值）代表實心圓點所產生的列表。<br>
+type=“circle” 代表空心圓點所產生的列表。<br>
+type=“square” 代表實心正方形所產生的列表。</p><p>有序列表：使用序號來代表提示符號。</p><ol>
+<li>香蕉</li>
+<li>蘋果</li>
+<li>檸檬</li>
+</ol><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">ol</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>香蕉<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>蘋果<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>檸檬<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ol</span>&gt;</span>
+</div></div></code></pre><p>type=“1”：這是預設值，代表用阿拉伯數目（1, 2 ,3 …）字編號。<br>
+type=“A”：代表用大寫英文字母（A-Z）來編號。<br>
+type=“a”：代表用小寫英文字母（a-z）來編號。<br>
+type=“I”：代表用大寫羅馬數字（I, II, III, …）來編號。<br>
+type=“i”：代表用小寫羅馬數字（i, ii, iii, …）來編號。</p><h2 id="表單"><a class="anchor hidden-xs" href="#表單" title="表單"><span class="octicon octicon-link"></span></a>表單</h2><p><strong>HTML form 表單結構</strong></p><pre><code class="html hljs">&lt;form action=<span class="hljs-string">"送出目的地"</span> method=<span class="hljs-string">"資料傳送方式"</span>&gt;
+<span class="xml"><span class="hljs-comment">&lt;!-- ... 表單內容... --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span>
+</code></pre><ul>
+<li><code>action</code> 屬性用來指定送出表單的資料要由哪個網址來處理</li>
+<li><code>method</code> 屬性用來指定資料傳送的方式，最常見的值有2種：
+<ul>
+<li><code>GET</code> ：將欄位資料當成網址列的參數來傳遞，較簡單，但僅適合傳送少量資料使用</li>
+<li><code>POST</code> ：將欄位資料當成HTTP請求檔頭的一部份，資料內容不會出現在網址列上，適合用來傳送大量資料，例如：上傳檔案</li>
+</ul>
+</li>
+</ul><p><strong>常見的表單元素</strong></p><ul>
+<li>
+<p>單行文字輸入</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"text"</span> name=<span class="hljs-string">"欄位名稱"</span>&gt;
+</code></pre>
+<ul>
+<li>輸入單行文字時使用</li>
+<li>若有預設內容，可加上 <code>value="預設內容"</code> 屬性</li>
+</ul>
+</li>
+<li>
+<p>密碼輸入</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"password"</span> name=<span class="hljs-string">"欄位名稱"</span>&gt;
+</code></pre>
+<ul>
+<li>外觀似單行文字欄位，但在輸入時的內容會以 <code>*</code> 來呈現，以保護資料不被他人窺伺</li>
+</ul>
+</li>
+<li>
+<p>多行文字輸入</p>
+<pre><code class="html hljs">&lt;textarea name=<span class="hljs-string">"欄位名稱"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span></span>
+</code></pre>
+<ul>
+<li>輸入多行文字時使用</li>
+<li>若要指定外觀的寬與高，可加上 <code>cols="行數"</code> 或 <code>rows="列數"</code> 屬性</li>
+<li>若要預先指定預設內容，可將其置於 <code>&lt;textarea&gt;</code> 與 <code>&lt;/textarea&gt;</code> 標籤之間<pre><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"comment"</span> <span class="hljs-attr">cols</span>=<span class="hljs-string">"60"</span> <span class="hljs-attr">rows</span>=<span class="hljs-string">"10"</span>&gt;</span>
+這是預設內容的第1行
+這是預設內容的第2行
+這是預設內容的第3行
+<span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span>
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>下拉選單</p>
+<pre><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"欄位名稱"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"選項值1"</span>&gt;</span>選項文字1<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"選項值2"</span>&gt;</span>選項文字2<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--...餘類推...--&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+</code></pre>
+<ul>
+<li>下拉選項的每一個選項都要指定一個對應的選項值</li>
+<li>若要預設某個選項已被選定，則在該選項 <code>&lt;option&gt;</code> 標籤加上 <code>selected</code> 屬性，例：<pre><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"gender"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span>&gt;</span>女<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"2"</span>&gt;</span>男<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"3"</span> <span class="hljs-attr">selected</span>&gt;</span>不告訴你<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>單選按鈕</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"radio"</span> name=<span class="hljs-string">"欄位名稱"</span> value=<span class="hljs-string">"選項值"</span>&gt;
+</code></pre>
+<ul>
+<li>適用於某個欄位僅能由幾個選項中選一個的情況，類似前述下拉選單的預設情況</li>
+<li>這些選項需共用同一個欄位名稱，但其選項值不同</li>
+<li>若要設定預設選項，則在該選項的 <code>&lt;input&gt;</code> 標籤加上 <code>checked</code> 屬性，例：<pre><code class="html hljs">性別：
+&lt;input type=<span class="hljs-string">"radio"</span> name=<span class="hljs-string">"gender"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"1"</span>&gt;女 
+&lt;input type=<span class="hljs-string">"radio"</span> name=<span class="hljs-string">"gender"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"2"</span>&gt;男 
+&lt;input type=<span class="hljs-string">"radio"</span> name=<span class="hljs-string">"gender"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"3"</span> <span class="hljs-keyword">checked</span>&gt;不告訴你 
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>核取方塊</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"checkbox"</span> name=<span class="hljs-string">"欄位名稱"</span> value=<span class="hljs-string">"選項值"</span>&gt;
+</code></pre>
+<ul>
+<li>可用來當作複選欄位的輸入方式</li>
+<li>預先要被核取的欄位，可加上 <code>checked</code> 屬性，例：<pre><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>您的興趣<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"interest"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"coding"</span> <span class="hljs-attr">checked</span>&gt;</span>寫程式
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"interest"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"music"</span>&gt;</span>聽音樂
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"interest"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"singing"</span> <span class="hljs-attr">checked</span>&gt;</span>唱歌
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>按鈕</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"按鈕類型"</span> value=<span class="hljs-string">"按鈕標籤"</span>&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>按鈕類型</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>submit</td>
+<td>送出表單</td>
+</tr>
+<tr>
+<td>reset</td>
+<td>重設表單，將此表單的所有欄位恢復成預設值</td>
+</tr>
+<tr>
+<td>button</td>
+<td>顯示為一般按鈕，通常需搭配 javascript 來控制頁面上的元件</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>按鈕通常不需要特別指定 <code>name</code> 屬性</li>
+<li>按鈕上顯示的標籤文字，由 <code>value</code> 屬性指定
+<ul>
+<li><code>submit</code> 或 <code>reset</code> 這兩類按鈕若省略 <code>value</code> 屬性，則其標籤文字由瀏覽器決定</li>
+<li><code>button</code> 類型的按鈕若省略 <code>value</code> 屬性，則不顯示標籤文字</li>
+</ul>
+</li>
+</ul>
+<p>例:</p>
+<pre><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"/comment/add"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- ... 略 ... --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"發表意見"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"reset"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"清空重填"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+</code></pre>
+</li>
+<li>
+<p>隱藏欄位</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"hidden"</span> name=<span class="hljs-string">"欄位名稱"</span> value=<span class="hljs-string">"欄位值"</span>&gt;
+</code></pre>
+<ul>
+<li>隱藏欄位在頁面上不可見</li>
+<li>通常在頁面間傳遞資料或狀態時使用，因此通常會指定其 <code>value</code> 屬性，例：</li>
+</ul>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"hidden"</span> name=<span class="hljs-string">"secret_token"</span> value=<span class="hljs-string">"AIzaSyCjSrqWHhmWJnoI7JlD8"</span>&gt;
+</code></pre>
+</li>
+<li>
+<p>檔案欄位</p>
+<pre><code class="html hljs">&lt;input <span class="hljs-built_in">type</span>=<span class="hljs-string">"file"</span> name=<span class="hljs-string">"欄位名稱"</span> accept=<span class="hljs-string">"檔案類型篩選規則"</span>&gt;
+</code></pre>
+<ul>
+<li>會顯示一個按鈕，按下後可選擇欲上傳的檔案</li>
+<li><code>accept</code> 屬性可用來限制欲上傳的檔案類型，可以使用 MIME 的格式，也可以使用副檔名限定，例：<pre><code class="html hljs">&lt;div&gt;
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>大頭照<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span>
+  &lt;input type=<span class="hljs-string">"file"</span> name=<span class="hljs-string">"mypic"</span> accept=<span class="hljs-string">"image/jpeg, .png"</span>&gt;
+<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+</code></pre>
+若省略 <code>accept</code> 屬性，則不限制上傳檔案的類型。</li>
+</ul>
+</li>
+</ul><p><strong>表單範例</strong></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"submit.php"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+姓名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+內容：<span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"content"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"送出"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+</div></div></code></pre><p><strong>呈現結果</strong></p><p><img src="https://i.imgur.com/il1M3mF.png" alt=""></p></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav"><li class=""><a href="#HTML基礎" title="HTML基礎">HTML基礎</a><ul class="nav"><li class=""><a href="#什麼是HTML" title="什麼是HTML">什麼是HTML</a></li><li class=""><a href="#HTML文件的結構" title="HTML文件的結構">HTML文件的結構</a></li><li class=""><a href="#ltHTMLgt-與-ltHTMLgt" title="<HTML> 與 </HTML>">&lt;HTML&gt; 與 &lt;/HTML&gt;</a></li><li class=""><a href="#文字的排版" title="文字的排版">文字的排版</a></li><li class=""><a href="#段落的排版" title="段落的排版">段落的排版</a></li><li class=""><a href="#標題的排版" title="標題的排版">標題的排版</a></li></ul></li><li class=""><a href="#這裡是標題一" title="這裡是標題一">這裡是標題一</a><ul class="nav"><li class=""><a href="#這裡是標題二" title="這裡是標題二">這裡是標題二</a><ul class="nav"><li class=""><a href="#這裡是標題三" title="這裡是標題三">這裡是標題三</a></li></ul></li><li class=""><a href="#圖片的排版" title="圖片的排版">圖片的排版</a></li><li class=""><a href="#超連結" title="超連結">超連結</a></li><li class=""><a href="#表格的排版" title="表格的排版">表格的排版</a></li><li class=""><a href="#項目符號" title="項目符號">項目符號</a></li><li class=""><a href="#表單" title="表單">表單</a></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:77px; left:920px; display:inline;"  >
+        <div class="toc"><ul class="nav"><li class=""><a href="#HTML基礎" title="HTML基礎">HTML基礎</a><ul class="nav"><li class=""><a href="#什麼是HTML" title="什麼是HTML">什麼是HTML</a></li><li class=""><a href="#HTML文件的結構" title="HTML文件的結構">HTML文件的結構</a></li><li class=""><a href="#ltHTMLgt-與-ltHTMLgt" title="<HTML> 與 </HTML>">&lt;HTML&gt; 與 &lt;/HTML&gt;</a></li><li class=""><a href="#文字的排版" title="文字的排版">文字的排版</a></li><li class=""><a href="#段落的排版" title="段落的排版">段落的排版</a></li><li class=""><a href="#標題的排版" title="標題的排版">標題的排版</a></li></ul></li><li class=""><a href="#這裡是標題一" title="這裡是標題一">這裡是標題一</a><ul class="nav"><li class=""><a href="#這裡是標題二" title="這裡是標題二">這裡是標題二</a><ul class="nav"><li class=""><a href="#這裡是標題三" title="這裡是標題三">這裡是標題三</a></li></ul></li><li class=""><a href="#圖片的排版" title="圖片的排版">圖片的排版</a></li><li class=""><a href="#超連結" title="超連結">超連結</a></li><li class=""><a href="#表格的排版" title="表格的排版">表格的排版</a></li><li class=""><a href="#項目符號" title="項目符號">項目符號</a></li><li class=""><a href="#表單" title="表單">表單</a></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
+{% endblock %}
