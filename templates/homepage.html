@@ -71,6 +71,8 @@
   
   #summary {position: relative; padding: 0}
   #summary>div {position: absolute; bottom: 21px; width: 219px; line-height: 37px; text-align: center}
+  #summary2 {position: relative; padding: 0}
+  #summary2>div {position: absolute; bottom: 55px; width: 219px; line-height: 37px; text-align: center}  
 </style>
 {% endblock %}
 {% block banner %}
@@ -167,7 +169,7 @@
     <div class="whitebox">
       <div class="content">
         <h1>在 Joy of Code 上學習</h1>
-        {{student}} 個學生在這兒撰寫了 {{works.0}} 個程式。
+        {{student}} 個學生在這兒撰寫了 {{works.0}} 個程式，看了 X本書。
         <div id="summary">
           <img src="/static/images/work.png">
           <div style="left:27px">
@@ -179,6 +181,19 @@
           <div style="left:646px">
              <a href="/student/work/list/3" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.3.0}} 班次共 {{works.3.1}} 個作業</a>
           </div>
+        </div>
+         <div id="summary2">         
+          <img src="/static/images/work2.png">
+          <div style="left:27px">
+            <a href="/student/work/list/4" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
+          </div>
+          <div style="left:333px">
+            <a href="/student/work/list/5" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
+          </div>
+          <div style="left:646px">
+            <a href="/student/work/list/6" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none"></a>
+          </div>
+          
         </div>
       </div>
       <div class="clear"></div>
