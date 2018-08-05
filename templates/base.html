@@ -13,24 +13,24 @@ Licence URI: http://www.os-templates.com/template-terms
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 {% block header0 %}
-{% endblock %}	
+{% endblock %}
 <!-- Superfish Menu -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
 <script type="text/javascript" src="/static/layout/scripts/superfish/jquery.hoverIntent.js"></script>
-<script type="text/javascript" src="/static/layout/scripts/superfish/superfish.js"></script>  
+<script type="text/javascript" src="/static/layout/scripts/superfish/superfish.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script type="text/javascript">
 jQuery(function () {
     $('ul.nav1').superfish();
     $('form>p').addClass('form-group form-inline');
-    $('form>p>input').addClass('form-control');  
-    $('form>p>select').addClass('form-control'); 
-    $('form>p>textarea').addClass('form-control');   
-    $('td>select').addClass('form-control'); 	
-    $('td>input').addClass('form-control');  		
-    $('input').addClass('form-control'); 
+    $('form>p>input').addClass('form-control');
+    $('form>p>select').addClass('form-control');
+    $('form>p>textarea').addClass('form-control');
+    $('td>select').addClass('form-control');
+    $('td>input').addClass('form-control');
+    $('input').addClass('form-control');
 });
 
 </script>
@@ -41,10 +41,10 @@ jQuery(function () {
 <!-- / Superfish Menu -->
 <style>
 .scrollToTop{
-	width:80px; 
+	width:80px;
 	height:80px;
-	padding:1px; 
-	text-align:left; 
+	padding:1px;
+	text-align:left;
 	color: #333;
 	text-decoration: none;
 	position:fixed;
@@ -55,101 +55,101 @@ jQuery(function () {
 }
 .scrollToTop:hover{
 	text-decoration:none;
-}	
+}
+li>ul {display:none}
 </style>
 {% block header %}
-{% endblock %}	
+{% endblock %}
 </head>
 <body id="top">
-<a href="#" class="scrollToTop">回上方</a>  
+<a href="#" class="scrollToTop">回上方</a>
 <div class="wrapper topnav">
   <div id="topnav">
     <div class="fl_left">
     <ul class="nav1">
       <li><a href="/"><img src="/static/images/icon_home.png"> 首頁</a></li>
-      <li><a href="#"><img src="/static/images/icon_lesson.png"> 課程</a>    
+      <li><a href="#"><img src="/static/images/icon_lesson.png"> 課程</a>
         <ul>
           <li><a href="/student/lessons/A">程式設計輕鬆學：使用Scratch2.X</a></li>
           <li><a href="/student/lessons/B">VPhysics物理模擬：使用Python2</a></li>
-          <li><a href="/student/lessons/C">Euler數學解題：使用Python3</a></li>    
-          <li><a href="/student/lessons/E">VPhysics物理模擬：使用Python3</a></li>    
+          <li><a href="/student/lessons/C">Euler數學解題：使用Python3</a></li>
+          <li><a href="/student/lessons/E">VPhysics物理模擬：使用Python3</a></li>
           <li><a href="/student/lessons/D">VPhysics物理模擬：建中特色課程</a></li>
-          <li><a href="/student/lessons/G">Django網站開發：使用Python3</a></li>              
-          <li><a href="/student/lessons/F">網路讀書會：好書共讀</a></li>   
-
+          <li><a href="/student/lessons/G">Django網站開發：使用Python3</a></li>
+          <li><a href="/student/lessons/F">網路讀書會：好書共讀</a></li>
         </ul>
       </li>
-      <li><a href="#"><img src="/static/images/icon_lesson.png"> 藝廊</a>    
+      <li><a href="#"><img src="/static/images/icon_lesson.png"> 藝廊</a>
         <ul>
           <li><a href="/show/gallery/show/1">Scratch創意秀</a></li>
-          <li><a href="/show/gallery/show/2">VPhysics創意秀</a></li>                
+          <li><a href="/show/gallery/show/2">VPhysics創意秀</a></li>
         </ul>
-      </li>           
-      {% if user.is_authenticated %}  
+      </li>
+      {% if user.is_authenticated %}
 			<li><a href="/account/dashboard/0"><img src="/static/images/icon_message.png"> 訊息{% if request.user.id|unread > 0 %}({{request.user.id|unread}}){% endif %}</a></li>
 			<li><a href="/account/profile/{{request.user.id}}"><img  width=16 src="/static/images/icon_doc.png"> 檔案</a>
         <ul>
             <li><a href="/account/profile/{{user.id}}/#tab1">積分</a></li>
               <li><a href="/account/profile/{{user.id}}/#tab2">證書</a></li>
-		        <li><a href="/account/event/calendar/{{user.id}}">登入記錄</a></li>			
-		        <li><a href="/account/event/timeline/{{user.id}}">使用記錄</a></li>		
+		        <li><a href="/account/event/calendar/{{user.id}}">登入記錄</a></li>
+		        <li><a href="/account/event/timeline/{{user.id}}">使用記錄</a></li>
 			  </ul>
-			</li>											
-		  <li><a href="/student/classroom"><img  width=16 src="/static/images/icon_class.png">班級</a></li>						
+			</li>
+		  <li><a href="/student/classroom"><img  width=16 src="/static/images/icon_class.png">班級</a></li>
 						{% if request.user|has_group:"teacher" %}
 			<li><a href="/teacher/classroom"><img src="/static/images/icon_teacher.png"> 教師</a></li>
-					 {% endif %}           
+					 {% endif %}
  					{% if user.is_superuser %}
 			<li><a href="/account/admin"><img src="/static/images/icon_admin.png"> 管理</a></li>
-		      {% endif %}	
+		      {% endif %}
       {% else %}
       <li><A href="#"><img width=16 src="/static/images/icon_article.png"> 推薦</A>
         <ul>
-          <li><a href="https://www.youtube.com/watch?v=4JhlfRAzVKY" target=_blank>怎麼樣成為一個高手</a></li>	
-          <li><a href="https://www.youtube.com/watch?v=s7wcbF8QiUQ" target=_blank>成功的要訣：恆毅力</a></li>			
+          <li><a href="https://www.youtube.com/watch?v=4JhlfRAzVKY" target=_blank>怎麼樣成為一個高手</a></li>
+          <li><a href="https://www.youtube.com/watch?v=s7wcbF8QiUQ" target=_blank>成功的要訣：恆毅力</a></li>
           <li><a href="https://www.youtube.com/watch?v=g9pgLqPzLBk" target=_blank>先別急著吃棉花糖</a></li>
-          <li><a href="https://www.gvm.com.tw/article.html?id=33811" target=_blank>程式、跨領域、終身學習</a></li>          
+          <li><a href="https://www.gvm.com.tw/article.html?id=33811" target=_blank>程式、跨領域、終身學習</a></li>
 			  </ul>
     </li>
-      <li><a href="http://www.books.com.tw/products/0010703424" target="_blank"><img src="/static/images/icon_book.png">參考書</a></li>   
-      <li><a href="/account/author"><img src="/static/images/icon_master.png">作者</a></li>    
+      <li><a href="http://www.books.com.tw/products/0010703424" target="_blank"><img src="/static/images/icon_book.png">參考書</a></li>
+      <li><a href="/account/author"><img src="/static/images/icon_master.png">作者</a></li>
       {% endif %}
-    </ul>  
+    </ul>
     </div>
     <div class="fl_right">
-      <ul class="nav">     
-      {% if user.is_authenticated %}   
+      <ul class="nav">
+      {% if user.is_authenticated %}
         <li><a href="/account/avatar"><img src="/static/avatar/s0.png"></a>{{ request.user.first_name }}　</li>
-        <li><a href="/account/logout" class="btn">登出</a></li>              
+        <li><a href="/account/logout" class="btn">登出</a></li>
       {% else %}
       <li><a href="/account/register_school" class="btn">註冊新學校</a></li>
       <li><a href="/account/register" class="btn">註冊新帳號</a></li>
       <li><a href="/account/login/0/" class="btn">登入</a></li>
-      <li><a href="/account/login/1/" class="btn">學生登入</a></li>				
+      <li><a href="/account/login/1/" class="btn">學生登入</a></li>
       {% endif %}
-    </ul>  
+    </ul>
     </div>
     <div class="clear"></div>
   </div>
 </div>
 <!-- ####################################################################################################### -->
 <div class="main">
-  
+
 {% block banner %}
 {% endblock %}
 <div class="wrapper">
   <div class="container">
     <div class="whitebox">
-      <div class="content">        
+      <div class="content">
         {% block content %}{% endblock %}
       </div>
       <div class="clear"></div>
     </div>
   </div>
-</div>  
+</div>
 {% block footer %}
- 
-{% endblock %}  
+
+{% endblock %}
 
 <!-- ####################################################################################################### -->
 <div class="wrapper">
@@ -160,7 +160,7 @@ jQuery(function () {
     <br class="clear" />
   </div>
 </div>
-  </div> 
+  </div>
 <!-- JAVASCRIPTS -->
 <script>
   var csrftoken = $.cookie('csrftoken');
@@ -168,7 +168,7 @@ jQuery(function () {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
   }
-  
+
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
       if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -188,7 +188,7 @@ jQuery(function () {
 		$('.scrollToTop').click(function(){
 			$('html, body').animate({scrollTop : 0},800);
 			return false;
-		});
+    });
     {% block domready %}
     {% endblock %}
   });
