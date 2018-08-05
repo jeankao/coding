@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% block header %}
-    <link rel="icon" type="image/png" href="https://hackmd.io/favicon.png">
-    <link rel="apple-touch-icon" href="https://hackmd.io/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" integrity="sha256-3iu9jgsy9TpTwXKb7bNQzqWekRX7pPK+2OLj3R922fo=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css" integrity="sha256-QiWfLIsCT02Sdwkogf6YMiQlj4NE84MKkzEMkZnMGdg=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css" integrity="sha256-vtR0hSWRc3Tb26iuN2oZHt3KRUomwTufNIf5/4oeCyg=" crossorigin="anonymous" />
@@ -23,10 +21,11 @@
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
     </li>
-    
+    <!--
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
-    </li>    
+    </li>
+-->
     {% if user.is_authenticated %}	
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
