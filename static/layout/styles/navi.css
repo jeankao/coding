@@ -67,3 +67,26 @@ ul.nav1 li li li:hover ul, ul.nav1 li li li.sfHover ul{left:10em; top:0;}
 .column .subnav ul ul ul a{padding-left:50px; background-position:40px center;}
 .column .subnav ul ul ul ul a{padding-left:60px; background-position:50px center;}
 .column .subnav ul ul ul ul ul a{padding-left:70px; background-position:60px center;}
+
+/* CSS Menu */
+.nav1 li, .nav1 a {-moz-transition: background-color 0.5s ease; -webkit-transition: background-color 0.5s ease; transition: background-color 0.5s ease;}
+.nav1 li>ul {left: -99999px; opacity: 0; -moz-transition: opacity ease 0.5s; -webkit-transition: opacity 0.5s ease ; transition: opacity 0.5s ease;}
+.nav1 li:hover>ul {left: 0; opacity: 1;}
+
+/* ScrollToTop */
+.scrollToTop{
+	width:80px;
+	height:80px;
+	padding:1px;
+	text-align:left;
+	color: #333;
+	text-decoration: none;
+	position:fixed;
+	bottom:0px;
+	right:10px;
+	display:none;
+	background: url('/static/images/up.png') no-repeat 5px 25px;
+}
+.scrollToTop:hover{
+	text-decoration:none;
+}

@@ -12,56 +12,18 @@ Licence URI: http://www.os-templates.com/template-terms
 <title>Joy of Code</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-{% block header0 %}
-{% endblock %}
-<!-- Superfish Menu -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
-<script type="text/javascript" src="/static/layout/scripts/superfish/jquery.hoverIntent.js"></script>
-<script type="text/javascript" src="/static/layout/scripts/superfish/superfish.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% block header0 %}{% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<script type="text/javascript">
-jQuery(function () {
-    $('ul.nav1').superfish();
-    $('form>p').addClass('form-group form-inline');
-    $('form>p>input').addClass('form-control');
-    $('form>p>select').addClass('form-control');
-    $('form>p>textarea').addClass('form-control');
-    $('td>select').addClass('form-control');
-    $('td>input').addClass('form-control');
-    $('input').addClass('form-control');
-});
-
-</script>
 <link rel="icon" type="image/png" href="/static/images/icon_title.png">
 <link rel="apple-touch-icon" href="/static/images/icon_title.png">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="/static/layout/styles/layout.css" type="text/css" />
-<!-- / Superfish Menu -->
-<style>
-.scrollToTop{
-	width:80px;
-	height:80px;
-	padding:1px;
-	text-align:left;
-	color: #333;
-	text-decoration: none;
-	position:fixed;
-	bottom:0px;
-	right:10px;
-	display:none;
-	background: url('/static/images/up.png') no-repeat 5px 25px;
-}
-.scrollToTop:hover{
-	text-decoration:none;
-}
-li>ul {display:none}
-</style>
-{% block header %}
-{% endblock %}
+{% block header %}{% endblock %}
 </head>
-<body id="top">
+<body>
 <a href="#" class="scrollToTop">回上方</a>
 <div class="wrapper topnav">
   <div id="topnav">
@@ -135,33 +97,28 @@ li>ul {display:none}
 </div>
 <!-- ####################################################################################################### -->
 <div class="main">
-
-{% block banner %}
-{% endblock %}
-<div class="wrapper">
-  <div class="container">
-    <div class="whitebox">
-      <div class="content">
-        {% block content %}{% endblock %}
+  {% block banner %}{% endblock %}
+  <div class="wrapper">
+    <div class="container">
+      <div class="whitebox">
+        <div class="content">
+          {% block content %}{% endblock %}
+        </div>
+        <div class="clear"></div>
       </div>
-      <div class="clear"></div>
+    </div>
+  </div>
+  {% block footer %}{% endblock %}
+<!-- ####################################################################################################### -->
+  <div class="wrapper">
+    <div id="copyright">
+      <p class="fl_left">Copyright &copy; All Rights Reserved</p>
+      <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a>
+      Designed by <a href='http://www.freepik.com'>Freepik</a></p>
+      <br class="clear" />
     </div>
   </div>
 </div>
-{% block footer %}
-
-{% endblock %}
-
-<!-- ####################################################################################################### -->
-<div class="wrapper">
-  <div id="copyright">
-		<p class="fl_left">Copyright &copy; All Rights Reserved</p>
-    <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a>
-		Designed by <a href='http://www.freepik.com'>Freepik</a></p>
-    <br class="clear" />
-  </div>
-</div>
-  </div>
 <!-- JAVASCRIPTS -->
 <script>
   var csrftoken = $.cookie('csrftoken');
@@ -177,6 +134,8 @@ li>ul {display:none}
       }
     }
   });
+  $('form>p').addClass('form-group form-inline');
+  $('input, select, textarea').addClass('form-control');
   $(document).ready(function(){
 		$(window).scroll(function(){
 			if ($(this).scrollTop() > 100) {
@@ -190,8 +149,7 @@ li>ul {display:none}
 			$('html, body').animate({scrollTop : 0},800);
 			return false;
     });
-    {% block domready %}
-    {% endblock %}
+    {% block domready %}{% endblock %}
   });
 </script>
 {% block footer_script %}
