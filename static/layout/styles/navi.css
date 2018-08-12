@@ -44,7 +44,7 @@ ul.nav1 li li li:hover ul, ul.nav1 li li li.sfHover ul{left:10em; top:0;}
 .nav1 li.active a{color:#999999;}
 .nav1 a, .nav a:visited, .nav li.active li a{color:#333333;}
 .nav1 li{background:#EEEEEE;}
-/*.nav1 li li{background:#E0E0E0;} */
+.nav1 li li{background:#E0E0E0;}
 .nav1 li li li{background:#E0E0E0;}
 .nav1 li:hover, .nav1 li.sfHover, .nav1 a:focus, .nav1 a:hover, .nav1 a:active {background:#C0C0C0;}
 
@@ -70,7 +70,7 @@ ul.nav1 li li li:hover ul, ul.nav1 li li li.sfHover ul{left:10em; top:0;}
 
 /* CSS Menu */
 .nav1 li, .nav1 a {-moz-transition: background-color 0.5s ease; -webkit-transition: background-color 0.5s ease; transition: background-color 0.5s ease;}
-.nav1 li ul {border: 3px solid #c0c0c0; left: -99999px; opacity: 0; -moz-transition: opacity ease 0.5s; -webkit-transition: opacity 0.5s ease ; transition: opacity 0.5s ease;}
+.nav1 li ul {left: -99999px; opacity: 0; -moz-transition: opacity ease 0.5s; -webkit-transition: opacity 0.5s ease ; transition: opacity 0.5s ease;}
 .nav1 li:hover>ul {left: 0; opacity: 1;}
 .nav1>li:hover>a {background-color: #c0c0c0}
 
