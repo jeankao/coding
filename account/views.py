@@ -341,7 +341,7 @@ def password(request, user_id):
             user.set_password(request.POST['password'])
             user.save()
                
-            return redirect('homepage')
+            return redirect('/')
     else:
         form = PasswordForm()
         user = User.objects.get(id=user_id)
