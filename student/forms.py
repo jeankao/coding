@@ -60,3 +60,13 @@ class SubmitBForm(forms.Form):
         screenshot = forms.CharField(widget=forms.HiddenInput())
         memo = forms.CharField(widget=forms.Textarea)
         helps = forms.ChoiceField(choices=HELP_CHOICES, required=True, label="程度", widget=forms.RadioSelect)	
+
+class SubmitCForm(forms.ModelForm):
+        class Meta:
+           model = Work
+           fields = ['youtube','memo']
+           
+        def __init__(self, *args, **kwargs):
+            super(SubmitCForm, self).__init__(*args, **kwargs)
+            self.fields['youtube'].label = "影片網址"
+            self.fields['memo'].label = "心得感想"

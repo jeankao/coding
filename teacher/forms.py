@@ -54,6 +54,36 @@ class ScoreForm(forms.ModelForm):
             self.initial['score'] = 100		
             if user.groups.all().count() == 0 :
                 del self.fields['assistant']
+                
+# 作業評分表單           
+class ScoreBForm(forms.ModelForm):
+        RELEVANCE_CHOICES = (
+            (10, "10分"),
+            (9, "9分"),
+            (8, "8分"),
+            (7, "7分"),
+            (6, "6分"),
+            (5, "5分"),
+            (4, "4分"),
+            (3, "3分"),
+            (2, "2分"),
+            (1, "1分"),          
+			(-1, "重交")
+        )
+        score = forms.ChoiceField(choices = RELEVANCE_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+        assistant = forms.BooleanField(required=False,label="小老師")
+    
+        class Meta:
+           model = Work
+           fields = ['score']
+		   
+        def __init__(self, user, *args, **kwargs): 
+            super(ScoreBForm, self).__init__(*args, **kwargs)
+            self.initial['score'] = 10		
+            if user.groups.all().count() == 0 :
+                del self.fields['assistant']
+                
 			
 #上傳檔案
 class UploadFileForm(forms.Form):

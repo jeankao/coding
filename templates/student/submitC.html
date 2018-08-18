@@ -1,0 +1,37 @@
+{% load tag %}
+  {% if work_dict|hash_scorer:index > 0 %}
+  <button class="btn">
+    分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index|realname}}
+</button>
+<BR><BR>
+  {% endif %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/{{typing}}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}3{% elif 'D' in lesson %}4{% elif 'E' in lesson %}5{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <input type="hidden" name="lesson" value={{lesson}}>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Youtube：</label>
+        <input type=text class="form-control" id="id_youtube{{index}}" name="youtube" value="{{work_dict|hash_youtube:index}}">
+    </div>
+  <div class="form-group">
+        <label for="exampleFormControlTextarea1">心得感想：</label>
+        <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
+    </div>
+        <div class="form-group">
+            <input id="submit" type="submit" class="btn-info" value="送出" />
+        </div>
+    </div>
+</form>
+<br>
+<table class="table">
+    <tr>
+        {% if work_dict|hash_date:index %}
+        <td>
+            <a href="/student/work/show/{{typing}}/{{lesson_id}}/{{index}}/{{user.id}}">觀看({{work_dict|hash_date:index}})</a>
+        </td>
+        {% endif %}
+        {% if lesson_id == 2 and index < 18 %}
+        <td>
+            <a href="/student/work/answer/{{lesson_id}}/{{index}}">解答</a>
+        </td>
+        {% endif %}
+    </tr>
+</table>

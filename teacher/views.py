@@ -7,8 +7,7 @@ from teacher.models import Classroom, ImportUser, TWork
 from student.models import Enroll, EnrollGroup, Work, WorkAssistant, WorkFile
 from account.models import Message, MessagePoll, MessageContent, PointHistory
 from account.avatar import *
-from .forms import ClassroomForm, AnnounceForm, ScoreForm, UploadFileForm, CheckForm, CheckForm1, CheckForm2, CheckForm3, CheckForm4, CheckForm_vphysics, CheckForm_euler
-from .forms import WorkForm
+from teacher.forms import *
 from django.contrib.auth.decorators import login_required
 from student.lesson import *
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -407,8 +406,11 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                     break
 
     if request.method == 'POST':
-        form = ScoreForm(request.user, request.POST)
-        if form.is_valid():
+        if lesson == "4":
+            form = ScoreBForm(request.user, request.POST)
+        else :
+            form = ScoreForm(request.user, request.POST)
+        if form.is_valid():           
             works = Work.objects.filter(typing=typing, index=index, user_id=user_id, lesson_id=lesson)
             if works.exists():
                 if works[0].score < 0 :
@@ -439,7 +441,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
 
                     # create Message
                     title = u"<" + assistant.student.first_name+ u">擔任小老師<" + lesson_name.decode('utf8') + u">"
-                    url = "/teacher/score_peer/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group)
+                    url = "/teacher/score_peer/" + typing + "/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group)
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()
 
@@ -457,9 +459,15 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
     else:
         works = Work.objects.filter(typing=typing, index=index, user_id=user_id)
         if not works.exists():
-            form = ScoreForm(user=request.user)
+            if lesson == "4":
+               form = ScoreBForm(user=request.user)
+            else :
+               form = ScoreForm(user=request.user)
         else:
-            form = ScoreForm(instance=works[0], user=request.user)
+            if lesson == "4":
+                form = ScoreBForm(instance=works[0], user=request.user)             
+            else :
+                form = ScoreForm(instance=works[0], user=request.user)
             workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")
     return render_to_response('teacher/scoring.html', {'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index}, context_instance=RequestContext(request))
 
@@ -500,7 +508,7 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
                 work = Work.objects.filter(typing=typing, user_id=enroll.student.id, index=index, lesson_id=lesson).order_by("-id")[0]
             classmate_work.append([enroll.student,work,1, scorer_name])
         lessons = queryset[int(index)-1]
-    return render_to_response('teacher/score_peer.html',{'enrolls':enrolls, 'classmate_work': classmate_work, 'classroom_id':classroom_id, 'lesson':lesson, 'index': index}, context_instance=RequestContext(request))
+    return render_to_response('teacher/score_peer.html',{'enrolls':enrolls, 'classmate_work': classmate_work, 'classroom_id':classroom_id, 'lesson':lesson, 'index': index, 'typing':typing}, context_instance=RequestContext(request))
 
 # 心得
 def memo(request, lesson, classroom_id):

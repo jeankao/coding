@@ -12,7 +12,7 @@ from teacher.models import Classroom, TWork
 from show.models import Round
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
-from student.forms import EnrollForm, GroupForm, SeatForm, GroupSizeForm, SubmitAForm, SubmitBForm
+from student.forms import *
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from uuid import uuid4
@@ -461,7 +461,36 @@ def submit(request, typing, lesson, index):
                 else :
                     works.update(memo=form.cleaned_data['memo'])
             return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
-    elif lesson == "2" or lesson == "3" or lesson == "4" or lesson == "5":
+    elif lesson == "4":
+        if request.method == 'POST':
+            form = SubmitCForm(request.POST)    
+            if form.is_valid():
+                try:
+                    work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
+                except ObjectDoesNotExist:
+                    # credit
+                    answers = Answer.objects.filter(lesson_id=lesson, index=index, student_id=request.user.id)
+                    if len(answers)>0 :
+                        points = 1
+                    else :
+                        points = 3                    
+                    update_avatar(request.user.id, 1, points)
+                    # History
+                    history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
+                    history.save()
+                    profile = Profile.objects.get(user=request.user)
+                    if typing == "0":
+                        profile.lock4 +=1                            
+                        profile.save()
+                except MultipleObjectsReturned:
+                    pass
+                work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
+                work.youtube=form.cleaned_data['youtube']
+                work.memo=form.cleaned_data['memo']
+                work.save()
+                return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))  
+            return redirect('/student/lesson/'+request.POST.get("lesson", ""))              
+    elif lesson == "2" or lesson == "3" or lesson == "5":
         if request.method == 'POST':
             form = SubmitBForm(request.POST, request.FILES)
             if form.is_valid():
@@ -484,8 +513,6 @@ def submit(request, typing, lesson, index):
                             profile.lock2 += 1
                         elif lesson == "3":
                             profile.lock3 +=1
-                        elif lesson == "4":
-                            profile.lock4 +=1
                         elif lesson == "5":
                             profile.lock5 +=1                            
                         else:

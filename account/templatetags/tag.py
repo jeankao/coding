@@ -123,6 +123,20 @@ def hash_memo(h, key):
       return h[key][0].memo
     else:
       return ""
+
+@register.filter
+def hash_youtube(h, key):
+    key = int(key)
+    if key in h:
+      return h[key][0].youtube
+    else:
+      return ""
+    
+@register.filter
+def video(url):
+    number_pos = url.find("v=")
+    number = url[number_pos+2:number_pos+13]
+    return number   
     
 @register.filter
 def hash_code(h, key):

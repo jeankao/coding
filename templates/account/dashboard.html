@@ -12,7 +12,11 @@
  <button class="btn btn-default">
 {{ message.time| date:"Y/m/d H:i"}}
   </button>
+{% if message.url %}
+<a href="/account/message/{{ messagepoll.id }}">
+{% else %}
 <a href="/account/line/detail/0/{{ message.id }}">
+{% endif %}
 {% if message.type == 2 %}
 <img src="/static/images/line.png">
 {% elif message.type == 1 %}
