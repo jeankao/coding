@@ -86,7 +86,7 @@
     <div class="form-group">
         <label for="exampleFormControlTextarea1">執行結果：</label>
         {% if work_dict|hash_scorer:index == 0 %}
-        <div id="edit-box{{index}}" class="form-control target" contenteditable="true">
+        <div id="edit-box{{index}}" class="form-control target" contenteditable="true" style="height:auto">
             {% if work_dict|hash_workid:index %} 如果變更擷圖，請刪除原圖後重貼...
             <img width=880 src="/{{ work_dict|hash_picture:index }}" /> 
             {% else %}
