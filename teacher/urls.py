@@ -41,11 +41,16 @@ urlpatterns = [
     url(r'^check/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<user_id>\d+)/(?P<classroom_id>[^/]+)/$', views.check), 
 	  #成績
 	  url(r'^grade/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<classroom_id>\d+)/$', views.grade),	
-    # 作業
+    # 自訂作業
     url(r'^work2/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView2.as_view())),
     url(r'^work2/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView2.as_view())),
     url(r'^work2/edit/(?P<lesson>\d+)(?P<classroom_id>\d+)/$', views.work_edit),  
-    url(r'^work2/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class2),  
+    url(r'^work2/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class2),
+    # 檢核作業
+    url(r'^work3/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView3.as_view())),
+    url(r'^work3/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView3.as_view())),
+    url(r'^work3/edit/(?P<lesson>\d+)(?P<classroom_id>\d+)/$', views.work_edit),  
+    url(r'^work3/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class3),    
     #設定助教
     url(r'^assistant/$', login_required(views.AssistantClassroomListView.as_view())),  
     url(r'^assistant/make/$', login_required(views.assistant_make), name='make'),     

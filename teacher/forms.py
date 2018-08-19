@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from account.models import Message
-from teacher.models import Classroom, TWork
+from teacher.models import Classroom, TWork, CWork
 from student.models import Work, Enroll
 
 # 新增一個課程表單
@@ -174,5 +174,15 @@ class WorkForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super(WorkForm, self).__init__(*args, **kwargs)
             self.fields['title'].label = "作業名稱"
+            
+# 新增一個作業
+class Work3Form(forms.ModelForm):
+        class Meta:
+           model = CWork
+           fields = ['title']
+        
+        def __init__(self, *args, **kwargs):
+            super(Work3Form, self).__init__(*args, **kwargs)
+            self.fields['title'].label = "作業名稱"            
 
             

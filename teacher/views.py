@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from teacher.models import Classroom, ImportUser, TWork, Assistant
+from teacher.models import Classroom, ImportUser, TWork, Assistant, CWork
 from student.models import Enroll, EnrollGroup, Work, WorkAssistant, WorkFile
 from account.models import Message, MessagePoll, MessageContent, PointHistory
 from account.avatar import *
@@ -521,7 +521,7 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
 # 心得
 def memo(request, lesson, classroom_id):
     # 限本班任課教師
-    if not is_teacher(request.user, classroom_id) or not is_assistant(request.user, classroom_id):
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
         return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom_name = Classroom.objects.get(id=classroom_id).name
@@ -532,7 +532,7 @@ def memo(request, lesson, classroom_id):
 @user_passes_test(not_in_teacher_group, login_url='/')
 def check(request, typing, lesson, unit, user_id, classroom_id):
     # 限本班任課教師
-    if not is_teacher(request.user, classroom_id) or not is_assistant(request.user, classroom_id):
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
         return redirect("/")
 
     user_name = User.objects.get(id=user_id).first_name
@@ -979,7 +979,7 @@ class WorkCreateView2(CreateView):
 def work_edit(request, classroom_id):
     # 限本班任課教師
     if not is_teacher(request.user, classroom_id):
-        return redirect("homepage")
+        return redirect("/")
     classroom = Classroom.objects.get(id=classroom_id)
     if request.method == 'POST':
         form = ClassroomForm(request.POST)
@@ -1035,7 +1035,7 @@ def work_class2(request, lesson, classroom_id, work_id):
 def classroom_assistant(request, classroom_id):
     # 限本班任課教師
     if not is_teacher(request.user, classroom_id):
-        return redirect("homepage")
+        return redirect("/")
     assistants = Assistant.objects.filter(classroom_id=classroom_id).order_by("-id")
     classroom = Classroom.objects.get(id=classroom_id)
 
@@ -1078,3 +1078,72 @@ class AssistantClassroomListView(ListView):
             classroom_list.append(assistant.classroom_id)
         queryset = Classroom.objects.filter(id__in=classroom_list).order_by("-id")
         return queryset
+
+# 列出所有課程
+class WorkListView3(ListView):
+    model = CWork
+    context_object_name = 'works'
+    template_name = 'teacher/cwork_list.html'  	
+    paginate_by = 20
+
+    def dispatch(self, *args, **kwargs):
+        if not not_in_teacher_group(self.request.user):
+            raise PermissionDenied
+        else :
+            return super(WorkListView3, self).dispatch(*args, **kwargs)
+          
+    def get_queryset(self):
+        queryset = CWork.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-id")
+        return queryset
+			
+    def get_context_data(self, **kwargs):
+        context = super(WorkListView3, self).get_context_data(**kwargs)
+        context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
+        context['lesson'] = self.kwargs['lesson']
+        return context	
+        
+#新增一個課程
+class WorkCreateView3(CreateView):
+    model = CWork
+    form_class = Work3Form
+    template_name = 'form.html'  	  
+    
+    def dispatch(self, *args, **kwargs):
+        if not not_in_teacher_group(self.request.user):
+            raise PermissionDenied
+        else :
+            return super(WorkCreateView3, self).dispatch(*args, **kwargs)    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.teacher_id = self.request.user.id
+        self.object.classroom_id = self.kwargs['classroom_id']
+        self.object.save()              
+        return redirect("/teacher/work3/"+self.kwargs['lesson']+"/"+self.kwargs['classroom_id'])        
+             
+  
+# 列出某作業所有同學名單
+def work_class3(request, lesson, classroom_id, work_id):
+    if not not_in_teacher_group(request.user):
+        return redirect("/")
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    classmate_work = []
+    scorer_name = ""
+    for enroll in enrolls:
+        try:    
+            work = Work.objects.get(typing=2, user_id=enroll.student_id, index=work_id, lesson_id=lesson)
+        except ObjectDoesNotExist:
+            work = Work(typing=2, user_id=enroll.student_id, index=work_id, lesson_id=lesson, score=0)
+        except MultipleObjectsReturned:
+            work = Work.objects.filter(typing=2, user_id=enroll.student_id, index=work_id, lesson_id=lesson).last()			
+        try:
+            group_name = EnrollGroup.objects.get(id=enroll.group).name
+        except ObjectDoesNotExist:
+            group_name = "沒有組別"
+        classmate_work.append([enroll,work, group_name])
+        
+    def getKey(custom):
+        return custom[0].seat
+    classmate_work = sorted(classmate_work, key=getKey)    
+    return render_to_response('teacher/work3_class.html',{'typing':2, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
+	

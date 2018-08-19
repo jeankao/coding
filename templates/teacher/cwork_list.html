@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+        <a href="/teacher/work3/add/{{lesson}}/{{classroom.id}}"  role="button" class="btn">新增作業</a><BR><BR>
+        <table class="table">
+            <tr>
+                <td>名稱</td>
+                <td>時間</td>				
+                <td colspan=2>功能</td>		
+        {% for work in works %}
+            <tr>
+            <td>{{forloop.revcounter}}){{work.title}}</td>
+			<td>{{work.time}}</td>
+            <td><a href="/teacher/work3/class/{{classroom.lesson}}/{{classroom.id}}/{{work.id}}">評分</a></td>
+            </tr>
+        {% endfor %}
+        </table>		
+{% endblock %}
