@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<a href="/teacher/classroom/" class="btn btn-success" role="btn">{{classroom.name}}</a>
+<a href="/teacher/classroom/assistant/add/{{classroom.id}}" class="btn btn-warning" role="btn"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> 設定助教</a>
+        <table class="table">
+            <td>帳號</td>
+        </tr>
+{% for assistant in assistants %}
+            <tr>
+                <td>{{assistant.user_id|realname}}</td>
+            </tr>
+{% endfor %}
+</table>
+{% endblock %}

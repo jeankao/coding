@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from teacher.models import Classroom, ImportUser, TWork
+from teacher.models import Classroom, ImportUser, TWork, Assistant
 from student.models import Enroll, EnrollGroup, Work, WorkAssistant, WorkFile
 from account.models import Message, MessagePoll, MessageContent, PointHistory
 from account.avatar import *
@@ -32,13 +32,20 @@ reload(sys)
 
 sys.setdefaultencoding('utf-8')
 
+def is_assistant(user, classroom_id):
+    assistants = Assistant.objects.filter(classroom_id=classroom_id, user_id=user.id)
+    if len(assistants)>0 :
+        return True
+    return False
+
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
     return user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
 
 def not_in_teacher_group(user):
     if not user.groups.filter(name='teacher').exists():
-        return False
+        if not Assistant.objects.filter(user_id=user.id).exists():
+            return False
     return True
 
 # 列出所有課程
@@ -216,7 +223,7 @@ class AnnounceListView(ListView):
 
     # 限本班任課教師
     def render_to_response(self, context):
-        if not is_teacher(self.request.user, self.kwargs['classroom_id']):
+        if not is_teacher(self.request.user, self.kwargs['classroom_id']) and not is_assistant(self.request.user, self.kwargs['classroom_id']):
             return redirect('/')
         return super(AnnounceListView, self).render_to_response(context)
 
@@ -358,7 +365,8 @@ def work_class(request, typing, lesson, classroom_id, index):
 
 # (小)教師評分
 def scoring(request, lesson, classroom_id, user_id, index, typing):
-    teacher = is_teacher(User.objects.get(id=request.user.id), classroom_id)
+    user = User.objects.get(id=request.user.id)
+    teacher = is_teacher(user, classroom_id) or is_assistant(user, classroom_id)
     if not teacher:
         if not WorkAssistant.objects.filter(typing=typing, lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id).exists():
             return redirect("/")
@@ -383,7 +391,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
     try:
         assistant = WorkAssistant.objects.filter(typing=typing, classroom_id=classroom_id,lesson_id=lesson, index=index,student_id=request.user.id)
     except ObjectDoesNotExist:
-        if not is_teacher(request.user, classroom_id):
+        if not is_teacher(request.user, classroom_id) or not is_assistant(request.user, classroom_id):
             return render_to_response('message.html', {'message':"您沒有權限"}, context_instance=RequestContext(request))
 
     try:
@@ -431,7 +439,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                 works.update(score=form.cleaned_data['score'])
                 works.update(scorer=request.user.id)
 
-            if is_teacher(request.user, classroom_id):
+            if is_teacher(request.user, classroom_id) or is_assistant(request.user, classroom_id):
                 if form.cleaned_data['assistant']:
                     try :
                         assistant = WorkAssistant.objects.get(typing=typing, student_id=user_id, classroom_id=classroom_id, index=index, lesson_id=lesson)
@@ -513,7 +521,7 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
 # 心得
 def memo(request, lesson, classroom_id):
     # 限本班任課教師
-    if not is_teacher(request.user, classroom_id):
+    if not is_teacher(request.user, classroom_id) or not is_assistant(request.user, classroom_id):
         return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom_name = Classroom.objects.get(id=classroom_id).name
@@ -524,7 +532,7 @@ def memo(request, lesson, classroom_id):
 @user_passes_test(not_in_teacher_group, login_url='/')
 def check(request, typing, lesson, unit, user_id, classroom_id):
     # 限本班任課教師
-    if not is_teacher(request.user, classroom_id):
+    if not is_teacher(request.user, classroom_id) or not is_assistant(request.user, classroom_id):
         return redirect("/")
 
     user_name = User.objects.get(id=user_id).first_name
@@ -745,7 +753,7 @@ def work1(request, lesson, classroom_id):
         lessons.append([lesson_list[index], student_groups])
     return render_to_response('teacher/work1.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
 
-# Ajax 設為教師、取消教師
+# Ajax 設為小教師、取消小教師
 def make(request):
     classroom_id = request.POST.get('classroomid')
     user_id = request.POST.get('userid')
@@ -765,7 +773,7 @@ def make(request):
         queryset = lesson_list1
         assignment = queryset[int(index)-1][2]
 
-    if is_teacher(request.user, classroom_id):
+    if is_teacher(request.user, classroom_id) or is_assistant(request.user, classroom_id):
         if user_id and action and lesson and index:
             user = User.objects.get(id=user_id)
         if action == "set":
@@ -801,9 +809,7 @@ def make(request):
                 # message for group member
                 messagepoll = MessagePoll(message_id = message.id,reader_id=enroll.student_id)
                 messagepoll.save()
-            return JsonResponse({'status':'ok'}, safe=False)
-        else:
-            return JsonResponse({'status':'n!'}, safe=False)
+        return JsonResponse({'status':'ok'}, safe=False)
     else:
         return JsonResponse({'status':classroom_id}, safe=False)
 # Create your views here.
@@ -1025,3 +1031,50 @@ def work_class2(request, lesson, classroom_id, work_id):
        
     return render_to_response('teacher/work_class.html',{'typing':1, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
 	
+# 設定班級助教
+def classroom_assistant(request, classroom_id):
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id):
+        return redirect("homepage")
+    assistants = Assistant.objects.filter(classroom_id=classroom_id).order_by("-id")
+    classroom = Classroom.objects.get(id=classroom_id)
+
+    return render_to_response('teacher/assistant.html',{'assistants': assistants, 'classroom':classroom}, context_instance=RequestContext(request))        
+
+# 教師可以查看所有帳號
+class AssistantListView(ListView):
+    context_object_name = 'users'
+    paginate_by = 20
+    template_name = 'teacher/assistant_user.html'
+    
+    def get_queryset(self):        
+        if self.request.GET.get('account') != None:
+            keyword = self.request.GET.get('account')
+            queryset = User.objects.filter(Q(groups__name__in=['apply']) & (Q(username__icontains=keyword) | Q(first_name__icontains=keyword))).order_by('-id')
+        else :
+            queryset = User.objects.filter(groups__name__in=['apply']).order_by('-id')				
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(AssistantListView, self).get_context_data(**kwargs)
+        context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
+        assistant_list = []
+        assistants = Assistant.objects.filter(classroom_id=self.kwargs['classroom_id'])
+        for assistant in assistants:
+            assistant_list.append(assistant.user_id)
+        context['assistants'] = assistant_list
+        return context	
+
+# 列出所有助教課程
+class AssistantClassroomListView(ListView):
+    model = Classroom
+    context_object_name = 'classrooms'
+    template_name = 'teacher/assistant_list.html'
+    paginate_by = 20
+    def get_queryset(self):      
+        assistants = Assistant.objects.filter(user_id=self.request.user.id)
+        classroom_list = []
+        for assistant in assistants:
+            classroom_list.append(assistant.classroom_id)
+        queryset = Classroom.objects.filter(id__in=classroom_list).order_by("-id")
+        return queryset

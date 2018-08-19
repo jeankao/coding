@@ -3,6 +3,9 @@
 {% block content %}
         <h1>班級名稱：{{classroom.name}}</h1>
         <table class="table">
+             <tr>
+               <td>教師</td><td>{{message.author_id|realname}}</td>
+            </tr>         
             <tr>
                 <td>時間</td><td>{{message.time}}</td>
             </tr>

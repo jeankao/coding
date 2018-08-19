@@ -59,6 +59,9 @@ Licence URI: http://www.os-templates.com/template-terms
 			  </ul>
 			</li>
 		  <li><a href="/student/classroom"><img  width=16 src="/static/images/icon_class.png">班級</a></li>
+						{% if request.user.id|assistant %}
+			<li><a href="/teacher/assistant"><img src="/static/images/icon_assistant.png"> 助教</a></li>
+					 {% endif %}	      
 						{% if request.user|has_group:"teacher" %}
 			<li><a href="/teacher/classroom"><img src="/static/images/icon_teacher.png"> 教師</a></li>
 					 {% endif %}
@@ -82,7 +85,7 @@ Licence URI: http://www.os-templates.com/template-terms
     <div class="fl_right">
       <ul class="nav">
       {% if user.is_authenticated %}
-        <li><a href="/account/avatar"><img src="/static/avatar/s0.png"></a>{{ request.user.first_name }}　</li>
+        <li><a href="/account/avatar"><img src="/static/avatar/s{{request.user.profile.avatar}}.png"></a>{{ request.user.first_name }}　</li>
         <li><a href="/account/logout" class="btn">登出</a></li>
       {% else %}
       <li><a href="/account/register_school" class="btn">註冊新學校</a></li>

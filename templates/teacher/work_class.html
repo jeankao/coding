@@ -23,7 +23,7 @@
                 </td>
                 <td>{{list.4}}</td>
 								{% if list.1.user_id > 0 %}
-                <td>{% if list.2 > 0 %}<a class="assistant btn btn-info active" role="button" href="/teacher/work/assistant/make/" data-classroomid="{{classroom.id}}" data-userid="{{ list.1.user_id }}"  data-action="unset"  data-lesson="{{ lesson }}"  data-index="{{ index }}">取消小老師</a>{% else %}<a class="assistant btn" role="button" href="/teacher/work/assistant/make" data-classroomid="{{classroom.id}}" data-userid="{{ list.1.user_id }}"  data-action="set"  data-lesson="{{ lesson }}"  data-index="{{ index }}">設定為小老師</a>{% endif %}</td>
+                <td>{% if list.2 > 0 %}<a class="assistant btn btn-info active" role="button" href="/teacher/work/assistant/make/" data-classroomid="{{classroom.id}}" data-userid="{{ list.1.user_id }}"  data-action="unset"  data-lesson="{{ lesson }}"  data-index="{{ index }}">取消小老師</a>{% else %}<a class="assistant btn" role="button" href="/teacher/work/assistant/make" data-classroomid="{{classroom.id}}" data-userid="{{ list.1.user_id }}"  data-action="set"  data-lesson="{{ lesson }}"  data-index="{{ index }}">設為小老師</a>{% endif %}</td>
                 {% else %}
 								<td></td>
 								{% endif %}
@@ -52,12 +52,12 @@
                $(launcher).html("取消小老師");
                $(launcher).data('action', 'unset');
            } else {
-               $(launcher).removeClass("btn-info").addClass("btn-default");
+               $(launcher).removeClass("btn-info active").addClass("btn-default");
                $(launcher).html("設為小老師");
                $(launcher).data('action', 'set');               
            }
         } else {
-			   	alert("hello");
+          alert("hello");
 	    	}
       }
     );

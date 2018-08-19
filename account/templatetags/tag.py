@@ -2,7 +2,7 @@
 from django import template
 from account.models import MessagePoll, School
 from student.models import Enroll, Work, WorkFile
-from teacher.models import Classroom
+from teacher.models import *
 from show.models import ShowGroup, Round, ShowReview
 from certificate.models import Certificate
 from student.lesson import *
@@ -280,3 +280,10 @@ def is_pic(title):
 @register.filter(name='abs_filter')
 def abs_filter(value):
     return abs(value)
+  
+@register.filter(name='assistant') 
+def assistant(user_id):
+    assistants = Assistant.objects.filter(user_id=user_id)
+    if assistants:
+      return True
+    return False
