@@ -20,7 +20,6 @@ MarkupSafe==0.18
 olefile==0.44
 openpyxl==2.4.9
 pathlib==1.0.1
-Pillow==4.3.0
 psycopg2==2.7.3.1
 pyexcel==0.5.4
 pyexcel-io==0.5.3
