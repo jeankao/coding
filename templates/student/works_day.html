@@ -7,6 +7,9 @@
             <tr>
                <td>姓名</td>
                <td>學校</td>
+              {% if request.user.is_superuser %}              
+               <td>班級</td>              
+              {% endif %}
                <td>日期</td>
                <td>作業</td>
             </tr>
@@ -18,8 +21,11 @@
               <td>{{work.user_id|realname2}}</td>
                 {% endif %}
               <td>{{work.user.last_name|school}}</td>
+              {% if request.user.is_superuser %}
+              <td>{{work.user_id|classroom}}</td>
+              {% endif %}
               <td>{{work.publication_date}}</td>
-              <td>{{work.index|work_name:work.lesson_id}}</td>
+              <td>{% work_name work.index work.lesson_id work.typing %}</td>
             </tr>
         {% endfor %}
         </table>    

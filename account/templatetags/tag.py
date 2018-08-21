@@ -81,8 +81,13 @@ def realname2(user_id):
         pass
         return ""  
       
-@register.filter(takes_context=True)
-def work_name(index, lesson):
+@register.simple_tag
+def work_name(index, lesson, typing):
+  if typing == 1:
+    return TWork.objects.get(id=index).title
+  elif typing == 2:
+    return CWork.objects.get(id=index).title
+  else :
     if lesson == 1:
         return lesson_list1[index-1][2]
     elif lesson == 2:
@@ -93,7 +98,7 @@ def work_name(index, lesson):
         return lesson_list4[index-1][1]
     else :
         return lesson_list1[index-1][2]
-      
+     
 @register.filter(takes_context=True)
 def school(school_id):
     if not school_id:
