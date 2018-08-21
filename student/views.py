@@ -891,7 +891,7 @@ def memo_count(request, classroom_id):
                 words.append([key, value])
                 if count == 30:
                     break       
-        return render(request, 'student/memo_count.html', {'words':words, 'enrolls':enrolls, 'classroom':classroom})
+        return render(request, 'student/memo_count.html', {'total':works.count(), 'words':words, 'enrolls':enrolls, 'classroom':classroom})
 
 # 評分某同學某進度心得
 def memo_user(request, user_id):
