@@ -97,7 +97,7 @@ def classroom_edit(request, classroom_id):
     else:
         form = ClassroomForm(instance=classroom)
 
-    return render_to_response('teacher/classroom_form.html',{'form': form}, context_instance=RequestContext(request))
+    return render(request, 'teacher/classroom_form.html',{'form': form})
 
 # 退選
 @login_required
@@ -116,7 +116,7 @@ def classroom_assistant(request, classroom_id):
     assistants = Assistant.objects.filter(classroom_id=classroom_id).order_by("-id")
     classroom = Classroom.objects.get(id=classroom_id)
 
-    return render_to_response('teacher/assistant.html',{'assistants': assistants, 'classroom':classroom}, context_instance=RequestContext(request))
+    return render(request, 'teacher/assistant.html',{'assistants': assistants, 'classroom':classroom})
 
 # 教師可以查看所有帳號
 class AssistantListView(ListView):
@@ -222,10 +222,10 @@ class AnnounceListView(ListView):
         return context
 
     # 限本班任課教師
-    def render_to_response(self, context):
+    def render(request, self, context):
         if not is_teacher(self.request.user, self.kwargs['classroom_id']) and not is_assistant(self.request.user, self.kwargs['classroom_id']):
             return redirect('/')
-        return super(AnnounceListView, self).render_to_response(context)
+        return super(AnnounceListView, self).render(request, context)
 
 #新增一個公告
 class AnnounceCreateView(CreateView):
@@ -294,7 +294,7 @@ def announce_detail(request, message_id):
     def getKey(custom):
         return custom[0]
     announce_reads = sorted(announce_reads, key=getKey)
-    return render_to_response('teacher/announce_detail.html', {'files':files,'message':message, 'classroom':classroom, 'announce_reads':announce_reads}, context_instance=RequestContext(request))
+    return render(request, 'teacher/announce_detail.html', {'files':files,'message':message, 'classroom':classroom, 'announce_reads':announce_reads})
 
 # 列出所有課程
 class WorkListView(ListView):
@@ -361,7 +361,7 @@ def work_class(request, typing, lesson, classroom_id, index):
         return custom[0].seat
 
     classmate_work = sorted(classmate_work, key=getKey)
-    return render_to_response('teacher/work_class.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson}, context_instance=RequestContext(request))
+    return render(request, 'teacher/work_class.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson})
 
 # (小)教師評分
 def scoring(request, lesson, classroom_id, user_id, index, typing):
@@ -392,7 +392,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
         assistant = WorkAssistant.objects.filter(typing=typing, classroom_id=classroom_id,lesson_id=lesson, index=index,student_id=request.user.id)
     except ObjectDoesNotExist:
         if not is_teacher(request.user, classroom_id) or not is_assistant(request.user, classroom_id):
-            return render_to_response('message.html', {'message':"您沒有權限"}, context_instance=RequestContext(request))
+            return render(request, 'message.html', {'message':"您沒有權限"})
 
     try:
         work3 = Work.objects.get(typing=typing, user_id=user_id, index=index, lesson_id=lesson)
@@ -477,7 +477,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
             else :
                 form = ScoreForm(instance=works[0], user=request.user)
             workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")
-    return render_to_response('teacher/scoring.html', {'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index}, context_instance=RequestContext(request))
+    return render(request, 'teacher/scoring.html', {'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index})
 
 # 小老師評分名單
 def score_peer(request, typing, lesson, index, classroom_id, group):
@@ -516,7 +516,7 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
                 work = Work.objects.filter(typing=typing, user_id=enroll.student.id, index=index, lesson_id=lesson).order_by("-id")[0]
             classmate_work.append([enroll.student,work,1, scorer_name])
         lessons = queryset[int(index)-1]
-    return render_to_response('teacher/score_peer.html',{'enrolls':enrolls, 'classmate_work': classmate_work, 'classroom_id':classroom_id, 'lesson':lesson, 'index': index, 'typing':typing}, context_instance=RequestContext(request))
+    return render(request, 'teacher/score_peer.html',{'enrolls':enrolls, 'classmate_work': classmate_work, 'classroom_id':classroom_id, 'lesson':lesson, 'index': index, 'typing':typing})
 
 # 心得
 def memo(request, lesson, classroom_id):
@@ -525,7 +525,7 @@ def memo(request, lesson, classroom_id):
         return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom_name = Classroom.objects.get(id=classroom_id).name
-    return render_to_response('teacher/memo.html', {'lesson':lesson, 'enrolls':enrolls, 'classroom_name':classroom_name}, context_instance=RequestContext(request))
+    return render(request, 'teacher/memo.html', {'lesson':lesson, 'enrolls':enrolls, 'classroom_name':classroom_name})
 
 # 評分某同學某進度心得
 @login_required
@@ -644,7 +644,7 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
       else :
         form =  CheckForm(instance=enroll)
 
-    return render_to_response('teacher/check.html', {'typing':typing, 'works':works, 'lesson': lesson, 'unit':unit, 'form':form, 'works':works, 'lesson_list':sorted(lesson_dict.items()), 'enroll': enroll, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
+    return render(request, 'teacher/check.html', {'typing':typing, 'works':works, 'lesson': lesson, 'unit':unit, 'form':form, 'works':works, 'lesson_list':sorted(lesson_dict.items()), 'enroll': enroll, 'classroom_id':classroom_id})
 
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
@@ -704,7 +704,7 @@ def grade(request, typing, lesson, unit, classroom_id):
                 memo = enroll.score_memo_vphysics3
             grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
       data.append([enroll, enroll_score, memo, grade])
-    return render_to_response('teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data}, context_instance=RequestContext(request))
+    return render(request, 'teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data})
 
 # 列出分組所有作業
 @login_required
@@ -751,7 +751,7 @@ def work1(request, lesson, classroom_id):
                     group_assistants.append(member)
             student_groups.append([group, works, group_assistants])
         lessons.append([lesson_list[index], student_groups])
-    return render_to_response('teacher/work1.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id}, context_instance=RequestContext(request))
+    return render(request, 'teacher/work1.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
 
 # Ajax 設為小教師、取消小教師
 def make(request):
@@ -916,7 +916,7 @@ def password(request, user_id):
         form = PasswordForm()
         user = User.objects.get(id=user_id)
 
-    return render_to_response('form.html',{'form': form, 'user':user}, context_instance=RequestContext(request))
+    return render(request, 'form.html',{'form': form, 'user':user})
 
 # 修改真實姓名
 def realname(request, user_id):
@@ -944,7 +944,7 @@ def realname(request, user_id):
         else:
             return redirect("/")
 
-    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))
+    return render(request, 'form.html',{'form': form})
 
 # 列出所有課程
 class WorkListView2(ListView):
@@ -995,7 +995,7 @@ def work_edit(request, classroom_id):
     else:
         form = ClassroomForm(instance=classroom)
 
-    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))
+    return render(request, 'form.html',{'form': form})
 
 # 列出某作業所有同學名單
 def work_class2(request, lesson, classroom_id, work_id):
@@ -1029,7 +1029,7 @@ def work_class2(request, lesson, classroom_id, work_id):
 
     classmate_work = sorted(classmate_work, key=getKey)
 
-    return render_to_response('teacher/work_class.html',{'typing':1, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
+    return render(request, 'teacher/work_class.html',{'typing':1, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id})
 
 # 設定班級助教
 def classroom_assistant(request, classroom_id):
@@ -1039,7 +1039,7 @@ def classroom_assistant(request, classroom_id):
     assistants = Assistant.objects.filter(classroom_id=classroom_id).order_by("-id")
     classroom = Classroom.objects.get(id=classroom_id)
 
-    return render_to_response('teacher/assistant.html',{'assistants': assistants, 'classroom':classroom}, context_instance=RequestContext(request))
+    return render(request, 'teacher/assistant.html',{'assistants': assistants, 'classroom':classroom})
 
 # 教師可以查看所有帳號
 class AssistantListView(ListView):
@@ -1145,7 +1145,7 @@ def work_class3(request, lesson, classroom_id, work_id):
     def getKey(custom):
         return custom[0].seat
     classmate_work = sorted(classmate_work, key=getKey)
-    return render_to_response('teacher/work3_class.html',{'typing':2, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id}, context_instance=RequestContext(request))
+    return render(request, 'teacher/work3_class.html',{'typing':2, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id})
 
 #
 def work3_score(request, lesson, classroom_id, work_id):

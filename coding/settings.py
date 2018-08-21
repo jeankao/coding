@@ -26,7 +26,7 @@ SECRET_KEY = 'b1pn2xu8qyo@p*(s$zdj8-g8)-)fc&uig=jci-n+zy88gd=2gn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,14 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',  
+    'django.contrib.sites',
     'account',  
     'teacher',
     'student',
     'certificate',
     'survey',
     'nocaptcha_recaptcha',  
-    'show'
+    'show',
+    #'django.contrib.sitemaps',  
+    'photologue',
+    #'sortedm2m',  
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -123,6 +127,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
