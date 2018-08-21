@@ -870,7 +870,7 @@ def memo_count(request, classroom_id):
         for enroll in enrolls:
             members.append(enroll.student_id)
         classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members)
+        works = Work.objects.filter(user_id__in=members, lesson_id=classroom.lesson)
         memo = ""
         for work in works:
             memo += work.memo
@@ -911,7 +911,7 @@ def memo_work_count(request, classroom_id, work_id):
         for enroll in enrolls:
             members.append(enroll.student_id)
         classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members, index=int(work_id))
+        works = Work.objects.filter(user_id__in=members, index=int(work_id), lesson_id=classroom.lesson)
         memo = ""
         for work in works:
             memo += work.memo
