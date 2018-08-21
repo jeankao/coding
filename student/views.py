@@ -8,7 +8,7 @@ from django.template import RequestContext
 from student.lesson import *
 from django.views.generic import ListView, CreateView
 from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam
-from teacher.models import Classroom, TWork
+from teacher.models import Classroom, TWork, CWork
 from show.models import Round
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
@@ -399,12 +399,20 @@ def work_list(request, typing, lesson, classroom_id):
             assignments = lesson_list1
     elif typing == "1":
         assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
+    elif typing == "2":
+        assignments = CWork.objects.filter(classroom_id=classroom_id).order_by("-id")
+    else :
+        assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")        
     work_dict = dict(((work.index, work) for work in Work.objects.filter(typing=typing, user_id=request.user.id, lesson_id=lesson)))
 
     for idx, assignment in enumerate(assignments):
         if typing == "0":
             index = idx+1
         elif typing == "1":
+            index = assignment.id
+        elif typing == "2":
+            index = assignment.id
+        else :
             index = assignment.id
         if not index in work_dict:
             lessons.append([assignment, None])
