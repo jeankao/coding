@@ -646,6 +646,28 @@ def memo(request, typing, lesson, classroom_id, index):
 
     return render(request, 'student/memo.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas})
 
+# 查詢某檢核作業所有同學
+def work_class(request, typing, lesson, classroom_id, index):
+    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+    student_ids = map(lambda a: a.student_id, enroll_pool)
+    work_pool = Work.objects.filter(typing=typing, lesson_id=lesson, user_id__in=student_ids, index=index).order_by("-id")
+    datas = []
+    enrollgroup_dict = dict(((group.id, enrollgroup) for enrollgroup in EnrollGroup.objects.filter(classroom_id=classroom_id)))
+    if enroll.group == 0 :
+         group_name = "沒有組別"
+    else : 
+        group_name = enrollgroup_dict[enroll.group].name
+    
+    for enroll in enroll_pool:
+        works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+        if works :
+            datas.append([enroll, works[0].score, group_name])
+        else:
+            datas.append([enroll, "", group_name])
+
+    return render(request, 'student/work_class.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas})
+  
+  
 def work_download(request, index, user_id, workfile_id):
     workfile = WorkFile.objects.get(id=workfile_id)
     username = User.objects.get(id=user_id).first_name
@@ -717,6 +739,16 @@ def progress(request, typing, lesson, unit, classroom_id):
             else:
               bar.append([assignment, False])
           bars.append([enroll, bar])
+      elif typing == "2":
+          lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+          for assignment in lesson_list:
+            works = filter(lambda u: u.index == assignment.id, student_works)
+            index = index + 1
+            if len(works) > 0:
+              bar.append([assignment, works[0]])
+            else:
+              bar.append([assignment, False])
+          bars.append([enroll, bar])         
     return render(request, 'student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list})
 
 # 查詢某作業分組小老師

@@ -7,7 +7,7 @@
                 {% for assignment in lesson_list %}
                      {% if typing == "0" %}
                      <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{assignment.0}}</button></td>              
-                     {% elif typing == "1" %}
+                     {% elif typing == "1"  or typing == "2" %}
                      <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{{forloop.counter}}</button></td>                           
                      {% endif %}
                 {% endfor %}
@@ -21,7 +21,7 @@
                     {% else %}
                      <td><font size=-2>{{assignment.1}}</font></td>              
                     {% endif %}
-                    {% elif typing == "1" %}
+                    {% elif typing == "1" or typing == "2" %}
                      <td><font size=-2>{{assignment.title}}</font></td>              
                     {% endif %}
                 {% endfor %}

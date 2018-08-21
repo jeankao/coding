@@ -1015,11 +1015,12 @@ def work_class2(request, lesson, classroom_id, work_id):
             work = Work(typing=1, index=work_id, user_id=0, lesson_id=lesson)
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=1, user_id=enroll.student_id, index=work_id, lesson_id=lesson).last()
-        try:
-            group_name = EnrollGroup.objects.get(id=enroll.group).name
-        except ObjectDoesNotExist:
-            group_name = "沒有組別"
+        enrollgroup_dict = dict(((group.id, enrollgroup) for enrollgroup in EnrollGroup.objects.filter(classroom_id=self.kwargs['classroom_id'])))
         assistant = WorkAssistant.objects.filter(typing=1, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=work_id)
+        if enroll.group == 0 :
+            group_name = "沒有組別"
+        else : 
+            group_name = enrollgroup_dict[enroll.group].name
         if assistant.exists():
             classmate_work.append([enroll,work,1, scorer_name, group_name])
         else :

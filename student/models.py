@@ -65,7 +65,7 @@ class Enroll(models.Model):
 
     @property
     def student(self):
-        return User.objects.get(id=self.student_id)
+        return User.objects.get(id=self.student_id)      
 
     def __str__(self):
         return str(self.id) + ":" + str(self.classroom_id)

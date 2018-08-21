@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/starrr/starrr.css">
+<script type="text/javascript" src="/static/starrr/starrr.js"></script>
+{% endblock %}
+
+{% block content %}
+<table class="table">
+  <tr>
+    <td>學生</td>
+    <td>組別</td>
+    <td>功能</td>
+  </tr>
+  {% for enroll, score, group_name in datas %}
+  <tr>
+    <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
+    <td>{{group_name}}</td>
+    <td class="pos-relative">
+      <div class="starrr readonly" data-rating="{{ score }}"></div>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+{% block domready %}
+  $('.starrr.readonly').starrr({
+    readOnly: true,
+  });
+
+  $('.rating-btn').click(function() {
+    $(this).parent().append('<div class="starrr edit"></div>');
+    var $ratingObj = $('.starrr.edit', $(this).parent());
+    var $origObj = $('.starrr.readonly', $(this).parent());
+    var $btnObj = $('button.rating-btn', $(this).parent());
+    var origValue = $origObj.data('rating');
+    $btnObj.css('visibility', 'hidden');
+    $ratingObj.offset($origObj.offset());
+    $ratingObj.starrr({
+      rating: $origObj.data('rating'), 
+      change: function(e, value) {
+        var $this = $(this);
+        var $parent = $this.parent();
+        if (value === undefined)
+          value = origValue;
+        $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
+          workid: $parent.data('workid'),
+          stuid: $parent.data('stuid'),
+          score: value,
+        }, function(data){
+          if (!$parent.data('workid')) 
+            $parent.data('workid', data.workid);
+        });
+        $origObj.data({starrr: null, rating: value}).empty().starrr({readOnly: true});
+        $btnObj.css('visibility', 'visible');
+        $this.remove();
+      },
+    });
+  });
+{% endblock %}
