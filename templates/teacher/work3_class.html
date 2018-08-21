@@ -17,8 +17,9 @@
   <tr>
     <td>{{list.0.seat}}){{list.0.student.first_name}}</td>
     <td>{{list.2}}</td>
-    <td>
-      <div class="stars starrr score" data-rating="{{ list.1.score }}" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}"></div>
+    <td class="pos-relative" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}">
+      <div class="starrr readonly" data-rating="{{ list.1.score }}"></div>
+      <button class="btn btn-sm btn-outline-dark rating-btn">評分</button>
     </td>
   </tr>
   {% endfor %}
@@ -26,32 +27,37 @@
 {% endblock %}
 
 {% block domready %}
-  $('.starrr').starrr({
-    change: function(e, value) {
-      var $this = $(this);
-      $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
-        workid: $this.data('workid'),
-        stuid: $this.data('stuid'),
-        score: value ? value : 0,
-      }, function(data){
-        if (!$this.data('workid')) 
-          $this.data('workid', data.workid);
-      });
-      console.log(value);
-    },
+  $('.starrr.readonly').starrr({
+    readOnly: true,
   });
-  /*
-  $('.starrr').on('starrr:change', function(e, value) {
-    var $this = $(this);
-    $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
-      workid: $this.data('workid'),
-      stuid: $this.data('stuid'),
-      score: value ? value : 0,
-    }, function(data){
-      if (!$this.data('workid')) 
-        $this.data('workid', data.workid);
+
+  $('.rating-btn').click(function() {
+    $(this).parent().append('<div class="starrr edit"></div>');
+    var $ratingObj = $('.starrr.edit', $(this).parent());
+    var $origObj = $('.starrr.readonly', $(this).parent());
+    var $btnObj = $('button.rating-btn', $(this).parent());
+    var origValue = $origObj.data('rating');
+    $btnObj.css('visibility', 'hidden');
+    $ratingObj.offset($origObj.offset());
+    $ratingObj.starrr({
+      rating: $origObj.data('rating'), 
+      change: function(e, value) {
+        var $this = $(this);
+        var $parent = $this.parent();
+        if (value === undefined)
+          value = origValue;
+        $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
+          workid: $parent.data('workid'),
+          stuid: $parent.data('stuid'),
+          score: value,
+        }, function(data){
+          if (!$parent.data('workid')) 
+            $parent.data('workid', data.workid);
+        });
+        $origObj.data({starrr: null, rating: value}).empty().starrr({readOnly: true});
+        $btnObj.css('visibility', 'visible');
+        $this.remove();
+      },
     });
-    console.log(value);
   });
-  */
 {% endblock %}
