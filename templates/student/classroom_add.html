@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
+<table>
+  <Tr>
+  <Td>
+ <a href="." role="button" class="form-group form-inline btn btn-info {% if group == '0' and not account.strip %}active{% endif %}">所有班級</a>      
+  </Td>
+  <td>
+    <form action=""  method="get">
+<label class="form-group form-inline">搜尋教師：<input type="text" name = "account"><input type="submit" value="送出"/></label>
+    </form>    
+  </td>
+  </Tr>
+</table>
+ 
 <table class="table">
 <tr>
     <td>班級</td>

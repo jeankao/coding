@@ -338,16 +338,16 @@ def work_class(request, typing, lesson, classroom_id, index):
     scorer_name = ""
     for enroll in enrolls:
         try:
-            work = Work.objects.get(user_id=enroll.student_id, index=index, lesson_id=lesson)
+            work = Work.objects.get(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson)
             if work.scorer > 0 :
                 scorer = User.objects.get(id=work.scorer)
                 scorer_name = scorer.first_name
             else :
                 scorer_name = "1"
         except ObjectDoesNotExist:
-            work = Work(index=index, user_id=0, lesson_id=lesson)
+            work = Work(typing=0, index=index, user_id=0, lesson_id=lesson)
         except MultipleObjectsReturned:
-            work = Work.objects.filter(user_id=enroll.student_id, index=index, lesson_id=lesson).last()
+            work = Work.objects.filter(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson).last()
         try:
             group_name = EnrollGroup.objects.get(id=enroll.group).name
         except ObjectDoesNotExist:

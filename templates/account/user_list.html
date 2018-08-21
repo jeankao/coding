@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 {% load tag %}
 {% block content %}
-    <form action="."  method="get">
- <label class="inline">搜尋帳號：<input type="text" name = "account"><input type="submit" value="送出"/></label>    
-<a href="/account/userlist/0" role="button" class="btn btn-info {% if group == '0' and not account.strip %}active{% endif %}">所有帳號</a>
-<a href="/account/userlist/1" role="button" class="btn btn-info {% if group == '1' and not account.strip  %}active{% endif %}">註冊帳號</a>
+<table>
+  <tr>
+  <Td>
+ <a href="/account/userlist/0" role="button" class="btn btn-info {% if group == '0' and not account.strip %}active{% endif %}">所有帳號</a>
+<a href="/account/userlist/1" role="button" class="btn btn-info {% if group == '1' and not account.strip  %}active{% endif %}">註冊帳號</a>  
+  </Td>
+    <td>
+<form action="."  method="get">
+ <label class="form-group form-inline">搜尋帳號：<input type="text" name = "account"><input type="submit" value="送出"/></label>    
     </form>
+    </td>
+  </tr>
+</table>
           
         <table class="table" style="width:100%">
             <td>帳號</td>

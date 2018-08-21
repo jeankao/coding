@@ -28,6 +28,7 @@ import pytz
 from django.core.paginator import Paginator
 import copy
 import jieba
+from django.db.models import Q
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
     return  user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
@@ -289,18 +290,28 @@ def classroom(request):
             classrooms.append([enroll, shows])
         return render(request, 'student/classroom.html',{'classrooms':classrooms})
 
-# 查看可加入的班級
-def classroom_add(request):
-        classrooms = Classroom.objects.all().order_by('-id')
+# 查看班級
+class ClassroomListView(ListView):
+    context_object_name = 'classroom_teachers'
+    paginate_by = 30
+    template_name = 'student/classroom_add.html'
+
+    def get_queryset(self):
+        if self.request.GET.get('account') != None:
+            keyword = self.request.GET.get('account')
+            queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
+        else :
+            queryset = User.objects.all().order_by('-id')
+        teacher_ids = map(lambda a: a.id, queryset)
+        classrooms = Classroom.objects.filter(teacher_id__in=teacher_ids).order_by('-id')
         classroom_teachers = []
         for classroom in classrooms:
-            enroll = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom.id)
+            enroll = Enroll.objects.filter(student_id=self.request.user.id, classroom_id=classroom.id)
             if enroll.exists():
                 classroom_teachers.append([classroom,classroom.teacher.first_name,1])
             else:
                 classroom_teachers.append([classroom,classroom.teacher.first_name,0])
-
-        return render(request, 'student/classroom_add.html', {'classroom_teachers':classroom_teachers})
+        return classroom_teachers      
 
 # 加入班級
 def classroom_enroll(request, classroom_id):
@@ -925,15 +936,6 @@ def memo_count(request, classroom_id):
                     break       
         return render(request, 'student/memo_count.html', {'total':works.count(), 'words':words, 'enrolls':enrolls, 'classroom':classroom})
 
-# 評分某同學某進度心得
-def memo_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    del lesson_list[:]
-    reset()
-    works = Work.objects.filter(user_id=user_id)
-    for work in works:
-        lesson_list[work.index-1].append(work.memo)
-    return render(request, 'student/memo_user.html', {'lesson_list':lesson_list, 'student': user})
 
 
 # 查詢某班級某作業心得統計

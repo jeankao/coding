@@ -6,20 +6,19 @@
   </tr>
   {% for lesson, work in lessons %}
   <tr>
-    <td>{% if typing == "0" %}{% if classroom.lesson == 1 %}{{forloop.counter}}{% else %}{{lesson.0}}{% endif %}{% else %}{{forloop.revcounter}}{% endif %}){% if typing == "0" %}{% if classroom.lesson == 1%}{{lesson.2}}{% else %}{{lesson.1}}{% endif %}{%
-      else %}{{lesson.title}}{% endif %}</td>
-    {% if typing == "2" %}
+ 	 <td>{% if typing == "0" %}{% if classroom.lesson == 1 %}{{forloop.counter}}{% else %}{{lesson.0}}{% endif %}{% else %}{{forloop.revcounter}}{% endif %}){% if typing == "0" %}{% if classroom.lesson == 1%}{{lesson.2}}{% else %}{{lesson.1}}{% endif %}{% else %}{{lesson.title}}{% endif %}</td>
+   {% if typing == "2" %}
     <td>{% if work %}{{work.publication_date}}--{{work.score}}{% else %}尚未評分{% endif %}</a>
     </td>
     <td><a href="/student/work/class/{{typing}}/{{classroom.lesson}}/{{classroom.id}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">班級</a></td>
     <td></td>
     {% else %}
-    <td>{% if not work.score or work.score == -1 %}<a href="/student/work/submit/{{typing}}/{{classroom.lesson}}/{% if typing == " 0 " %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">繳交</a>{% endif %}</td>
-    <td><a href="/student/work/show/{{typing}}/{{classroom.lesson}}/{% if typing == " 0 " %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}/{{user.id}}">觀看({{work.publication_date}}){% if work.score > -1 %}--{{work.score}}{% endif %}</a></td>
+    <td>{% if not work.score or work.score == -1 %}<a href="/student/work/submit/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">繳交</a>{% endif %}</td>
+    <td><a href="/student/work/show/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}/{{user.id}}">觀看({{work.publication_date}}){% if work.score > -1 %}--{{work.score}}{% endif %}</a></td>
     <!--
 								<td><a href="/student/work/rank/{{typing}}/{{classroom.lesson}}/{{forloop.counter}}">排行榜</a></td>  
 				-->
-    <td><a href="/student/work/memo/{{typing}}/{{classroom.lesson}}/{{classroom.id}}/{% if typing == " 0 " %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">心得</a></td>
+    <td><a href="/student/work/memo/{{typing}}/{{classroom.lesson}}/{{classroom.id}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">心得</a></td>
     {% endif %}
   </tr>
   {% endfor %}
