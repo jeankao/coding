@@ -45,4 +45,11 @@ urlpatterns = [
     url(r'^exam/score/$', views.exam_score),  
     #心得
     url(r'^memo_user/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<user_id>\d+)/$', views.memo_user),	
+    #查詢某班級所有同學心得		
+    url(r'^memo_all/(?P<classroom_id>[^/]+)$', views.memo_all),  	
+    url(r'^memo_show/(?P<user_id>\d+)/(?P<unit>\d+)/(?P<classroom_id>[^/]+)/(?P<score>[^/]+)/$', views.memo_show),
+    url(r'^memo_count/(?P<classroom_id>\d+)/$', views.memo_count),        
+    url(r'^memo_word/(?P<classroom_id>\d+)/(?P<word>[^/]+)/$', views.memo_word),  	
+    url(r'^memo_work_count/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.memo_work_count),        	
+    url(r'^memo_work_word/(?P<classroom_id>\d+)/(?P<work_id>\d+)/(?P<word>[^/]+)/$', views.memo_work_word),    
 ]

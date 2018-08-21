@@ -1,7 +1,10 @@
+Django==1.11
+Pillow==4.3.0
+django-sortedm2m>=1.5.0 # Need at least 1.4.0 for it to work with Django 1.11.
+ExifRead>=2.1.2
 colorama==0.2.5
 dj-database-url==0.5.0
 dj-static==0.0.6
-Django==1.9.2
 django-excel==0.0.9
 django-nocaptcha-recaptcha==0.0.20
 docutils==0.11
@@ -17,7 +20,6 @@ MarkupSafe==0.18
 olefile==0.44
 openpyxl==2.4.9
 pathlib==1.0.1
-Pillow==4.3.0
 psycopg2==2.7.3.1
 pyexcel==0.5.4
 pyexcel-io==0.5.3

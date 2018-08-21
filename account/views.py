@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render
 from django.template import RequestContext
 from forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm, TeacherApplyForm
 from django.contrib.auth import authenticate, login
@@ -86,32 +87,32 @@ def homepage(request):
     enroll_euler =  len(filter(lambda w: w.classroom_id, classroom_euler))
     certificate = certificate_scratch+certificate_vphysics+certificate_euler
     certificates = [certificate, [enroll_scratch, certificate_scratch], [enroll_vphysics, certificate_vphysics], [enroll_euler, certificate_euler]]
-    return render_to_response('homepage.html', {'certificates':certificates, 'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile}, context_instance=RequestContext(request))
+    return render(request, 'homepage.html', {'certificates':certificates, 'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile})
   
 # 網站大廳
 def dashboard(request):
-    return render_to_response('account/dashboard.html', context_instance=RequestContext(request))
+    return render(request, 'account/dashboard.html')
   
 def author(request):   
-    return render_to_response('account/author.html', context_instance=RequestContext(request))	
+    return render(request, 'account/author.html')	
     
 def about(request):   
-    return render_to_response('account/about.html', context_instance=RequestContext(request))	  
+    return render(request, 'account/about.html')	  
 
 def contact(request):   
-    return render_to_response('account/contact.html', context_instance=RequestContext(request))	  	
+    return render(request, 'account/contact.html')	  	
     
 def statics_zone(request):
     cities = County.objects.all()
-    return render_to_response('account/statics_zone.html', {'cities':cities}, context_instance=RequestContext(request))	  	
+    return render(request, 'account/statics_zone.html', {'cities':cities})	  	
 
 def statics_lesson(request):
     counters = LessonCounter.objects.all().order_by("-hit")		
-    return render_to_response('account/statics_lesson.html', {'counters':counters}, context_instance=RequestContext(request))
+    return render(request, 'account/statics_lesson.html', {'counters':counters})
     
 # 管理介面 
 def admin(request):
-    return render_to_response('account/admin.html', context_instance=RequestContext(request))
+    return render(request, 'account/admin.html')
     
 # 使用者登入功能
 def user_login(request, role):
@@ -198,7 +199,7 @@ def user_login(request, role):
             form = LoginForm()
         else:
             form = LoginStudentForm()
-    return render_to_response('registration/login.html', {'role':role, 'message': message, 'form': form}, context_instance=RequestContext(request))
+    return render(request, 'registration/login.html', {'role':role, 'message': message, 'form': form})
 
 # 註冊帳號
 def register(request):
@@ -231,11 +232,11 @@ def register(request):
             messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
             messagepoll.save() 	      						
                         
-            return render_to_response('registration/register_done.html',{'new_user': new_user}, context_instance=RequestContext(request))
+            return render(request, 'registration/register_done.html',{'new_user': new_user})
     else:
         form = RegistrationForm()
     school_pool = School.objects.filter(online=True)
-    return render_to_response('registration/register.html', {'form': form, 'schools': school_pool}, context_instance=RequestContext(request))
+    return render(request, 'registration/register.html', {'form': form, 'schools': school_pool})
 
 # 註冊學校
 def register_school(request):      
@@ -247,7 +248,7 @@ def register_school(request):
     else:
         form = RegistrationSchoolForm()
     school_pool = School.objects.filter(online=True)
-    return render_to_response('registration/register_school.html', {'form': form, 'schools': school_pool}, context_instance=RequestContext(request))
+    return render(request, 'registration/register_school.html', {'form': form, 'schools': school_pool})
   
 # 申請教師
 def teacher_apply(request):      
@@ -258,7 +259,7 @@ def teacher_apply(request):
             return redirect("/account/register")
     else:
         form = TeacherApplyForm()
-    return render_to_response('account/teacher_apply.html', {'form': form}, context_instance=RequestContext(request))
+    return render(request, 'account/teacher_apply.html', {'form': form})
 
 # 超級管理員可以查看所有帳號
 class UserListView(ListView):
@@ -321,7 +322,7 @@ def message(request, messagepoll_id):
 # 所有註冊學校
 def schools(request):
     schools = School.objects.all()
-    return render_to_response('account/schools.html',{'schools': schools}, context_instance=RequestContext(request))		
+    return render(request, 'account/schools.html',{'schools': schools})		
     
 class SchoolUpdateView(UpdateView):
     model = School
@@ -346,7 +347,7 @@ def password(request, user_id):
         form = PasswordForm()
         user = User.objects.get(id=user_id)
 
-    return render_to_response('form.html',{'form': form, 'user':user}, context_instance=RequestContext(request))
+    return render(request, 'form.html',{'form': form, 'user':user})
 
 # 修改他人的真實姓名
 def adminrealname(request, user_id):
@@ -372,7 +373,7 @@ def adminrealname(request, user_id):
         else:
             return redirect("/")
 
-    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))
+    return render(request, 'form.html',{'form': form})
     
 # 修改自己的真實姓名
 def realname(request):
@@ -388,7 +389,7 @@ def realname(request):
         user = User.objects.get(id=request.user.id)
         form = RealnameForm(instance=user)
 
-    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))
+    return render(request, 'form.html',{'form': form})
 
 # 修改學校名稱
 def adminschool(request):
@@ -424,7 +425,7 @@ def adminschool(request):
             school = School.objects.get(id=user.last_name)
         except ObjectDoesNotExist:
             school = School.objects.get(id=1)
-    return render_to_response('account/school.html',{'form': form, 'district':district, 'school':school }, context_instance=RequestContext(request))
+    return render(request, 'account/school.html',{'form': form, 'district':district, 'school':school })
     
 # 修改信箱
 def adminemail(request):
@@ -440,7 +441,7 @@ def adminemail(request):
         user = User.objects.get(id=request.user.id)
         form = EmailForm(instance=user)
 
-    return render_to_response('form.html',{'form': form}, context_instance=RequestContext(request))    
+    return render(request, 'form.html',{'form': form})    
 
 # 記錄積分項目
 class LogListView(ListView):
@@ -487,9 +488,9 @@ def profile(request, user_id):
     user_enrolls = Enroll.objects.filter(student_id=request.user.id)
     for enroll in user_enrolls:
         if is_classmate(user_id, enroll.classroom_id) or request.user.id == 1:
-          return render_to_response('account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit}, context_instance=RequestContext(request))	
+          return render(request, 'account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit})	
     if user_id == str(request.user.id):	
-        return render_to_response('account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit}, context_instance=RequestContext(request))	
+        return render(request, 'account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit})	
     return redirect("/")				
     
 # 列出所有日期訪客
@@ -533,10 +534,10 @@ class VisitorLogListView(ListView):
         queryset = VisitorLog.objects.filter(visitor_id=self.kwargs['visitor_id']).order_by('-id')
         return queryset
         
-    def render_to_response(self, context):
+    def render(request, self, context):
         if not self.request.user.is_authenticated():
             return redirect('/')
-        return super(VisitorLogListView, self).render_to_response(context)	
+        return super(VisitorLogListView, self).render(request, context)	
 
 # Ajax 設為教師、取消教師
 @user_passes_test(lambda u: u.is_superuser)
@@ -578,7 +579,7 @@ def make(request):
 
 def avatar(request):
     profile = Profile.objects.get(user = request.user)      
-    return render_to_response('account/avatar.html', {'avatar':profile.avatar}, context_instance=RequestContext(request))
+    return render(request, 'account/avatar.html', {'avatar':profile.avatar})
   
 # 列出所有私訊
 class LineListView(ListView):
@@ -606,10 +607,10 @@ class LineClassListView(ListView):
         return queryset
         
     # 限本班同學
-    def render_to_response(self, context):
+    def render(request, self, context):
         if not is_classmate(self.request.user.id, self.kwargs['classroom_id']):
             return redirect('/')
-        return super(LineClassListView, self).render_to_response(context)            
+        return super(LineClassListView, self).render(request, context)            
                 
 #新增一個私訊
 class LineCreateView(CreateView):
@@ -721,7 +722,7 @@ def line_detail(request, classroom_id, message_id):
         messagepoll.save()
     except :
         messagepoll = MessagePoll()
-    return render_to_response('account/line_detail.html', {'files':files, 'lists':messes, 'classroom_id':classroom_id, 'message':message, 'messagepoll':messagepoll}, context_instance=RequestContext(request))
+    return render(request, 'account/line_detail.html', {'files':files, 'lists':messes, 'classroom_id':classroom_id, 'message':message, 'messagepoll':messagepoll})
 
 # 下載檔案
 def line_download(request, file_id):
@@ -739,4 +740,4 @@ def line_download(request, file_id):
 # 顯示圖片
 def line_showpic(request, file_id):
         content = MessageContent.objects.get(id=file_id)
-        return render_to_response('student/forum_showpic.html', {'content':content}, context_instance=RequestContext(request))
+        return render(request, 'student/forum_showpic.html', {'content':content})

@@ -57,7 +57,7 @@ def upload_pic(request):
         except ObjectDoesNotExist:
             pass
         form = ImageUploadForm()
-    return render_to_response('certificate/certificate.html', {'form':form, 'certificate': m}, context_instance=RequestContext(request))
+    return render(request, 'certificate/certificate.html', {'form':form, 'certificate': m})
 
 
 def openFile(fileName, mode, context):
@@ -93,7 +93,7 @@ def show(request, lesson, unit, enroll_id):
         certificate_image = lesson + "/" + unit + "/" + str(request.user.id) + ".jpg"        
     else :
         certificate_image = lesson + "/" + unit + "/" + enroll_id + ".jpg"		
-    return render_to_response('certificate/show.html', {'certificate_image': certificate_image}, context_instance=RequestContext(request))
+    return render(request, 'certificate/show.html', {'certificate_image': certificate_image})
     
     
 # 產生證書圖片
@@ -304,7 +304,7 @@ def classroom(request, lesson, unit, classroom_id):
                 nodatas.append(enroll)	                       
     for student in nodatas:
 		    datas.append(student)
-    return render_to_response('certificate/classroom.html', {'nodatas':nodatas, 'enrolls':enrolls,'datas': datas, 'unit':unit, 'lesson':lesson}, context_instance=RequestContext(request))
+    return render(request, 'certificate/classroom.html', {'nodatas':nodatas, 'enrolls':enrolls,'datas': datas, 'unit':unit, 'lesson':lesson})
       
 def certificate(request, lesson, unit, enroll_id, action):
     if enroll_id and action :
