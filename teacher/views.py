@@ -1161,10 +1161,10 @@ def work3_score(request, lesson, classroom_id, work_id):
     else:
         try:
             work = Work.objects.get(id=wid)
+            work.publication_date = timezone.now()            
         except ObjectDoesNotExist:
             work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
     work.score = request.POST.get('score')
     work.scorer = request.user.id
-    work.publication_date = datetime.datetime.now()
     work.save()
     return JsonResponse({'staus':'ok', 'workid': work.id}, safe=False)
