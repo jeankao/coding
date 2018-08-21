@@ -84,9 +84,9 @@ def realname2(user_id):
 @register.simple_tag
 def work_name(index, lesson, typing):
   if typing == 1:
-    return TWork.objects.get(id=index).title
+    return "(自)" + TWork.objects.get(id=index).title
   elif typing == 2:
-    return CWork.objects.get(id=index).title
+    return "(檢)" + CWork.objects.get(id=index).title
   else :
     if lesson == 1:
         return lesson_list1[index-1][2]
