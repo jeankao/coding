@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from teacher.models import Classroom
 from django.utils import timezone
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, validate_comma_separated_integer_list
 
 # 學生選課資料
 class Enroll(models.Model):
@@ -18,7 +18,8 @@ class Enroll(models.Model):
     # 組別
     group = models.IntegerField(default=0)
     # 創意秀組別
-    groupshow = models.CommaSeparatedIntegerField(max_length=200)
+    #groupshow = models.CommaSeparatedIntegerField(max_length=200)
+    groupshow = models.CharField(validators=[validate_comma_separated_integer_list], max_length=200)
     # 12堂課證書
     certificate1 = models.BooleanField(default=False)
     certificate1_date = models.DateTimeField(default=timezone.now)
