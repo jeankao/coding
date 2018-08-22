@@ -12,4 +12,4 @@
 
 .starrr.readonly a{color: dimgrey}
 .pos-relative {position: relative}
-.starrr.edit {position: absolute; width: 100%; height: 100%; left: 0; top: 0}
+.starrr.edit {position: absolute}

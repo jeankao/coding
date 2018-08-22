@@ -19,7 +19,7 @@
     <td>{{list.2}}</td>
     <td class="pos-relative" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}">
       <div class="starrr readonly" data-rating="{{ list.1.score }}"></div>
-      <button class="btn btn-sm btn-outline-dark rating-btn">評分</button>
+      <button class="btn btn-sm rating-btn">評分</button>
     </td>
   </tr>
   {% endfor %}
@@ -31,33 +31,41 @@
     readOnly: true,
   });
 
-  $('.rating-btn').click(function() {
+  var btn_class_rating = 'btn-outline-dark', 
+      btn_class_cancel = 'btn-outline-danger';
+
+  $('.rating-btn').addClass(btn_class_rating).click(function() {
     $(this).parent().append('<div class="starrr edit"></div>');
     var $ratingObj = $('.starrr.edit', $(this).parent());
     var $origObj = $('.starrr.readonly', $(this).parent());
     var $btnObj = $('button.rating-btn', $(this).parent());
     var origValue = $origObj.data('rating');
-    $btnObj.css('visibility', 'hidden');
-    $ratingObj.offset($origObj.offset());
-    $ratingObj.starrr({
-      rating: $origObj.data('rating'), 
-      change: function(e, value) {
-        var $this = $(this);
-        var $parent = $this.parent();
-        if (value === undefined)
-          value = origValue;
-        $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
-          workid: $parent.data('workid'),
-          stuid: $parent.data('stuid'),
-          score: value,
-        }, function(data){
-          if (!$parent.data('workid')) 
-            $parent.data('workid', data.workid);
-        });
-        $origObj.data({starrr: null, rating: value}).empty().starrr({readOnly: true});
-        $btnObj.css('visibility', 'visible');
-        $this.remove();
-      },
-    });
+    if (!$btnObj.hasClass(btn_class_cancel)) {
+      $btnObj.addClass(btn_class_cancel).removeClass(btn_class_rating).text('取消');
+      $ratingObj.offset($origObj.offset());
+      $ratingObj.starrr({
+        rating: $origObj.data('rating'), 
+        change: function(e, value) {
+          var $this = $(this);
+          var $parent = $this.parent();
+          if (value === undefined)
+            value = origValue;
+          $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
+            workid: $parent.data('workid'),
+            stuid: $parent.data('stuid'),
+            score: value,
+          }, function(data){
+            if (!$parent.data('workid')) 
+              $parent.data('workid', data.workid);
+          });
+          $origObj.data({starrr: null, rating: value}).empty().starrr({readOnly: true});
+          $btnObj.removeClass(btn_class_cancel).addClass(btn_class_rating).text('評分');
+          $this.remove();
+        },
+      });
+    } else {
+      $btnObj.removeClass(btn_class_cancel).addClass(btn_class_rating).text('評分');
+      $('.starrr.edit', $(this).parent()).remove();
+    }
   });
 {% endblock %}
