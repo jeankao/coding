@@ -11,7 +11,7 @@
     </tr>
       {% for work in works %}
     <Tr>
-      <td nowrap>{{work.index}}){{work.index|work_name:classroom.lesson}}</td>
+      <td nowrap>{{work.index}}){% work_name work.index classroom.lesson typing %}</td>
       <td nowrap><a href="/student/memo_user/{{work.user_id}}">{{work.user_id|realname}}</a></td>
       <td>{{work.memo|safe}}</td>
     </Tr>
