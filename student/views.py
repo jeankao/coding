@@ -980,7 +980,7 @@ def memo_word(request, classroom_id, word):
         for enroll in enrolls:
             members.append(enroll.student_id)
         classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members, memo__contains=word).order_by('index')
+        works = Work.objects.filter(user_id__in=members, memo__contains=word, lesson_id=classroom.lesson).order_by('index')
         for work in works:
             work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')        
         return render(request, 'student/memo_word.html', {'word':word, 'works':works, 'classroom':classroom})
