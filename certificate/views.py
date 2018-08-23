@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from .models import Certificate
 from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
