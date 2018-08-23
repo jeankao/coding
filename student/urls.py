@@ -8,8 +8,8 @@ urlpatterns = [
     url(r'^lesson/(?P<lesson>[^/]+)/$', views.lesson),
     # 選課
     url(r'^classroom/enroll/(?P<classroom_id>[^/]+)/$', views.classroom_enroll),      
-    url(r'^classroom/add/$', views.ClassroomListView.as_view()),  
-    url(r'^classroom/$', views.classroom),
+    url(r'^classroom/add/$', views.ClassroomAdd.as_view()),  
+    url(r'^classroom/$', views.ClassroomList.as_view()),
      url(r'^classroom/seat/(?P<enroll_id>\d+)/(?P<classroom_id>\d+)/$', views.seat_edit),
     # 同學
     url(r'^classmate/(?P<classroom_id>\d+)/$', views.classmate), 

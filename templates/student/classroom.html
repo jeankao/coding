@@ -71,7 +71,9 @@
     </p>
   </div>
 </div>
-<BR>        
+<BR>    
+        {% load pagination %}
+        {% get_pagination %}  
 {% endfor %}
 
 {% endblock %}

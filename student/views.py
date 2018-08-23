@@ -281,17 +281,22 @@ def group_open(request, classroom_id, action):
     return redirect('/student/group/'+classroom_id)
 
 # 列出選修的班級
-def classroom(request):
+class ClassroomList(ListView):
+    context_object_name = 'classrooms'
+    paginate_by = 30
+    template_name = 'student/classroom.html'  
+
+    def get_queryset(self):
         classrooms = []
-        enrolls = Enroll.objects.filter(student_id=request.user.id).order_by("-id")
+        enrolls = Enroll.objects.filter(student_id=self.request.user.id).order_by("-id")
         round_pool = Round.objects.all().order_by("-id")
         for enroll in enrolls :
             shows = filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool)
             classrooms.append([enroll, shows])
-        return render(request, 'student/classroom.html',{'classrooms':classrooms})
+        return classrooms
 
 # 查看班級
-class ClassroomListView(ListView):
+class ClassroomAdd(ListView):
     context_object_name = 'classroom_teachers'
     paginate_by = 30
     template_name = 'student/classroom_add.html'
