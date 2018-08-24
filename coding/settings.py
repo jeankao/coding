@@ -46,9 +46,9 @@ INSTALLED_APPS = [
     'survey',
     'nocaptcha_recaptcha',  
     'show',
-    #'django.contrib.sitemaps',  
+    'django.contrib.sitemaps',  
     'photologue',
-    #'sortedm2m',  
+    'sortedm2m',  
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -133,6 +133,9 @@ SITE_ID = 1
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = "photologue/gallery/photologue/"
+MEDIA_URL = "/"
 
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),

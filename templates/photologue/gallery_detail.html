@@ -1,0 +1,31 @@
+{% extends "photologue/root.html" %}
+{% load i18n %}
+
+{% block title %}{{ gallery.title }}{% endblock %}
+
+{% block content %}
+
+	<table width=100%>
+    <tr>
+    <Td>
+       <h1 class="page-header">{{ gallery.title }}</h1>
+        <p class="muted"><small>{% trans "Published" %} {{ gallery.date_added }}</small></p>        
+      
+    </Td>
+    </tr>
+    <tr>
+    <td>
+               {% if gallery.description %}{{ gallery.description|safe }}{% endif %}
+	    {% for photo in gallery.public %}
+	        <a href="{{ photo.get_absolute_url }}">
+	             <img src="{{ photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.title }}">
+	        </a>
+	    {% endfor %}
+      </td></tr>
+
+</table>        
+
+        <div><a href="{% url 'photologue:gallery-list' %}" class="btn btn-default">{% trans "View all galleries" %}</a></div>
+	
+
+{% endblock %}

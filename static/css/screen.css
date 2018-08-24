@@ -1,0 +1,22 @@
+/* Some customisation for the Photologue demo site. */
+
+div.row img.thumbnail {
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+.page-header {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+td {
+	width: 100px;
+}
+
+a.btn.btn-default {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.thumbnail{padding:4px;margin-bottom:20px;line-height:1.42857143;background-color:#fff;border:1px solid #ddd;border-radius:4px;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}.thumbnail>img,.thumbnail a>img{margin-right:auto;margin-left:auto}a.thumbnail:hover,a.thumbnail:focus,a.thumbnail.active{border-color:#428bca}.thumbnail .caption{padding:9px;color:#333}

@@ -1,0 +1,37 @@
+{% extends "photologue/root.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "All galleries" %}{% endblock %}
+
+{% block content %}
+
+    <div class="row col-lg-12">
+        <h1 class="page-header">{% trans "活動紀實" %}</h1>
+    </div>
+
+    {% if object_list %}
+        {% for gallery in object_list %}
+  <table width=100%>
+    <tr>
+    <td><h2><a href="{{ gallery.get_absolute_url }}">{{ gallery.title }}</a></h2><small>{% trans "Published" %} {{ gallery.date_added }}</small></td>
+    </tr>
+    <tr>
+      <td>
+               {% if gallery.description %}<p>{{ gallery.description|safe }}</p>{% endif %}
+                {% for photo in gallery.sample %}
+                    <a href="{{ photo.get_absolute_url }}">
+                         <img src="{{ photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.title }}">
+                    </a>
+                {% endfor %}      
+        
+      </td>
+    </tr>
+</table>
+        {% endfor %}
+    {% else %}
+        <div class="row col-lg-12">{% trans "No galleries were found" %}.</div>
+    {% endif %}
+
+    {% include "photologue/includes/paginator.html" %}
+    
+{% endblock %}
