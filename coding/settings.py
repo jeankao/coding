@@ -134,7 +134,7 @@ SITE_ID = 1
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = "photologue/gallery/photologue/"
+MEDIA_ROOT = "photologue/photo/"
 MEDIA_URL = "/"
 
 STATICFILES_DIRS = [
