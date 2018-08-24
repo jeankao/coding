@@ -17,8 +17,7 @@
     </tr>
     <tr>
       <td>
-               {% if gallery.description %}<p>{{ gallery.description|safe }}</p>{% endif %}
-                {% for photo in gallery.sample %}
+                    {% for photo in gallery.sample %}
                     <a href="{{ photo.get_absolute_url }}">
                          <img src="{{ photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.title }}">
                     </a>
