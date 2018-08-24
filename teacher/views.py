@@ -1154,13 +1154,20 @@ def work3_score(request, lesson, classroom_id, work_id):
     assistants = Assistant.objects.filter(classroom_id=classroom_id, user_id=request.user.id)
     if not is_teacher(request.user, classroom_id): # and not assistants:
         return JsonResponse({'status':'fail'}, safe=False)
-
+    
+    score = request.POST.get('score')
     wid = request.POST.get('workid')
     sid = request.POST.get('stuid')
-    if not work_id:
+
+    # 如果評分為 0，清除該生成績紀錄
+    if score == 0:
+        Work.objects.filter(typing=2, user_id=sid, index=work_id, lesson_id=lesson).delete()
+        return JsonResponse({'status':'ok', 'workid': 0}, safe=False)
+
+    if not work_id: # 沒有成績紀錄 => 新增一筆
         work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
-    else:
-        try:
+    else:           # 取得舊評分紀錄，更新資料，如果找不到該筆紀錄就新增
+        try:    
             work = Work.objects.get(id=wid)
             work.publication_date = timezone.now()            
         except ObjectDoesNotExist:

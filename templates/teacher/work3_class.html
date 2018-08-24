@@ -17,9 +17,10 @@
   <tr>
     <td>{{list.0.seat}}){{list.0.student.first_name}}</td>
     <td>{{list.2}}</td>
-    <td class="pos-relative" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}">
+    <td class="rating-wrapper" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}">
       <div class="starrr readonly" data-rating="{{ list.1.score }}"></div>
       <button class="btn btn-sm rating-btn">評分</button>
+      <button class="btn btn-sm btn-danger clear-btn">清除</button>
     </td>
   </tr>
   {% endfor %}
@@ -46,7 +47,7 @@
       $ratingObj.starrr({
         rating: $origObj.data('rating'), 
         change: function(e, value) {
-          var $this = $(this);
+          var $this = $(e.target);
           var $parent = $this.parent();
           if (value === undefined)
             value = origValue;
@@ -67,5 +68,30 @@
       $btnObj.removeClass(btn_class_cancel).addClass(btn_class_rating).text('評分');
       $('.starrr.edit', $(this).parent()).remove();
     }
+  });
+  function whoisthat(e, v) {
+    console.log(this, e, v);
+  }
+  function whoisthis(e) {
+    console.log(this, e);
+    whoisthat(e, 0);
+  }
+  $('.clear-btn').click(function(e) {
+    var $parent = $(this).parent();
+    var $ratingObj = $('.starrr.edit', $parent);
+    var $origObj = $('.starrr.readonly', $parent);
+    var $btnObj = $('button.rating-btn', $parent);
+    if ($origObj.data('rating')) {
+      $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
+        workid: $parent.data('workid'),
+        stuid: $parent.data('stuid'),
+        score: 0,
+      }, function(data){
+        $parent.data('workid', 0);
+      });  
+    }
+    $ratingObj.remove();
+    $origObj.data({starrr: null, rating: 0}).empty().starrr({readOnly: true});
+    $btnObj.removeClass(btn_class_cancel).addClass(btn_class_rating).text('評分');
   });
 {% endblock %}

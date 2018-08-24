@@ -11,5 +11,7 @@
 }
 
 .starrr.readonly a{color: dimgrey}
-.pos-relative {position: relative}
+.rating-wrapper {position: relative}
 .starrr.edit {position: absolute}
+.rating-wrapper .btn-danger {visibility: hidden; opacity: 0; transition: opacity 1s ease}
+.rating-wrapper:hover .btn-danger {visibility: visible; opacity: 1}
