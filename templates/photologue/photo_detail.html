@@ -1,7 +1,18 @@
 {% extends "photologue/root.html" %}
 {% load photologue_tags i18n %}
 
-{% block title %}{{ object.title }}{% endblock %}
+{% block header %}
+<style>
+body.modal-open {
+overflow-y: auto !important;
+padding-right: 0 !important;
+}
+
+.modal-scrollbar-measure {
+overflow: hidden;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="row col-lg-12">
@@ -55,8 +66,3 @@
 <!-- /.modal -->
 {% endblock %}
 
-{% block domready %}
-  $('#picture').on('shown.bs.modal', function(e) {
-    $('body').css('padding-right', '');
-  });
-{% endblock %}
