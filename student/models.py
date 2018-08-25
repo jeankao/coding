@@ -59,6 +59,10 @@ class Enroll(models.Model):
     certificate_vphysics3 = models.BooleanField(default=False)
     certificate_vphysics3_date = models.DateTimeField(default=timezone.now)
     score_memo_vphysics3 =  models.IntegerField(default=0)
+    # Vphysics3
+    certificate_microbit = models.BooleanField(default=False)
+    certificate_microbit_date = models.DateTimeField(default=timezone.now)
+    score_memo_microbit =  models.IntegerField(default=0)    
     
     @property
     def classroom(self):

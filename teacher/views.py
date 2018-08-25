@@ -497,6 +497,10 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
             queryset = lesson_list2
         elif lesson == "3":
             queryset = lesson_list3
+        elif lesson == "4":
+            queryset = lesson_list4
+        elif lesson == "5":
+            queryset = lesson_list2          
         else:
             queryset = lesson_list1
     elif typing == "1":
@@ -785,6 +789,8 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
                 memo = enroll.score_memo_vphysics2
             elif lesson == "5":
                 memo = enroll.score_memo_vphysics3
+            elif lesson == "5":
+                memo = enroll.score_memo_microbit                
             if typing == "2":
                 grade = total
             else :
