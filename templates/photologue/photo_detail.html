@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-6">
 		    {% if object.caption %}<p>{{ object.caption|safe }}</p>{% endif %}
-		    <a href="{{ object.image.url }}">
+		    <a href="#" data-toggle="modal" data-target="#picture">
 		        <img src="{{ object.get_display_url }}" class="thumbnail" alt="{{ object.title }}">
 		    </a>
         </div>
@@ -33,4 +33,18 @@
         </div>
     </div>
 
+<div class="modal fade" tabindex="-1" role="dialog" id="picture">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img src="{{ object.image.url }}" width="765px">
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock %}
+
