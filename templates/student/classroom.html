@@ -7,13 +7,15 @@
   <h5 class="card-header">{{enroll.classroom}} ({{enroll.classroom.lesson_choice}})：{{enroll.seat}}號</h5>
   <div class="card-body">
     <p class="card-text">
+                    <p style="padding:0px; margin:2px;">
 基本資料：
 			<a href="/student/classroom/seat/{{enroll.id}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">座號</a>
 			<a href="/student/group/{{enroll.classroom_id}}" role="button" class="btn btn-success">組別</a>
 			<a href="/student/classmate/{{enroll.classroom_id}}" role="button" class="btn btn-success">同學</a>
 			<a href="/student/work1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">小老師</a>
       <a href="/student/memo_count/{{enroll.classroom_id}}" role="button" class="btn btn-success">詞頻</a>      
-<BR><BR>
+    </p>
+    <p style="padding:0px; margin:2px;">
   課程活動：
 	        <a href="/student/work/0/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">指定作業</a>
 {% if not enroll.classroom.lesson == 1 %}
@@ -30,24 +32,27 @@
 {% if not enroll.classroom.lesson == 1 %}
 			<a href="/certificate/cert/classroom/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">證書</a>         
 {% endif %}
+    </p>
 {% if enroll.classroom.lesson == 1 %}
-			<BR><BR>作業進度：
+	   <p style="padding:0px; margin:2px;">
+     作業進度：
 			<a href="/student/progress/0/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>
 			<a href="/student/progress/0/{{enroll.classroom.lesson}}/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>
 			<a href="/student/progress/0/{{enroll.classroom.lesson}}/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
 			<a href="/student/progress/0/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
 			<a href="/student/progress/1/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">自訂作業</a>			
+    </p>
 {% endif %}
 {% if enroll.classroom.lesson == 1 %}			
-      <BR><BR>修業證書：        
+      <p style="padding:0px; margin:2px;">修業證書：        
 			<a href="/certificate/cert/classroom/1/0/{{enroll.classroom.id}}/" role="button" class="btn btn-success">Hour of Code</a>        
 			<a href="/certificate/cert/classroom/1/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">12堂課</a>        
 			<a href="/certificate/cert/classroom/1/2/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰入門</a>
 			<a href="/certificate/cert/classroom/1/3/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰進擊</a>
 			<a href="/certificate/cert/classroom/1/4/{{enroll.classroom.id}}/" role="button" class="btn btn-success">實戰高手</a>			
+    </p>
 {% endif %}        
-        
-			<BR><BR>師生互動：
+    <p style="padding:0px; margin:2px;">師生互動：
 			<a href="/survey/pre_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課前問卷</a>
 			<a href="/survey/post_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課後問卷</a>        
 			<a href="/student/announce/{{enroll.classroom_id}}" role="button" class="btn btn-success">公告</a>
@@ -56,9 +61,10 @@
 		    <a href="/account/line/class/{{enroll.classroom_id}}" role="button" class="btn btn-success">私訊同學</a>
 			{% endif %}
 			<a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.classroom.teacher_id}}" role="button" class="btn btn-success">私訊老師</a>
-      <BR><BR>
+    </p>
       {% for show in shows %}
-      創意秀({{forloop.revcounter}})：
+    <p style="padding:0px; margin:2px;">
+    創意秀({{forloop.revcounter}})：
 			<a href="/show/group/{{show.id}}" role="button" class="btn btn-success">組別</a>
 			{% if enroll.group_show > 0 %}
 			<a href="/show/group/submit/{{show.id}}/{{enroll.group_show}}/" role="button" class="btn btn-success">繳交</a>
@@ -66,7 +72,7 @@
 			<a href="/show/rank/1/{{show.id}}/" role="button" class="btn btn-success">美工王</a>
 			<a href="/show/rank/2/{{show.id}}/" role="button" class="btn btn-success">程式王</a>
 			<a href="/show/rank/3/{{show.id}}/" role="button" class="btn btn-success">創意王</a>			
-			<BR><BR>
+			</p>
 			{% endfor %}
     </p>
   </div>
