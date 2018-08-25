@@ -823,7 +823,10 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
       worksheet.write(row, 3, grade)     
       index = 4
       for score, index2 in enroll_score:
-          worksheet.write(row, index, score)
+          if score == -1 :
+              worksheet.write(row, index, "V")
+          else :
+              worksheet.write(row, index, score)
           index +=1 
 
     workbook.close()

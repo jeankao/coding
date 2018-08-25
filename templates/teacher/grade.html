@@ -19,21 +19,34 @@
 <a href="/teacher/grade/excel/{{typing}}/{{classroom.lesson}}/1/{{classroom.id}}" role="btn" class="btn btn-success active">匯出Excel</a>
 <BR>
 班級名稱：{{ classroom.name }}<BR>
-<table class="table">
+<table class="table" style="max-width:850px">
   <tr>
-  <td>座號</td>
-  <td>姓名</td>
-  <td align="center">成績</td>    
+  <td style="padding:2px">座號</td>
+  <td style="padding:2px">姓名</td>
+  <td align="center" style="padding:0px">成績</td>    
                 {% for assignment in lesson_list %}                    
-                     <td align="center" style="padding:0px">{% if typing == "0" %}{{assignment.1}}{% else %}{{assignment.title}}{% endif %}<BR><button type="button" class="btn btn-warning btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{forloop.counter}}{% endif %}</button></td>              
+                     <td align="center" style="padding:0px">{% if typing == "0" %}{{assignment.1}}{% else %}{{assignment.title}}{% endif %}</td>              
                 {% endfor %}
-    <td align="center"><button type="button" class="btn btn-warning btn-circle">心得</button></td>
+    <td></td>
+    
 </tr>
+  <tr>
+  <td></td>
+  <td></td>
+  <td></td>
+
+  {% for assignment in lesson_list %}      
+    <td align="center" style="padding:0px">  
+  <button type="button" class="btn btn-warning btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{forloop.counter}}{% endif %}</button> 
+   </td>
+  {% endfor %}
+<td align="center" style="padding:0px"><button type="button" class="btn btn-warning btn-circle">心得</button></td>
+  </tr>
 {% for enroll, enroll_score, memo, grade in data %}
 <tr>
-  <td>{{enroll.seat}}</td>
-  <td nowrap>{{enroll.student.first_name}}</td>
-  <td align=center>{{grade}}</td>
+  <td style="padding:2px">{{enroll.seat}}</td>
+  <td style="padding:2px" nowrap>{{enroll.student.first_name}}</td>
+  <td style="padding:0px" align=center>{{grade}}</td>
   {% for score, index in enroll_score %}
   <td align=center>{% if score == -1 %}V{% else %}{{score}}{% endif %}</td>
   {% endfor %}
