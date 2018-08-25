@@ -12,7 +12,7 @@
   {% if typing == "0" %}
     {% if lesson == "1" %}
     {% for list in lesson_list %}
-            {% if unit = "1" and forloop.counter < 18 %}
+            {% if unit == "1" and forloop.counter < 18 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
@@ -20,7 +20,7 @@
             <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}
-                {% if unit = "2" and forloop.counter > 17 and forloop.counter < 26 %}
+                {% if unit == "2" and forloop.counter > 17 and forloop.counter < 26 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
@@ -28,7 +28,7 @@
             <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}
-                {% if unit = "3" and forloop.counter > 25 and forloop.counter < 34 %}
+                {% if unit == "3" and forloop.counter > 25 and forloop.counter < 34 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
@@ -36,7 +36,7 @@
             <td>{{list.1.4}}</td>
         </tr>
                 {% endif %}
-                {% if unit = "4" and forloop.counter > 33 %}
+                {% if unit == "4" and forloop.counter > 33 %}
         <tr align=left>
         <td align=right>{{list.1.0.0}}</td>
             <td nowrap>{{list.1.0.2}}</td>
