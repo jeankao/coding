@@ -987,7 +987,7 @@
 .ui-affix-toc {
     position: fixed;
     top: 0;
-    max-width: 10vw;
+    max-width: 194px;
     max-height: 70vh;
     overflow: auto
 }
