@@ -5,9 +5,8 @@
 {% for enroll, shows in classrooms %}
 <div class="card">
   <h5 class="card-header">{{enroll.classroom}} ({{enroll.classroom.lesson_choice}})：{{enroll.seat}}號</h5>
-  <div class="card-body">
-    <p class="card-text">
-                    <p style="padding:0px; margin:2px;">
+  <div class="card-body ">
+    <p style="padding:0px; margin:2px;">
 基本資料：
 			<a href="/student/classroom/seat/{{enroll.id}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">座號</a>
 			<a href="/student/group/{{enroll.classroom_id}}" role="button" class="btn btn-success">組別</a>
