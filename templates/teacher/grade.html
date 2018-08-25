@@ -48,9 +48,9 @@
   <td style="padding:2px" nowrap>{{enroll.student.first_name}}</td>
   <td style="padding:0px" align=center>{{grade}}</td>
   {% for score, index in enroll_score %}
-  <td align=center>{% if score == -1 %}V{% else %}{{score}}{% endif %}</td>
+  <td align=center style="padding:0px">{% if score == -1 %}V{% else %}{% if score == "X" %}<font color="grey">x</font>{% else %}{{score}}{% endif %}{% endif %}</td>
   {% endfor %}
-  <td align=center>{{memo}}</td>
+  <td align=center style="padding:0px">{{memo}}</td>
 </tr>
 {% endfor %}
   </table>

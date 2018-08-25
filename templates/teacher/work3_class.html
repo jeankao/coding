@@ -18,9 +18,10 @@
     <td>{{list.0.seat}}){{list.0.student.first_name}}</td>
     <td>{{list.2}}</td>
     <td class="rating-wrapper" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}">
-      <div class="starrr readonly" data-rating="{{ list.1.score }}"></div>
-      <button class="btn btn-sm rating-btn">評分</button>
-      <button class="btn btn-sm btn-danger clear-btn">清除</button>
+      <div class="starrr readonly" data-rating="{{ list.1.score }}"></div>    
+      <button class="btn btn-sm rating-student">個人評分</button>      
+      <button class="btn btn-sm btn-danger clear-btn">清除</button>        
+      <button class="btn btn-sm rating-group">小組評分</button>         
     </td>
   </tr>
   {% endfor %}
@@ -32,15 +33,15 @@
     readOnly: true,
   });
 
-  var btn_class_rating = 'btn-outline-dark', 
-      btn_class_cancel = 'btn-outline-danger';
+  var btn_class_rating_student = 'btn-outline-dark', 
+      btn_class_cancel_student = 'btn-outline-danger';
 
   function do_rating(e, value) {
     var $this = $(e.target), 
         $parent = $this.parent(),
         $ratingObj = $('.starrr.edit', $parent),
         $origObj = $('.starrr.readonly', $parent),
-        $ratingBtn = $('button.rating-btn', $parent),
+        $ratingBtn = $('button.rating-student', $parent),
         $clearBtn = $('button.clear-btn', $parent),
         origValue = $origObj.data('rating');
 
@@ -57,19 +58,19 @@
         $origObj.data({starrr: null, rating: value}).empty().starrr({readOnly: true});
       });
     }
-    $ratingBtn.removeClass(btn_class_cancel).addClass(btn_class_rating).text('評分');
+    $ratingBtn.removeClass(btn_class_cancel_student).addClass(btn_class_rating_student).text('個人評分');
     $clearBtn.removeClass('show');
     $ratingObj.remove();
   }
 
-  $('.rating-btn').addClass(btn_class_rating).click(function() {
+  $('.rating-student').addClass(btn_class_rating_student).click(function() {
     var $parent = $(this).parent().append('<div class="starrr edit"></div>'), 
         $ratingObj = $('.starrr.edit', $parent),
         $origObj = $('.starrr.readonly', $parent),
-        $ratingBtn = $('button.rating-btn', $parent),
+        $ratingBtn = $('button.rating-student', $parent),
         $clearBtn = $('button.clear-btn', $parent);
-    if (!$ratingBtn.hasClass(btn_class_cancel)) {
-      $ratingBtn.addClass(btn_class_cancel).removeClass(btn_class_rating).text('取消');
+    if (!$ratingBtn.hasClass(btn_class_cancel_student)) {
+      $ratingBtn.addClass(btn_class_cancel_student).removeClass(btn_class_rating_student).text('取消評分');
       if ($origObj.data('rating'))
         $clearBtn.addClass('show');
       $ratingObj.offset($origObj.offset()).starrr({
@@ -77,7 +78,7 @@
         change: do_rating,
       });
     } else {
-      $ratingBtn.removeClass(btn_class_cancel).addClass(btn_class_rating).text('評分');
+      $ratingBtn.removeClass(btn_class_cancel_student).addClass(btn_class_rating_student).text('個人評分');
       $clearBtn.removeClass('show');
       $ratingObj.remove();
     }
