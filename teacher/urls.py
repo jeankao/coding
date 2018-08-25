@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^check/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<user_id>\d+)/(?P<classroom_id>[^/]+)/$', views.check),
 	  #成績
 	  url(r'^grade/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<classroom_id>\d+)/$', views.grade),
+	  url(r'^grade/excel/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<unit>[^/]+)/(?P<classroom_id>\d+)/$', views.grade_excel),  
     # 自訂作業
     url(r'^work2/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView2.as_view())),
     url(r'^work2/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView2.as_view())),

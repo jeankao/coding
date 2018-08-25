@@ -15,17 +15,19 @@
 <a href="/teacher/grade/0/5/1/{{classroom.id}}" role="btn" class='btn {% if typing == "0" %}btn-info active{% endif %}'>指定作業</a>
 {% endif %}
 <a href="/teacher/grade/1/{{classroom.lesson}}/1/{{classroom.id}}" role="btn" class='btn {% if typing == "1" %}btn-info active{% endif %}'>自訂作業</a>
+<a href="/teacher/grade/2/{{classroom.lesson}}/1/{{classroom.id}}" role="btn" class='btn {% if typing == "2" %}btn-info active{% endif %}'>檢核作業</a>
+<a href="/teacher/grade/excel/{{typing}}/{{classroom.lesson}}/1/{{classroom.id}}" role="btn" class="btn btn-success active">匯出Excel</a>
 <BR>
 班級名稱：{{ classroom.name }}<BR>
-<table>
+<table class="table">
   <tr>
   <td>座號</td>
   <td>姓名</td>
-  <td>成績</td>    
+  <td align="center">成績</td>    
                 {% for assignment in lesson_list %}                    
-                     <td style="padding:0px"><button type="button" class="btn btn-warning btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{forloop.counter}}{% endif %}</button></td>              
+                     <td align="center" style="padding:0px">{% if typing == "0" %}{{assignment.1}}{% else %}{{assignment.title}}{% endif %}<BR><button type="button" class="btn btn-warning btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{forloop.counter}}{% endif %}</button></td>              
                 {% endfor %}
-    <td><button type="button" class="btn btn-warning btn-circle">心得</button></td>
+    <td align="center"><button type="button" class="btn btn-warning btn-circle">心得</button></td>
 </tr>
 {% for enroll, enroll_score, memo, grade in data %}
 <tr>

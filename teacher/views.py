@@ -27,6 +27,12 @@ from account.forms import PasswordForm, RealnameForm
 import sys
 from uuid import uuid4
 import os
+import StringIO
+from shutil import copyfile
+import xlsxwriter
+from datetime import datetime
+from django.http import HttpResponse
+from django.utils.timezone import localtime
 
 reload(sys)
 
@@ -460,7 +466,10 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                             # message for group member
                             messagepoll = MessagePoll(message_id = message.id,reader_id=enroll.student_id)
                             messagepoll.save()
-                return redirect('/teacher/work/class/'+typing+ "/" + lesson+"/"+classroom_id+'/'+index)
+                if typing == "0":
+                    return redirect('/teacher/work/class/'+typing+ "/" + lesson+"/"+classroom_id+'/'+index)
+                elif typing == "1":
+                    return redirect('/teacher/work2/class/' + lesson+"/"+classroom_id+'/'+index)  
             else:
                 return redirect('/teacher/score_peer/'+typing+"/"+lesson+"/"+index+'/'+classroom_id+'/'+str(enroll.group))
 
@@ -649,8 +658,77 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
 def grade(request, typing, lesson, unit, classroom_id):
-    classroom = Classroom.objects.get(id=classroom_id)
-    if not request.user.id == classroom.teacher_id:
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
+        return redirect("/")
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
+    classroom = Classroom.objects.get(id=classroom_id)     
+    user_ids = [enroll.student_id for enroll in enrolls]
+    work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
+    lesson_dict = {}
+    data = []
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-1]
+    for enroll in enrolls:
+      enroll_score = []
+      total = 0
+      stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+      if typing == "0":
+        if lesson == "1":
+            if unit == "1":
+                lesson_list = lesson_list[0:17]
+            elif unit == "2":
+                lesson_list = lesson_list[17:25]
+            elif unit == "3":
+                lesson_list = lesson_list[25:33]
+            elif unit == "4":
+                lesson_list = lesson_list[33:41]
+      elif typing == "1":
+        lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+      else :
+        lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+      for index, assignment in enumerate(lesson_list):
+            if typing == "0": 
+                works = filter(lambda w: w.index == index+1, stu_works)
+            else :
+                works = filter(lambda w: w.index == assignment.id, stu_works)
+            works_count = len(works)
+            if works_count == 0:
+                enroll_score.append(["X", index])
+                if typing == "0" or typing == "1":
+                    if not lesson == "4":
+                        total += 60
+            else:
+                work = works[-1]
+                enroll_score.append([work.score, index])
+                if work.score == -1:
+                    if typing == "0" or typing == "1":
+                          if not lesson == "4":
+                              total += 80
+                else:
+                    total += work.score
+
+            if lesson == "1":
+                memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
+            elif lesson == "2":
+                memo = enroll.score_memo_vphysics
+            elif lesson == "3":
+                memo = enroll.score_memo_euler
+            elif lesson == "4":
+                memo = enroll.score_memo_vphysics2
+            elif lesson == "5":
+                memo = enroll.score_memo_vphysics3
+            if typing == "2":
+                grade = total
+            else :
+                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
+      data.append([enroll, enroll_score, memo, grade])
+    return render(request, 'teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data})
+
+@login_required
+@user_passes_test(not_in_teacher_group, login_url='/')
+def grade_excel(request, typing, lesson, unit, classroom_id):
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
         return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
     user_ids = [enroll.student_id for enroll in enrolls]
@@ -672,23 +750,28 @@ def grade(request, typing, lesson, unit, classroom_id):
                 lesson_list = lesson_list[25:33]
             elif unit == "4":
                 lesson_list = lesson_list[33:41]
-
-      else :
+      elif typing == "1":
         lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+      else :
+        lesson_list = CWork.objects.filter(classroom_id=classroom_id)
       for index, assignment in enumerate(lesson_list):
-            works = filter(lambda w: w.index == index+1, stu_works)
+            if typing == "0": 
+                works = filter(lambda w: w.index == index+1, stu_works)
+            else :
+                works = filter(lambda w: w.index == assignment.id, stu_works)
             works_count = len(works)
             if works_count == 0:
-                enroll_score.append([0, index])
-                total += 60
+                enroll_score.append(["X", index])
+                if typing == "0" or typing == "1":
+                    if not lesson == "4":
+                        total += 60
             else:
                 work = works[-1]
                 enroll_score.append([work.score, index])
                 if work.score == -1:
-                    if works_count == 1:
-                        total += 80
-                    else: # Multiple
-                        total += 75
+                    if typing == "0" or typing == "1":
+                          if not lesson == "4":
+                              total += 80
                 else:
                     total += work.score
 
@@ -702,10 +785,62 @@ def grade(request, typing, lesson, unit, classroom_id):
                 memo = enroll.score_memo_vphysics2
             elif lesson == "5":
                 memo = enroll.score_memo_vphysics3
-            grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
+            if typing == "2":
+                grade = total
+            else :
+                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
       data.append([enroll, enroll_score, memo, grade])
-    return render(request, 'teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data})
+                
+    classroom = Classroom.objects.get(id=classroom_id)       
+    output = StringIO.StringIO()
+    workbook = xlsxwriter.Workbook(output)    
+    worksheet = workbook.add_worksheet(classroom.name)
+    date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
 
+    row = 1
+    worksheet.write(row, 1, u'座號')
+    worksheet.write(row, 2, u'姓名')
+    worksheet.write(row, 3, u'成績')        
+    index = 4
+    for assignment in lesson_list:
+        if typing == "0":
+	          worksheet.write(row, index, assignment[1])
+        else :
+	          worksheet.write(row, index, assignment.title)              
+        index += 1
+
+    index = 4
+    if not typing == "0":
+        row += 1
+        for assignment in lesson_list:            
+            worksheet.write(row, index, datetime.strptime(str(assignment.time)[:19],'%Y-%m-%d %H:%M:%S'), date_format)
+            index += 1			
+
+    for enroll, enroll_score, memo, grade in data:
+      row += 1
+      worksheet.write(row, 1, enroll.seat)
+      worksheet.write(row, 2, enroll.student.first_name)
+      worksheet.write(row, 3, grade)     
+      index = 4
+      for score, index2 in enroll_score:
+          worksheet.write(row, index, score)
+          index +=1 
+
+    workbook.close()
+    # xlsx_data contains the Excel file
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    if typing == "0":
+        type_name = "指定作業"
+    elif typing == "1":
+        type_name = "自訂作業"
+    else:
+        type_name = "檢核作業"        
+    filename = classroom.name + '-' + type_name + "-" + str(localtime(timezone.now()).date()) + '.xlsx'
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
+    xlsx_data = output.getvalue()
+    response.write(xlsx_data)
+    return response
+  
 # 列出分組所有作業
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
