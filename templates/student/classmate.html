@@ -26,7 +26,7 @@
 				{% endif %}
 
             <td>{{enroll.seat}}</td>           
-            <td><img src="/static/avatar/s{{ enroll.student.profile.avatar }}.png">{{enroll.student.first_name}}</td>
+              <td><a href="/account/profile/{{enroll.student_id}}"><img src="/static/avatar/s{{ enroll.student.profile.avatar }}.png">{{enroll.student.first_name}}</a></td>
 						<td>{{group}}</td>
             <td>{{enroll.student.last_login}}</td>
 						<td>{% if login_times > 0 %}<a href="/student/loginlog/{{enroll.student_id}}">{{login_times}}</a>{% else %} 0 {% endif %}</td>
