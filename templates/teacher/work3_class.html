@@ -14,25 +14,58 @@
     <td>功能</td>
   </tr>
   {% for list in classmate_work %}
-  <tr>
+  <tr id='stu{{list.0.id}}'>
     <td>{{list.0.seat}}){{list.0.student.first_name}}</td>
-    <td>{{list.2}}</td>
-    <td class="rating-wrapper" data-stuid="{{ list.0.student_id }}" data-workid="{% if list.1.id %}{{ list.1.id }}{% else %}0{% endif %}">
+    <td class="group-name">{{list.2}}</td>
+    <td class="rating-wrapper" data-stuid="{{ list.0.student_id }}">
       <div class="starrr readonly" data-rating="{{ list.1.score }}"></div>    
       <button class="btn btn-sm rating-student">個人評分</button>      
-      <button class="btn btn-sm btn-danger clear-btn">清除</button>        
-      <button class="btn btn-sm rating-group">小組評分</button>         
+      <button class="btn btn-sm btn-danger clear-btn">清除</button>
+      {% if list.2 != '沒有組別' %}
+      <button class="btn btn-sm rating-group" data-toggle="modal" data-target="#group-rating">小組評分</button>
+      {% endif %}
     </td>
   </tr>
   {% endfor %}
 </table>
+<div class="modal fade" id="group-rating" tabindex="-1" role="dialog" aria-labelledby="groupRatingLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="groupRatingLabel"><span id="group-name"></span> 小組評分</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>        
+      </div>
+      <div class="modal-body">
+        <table class="table" id="modal-table"></table>
+      </div>
+      <div class="modal-footer">
+        <div>
+          <div class="starrr group-edit"></div>
+          <button class="btn btn-sm btn-outline-danger cancel-btn">取消</button>
+          <button class="btn btn-sm btn-danger clear-btn show">清除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
+{% block footer_script %}
+<script>
+var groups = {
+  {% for group in groups.items %}
+  '{{ group.0 }}': {{ group.1 }},{% endfor %}
+};
+</script>
+{% endblock %}
 {% block domready %}
   $('.starrr.readonly').starrr({
     readOnly: true,
   });
-
+  //-------------------------------------------------------------------------
+  // 個人評分
   var btn_class_rating_student = 'btn-outline-dark', 
       btn_class_cancel_student = 'btn-outline-danger';
 
@@ -50,11 +83,9 @@
     
     if (value !== origValue) {
       $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
-        workid: $parent.data('workid'),
-        stuid: $parent.data('stuid'),
+        stuid: "["+$parent.data('stuid')+"]",
         score: value,
       }, function(data){
-        $parent.data('workid', data.workid);
         $origObj.data({starrr: null, rating: value}).empty().starrr({readOnly: true});
       });
     }
@@ -84,7 +115,44 @@
     }
   });
 
-  $('.clear-btn').click(function(e) {
+  $('.rating-wrapper .clear-btn').click(function(e) {
     do_rating(e, 0);
+  });
+
+  //-------------------------------------------------------------------------
+  // 小組評分
+  function do_group_rating(e, value) {
+    var $grpname = $('#group-name').text();
+    var $memberids = groups[$grpname];
+    var $stuids = '[' + $memberids.join(',') + ']';
+    $.post('/teacher/work3/score/{{classroom.lesson}}/{{classroom.id}}/{{index}}/', {
+      stuid: $stuids,
+      score: value,
+    }, function(data){
+      var update_elements = $memberids.map(function(mid) {return '#stu'+mid+' .starrr.readonly'}).join(',');
+      $(update_elements).data({starrr: null, rating: value}).empty().starrr({readonly: true});
+    });
+    $('#group-rating').modal('hide');
+  }
+
+  $('#group-rating').on('show.bs.modal', function(e) {
+    var grpname = $(e.relatedTarget).parent().parent().children('.group-name').text();
+    var member_ids = groups[grpname];
+    var data_ids = member_ids.map(function(mid) {return '#stu'+mid;}).join(',');
+    $('#modal-table').empty().append($(data_ids).clone().removeAttr('id'));
+    $('#modal-table td:nth-child(2), #modal-table button').remove();
+    var $modal = $(this);
+    $('#group-name').text(grpname);
+
+    $('.starrr.group-edit', $(this)).data({starrr: null}).empty().starrr({
+      change: do_group_rating,
+    });
+  });
+
+  $('#group-rating .btn').click(function(e) {
+    if ($(this).hasClass('clear-btn')) {
+      do_group_rating(e, 0);
+    }
+    $('#group-rating').modal('hide');
   });
 {% endblock %}

@@ -33,6 +33,7 @@ import xlsxwriter
 from datetime import datetime
 from django.http import HttpResponse
 from django.utils.timezone import localtime
+import json
 
 reload(sys)
 
@@ -1270,9 +1271,10 @@ class WorkCreateView3(CreateView):
 def work_class3(request, lesson, classroom_id, work_id):
     if not not_in_teacher_group(request.user):
         return redirect("/")
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
     classroom = Classroom.objects.get(id=classroom_id)
     classmate_work = []
+    groups = {}
     scorer_name = ""
     for enroll in enrolls:
         try:
@@ -1283,14 +1285,14 @@ def work_class3(request, lesson, classroom_id, work_id):
             work = Work.objects.filter(typing=2, user_id=enroll.student_id, index=work_id, lesson_id=lesson).last()
         try:
             group_name = EnrollGroup.objects.get(id=enroll.group).name
+            if not group_name in groups:
+                groups[group_name] = [enroll.student_id]
+            else:
+                groups[group_name].append(enroll.student_id)
         except ObjectDoesNotExist:
             group_name = "沒有組別"
         classmate_work.append([enroll,work, group_name])
-
-    def getKey(custom):
-        return custom[0].seat
-    classmate_work = sorted(classmate_work, key=getKey)
-    return render(request, 'teacher/work3_class.html',{'typing':2, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id})
+    return render(request, 'teacher/work3_class.html',{'typing':2, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id, 'groups': groups})
 
 #
 def work3_score(request, lesson, classroom_id, work_id):
@@ -1300,23 +1302,21 @@ def work3_score(request, lesson, classroom_id, work_id):
         return JsonResponse({'status':'fail'}, safe=False)
     
     score = request.POST.get('score')
-    wid = request.POST.get('workid')
-    sid = request.POST.get('stuid')
+    sids = json.loads(request.POST.get('stuid'))
 
     # 如果評分為 0，清除該生成績紀錄
     if score == 0:
-        Work.objects.filter(typing=2, user_id=sid, index=work_id, lesson_id=lesson).delete()
-        return JsonResponse({'status':'ok', 'workid': 0}, safe=False)
+        Work.objects.filter(typing=2, user_id__in=sid, index=work_id, lesson_id=lesson).delete()
+        return JsonResponse({'status':'ok'}, safe=False)
 
-    if not work_id: # 沒有成績紀錄 => 新增一筆
-        work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
-    else:           # 取得舊評分紀錄，更新資料，如果找不到該筆紀錄就新增
-        try:    
-            work = Work.objects.get(id=wid)
+    # 取得舊評分紀錄，更新資料，如果找不到該筆紀錄就新增
+    for sid in sids:
+        try:
+            work = Work.objects.get(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
             work.publication_date = timezone.now()            
         except ObjectDoesNotExist:
             work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
-    work.score = request.POST.get('score')
-    work.scorer = request.user.id
-    work.save()
-    return JsonResponse({'staus':'ok', 'workid': work.id}, safe=False)
+        work.score = request.POST.get('score')
+        work.scorer = request.user.id
+        work.save()
+    return JsonResponse({'staus':'ok'}, safe=False)
