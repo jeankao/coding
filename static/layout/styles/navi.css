@@ -34,7 +34,7 @@ File: Navigation CSS
 .nav1 a{display:block; position:relative;}
 .nav1 li:hover ul, .nav1 li.sfHover ul{left:0; top:2.5em; z-index:99;}
 ul.nav1 li:hover li ul, ul.nav1 li.sfHover li ul{top:-999em;}
-ul.nav1 li li:hover ul, ul.nav1 li li.sfHover ul{left:10em; top:0;}
+ul.nav1 li li:hover ul, ul.nav1 li li.sfHover ul{left:18em; top:0;}
 ul.nav1 li li:hover li ul, ul.nav1 li li.sfHover li ul{top:-999em;}
 ul.nav1 li li li:hover ul, ul.nav1 li li li.sfHover ul{left:10em; top:0;}
 
