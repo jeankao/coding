@@ -18,7 +18,7 @@ body.modal-open {overflow-y: auto !important;padding-right: 0 !important;}
     <td>功能</td>
   </tr>
   {% for list in classmate_work %}
-  <tr id='stu{{list.0.id}}'>
+  <tr id='stu{{list.0.student_id}}'>
     <td>{{list.0.seat}}){{list.0.student.first_name}}</td>
     <td class="group-name">{{list.2}}</td>
     <td class="rating-wrapper" data-stuid="{{ list.0.student_id }}">

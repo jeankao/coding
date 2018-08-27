@@ -1306,7 +1306,7 @@ def work3_score(request, lesson, classroom_id, work_id):
 
     # 如果評分為 0，清除該生成績紀錄
     if score == 0:
-        Work.objects.filter(typing=2, user_id__in=sid, index=work_id, lesson_id=lesson).delete()
+        Work.objects.filter(typing=2, user_id__in=sids, index=work_id, lesson_id=lesson).delete()
         return JsonResponse({'status':'ok'}, safe=False)
 
     # 取得舊評分紀錄，更新資料，如果找不到該筆紀錄就新增
@@ -1315,6 +1315,9 @@ def work3_score(request, lesson, classroom_id, work_id):
             work = Work.objects.get(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
             work.publication_date = timezone.now()            
         except ObjectDoesNotExist:
+            work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
+        except MultipleObjectsReturned:
+            Work.objects.filter(typing=2, user_id=sid, index=work_id, lesson_id=lesson).delete()
             work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
         work.score = request.POST.get('score')
         work.scorer = request.user.id
