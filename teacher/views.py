@@ -1341,7 +1341,7 @@ def work_word(request, lesson, classroom_id, index):
     lesson_list = lesson_list4
     #word
     document = Document()
-    docx_title=u"指定作業-" + classroom.name + "-"+ str(timezone.localtime(timezone.now()).date())+".docx"
+    docx_title=u"指定作業-" + classroom.name + "-"+ lesson_list[int(index)][1]+ "-" + str(timezone.localtime(timezone.now()).date())+".docx"
     document.add_paragraph(request.user.first_name + u'的指定作業')
     document.add_paragraph(u'主題：'+ lesson_list[int(index)][1])		
     document.add_paragraph(u"班級：" + classroom.name)		
