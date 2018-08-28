@@ -34,6 +34,12 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.utils.timezone import localtime
 import json
+from docx import *
+from docx.shared import Inches
+from docx.shared import RGBColor
+from docx.oxml.shared import OxmlElement, qn
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
+from docx.enum.dml import MSO_THEME_COLOR_INDEX
 
 reload(sys)
 
@@ -1323,3 +1329,79 @@ def work3_score(request, lesson, classroom_id, work_id):
         work.scorer = request.user.id
         work.save()
     return JsonResponse({'staus':'ok'}, safe=False)
+
+# ck指定作業匯出
+def work_word(request, lesson, classroom_id, index):
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
+       return redirect("/")
+    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+    student_ids = map(lambda a: a.student_id, enroll_pool)  
+    works = Work.objects.filter(typing=0, lesson_id=lesson, user_id__in=student_ids).order_by("-id")
+    classroom = Classroom.objects.get(id=classroom_id)
+    lesson_list = lesson_list4
+    #word
+    document = Document()
+    docx_title=u"指定作業-" + classroom.name + "-"+ str(timezone.localtime(timezone.now()).date())+".docx"
+    document.add_paragraph(request.user.first_name + u'的指定作業')
+    document.add_paragraph(u'主題：'+ lesson_list[int(index)][1])		
+    document.add_paragraph(u"班級：" + classroom.name)		
+
+    for enroll in enroll_pool:
+      enroll_works = filter(lambda w: w.user_id == enroll.student_id, works)
+      work = enroll_works[0]
+      run = document.add_paragraph().add_run(str(enroll.seat)+")"+enroll.student.first_name)
+      font = run.font
+      font.color.rgb = RGBColor(0xFA, 0x24, 0x00)
+      if len(enroll_works)>0:
+        p = document.add_paragraph(str(work.publication_date)[:19]+'\n')
+        add_hyperlink(document, p, work.youtube, work.youtube)
+        document.add_paragraph(work.memo)
+
+    # Prepare document for download        
+    f = StringIO.StringIO()
+    document.save(f)
+    length = f.tell()
+    f.seek(0)
+    response = HttpResponse(
+      f.getvalue(),
+      content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(docx_title.encode('utf8')) 
+    response['Content-Length'] = length
+    return response
+
+def add_hyperlink(document, paragraph, url, name):
+    """
+    Add a hyperlink to a paragraph.
+    :param document: The Document being edited.
+    :param paragraph: The Paragraph the hyperlink is being added to.
+    :param url: The url to be added to the link.
+    :param name: The text for the link to be displayed in the paragraph
+    :return: None
+    """
+
+    part = document.part
+    rId = part.relate_to(url, RT.HYPERLINK, is_external=True)
+
+    init_hyper = OxmlElement('w:hyperlink')
+    init_hyper.set(qn('r:id'), rId, )
+    init_hyper.set(qn('w:history'), '1')
+
+    new_run = OxmlElement('w:r')
+
+    rPr = OxmlElement('w:rPr')
+
+    rStyle = OxmlElement('w:rStyle')
+    rStyle.set(qn('w:val'), 'Hyperlink')
+
+    rPr.append(rStyle)
+    new_run.append(rPr)
+    new_run.text = name
+    init_hyper.append(new_run)
+
+    r = paragraph.add_run()
+    r._r.append(init_hyper)
+    r.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
+    r.font.underline = True
+
+    return None  
