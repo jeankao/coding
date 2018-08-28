@@ -1,0 +1,855 @@
+<div id="doc" class="markdown-body container-fluid" style="position: relative;"><style>
+.markdown-body table{
+    display: unset;
+}
+</style><h1 id="Lecture-10-Keyboard-and-Mouse-Control"><a class="anchor hidden-xs" href="#Lecture-10-Keyboard-and-Mouse-Control" title="Lecture-10-Keyboard-and-Mouse-Control"><span class="octicon octicon-link"></span></a>Lecture 10 Keyboard and Mouse Control</h1><blockquote>
+<p>建國高中特色選修課程 - 物理現象的程式設計與模擬<br>
+作者：賴奕帆<br>
+日期：2018/8/28</p>
+</blockquote><hr><h2 id="10-1-Keyboard-Control"><a class="anchor hidden-xs" href="#10-1-Keyboard-Control" title="10-1-Keyboard-Control"><span class="octicon octicon-link"></span></a>10-1 Keyboard Control</h2><h3 id="基本的Keyboard-Control範例"><a class="anchor hidden-xs" href="#基本的Keyboard-Control範例" title="基本的Keyboard-Control範例"><span class="octicon octicon-link"></span></a>基本的Keyboard Control範例</h3><p>請同學先執行第一個範例程式，可以按鍵盤上下左右、i、o可以控制地球的位置，按鍵盤c、r可以控制轉動軸方向，按鍵盤q、w可以控制轉動轉速。</p><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/z91Nc4M.jpg"></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span></div><div class="code"><span class="hljs-string">"""
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    日期: 107/08/31
+    特色課程 Lecture 10 
+    10_1_1_keyboard_control Example.py
+"""</span>
+<span class="hljs-keyword">from</span> vpython <span class="hljs-keyword">import</span> *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+
+angle_v = <span class="hljs-number">0</span>
+pos, axis= vector(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), vector(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>)
+
+scene = canvas(width=<span class="hljs-number">1000</span>, height=<span class="hljs-number">800</span>, range = <span class="hljs-number">6</span>, background=vec(<span class="hljs-number">0.6</span>,<span class="hljs-number">0.8</span>,<span class="hljs-number">0.8</span>))
+ball = sphere(radius = <span class="hljs-number">1.0</span>, texture=textures.earth )
+ 
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">keyinput</span><span class="hljs-params">(evt)</span>:</span>       <span class="hljs-comment"># 呼喚keyboard使用功能</span>
+    <span class="hljs-keyword">global</span> pos, axis ,angle_v     <span class="hljs-comment"># 定義鍵盤控制參數</span>
+    move = {<span class="hljs-string">'left'</span>: vector(<span class="hljs-number">-0.1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), <span class="hljs-string">'right'</span>: vector(<span class="hljs-number">0.1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), <span class="hljs-string">'up'</span>: vector(<span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0</span>),
+           <span class="hljs-string">'down'</span>: vector(<span class="hljs-number">0</span>, <span class="hljs-number">-0.1</span>, <span class="hljs-number">0</span>), <span class="hljs-string">'i'</span> : vector(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-0.1</span>), <span class="hljs-string">'o'</span>: vector(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>)}
+    axel = {<span class="hljs-string">'c'</span> : vector(<span class="hljs-number">0.00</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.02</span>), <span class="hljs-string">'r'</span>: vector(<span class="hljs-number">-0.02</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)}
+    key_s = {<span class="hljs-string">'q'</span> :<span class="hljs-number">0.01</span>, <span class="hljs-string">'w'</span> : <span class="hljs-number">-0.01</span>}
+    s = evt.key    <span class="hljs-comment">#控制鍵盤事件參數</span>
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> move : pos = pos + move[s]
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> axel: axis = axis + axel[s]
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> key_s : angle_v = angle_v + key_s[s]
+scene.bind(<span class="hljs-string">'keydown'</span>, keyinput)                    <span class="hljs-comment"># 將鍵盤控制設定綁定於scene視窗                             </span>
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:                                                     
+    rate(<span class="hljs-number">200</span>)
+    ball.rotate(angle=angle_v, axis=axis)
+    ball.pos = pos
+</div></div></code></pre><h3 id="Keyboard-Control_練習1"><a class="anchor hidden-xs" href="#Keyboard-Control_練習1" title="Keyboard-Control_練習1"><span class="octicon octicon-link"></span></a>Keyboard Control_練習1</h3><p>下述程式碼執行後會看到一顆黃球在進行圓周運動，目前的圓周半徑R為20，轉速w為1( 每秒鐘1弧度)。<br>
+並且可以看到紅色箭頭代表速度向量、白色箭頭代表加速度向量。</p><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/w7Rc7VB.jpg"></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span></div><div class="code"><span class="hljs-string">""</span><span class="hljs-string">"
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    日期: 107/08/31
+    特色課程 Lecture 10 
+    10_1_2_keyboard_control Practice_Circle_Motion with velocity and acceleration.py
+"</span><span class="hljs-string">""</span>
+from vpython import *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+
+R = 20                <span class="hljs-comment">#圓周半徑</span>
+B_r = 0.1*R           <span class="hljs-comment">#球的半徑</span>
+theta = 0*pi/180      <span class="hljs-comment">#轉動初始角度</span>
+w = 1                 <span class="hljs-comment">#轉動角速度</span>
+t=0
+dt = 0.001            <span class="hljs-comment">#時間間隔 0.001 秒</span>
+
+scene = canvas(width=1000, height=800, center = vec(0,0,0), background=vec(0.3,0.4,0.4), forward=vec(0,0,-1),range=60) <span class="hljs-comment">#設定畫面</span>
+
+ball = sphere(radius = B_r , color=color.yellow, make_trail= True, interval=100) <span class="hljs-comment">#畫球</span>
+ball.pos = vector( R*cos(theta), R*sin(theta), 0) <span class="hljs-comment">#球初始位置</span>
+ball.v = vector( 0, 0, 0) <span class="hljs-comment">#球初速 </span>
+
+v_arrow = arrow(pos=ball.pos,axis=vec(0,0,0),shaftwidth=0.2*B_r ,color = color.red)  <span class="hljs-comment">#速度箭頭</span>
+a_arrow = arrow(pos=ball.pos,axis=vec(0,0,0),shaftwidth=0.2*B_r ,color = color.white)  <span class="hljs-comment">#加速度箭頭</span>
+
+while True :             
+    rate(1000)     <span class="hljs-comment">#每一秒跑 1000 次</span>
+    
+    theta = theta + w * dt          
+    ball.pos = vector (R*cos(theta), R*sin(theta), 0 )
+
+    v_arrow.pos = ball.pos
+    v_arrow.axis = cross(vector(0,0,1),ball.pos).norm() * R * w
+    a_arrow.pos = ball.pos
+    a_arrow.axis = - ball.pos.norm() * R * w * w
+
+    t = t + dt
+</div></div></code></pre><h3 id="課堂作業-10-1"><a class="anchor hidden-xs" href="#課堂作業-10-1" title="課堂作業-10-1"><span class="octicon octicon-link"></span></a>課堂作業 10-1</h3><p>請同學們嘗試合併上述程式，讓鍵盤可以控制圓周運動的圓周半徑R與轉速w，如下圖所示。</p><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/sGBqHeM.jpg"></p><div class="alert alert-success">
+<h4 id="課堂作業-10-1-參考解法步驟-"><a class="anchor hidden-xs" href="#課堂作業-10-1-參考解法步驟-" title="課堂作業-10-1-參考解法步驟-"><span class="octicon octicon-link"></span></a>課堂作業 10-1 參考解法步驟 :</h4>
+<ul>
+<li>複製def keyinput(evt)鍵盤控制程式碼:</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">keyinput</span><span class="hljs-params">(evt)</span>:</span>       <span class="hljs-comment"># 呼喚keyboard使用功能</span>
+    <span class="hljs-keyword">global</span> pos, axis ,angle_v     <span class="hljs-comment"># 定義鍵盤控制參數</span>
+    move = {<span class="hljs-string">'left'</span>: vector(<span class="hljs-number">-0.1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), <span class="hljs-string">'right'</span>: vector(<span class="hljs-number">0.1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), <span class="hljs-string">'up'</span>: vector(<span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0</span>),
+           <span class="hljs-string">'down'</span>: vector(<span class="hljs-number">0</span>, <span class="hljs-number">-0.1</span>, <span class="hljs-number">0</span>), <span class="hljs-string">'i'</span> : vector(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-0.1</span>), <span class="hljs-string">'o'</span>: vector(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>)}
+    axel = {<span class="hljs-string">'c'</span> : vector(<span class="hljs-number">0.00</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.02</span>), <span class="hljs-string">'r'</span>: vector(<span class="hljs-number">-0.02</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)}
+    key_s = {<span class="hljs-string">'q'</span> :<span class="hljs-number">0.01</span>, <span class="hljs-string">'w'</span> : <span class="hljs-number">-0.01</span>}
+    s = evt.key    <span class="hljs-comment">#控制鍵盤事件參數</span>
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> move : pos = pos + move[s]
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> axel: axis = axis + axel[s]
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> key_s : angle_v = angle_v + key_s[s]
+scene.bind(<span class="hljs-string">'keydown'</span>, keyinput)                    <span class="hljs-comment"># 將鍵盤控制設定綁定於scene視窗  </span>
+</div></div></code></pre>
+<ul>
+<li>修改global pos , axis , angle_v，改為R , w。</li>
+<li>修改s = evt.key。</li>
+<li>注意，R與w都是純量，與原本的key_s相同，不需要加vector。</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span></div><div class="code"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">keyinput</span><span class="hljs-params">(evt)</span>:</span>                                                           <span class="hljs-comment"># keyboard interrupt callback function</span>
+    <span class="hljs-keyword">global</span> R, w     <span class="hljs-comment"># define the global variables that you want to change by this function</span>
+    length = {<span class="hljs-string">'q'</span> :<span class="hljs-number">0.2</span>, <span class="hljs-string">'w'</span> : <span class="hljs-number">-0.2</span>}
+    angle_v = {<span class="hljs-string">'a'</span> : <span class="hljs-number">0.1</span>, <span class="hljs-string">'s'</span>: <span class="hljs-number">-0.1</span>}
+    
+    s = evt.key
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> length : R = R + length[s]
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> angle_v: w = w + angle_v[s]
+scene.bind(<span class="hljs-string">'keydown'</span>, keyinput)       
+</div></div></code></pre>
+</div><h3 id="Keyboard-Control_練習2"><a class="anchor hidden-xs" href="#Keyboard-Control_練習2" title="Keyboard-Control_練習2"><span class="octicon octicon-link"></span></a>Keyboard Control_練習2</h3><ul>
+<li>下述程式碼執行後會看到一顆球在進行斜向拋射，並在最高點會自動分裂成兩顆球(質量設定為2:1)。</li>
+</ul><p><img src="https://i.imgur.com/ICk4PjH.jpg" alt=""></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span>
+<span data-linenumber="40"></span></div><div class="code"><span class="hljs-string">""</span><span class="hljs-string">"
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    日期: 107/08/31
+    特色課程 Lecture 10 
+    10_1_3_keyboard_control Practice_Pjojectile motion and boom.py
+"</span><span class="hljs-string">""</span>
+from vpython import *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+g=9.8    ;   size = 0.5  ; m1 =2 ; m2 =4 ; t = 0 ; dt = 0.001
+v0 = 20   ;   theta_0 = 60*pi/180   ;   s0 = vector( -25.0, size, 0.0)
+J_vector = norm(vector(1,0,0)) <span class="hljs-comment">#爆炸衝量方向(1,0,0)為水平爆炸</span>
+J_mag = 20 <span class="hljs-comment">#爆炸衝量強度</span>
+scene = canvas(title='拋體運動', width=1000, height=600, center=vec(0,10,0),background=vec(0.6,0.8,0.8))<span class="hljs-comment">#設定畫面</span>
+floor = box(length=60, height=0.01, width=4, texture=textures.wood)                  <span class="hljs-comment">#畫地板</span>
+ball1 = sphere(radius = size,  color=color.red, make_trail = True)          <span class="hljs-comment">#畫球</span>
+ball2 = sphere(radius = size,  color=color.green, make_trail = True)          <span class="hljs-comment">#畫球</span>
+ball3 = sphere(radius = 0.01*size,  color=color.black, make_trail = True)          <span class="hljs-comment">#畫球</span>
+ball1.pos = s0    ;  ball1.v = vector(v0*cos(theta_0), v0*sin(theta_0) , 0.0)       <span class="hljs-comment">#球初速</span>
+ball2.pos = s0    ;  ball2.v = vector(v0*cos(theta_0), v0*sin(theta_0) , 0.0)       <span class="hljs-comment">#球初速</span>
+ball3.pos = s0    ;  ball3.v = vector(0, 0 , 0)       <span class="hljs-comment">#球初速</span>
+
+<span class="hljs-comment">#設定鍵盤按下a,使start &gt; 0 , 開始拋射</span>
+start = 0
+
+while ball3.pos.y&gt;=0:       <span class="hljs-comment">#模擬直到球落地</span>
+    rate(500)                   <span class="hljs-comment">#每一秒跑1000次</span>
+    t = t + dt
+
+    ball3.pos = (m1*ball1.pos+m2*ball2.pos)/(m1+m2)  <span class="hljs-comment">#兩球的質心</span>
+    
+    <span class="hljs-comment">##設定鍵盤按下a,使start &gt; 0 , 開始拋射</span>
+    if t &gt;= 0:
+        ball1.pos += ball1.v*dt
+        ball1.v += vector(0,- g*dt,0)
+        ball2.pos += ball2.v*dt
+        ball2.v += vector(0,- g*dt,0)
+        if ball1.v.y &lt; 0  and start &lt; 1:   <span class="hljs-comment"># 注意，此處衝量J_vector只能施加一次爆炸衝擊。</span>
+            ball1.v += J_vector*J_mag/m1      <span class="hljs-comment">#球1受到向右的衝量</span>
+            ball2.v += - J_vector*J_mag/m2     <span class="hljs-comment">#球2受到向左的衝量</span>
+            start = start + 1                 <span class="hljs-comment">#使衝量只會受到一次</span>
+</div></div></code></pre><h3 id="課堂作業-10-2"><a class="anchor hidden-xs" href="#課堂作業-10-2" title="課堂作業-10-2"><span class="octicon octicon-link"></span></a>課堂作業 10-2</h3><p>請同學們設定鍵盤控制，讓程式執行時，改為可以由鍵盤控制<strong>發射</strong>與<strong>炸開</strong>的時機。</p><p><img src="https://i.imgur.com/UkNeoHb.jpg" alt=""></p><div class="alert alert-success">
+<h4 id="課堂作業-10-2-參考解法步驟-"><a class="anchor hidden-xs" href="#課堂作業-10-2-參考解法步驟-" title="課堂作業-10-2-參考解法步驟-"><span class="octicon octicon-link"></span></a>課堂作業 10-2 參考解法步驟 :</h4>
+<ul>
+<li>複製def keyinput(evt)鍵盤控制程式碼:</li>
+<li>修改global pos , axis , angle_v，改為start。</li>
+<li>修改s = evt.key。</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">keyinput</span><span class="hljs-params">(evt)</span>:</span>       <span class="hljs-comment"># 呼喚keyboard使用功能</span>
+    <span class="hljs-keyword">global</span> start     <span class="hljs-comment"># 定義鍵盤控制參數</span>
+    key_s = {<span class="hljs-string">'a'</span> :<span class="hljs-number">1.0</span>}
+    s = evt.key    <span class="hljs-comment">#控制鍵盤事件參數</span>
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> key_s : start = start + key_s[s]
+scene.bind(<span class="hljs-string">'keydown'</span>, keyinput)                    <span class="hljs-comment"># 將鍵盤控制設定綁定於scene視窗  </span>
+</div></div></code></pre>
+<ul>
+<li>修改執行迴圈中球射出的設定，原為"if t &gt;= 0:"，改為"if start &gt; 0:"</li>
+<li>修改執行迴圈中球爆炸的設定，原為"if ball1.v.y &lt; 0  and start &lt; 1: “,改為"if start &gt; 1.9 and start &lt;2.1”</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code">    <span class="hljs-comment">##設定鍵盤按下a,使start &gt; 0 , 開始拋射</span>
+    <span class="hljs-keyword">if</span> start &gt; <span class="hljs-number">0</span>:
+        ball1.pos += ball1.v*dt
+        ball1.v += vector(<span class="hljs-number">0</span>,- g*dt,<span class="hljs-number">0</span>)
+        ball2.pos += ball2.v*dt
+        ball2.v += vector(<span class="hljs-number">0</span>,- g*dt,<span class="hljs-number">0</span>)
+        <span class="hljs-keyword">if</span> start &gt; <span class="hljs-number">1.9</span> <span class="hljs-keyword">and</span> start &lt;<span class="hljs-number">2.1</span>:   <span class="hljs-comment"># 注意，此處衝量J_vector只能施加一次爆炸衝擊。</span>
+            ball1.v += J_vector*J_mag/m1      <span class="hljs-comment">#球1受到向右的衝量</span>
+            ball2.v += - J_vector*J_mag/m2    <span class="hljs-comment">#球2受到向左的衝量</span>
+            start = start + <span class="hljs-number">1</span>                 <span class="hljs-comment">#使衝量只會受到一次</span>
+</div></div></code></pre>
+</div><h2 id="10-2-Mouse-Control"><a class="anchor hidden-xs" href="#10-2-Mouse-Control" title="10-2-Mouse-Control"><span class="octicon octicon-link"></span></a>10-2 Mouse Control</h2><h3 id="基本的Mouse-Control範例"><a class="anchor hidden-xs" href="#基本的Mouse-Control範例" title="基本的Mouse-Control範例"><span class="octicon octicon-link"></span></a>基本的Mouse Control範例</h3><ul>
+<li>執行下述範例，可以用滑鼠按箭頭的頭改變向量的方向與大小。<br>
+用滑鼠按箭頭的尾改變向量的位置。</li>
+</ul><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/EDFqXcd.jpg"></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span></div><div class="code"><span class="hljs-string">"""
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    日期: 107/08/31
+    特色課程 Lecture 10 
+    10_2_1_mouse_control Example.py
+"""</span>
+<span class="hljs-keyword">from</span> vpython <span class="hljs-keyword">import</span> *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+scene.range = <span class="hljs-number">8</span> <span class="hljs-comment"># fixed size, no autoscaling , 固定螢幕大小</span>
+arr = arrow(pos=vec(<span class="hljs-number">2</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>),axis=vec(<span class="hljs-number">0</span>,<span class="hljs-number">5</span>,<span class="hljs-number">0</span>))
+by = <span class="hljs-number">1</span> <span class="hljs-comment"># touch this close to tail or tip, 滑鼠按下後與尾與箭頭的判斷距離</span>
+drag = <span class="hljs-keyword">None</span> <span class="hljs-comment"># have not selected tail or tip of arrow, 判斷是否選擇了尾與箭頭</span>
+
+drag_pos = vector (<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)
+new_pos = vector (<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>: 
+    rate(<span class="hljs-number">30</span>) <span class="hljs-comment">#以每1/30秒的週期執行下列指令</span>
+    m_ev = scene.waitfor(<span class="hljs-string">'click mousedown mouseup mousemove'</span>)  <span class="hljs-comment">#滑鼠event</span>
+    <span class="hljs-keyword">if</span> m_ev.event == <span class="hljs-string">'mousedown'</span>:  <span class="hljs-comment">#如果滑鼠按下左鍵</span>
+        <span class="hljs-keyword">if</span> mag(arr.pos-m_ev.pos) &lt;= by: <span class="hljs-comment">#若滑鼠位置與尾端的位置差小於by</span>
+            drag = <span class="hljs-string">'tail'</span> <span class="hljs-comment"># near tail of arrow, 則判斷正在拖曳tail(尾)</span>
+        <span class="hljs-keyword">elif</span> mag((arr.pos+arr.axis)-m_ev.pos) &lt;= by: <span class="hljs-comment">#若滑鼠位置與箭頭的位置差小於by</span>
+            drag = <span class="hljs-string">'tip'</span> <span class="hljs-comment"># near tip of arrow, 則判斷正在拖曳tip(箭頭)</span>
+            drag_pos = m_ev.pos <span class="hljs-comment"># save press location , 紀錄按下的位置於drag_pos(注意，此時滑鼠左鍵持續按著, 可拖曳)</span>
+    <span class="hljs-keyword">elif</span> m_ev.event == <span class="hljs-string">'mouseup'</span>: <span class="hljs-comment"># released at end of drag, 若滑鼠左鍵放開</span>
+        drag = <span class="hljs-keyword">None</span> <span class="hljs-comment"># end dragging (None is False) , 則判斷停者拖曳  </span>
+
+    <span class="hljs-keyword">if</span> drag: <span class="hljs-comment">#如果滑鼠正在按下拖曳tail or tip)</span>
+        new_pos = m_ev.pos <span class="hljs-comment">#把目前滑鼠的位置紀錄於new_pos</span>
+        <span class="hljs-keyword">if</span> new_pos != drag_pos: <span class="hljs-comment"># if mouse has moved, 如果滑鼠拖曳了, 導致目前滑鼠的位置與之前紀錄的位置不一樣</span>
+            displace = new_pos - drag_pos <span class="hljs-comment"># how far , 則計算滑鼠移動了多少距離</span>
+            drag_pos = new_pos <span class="hljs-comment"># update drag position, 並更新drag_pos於目前的滑鼠位置</span>
+            
+            <span class="hljs-keyword">if</span> drag == <span class="hljs-string">'tail'</span>: <span class="hljs-comment">#如果判斷指令為tail(尾)</span>
+                arr.pos = m_ev.pos <span class="hljs-comment"># displace the tail, 則更新尾巴的位置</span>
+            <span class="hljs-keyword">if</span> drag == <span class="hljs-string">'tip'</span>: <span class="hljs-comment">#如果判斷指令為tip(箭頭)</span>
+                arr.axis += displace <span class="hljs-comment"># displace the tip, 則更新向量的長度</span>
+
+    <span class="hljs-keyword">print</span> (drag, drag_pos, new_pos)
+</div></div></code></pre><h3 id="Mouse-Control_範例2"><a class="anchor hidden-xs" href="#Mouse-Control_範例2" title="Mouse-Control_範例2"><span class="octicon octicon-link"></span></a>Mouse Control_範例2</h3><ul>
+<li>下述程式碼執行後，會看到一個紅球，有個黃色箭頭代表出速度。</li>
+</ul><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/JvsTV00.jpg"></p><ul>
+<li>按a後會看到球體進行拋體運動，並繪出各個瞬間的曲率半徑。</li>
+</ul><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/GGyz4OA.jpg"></p><ul>
+<li>也可以先用滑鼠改變球的初速度，看看不同拋射狀況下的曲率半徑如何變化。</li>
+</ul><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/JoKECxd.jpg"></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span>
+<span data-linenumber="40"></span>
+<span data-linenumber="41"></span>
+<span data-linenumber="42"></span>
+<span data-linenumber="43"></span>
+<span data-linenumber="44"></span>
+<span data-linenumber="45"></span>
+<span data-linenumber="46"></span>
+<span data-linenumber="47"></span>
+<span data-linenumber="48"></span>
+<span data-linenumber="49"></span>
+<span data-linenumber="50"></span>
+<span data-linenumber="51"></span>
+<span data-linenumber="52"></span>
+<span data-linenumber="53"></span>
+<span data-linenumber="54"></span>
+<span data-linenumber="55"></span>
+<span data-linenumber="56"></span>
+<span data-linenumber="57"></span>
+<span data-linenumber="58"></span>
+<span data-linenumber="59"></span>
+<span data-linenumber="60"></span>
+<span data-linenumber="61"></span>
+<span data-linenumber="62"></span>
+<span data-linenumber="63"></span>
+<span data-linenumber="64"></span>
+<span data-linenumber="65"></span></div><div class="code"><span class="hljs-string">"""
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    特色課程 Lecture 10 
+    10_2_2 mouse control Practice_Projectile motion_aN and curvature radius
+    先用滑鼠控制初速度，按a後開始拋射運動
+"""</span>
+<span class="hljs-keyword">from</span> vpython <span class="hljs-keyword">import</span> *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+by = <span class="hljs-number">1</span> <span class="hljs-comment"># touch this close to tail or tip, 滑鼠按下後與尾與箭頭的判斷距離</span>
+drag = <span class="hljs-keyword">None</span> <span class="hljs-comment"># have not selected tail or tip of arrow, 判斷是否選擇了尾與箭頭</span>
+drag_pos = vector (<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)
+new_pos = vector (<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)
+
+g=<span class="hljs-number">10</span>  ;   size = <span class="hljs-number">0.5</span> ; t=<span class="hljs-number">0</span> ; dt = <span class="hljs-number">0.001</span> ; N =<span class="hljs-number">0</span> ; drag = <span class="hljs-keyword">None</span>
+scene = canvas(width=<span class="hljs-number">1000</span>, height=<span class="hljs-number">600</span>, center = vec(<span class="hljs-number">20</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>), background=vec(<span class="hljs-number">0.4</span>,<span class="hljs-number">0.6</span>,<span class="hljs-number">0.6</span>),range=<span class="hljs-number">25</span>)<span class="hljs-comment">#設定畫面</span>
+floor = box(pos = vector(<span class="hljs-number">50</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>), length=<span class="hljs-number">100</span>, height=<span class="hljs-number">0.2</span>, width=<span class="hljs-number">4</span>, texture=textures.wood)                  <span class="hljs-comment">#畫地板</span>
+ball = sphere(radius = size,  color=color.red, make_trail= <span class="hljs-keyword">True</span>)              <span class="hljs-comment">#畫球</span>
+ball.pos = vector( <span class="hljs-number">0</span>, size, <span class="hljs-number">0.0</span>)    ;    ball.v = vector(<span class="hljs-number">12</span>,<span class="hljs-number">16</span>,<span class="hljs-number">0</span>)   <span class="hljs-comment">#球初速</span>
+v_arrow = arrow(pos=ball.pos,axis=ball.v,shaftwidth=<span class="hljs-number">0.3</span> ,color = color.yellow)
+<span class="hljs-comment">#設定鍵盤按下a,開始拋射</span>
+start = <span class="hljs-number">0</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">keyinput</span><span class="hljs-params">(evt)</span>:</span>                                          
+    <span class="hljs-keyword">global</span> start
+    key_s = {<span class="hljs-string">'a'</span> :<span class="hljs-number">1</span>}
+    s = evt.key
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">in</span> key_s : start = start + key_s[s]
+scene.bind(<span class="hljs-string">'keydown'</span>, keyinput)
+
+<span class="hljs-keyword">while</span> ball.pos.y &gt;= size:       <span class="hljs-comment">#模擬直到球落地 即y=球半徑</span>
+    rate(<span class="hljs-number">1000</span>)                  <span class="hljs-comment">#每一秒跑1000次</span>
+
+    <span class="hljs-keyword">if</span> start &lt;<span class="hljs-number">1</span> :
+        m_ev = scene.waitfor(<span class="hljs-string">'click mousedown mouseup mousemove keydown'</span>)  <span class="hljs-comment">#滑鼠event</span>
+        <span class="hljs-keyword">if</span> m_ev.event == <span class="hljs-string">'mousedown'</span>:  <span class="hljs-comment">#如果滑鼠按下左鍵</span>
+            <span class="hljs-keyword">if</span> mag((v_arrow.pos+v_arrow.axis)-m_ev.pos) &lt;= by: <span class="hljs-comment">#若滑鼠位置與尾端的位置差小於by</span>
+                drag = <span class="hljs-string">'tip'</span> <span class="hljs-comment"># near tip of arrow, 則判斷正在拖曳tip(箭頭)</span>
+                drag_pos = m_ev.pos <span class="hljs-comment"># save press location , 紀錄按下的位置於drag_pos(注意，此時滑鼠左鍵持續按著, 可拖曳)</span>
+        <span class="hljs-keyword">elif</span> m_ev.event == <span class="hljs-string">'mouseup'</span>: <span class="hljs-comment"># released at end of drag, 若滑鼠左鍵放開</span>
+                drag = <span class="hljs-keyword">None</span> <span class="hljs-comment"># end dragging (None is False) , 則判斷停者拖曳</span>
+        <span class="hljs-keyword">elif</span> m_ev.event ==<span class="hljs-string">'keydown'</span>:
+                drag = <span class="hljs-keyword">None</span>
+
+        <span class="hljs-keyword">if</span> drag: <span class="hljs-comment">#如果滑鼠正在按下拖曳tail or tip)</span>
+             new_pos = m_ev.pos <span class="hljs-comment">#把目前滑鼠的位置紀錄於new_pos</span>
+             <span class="hljs-keyword">if</span> new_pos != drag_pos: <span class="hljs-comment"># if mouse has moved, 如果滑鼠拖曳了, 導致目前滑鼠的位置與之前紀錄的位置不一樣</span>
+                 displace = new_pos - drag_pos <span class="hljs-comment"># how far , 則計算滑鼠移動了多少距離</span>
+                 drag_pos = new_pos <span class="hljs-comment"># update drag position, 並更新drag_pos於目前的滑鼠位置</span>
+            
+                 <span class="hljs-keyword">if</span> drag == <span class="hljs-string">'tip'</span>: <span class="hljs-comment">#如果判斷指令為tip(箭頭)</span>
+                     v_arrow.axis += displace <span class="hljs-comment"># displace the tip, 則更新向量的長度</span>
+                     ball.v = v_arrow.axis
+                    
+    <span class="hljs-comment">#設定當鍵盤按下a,開始拋射 </span>
+    <span class="hljs-keyword">if</span> start&gt;=<span class="hljs-number">1</span>:
+      t=t+dt ;  ball.pos = ball.pos+ball.v*dt
+      ball.v.y +=  - g*dt ; v_arrow.pos = ball.pos ;  v_arrow.axis = ball.v      
+      <span class="hljs-keyword">if</span> N==<span class="hljs-number">0</span> <span class="hljs-keyword">or</span> N&gt;=<span class="hljs-number">0.4</span> : <span class="hljs-comment">#每0.4秒畫一個曲率</span>
+         v_g_sin_angle = mag(cross(ball.v,vec(<span class="hljs-number">0</span>,g,<span class="hljs-number">0</span>)))/(mag(ball.v)*g)         
+         ring_radius = mag(ball.v)**<span class="hljs-number">2</span>/(g*v_g_sin_angle)
+         circle = ring(radius = ring_radius, pos = ball.pos+ring_radius*norm(cross(ball.v,vec(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>))), axis=vec(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>),thickness=<span class="hljs-number">0.05</span>, color=color.white )
+         ball_n = sphere(pos = ball.pos, radius = <span class="hljs-number">0.7</span>*size,  color=color.blue)
+         ball_0 = sphere(pos = ball.pos+ring_radius*norm(cross(ball.v,vec(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>))), radius = <span class="hljs-number">0.7</span>*size,  color=color.black)
+         r_arrow = arrow(pos=ball.pos+ring_radius*norm(cross(ball.v,vec(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>))),axis=ring_radius*norm(cross(ball.v,vec(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">-1</span>))), shaftwidth=<span class="hljs-number">0.1</span>, color = color.red)         
+         N=<span class="hljs-number">0</span>         
+      N=N+dt
+</div></div></code></pre><h3 id="Mouse-Control_練習1"><a class="anchor hidden-xs" href="#Mouse-Control_練習1" title="Mouse-Control_練習1"><span class="octicon octicon-link"></span></a>Mouse Control_練習1</h3><p>執行後，會看到地球與許多的紅色箭頭，代表空間中地球的重力場，但還有一個奇怪的藍色箭頭。</p><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/2FrwTrj.jpg"></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span></div><div class="code"><span class="hljs-string">"""
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    特色課程 Lecture 10 
+    10_2_3 mouse control Practice_Gravity force.py
+"""</span>
+<span class="hljs-keyword">from</span> vpython <span class="hljs-keyword">import</span> *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+G = <span class="hljs-number">6.67</span> ; M = <span class="hljs-number">6</span>*<span class="hljs-number">10</span>**<span class="hljs-number">1</span> ; Re = <span class="hljs-number">10</span> ; t =<span class="hljs-number">0</span> ; dt = <span class="hljs-number">0.001</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">ag</span><span class="hljs-params">(x)</span>:</span>
+    <span class="hljs-keyword">return</span> -G*M/(x**<span class="hljs-number">2</span>)
+
+scene = canvas(width=<span class="hljs-number">1000</span>, height=<span class="hljs-number">800</span>, center=vec(<span class="hljs-number">0</span>,<span class="hljs-number">-5</span>,<span class="hljs-number">0</span>),
+                background=vec(<span class="hljs-number">0.6</span>,<span class="hljs-number">0.8</span>,<span class="hljs-number">0.8</span>),range=<span class="hljs-number">6</span>*Re)
+earth = sphere(pos=vec(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>), radius=Re, texture=textures.earth)
+
+arrowlist = []
+<span class="hljs-keyword">for</span> N1 <span class="hljs-keyword">in</span> range(<span class="hljs-number">-5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">1</span>): <span class="hljs-comment">#X軸</span>
+  <span class="hljs-keyword">for</span> N2 <span class="hljs-keyword">in</span> range(<span class="hljs-number">-5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">1</span>):<span class="hljs-comment">#Y軸</span>
+    arrowlist.append(arrow(pos=vector(N1*Re,N2*Re,<span class="hljs-number">0</span>),axis=vector(<span class="hljs-number">5</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>),shaftwidth=<span class="hljs-number">1</span> , color=color.red))
+
+arr = arrow(pos=vector(<span class="hljs-number">12.5</span>,<span class="hljs-number">12.5</span>,<span class="hljs-number">0</span>),axis=vector(<span class="hljs-number">5</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>),shaftwidth=<span class="hljs-number">1</span> , color=color.blue)
+
+<span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> arrowlist:
+  N_dist = mag(N.pos - earth.pos)
+  N_radiavector = norm(N.pos-earth.pos)
+  <span class="hljs-keyword">if</span> N_dist &gt; <span class="hljs-number">1.2</span>*Re <span class="hljs-keyword">and</span> N_dist &lt; <span class="hljs-number">5</span>*Re:
+    N.axis = ag(N_dist) * N_radiavector * <span class="hljs-number">10</span>
+  <span class="hljs-keyword">else</span>: N.axis = vector(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)
+  
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:
+    rate(<span class="hljs-number">1000</span>)
+</div></div></code></pre><h3 id="課堂作業-10-3"><a class="anchor hidden-xs" href="#課堂作業-10-3" title="課堂作業-10-3"><span class="octicon octicon-link"></span></a>課堂作業 10-3</h3><p>請同學們利用滑鼠控制，能隨意控制藍色箭頭的位置，並讓藍色箭頭能表現出其位置的重力場向量。<br>
+`</p><p>`<br>
+<img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/Bhy3cex.jpg"></p><div class="alert alert-success">
+<h4 id="課堂作業-10-3-參考解法步驟-"><a class="anchor hidden-xs" href="#課堂作業-10-3-參考解法步驟-" title="課堂作業-10-3-參考解法步驟-"><span class="octicon octicon-link"></span></a>課堂作業 10-3 參考解法步驟 :</h4>
+<ul>
+<li>在執行迴圈處，讓藍色箭頭arr能在迴圈中即時計算地球引力場強度。</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span></div><div class="code"><span class="hljs-keyword">while</span> True:
+    rate(<span class="hljs-number">1000</span>)
+    arr_dist = mag(arr.pos - earth.pos)
+    arr_radiavector = norm(arr.pos - earth.pos)
+    <span class="hljs-keyword">if</span> arr_dist &gt; <span class="hljs-number">1.0</span>*Re :
+      arr.axis = ag(arr_dist) * arr_radiavector * <span class="hljs-number">10</span>
+    <span class="hljs-keyword">else</span>: arr.axis = <span class="hljs-built_in">vector</span>(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)
+</div></div></code></pre>
+<ul>
+<li>複製mouse control中的滑鼠控制程式碼:<br>
+包含基本參數 by , drag , drag_pos 與 new_pos。</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span></div><div class="code">by = 1 <span class="hljs-comment"># touch this close to tail or tip, 滑鼠按下後與尾與箭頭的判斷距離</span>
+drag = None <span class="hljs-comment"># have not selected tail or tip of arrow, 判斷是否選擇了尾與箭頭</span>
+drag_pos = vector (0,0,0)
+new_pos = vector (0,0,0)
+</div></div></code></pre>
+<p>和執行迴圈處，所以即時控制滑鼠的部分</p>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span></div><div class="code">    m_ev = scene.waitfor(<span class="hljs-string">'click mousedown mouseup mousemove'</span>)  <span class="hljs-meta">#滑鼠event</span>
+    <span class="hljs-keyword">if</span> m_ev.<span class="hljs-keyword">event</span> == <span class="hljs-string">'mousedown'</span>:  <span class="hljs-meta">#如果滑鼠按下左鍵</span>
+        <span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">mag</span>(<span class="hljs-params">arr.pos-m_ev.pos</span>) &lt;</span>= <span class="hljs-keyword">by</span>: <span class="hljs-meta">#若滑鼠位置與尾端的位置差小於by</span>
+            drag = <span class="hljs-string">'tail'</span> <span class="hljs-meta"># near tail of arrow, 則判斷正在拖曳tail(尾)</span>
+        <span class="hljs-function">elif <span class="hljs-title">mag</span>(<span class="hljs-params">(arr.pos+arr.axis</span>)-m_ev.pos) &lt;</span>= <span class="hljs-keyword">by</span>: <span class="hljs-meta">#若滑鼠位置與箭頭的位置差小於by</span>
+            drag = <span class="hljs-string">'tip'</span> <span class="hljs-meta"># near tip of arrow, 則判斷正在拖曳tip(箭頭)</span>
+            drag_pos = m_ev.pos <span class="hljs-meta"># save press location , 紀錄按下的位置於drag_pos(注意，此時滑鼠左鍵持續按著, 可拖曳)</span>
+    elif m_ev.<span class="hljs-keyword">event</span> == <span class="hljs-string">'mouseup'</span>: <span class="hljs-meta"># released at end of drag, 若滑鼠左鍵放開</span>
+        drag = None <span class="hljs-meta"># end dragging (None is False) , 則判斷停者拖曳  </span>
+
+    <span class="hljs-keyword">if</span> drag: <span class="hljs-meta">#如果滑鼠正在按下拖曳tail or tip)</span>
+        new_pos = m_ev.pos <span class="hljs-meta">#把目前滑鼠的位置紀錄於new_pos</span>
+        <span class="hljs-keyword">if</span> new_pos != drag_pos: <span class="hljs-meta"># <span class="hljs-meta-keyword">if</span> mouse has moved, 如果滑鼠拖曳了, 導致目前滑鼠的位置與之前紀錄的位置不一樣</span>
+            displace = new_pos - drag_pos <span class="hljs-meta"># how far , 則計算滑鼠移動了多少距離</span>
+            drag_pos = new_pos <span class="hljs-meta"># update drag position, 並更新drag_pos於目前的滑鼠位置            </span>
+            <span class="hljs-keyword">if</span> drag == <span class="hljs-string">'tail'</span>: <span class="hljs-meta">#如果判斷指令為tail(尾)</span>
+                arr.pos = m_ev.pos <span class="hljs-meta"># displace the tail, 則更新尾巴的位置</span>
+            <span class="hljs-keyword">if</span> drag == <span class="hljs-string">'tip'</span>: <span class="hljs-meta">#如果判斷指令為tip(箭頭)</span>
+                arr.axis += displace <span class="hljs-meta"># displace the tip, 則更新向量的長度</span>
+</div></div></code></pre>
+<ul>
+<li>由於我們這裡使需要控制藍色箭頭的Tail，所以滑鼠控制的部分不需要改變tip長度，因此可以把部分程式碼加上##(alt+3)，當然，其實不刪除其實也可以。</li>
+</ul>
+<pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code"><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#        elif mag((arr.pos+arr.axis)-m_ev.pos) &lt;= by: #若滑鼠位置與箭頭的位置差小於by</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#            drag = 'tip' # near tip of arrow, 則判斷正在拖曳tip(箭頭)</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#            drag_pos = m_ev.pos # save press location , 紀錄按下的位置於drag_pos(注意，此時滑鼠左鍵持續按著, 可拖曳)</span></span>
+<span class="hljs-meta">
+#</span><span class="bash"><span class="hljs-comment">#            if drag == 'tip': #如果判斷指令為tip(箭頭)</span></span>
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#                arr.axis += displace # displace the tip, 則更新向量的長度</span></span>
+</div></div></code></pre>
+</div><h3 id="Scene-bind-mouse"><a class="anchor hidden-xs" href="#Scene-bind-mouse" title="Scene-bind-mouse"><span class="octicon octicon-link"></span></a>Scene bind mouse</h3><p>這堂課的最後，介紹一個有趣的滑鼠控制功能。<br>
+執行下述程式後，畫面中會出現一個藍球。</p><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/tr2xY8B.jpg"></p><p>但若用滑鼠在螢幕中按下，藍球的顏色會改變，且滑鼠按下的位置也會出現一顆綠球。</p><p><img style="display: block; margin-left: auto; margin-right: auto" height="70%" width="70%" src="https://i.imgur.com/vV6bfdo.jpg"></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code"><span class="hljs-keyword">from</span> vpython <span class="hljs-keyword">import</span> *
+s = sphere(color=color.cyan)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">change</span><span class="hljs-params">(ev)</span>:</span>
+    <span class="hljs-keyword">if</span> s.color.equals(color.cyan):
+        s.color = color.red
+    <span class="hljs-keyword">else</span>:
+        s.color = color.cyan
+    sphere(pos=ev.pos, radius=<span class="hljs-number">0.2</span>, color=color.green)
+
+scene.bind(<span class="hljs-string">'click'</span>, change)
+</div></div></code></pre><p>這功能有什麼用呢，聰明的同學應該已經想到了，在Lecture9中，曾經有過電力線的討論，若我們利用這個功能，就可以隨意在電力線中加入隨意的粒子，看看它們在場中會如何的運動。</p><p>最後就不當作業了，直接當範例給大家參考吧，大家辛苦了，希望都能持續精進，加油吧。</p><p><img src="https://i.imgur.com/ze1pyeg.jpg" alt=""></p><pre><code class="python3 hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span>
+<span data-linenumber="40"></span>
+<span data-linenumber="41"></span>
+<span data-linenumber="42"></span>
+<span data-linenumber="43"></span>
+<span data-linenumber="44"></span>
+<span data-linenumber="45"></span>
+<span data-linenumber="46"></span>
+<span data-linenumber="47"></span>
+<span data-linenumber="48"></span>
+<span data-linenumber="49"></span>
+<span data-linenumber="50"></span>
+<span data-linenumber="51"></span>
+<span data-linenumber="52"></span>
+<span data-linenumber="53"></span>
+<span data-linenumber="54"></span>
+<span data-linenumber="55"></span>
+<span data-linenumber="56"></span>
+<span data-linenumber="57"></span>
+<span data-linenumber="58"></span>
+<span data-linenumber="59"></span>
+<span data-linenumber="60"></span>
+<span data-linenumber="61"></span>
+<span data-linenumber="62"></span>
+<span data-linenumber="63"></span>
+<span data-linenumber="64"></span>
+<span data-linenumber="65"></span>
+<span data-linenumber="66"></span>
+<span data-linenumber="67"></span>
+<span data-linenumber="68"></span>
+<span data-linenumber="69"></span>
+<span data-linenumber="70"></span></div><div class="code"><span class="hljs-string">"""
+    建國中學 Vpython物理模擬
+    作者: 物理科 賴奕帆老師
+    日期: 107/08/31
+    特色課程 Lecture 10 
+    10_2_4_mouse_control Example_Electric field simulation.py
+"""</span>
+<span class="hljs-keyword">from</span> vpython <span class="hljs-keyword">import</span> *  <span class="hljs-comment">#引用視覺畫套件Vpython</span>
+k = <span class="hljs-number">9</span>*<span class="hljs-number">10</span>**<span class="hljs-number">9</span>      
+size = <span class="hljs-number">0.4</span>  <span class="hljs-comment"># charge size</span>
+t = <span class="hljs-number">0</span> ; dt = <span class="hljs-number">0.001</span>
+b_N = <span class="hljs-number">20</span>
+
+Q1_charge = <span class="hljs-number">1</span>*<span class="hljs-number">10</span>**(<span class="hljs-number">-5</span>) <span class="hljs-comment">#Q1電量 </span>
+Q1_position = vector(<span class="hljs-number">-2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>) <span class="hljs-comment">#Q1位置</span>
+Q2_charge = <span class="hljs-number">-1</span>*<span class="hljs-number">10</span>**(<span class="hljs-number">-5</span>) <span class="hljs-comment">#Q2電量 </span>
+Q2_position = vector(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>) <span class="hljs-comment">#Q2位置</span>
+
+q_charge = <span class="hljs-number">1</span> * <span class="hljs-number">10</span> **(<span class="hljs-number">-7</span>)
+q_position = vector (<span class="hljs-number">1</span> , <span class="hljs-number">1</span> , <span class="hljs-number">0</span>)
+q_m = <span class="hljs-number">10</span>**(<span class="hljs-number">-3</span>)
+q_v = vector (<span class="hljs-number">0</span> , <span class="hljs-number">0</span> , <span class="hljs-number">0</span>)
+
+scene = canvas(title=<span class="hljs-string">'dipole'</span>, height=<span class="hljs-number">600</span>, width=<span class="hljs-number">1000</span>, range=<span class="hljs-number">5.0</span>,
+                auto_scale=<span class="hljs-keyword">False</span>, background=vec(<span class="hljs-number">1.0</span>,<span class="hljs-number">1.0</span>,<span class="hljs-number">1.0</span>))
+
+Q1 = sphere(pos = Q1_position , radius = size , color = color.blue)
+Q2 = sphere(pos = Q2_position , radius = size , color = color.red)
+
+field_ball_1=[]
+<span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> range(<span class="hljs-number">0</span>,b_N,<span class="hljs-number">1</span>):<span class="hljs-comment">#build field ball from wall</span>
+    field_ball_1.append(sphere(pos=vector(size*cos(<span class="hljs-number">2</span>*pi*N/b_N), size*sin(<span class="hljs-number">2</span>*pi*N/b_N),<span class="hljs-number">0</span>)+Q1_position,
+                             radius=<span class="hljs-number">0.01</span>, color=vec(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>), make_trail=<span class="hljs-keyword">True</span>, v=vector(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)))
+
+field_ball_2=[]
+<span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> range(<span class="hljs-number">0</span>,b_N,<span class="hljs-number">1</span>):<span class="hljs-comment">#build field ball from wall</span>
+    field_ball_2.append(sphere(pos=vector(size*cos(<span class="hljs-number">2</span>*pi*N/b_N), size*sin(<span class="hljs-number">2</span>*pi*N/b_N),<span class="hljs-number">0</span>)+Q2_position,
+                             radius=<span class="hljs-number">0.01</span>, color=vec(<span class="hljs-number">0.8</span>,<span class="hljs-number">0.8</span>,<span class="hljs-number">0.3</span>), make_trail=<span class="hljs-keyword">True</span>, v=vector(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)))
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">Force_E</span><span class="hljs-params">(r, q)</span>:</span><span class="hljs-comment">#force of field </span>
+    r1 = r - Q1_position
+    r2 = r - Q2_position
+    <span class="hljs-keyword">return</span> k*q*Q1_charge*r1.norm()/(r1.mag*r1.mag)+k*q*Q2_charge*r2.norm()/(r2.mag*r2.mag)
+
+q = []
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">make_q_charge</span><span class="hljs-params">(evt)</span>:</span>
+    loc = evt.pos
+    <span class="hljs-keyword">print</span> (<span class="hljs-string">"click at "</span>, loc)
+    q.append(sphere(pos=loc, radius=<span class="hljs-number">0.2</span>*size, color=color.green, make_trail=<span class="hljs-keyword">True</span>,
+                       v=vector(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)))
+   
+scene.bind(<span class="hljs-string">'mousedown'</span>, make_q_charge)
+
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:
+    rate(<span class="hljs-number">1000</span>)
+        
+    <span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> field_ball_1:
+        N.v = Force_E(N.pos, <span class="hljs-number">1.0</span>).norm()
+        N.pos += N.v*dt
+
+    <span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> field_ball_2:
+        N.v = Force_E(N.pos, <span class="hljs-number">-1.0</span>).norm()
+        N.pos += N.v*dt
+
+    <span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> q:
+        
+        <span class="hljs-keyword">if</span> mag(N.pos-Q1_position)&gt;=size <span class="hljs-keyword">and</span> mag(N.pos-Q2_position)&gt;=size :
+            N.v = N.v + Force_E(N.pos, q_charge)/q_m *dt
+            N.pos = N.pos+N.v*dt
+        <span class="hljs-keyword">else</span> : N.pos = N.pos
+</div></div></code></pre><div dir="ltr" class="resize-sensor" style="position: absolute; left: -10px; top: -10px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;"><div class="resize-sensor-expand" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div></div><div class="resize-sensor-shrink" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div></div></div></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav"><li class=""><a href="#Lecture-10-Keyboard-and-Mouse-Control" title="Lecture 10 Keyboard and Mouse Control">Lecture 10 Keyboard and Mouse Control</a><ul class="nav"><li><a href="#10-1-Keyboard-Control" title="10-1 Keyboard Control">10-1 Keyboard Control</a><ul class="nav"><li><a href="#基本的Keyboard-Control範例" title="基本的Keyboard Control範例">基本的Keyboard Control範例</a></li><li><a href="#Keyboard-Control_練習1" title="Keyboard Control_練習1">Keyboard Control_練習1</a></li><li><a href="#課堂作業-10-1" title="課堂作業 10-1">課堂作業 10-1</a></li><li><a href="#Keyboard-Control_練習2" title="Keyboard Control_練習2">Keyboard Control_練習2</a></li><li><a href="#課堂作業-10-2" title="課堂作業 10-2">課堂作業 10-2</a></li></ul></li><li><a href="#10-2-Mouse-Control" title="10-2 Mouse Control">10-2 Mouse Control</a><ul class="nav"><li><a href="#基本的Mouse-Control範例" title="基本的Mouse Control範例">基本的Mouse Control範例</a></li><li><a href="#Mouse-Control_範例2" title="Mouse Control_範例2">Mouse Control_範例2</a></li><li><a href="#Mouse-Control_練習1" title="Mouse Control_練習1">Mouse Control_練習1</a></li><li><a href="#課堂作業-10-3" title="課堂作業 10-3">課堂作業 10-3</a></li><li><a href="#Scene-bind-mouse" title="Scene bind mouse">Scene bind mouse</a></li></ul></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;"  >
+        <div class="toc"><ul class="nav"><li class=""><a href="#Lecture-10-Keyboard-and-Mouse-Control" title="Lecture 10 Keyboard and Mouse Control">Lecture 10 Keyboard and Mouse Control</a><ul class="nav"><li><a href="#10-1-Keyboard-Control" title="10-1 Keyboard Control">10-1 Keyboard Control</a><ul class="nav"><li><a href="#基本的Keyboard-Control範例" title="基本的Keyboard Control範例">基本的Keyboard Control範例</a></li><li><a href="#Keyboard-Control_練習1" title="Keyboard Control_練習1">Keyboard Control_練習1</a></li><li><a href="#課堂作業-10-1" title="課堂作業 10-1">課堂作業 10-1</a></li><li><a href="#Keyboard-Control_練習2" title="Keyboard Control_練習2">Keyboard Control_練習2</a></li><li><a href="#課堂作業-10-2" title="課堂作業 10-2">課堂作業 10-2</a></li></ul></li><li><a href="#10-2-Mouse-Control" title="10-2 Mouse Control">10-2 Mouse Control</a><ul class="nav"><li><a href="#基本的Mouse-Control範例" title="基本的Mouse Control範例">基本的Mouse Control範例</a></li><li><a href="#Mouse-Control_範例2" title="Mouse Control_範例2">Mouse Control_範例2</a></li><li><a href="#Mouse-Control_練習1" title="Mouse Control_練習1">Mouse Control_練習1</a></li><li><a href="#課堂作業-10-3" title="課堂作業 10-3">課堂作業 10-3</a></li><li><a href="#Scene-bind-mouse" title="Scene bind mouse">Scene bind mouse</a></li></ul></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
