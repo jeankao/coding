@@ -6,14 +6,17 @@
 		<HR>
 -->
      <a href="/teacher/classroom/add" role="button" class="btn btn-info active">新增班級</a>
-     <a href="/teacher/student/list" role="button" class="btn btn-info active">學生帳號</a><BR><BR>	
+     <a href="/teacher/student/list" role="button" class="btn btn-info active">學生帳號</a>
+          {% for classroom in classrooms %}
+          <a href="javascript:scroll({{classroom.id}})" role="btn" class="btn btn-success">{{classroom.name}}</a>
+          {% endfor %}
         <table class="table">
             <tr>
                 <td>名稱</td>
                 <td>密碼</td>
                 <td>功能</td>
         {% for classroom in classrooms %}
-            <tr>
+            <tr id={{classroom.id}}>
             <td>{{classroom.name}}({{classroom.lesson_choice}})</td>
             <td>{{classroom.password}}</td>
             <td>
@@ -40,3 +43,14 @@
         {% endfor %}
         </table>
 {% endblock %}
+  {% block footer_script %}
+  <script>
+    function scroll(element) {
+  // scrolls to the element with id='citation' 
+
+var node = document.getElementById(element);    
+node.scrollIntoView();
+      window.scrollBy(0, -70);
+    }
+  </script>
+  {% endblock %}
