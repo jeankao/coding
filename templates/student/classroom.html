@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 {% load tag %}
 {% block content %}
-        <a href="/student/classroom/add" role="button" class="btn btn-info active">加入班級</a><BR><BR>
+    <p style="padding:0px; margin:2px;">
+        <a href="/student/classroom/add" role="button" class="btn btn-info active">加入班級</a>
+          						{% if request.user.id|assistant or request.user|has_group:"teacher" %}
+          {% for enroll, show in classrooms %}
+          <a href="javascript:scroll({{enroll.classroom.id}})" role="btn" class="btn btn-success">{{enroll.classroom}}</a>
+          {% endfor %}
+      {% endif %}
+</p>
 {% for enroll, shows in classrooms %}
-<div class="card">
+<div class="card" id="{{enroll.classroom.id}}">
   <h5 class="card-header">{{enroll.classroom}} ({{enroll.classroom.lesson_choice}})：{{enroll.seat}}號</h5>
-  <div class="card-body ">
+  <div class="card-body">
     <p style="padding:0px; margin:2px;">
 基本資料：
 			<a href="/student/classroom/seat/{{enroll.id}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">座號</a>
@@ -82,3 +89,14 @@
 {% endfor %}
 
 {% endblock %}
+  {% block footer_script %}
+  <script>
+    function scroll(element) {
+  // scrolls to the element with id='citation' 
+
+var node = document.getElementById(element);    
+node.scrollIntoView();
+      window.scrollBy(0, -70);
+    }
+  </script>
+  {% endblock %}
