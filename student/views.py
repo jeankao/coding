@@ -409,7 +409,7 @@ def work_list(request, typing, lesson, classroom_id):
     lessons = []
 
     if typing == "0":
-        if lesson in ["2", "3", "4", "5"]:
+        if lesson in ["2", "3", "4", "5", "7"]:
             assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-2]
         else:
             assignments = lesson_list1
@@ -514,7 +514,7 @@ def submit(request, typing, lesson, index):
                 work.save()
                 return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))  
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))              
-    elif lesson == "2" or lesson == "3" or lesson == "5":
+    elif lesson == "2" or lesson == "3" or lesson == "5" or lesson == "7":
         if request.method == 'POST':
             form = SubmitBForm(request.POST, request.FILES)
             if form.is_valid():
@@ -554,7 +554,7 @@ def submit(request, typing, lesson, index):
                     mtype, fext = mime.split('/', 1)
                     binary_data = a2b_base64(data)
 
-                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
+                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/Panda'][int(lesson) - 2]
                     directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                     image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
