@@ -34,6 +34,9 @@
 				{% for enroll in group.1 %}
 				<A href="/account/profile/{{enroll.student.id}}"><img src="/static/avatar/s{{ enroll.student.profile.avatar }}.png"</a>
 				    ({{enroll.seat}}){{enroll.student.first_name}}
+          {% if forloop.counter|divisibleby:"4" %}
+          <BR>
+          {% endif %}
 				{% endfor %}
 				</td>
                 <td>
