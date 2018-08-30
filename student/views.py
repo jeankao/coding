@@ -441,14 +441,14 @@ def submit(request, typing, lesson, index):
     form = None
     work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if typing == "0":
-        if lesson in ["2", "3", "4", "5"]:
-            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-2][int(index)-1][1]
+        if lesson in ["2", "3", "4", "5", "6"]:
+            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2][int(lesson)-2][int(index)-1][1]
         else:
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
         lesson_name = TWork.objects.get(id=index).title
 
-    if lesson == "1":
+    if lesson == "1" or lesson == "6":
         works = Work.objects.filter(typing=typing, index=index, user_id=request.user.id, lesson_id=lesson)
         try:
             filepath = request.FILES['file']
@@ -457,9 +457,12 @@ def submit(request, typing, lesson, index):
         if request.method == 'POST':
             if filepath :
                 myfile = request.FILES['file']
-                fs = FileSystemStorage()
+                if lesson == "6":
+                    fs = FileSystemStorage("static/work/microbit/"+str(request.user.id)+"/")
+                else :
+                    fs = FileSystemStorage("static/work/scratch/"+str(request.user.id)+"/")                  
                 filename = uuid4().hex
-                fs.save("static/work/scratch/"+str(request.user.id)+"/"+filename, myfile)
+                fs.save(filename, myfile)
             form = SubmitAForm(request.POST, request.FILES)
             if not works.exists():
                 if form.is_valid():
@@ -684,11 +687,23 @@ def work_class(request, typing, lesson, classroom_id, index):
     return render(request, 'student/work_class.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas})
   
   
-def work_download(request, index, user_id, workfile_id):
-    workfile = WorkFile.objects.get(id=workfile_id)
+def work_download(request, typing, lesson, index, user_id, filename_uuid4):
+    workfile = WorkFile.objects.get(filename=filename_uuid4)
     username = User.objects.get(id=user_id).first_name
-    filename = username + "_" + lesson_list1[int(index)-1][2].decode("utf-8")  + ".sb2"
-    download =  settings.BASE_DIR + "/static/work/scratch/" + str(user_id) + "/" + workfile.filename
+    if typing == "0":
+        if lesson in ["2", "3", "4", "5", "6"]:
+            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2][int(lesson)-2][int(index)-1][1]
+        else:
+            lesson_name = lesson_list1[int(index)-1][2]
+    elif typing == "1":
+        lesson_name = TWork.objects.get(id=index).title
+    
+    if lesson == "1":
+        filename = username + "_" + lesson_name.decode("utf-8")  + ".sb2"
+        download =  settings.BASE_DIR + "/static/work/scratch/" + str(user_id) + "/" + workfile.filename
+    elif lesson == "6":
+        filename = username + "_" + lesson_name.decode("utf-8")  + ".hex"
+        download =  settings.BASE_DIR + "/static/work/microbit/" + str(user_id) + "/" + workfile.filename      
     wrapper = FileWrapper(file( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')

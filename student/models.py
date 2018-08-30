@@ -123,7 +123,7 @@ class Work(models.Model):
     publication_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=-1)
     scorer = models.IntegerField(default=0)
-		# scratch
+		# scratch, microbit
     file = models.FileField()
 		#python
     picture = models.ImageField(upload_to = upload_path_handler, default = '/static/python/null.jpg')

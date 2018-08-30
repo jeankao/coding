@@ -41,6 +41,20 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
   {% else %}
     尚未繳交
   {% endif %}
+{% elif lesson == "6" %}
+  {% if work %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    <div>心得感想：</div>
+    <div>{{ work.memo }}</div>
+    <div>
+    作品檔案:
+</div>
+<div>
+   <a href="/student/work/download/{{work.typing}}/{{lesson}}/{{index}}/{{request.user.id}}/{{work_dict|hash_file:index}}">下載</a>
+</div>
+  {% else %}
+    尚未繳交
+  {% endif %}
 {% elif lesson == "2" or lesson == "3" or lesson == "5" or lesson == "7" %}
   {% if work %}
     {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
