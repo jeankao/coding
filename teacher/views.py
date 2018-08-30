@@ -418,7 +418,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
         work3 = works[0]
         pic = work3.id
         if int(lesson) > 1 :
-            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2'][int(lesson) - 2]
+            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/pandas'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=user_id, index=index)
             for work in works:
                 image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)

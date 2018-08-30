@@ -554,7 +554,7 @@ def submit(request, typing, lesson, index):
                     mtype, fext = mime.split('/', 1)
                     binary_data = a2b_base64(data)
 
-                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/Panda'][int(lesson) - 2]
+                    prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/pandas'][int(lesson) - 2]
                     directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                     image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
