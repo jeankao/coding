@@ -687,8 +687,8 @@ def work_class(request, typing, lesson, classroom_id, index):
     return render(request, 'student/work_class.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas})
   
   
-def work_download(request, typing, lesson, index, user_id, filename_uuid4):
-    workfile = WorkFile.objects.get(filename=filename_uuid4)
+def work_download(request, typing, lesson, index, user_id, workfile_id):
+    workfile = WorkFile.objects.get(id=workfile_id)
     username = User.objects.get(id=user_id).first_name
     if typing == "0":
         if lesson in ["2", "3", "4", "5", "6"]:

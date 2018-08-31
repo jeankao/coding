@@ -481,7 +481,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
                 return redirect('/teacher/score_peer/'+typing+"/"+lesson+"/"+index+'/'+classroom_id+'/'+str(enroll.group))
 
     else:
-        works = Work.objects.filter(typing=typing, index=index, user_id=user_id)
+        works = Work.objects.filter(typing=typing, index=index, user_id=user_id, lesson_id=lesson).order_by("-id")
         if not works.exists():
             if lesson == "4":
                form = ScoreBForm(user=request.user)
@@ -493,7 +493,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
             else :
                 form = ScoreForm(instance=works[0], user=request.user)
             workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")
-    return render(request, 'teacher/scoring.html', {'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index})
+    return render(request, 'teacher/scoring.html', {'typing':typing, 'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index})
 
 # 小老師評分名單
 def score_peer(request, typing, lesson, index, classroom_id, group):

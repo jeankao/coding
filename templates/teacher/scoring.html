@@ -14,7 +14,7 @@
  
 <script >   
 var flashvars = {
-project: "/static/work/{{student.id}}/{{workfiles.0.filename}}" ,
+project: "/static/work/scratch/{{student.id}}/{{workfiles.0.filename}}" ,
 autostart: "false"
 };
 var params = {
@@ -33,7 +33,7 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
 </div>   
 {% endif %}
         {% for workfile in workfiles %}
-              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{index}}/{{student.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
+              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{typing}}/{{lesson}}/{{index}}/{{student.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
         {% endfor %}
 <BR>
   <font color=red>心得：</font>
