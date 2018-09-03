@@ -306,7 +306,7 @@ class ClassroomAdd(ListView):
             keyword = self.request.GET.get('account')
             queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
         else :
-            queryset = User.objects.all().order_by('-id')
+            queryset = User.objects.filter(groups__name__in=['teacher'])
         teacher_ids = map(lambda a: a.id, queryset)
         classrooms = Classroom.objects.filter(teacher_id__in=teacher_ids).order_by('-id')
         classroom_teachers = []
