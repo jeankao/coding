@@ -708,6 +708,7 @@ def work_download(request, typing, lesson, index, user_id, workfile_id):
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
+    response['Content-Length'] = os.path.getsize(download)    
     # It's usually a good idea to set the 'Content-Length' header too.
     # You can also set any other required headers: Cache-Control, etc.
     return response
