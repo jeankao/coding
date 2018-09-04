@@ -21,7 +21,7 @@ $(function () {
     });
 });  
 </script>
-            <form action="/student/work/submit/{% if typing == 0 %}0{% else %}1{% endif %}/{% if 'A' in lesson %}1{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this, {{index}});">      
+            <form action="/student/work/submit/{% if typing == "0" %}0{% else %}1{% endif %}/{% if 'A' in lesson %}1{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this, {{index}});">      
               <input type="hidden" name="lesson" value={{lesson}}>             
               <table class="table">            
         {% if not work_dict|hash_memo:index %}                      
@@ -68,6 +68,6 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent{{index}}", "482", "3
         {% with workfiles=work_dict|hash_files:index %}
 
         {% for workfile in workfiles %}
-              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
+              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{typing}}/{{lesson_id}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
         {% endfor %}
         {% endwith %}
