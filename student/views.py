@@ -704,7 +704,7 @@ def work_download(request, typing, lesson, index, user_id, workfile_id):
     elif lesson == "6":
         filename = username + "_" + lesson_name.decode("utf-8")  + ".hex"
         download =  settings.BASE_DIR + "/static/work/microbit/" + str(user_id) + "/" + workfile.filename      
-    wrapper = FileWrapper(file( download, "r" ))
+    wrapper = FileWrapper(file( download, "rb" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
