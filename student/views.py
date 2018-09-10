@@ -116,7 +116,7 @@ def lesson(request, lesson):
             if profile_lock < lock[lesson]:
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
-        return render(request, 'student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0 })
+        return render(request, 'student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0" })
     elif lesson[0] == "B":
         lesson_id = 2
         profile_lock = profile.lock2
@@ -131,17 +131,17 @@ def lesson(request, lesson):
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
 
-        return render(request, 'student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0})
+        return render(request, 'student/lessonB.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
     elif lesson[0] == "C":
         lesson_id = 3
         profile_lock = profile.lock3
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render(request, 'student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0})
+        return render(request, 'student/lessonC.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
     elif lesson[0] == "D":
         lesson_id = 4
         profile_lock = profile.lock4
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render(request, 'student/lessonD.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0})
+        return render(request, 'student/lessonD.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
     elif lesson[0] == "E":
         lesson_id = 5
         profile_lock = profile.lock5
@@ -156,7 +156,7 @@ def lesson(request, lesson):
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
 
-        return render(request, 'student/lessonE.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0})
+        return render(request, 'student/lessonE.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
     elif lesson[0] == "G":
         lesson_id = 7
         #profile_lock = profile.lock5
@@ -172,12 +172,12 @@ def lesson(request, lesson):
         #        if not request.user.groups.filter(name='teacher').exists():
         #            return redirect("/")
 
-        return render(request, 'student/lessonG.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0})
+        return render(request, 'student/lessonG.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
     else:
         lesson_id = 1
         profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(lesson_id=lesson_id, user_id=request.user.id)))
-        return render(request, 'student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':0})
+        return render(request, 'student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
 
 # 查看班級學生
 def classmate(request, classroom_id):
