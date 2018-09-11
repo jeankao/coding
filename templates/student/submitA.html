@@ -68,6 +68,7 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent{{index}}", "482", "3
         {% with workfiles=work_dict|hash_files:index %}
 
         {% for workfile in workfiles %}
+		{{workfile.id}}--
               <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{typing}}/{{lesson_id}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
         {% endfor %}
         {% endwith %}

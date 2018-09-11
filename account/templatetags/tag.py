@@ -111,12 +111,9 @@ def school(school_id):
       
 @register.filter(name='has_group') 
 def has_group(user, group_name):
-    try:
-        group =  Group.objects.get(name=group_name) 
-    except ObjectDoesNotExist:
-        group = None
-    return group in user.groups.all()
-  
+    return user.groups.filter(name=group_name).exists()
+   
+	
 @register.filter
 def subtract(a, b):
     return a - b
@@ -198,9 +195,9 @@ def hash_file(h, key):
       if len(h[key][1])>0:
         return h[key][1][0].filename
       else:
-        return None
+        return "hi"
     else:
-      return None
+      return "no"
     
 @register.filter
 def hash_files(h, key):
