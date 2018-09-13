@@ -563,7 +563,7 @@ def submit(request, typing, lesson, index):
 
                     if not os.path.exists(directory):
                         os.makedirs(directory)
-                    with open(image_file, 'wb') as fd:
+                    with open(settings.BASE_DIR + "/" + image_file, 'wb') as fd:
                         fd.write(binary_data)
                         fd.close()
                     work.picture=image_file
