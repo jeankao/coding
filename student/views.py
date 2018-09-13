@@ -561,8 +561,8 @@ def submit(request, typing, lesson, index):
                     directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                     image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
-                    if not os.path.exists(directory):
-                        os.makedirs(directory)
+                    if not os.path.exists(settings.BASE_DIR + "/" + directory):
+                        os.makedirs(settings.BASE_DIR + "/" + directory)
                     with open(settings.BASE_DIR + "/" + image_file, 'wb') as fd:
                         fd.write(binary_data)
                         fd.close()
