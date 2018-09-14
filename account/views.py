@@ -10,7 +10,7 @@ from django.db.models import Q
 from zone import *
 from account.models import County, Zone, School, Profile, PointHistory, Message, MessageContent, MessagePoll, Visitor, VisitorLog, LessonCounter
 from student.models import Work
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils import timezone
 from django.utils.timezone import localtime
 from student.models import Enroll
@@ -182,6 +182,8 @@ def user_login(request, role):
                         visitor = Visitor.objects.get(date=date_number)
                     except ObjectDoesNotExist:
                         visitor = Visitor(date=date_number)
+                    except MultipleObjectsReturned:
+					    visitor = Visitor.objects.filter(date=date_number)[0]
                     visitor.count = visitor.count + 1
                     visitor.save()
                                         
