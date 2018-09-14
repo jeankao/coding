@@ -867,7 +867,7 @@ def exam(request):
 
 # 測驗卷得分
 def exam_score(request):
-    exams = Exam.objects.filter(student_id=request.user.id)
+    exams = Exam.objects.filter(student_id=request.user.id).order_by("-id")
     return render(request, 'student/exam_score.html', {'exams':exams} )
 
 # 測驗卷檢查答案
@@ -886,7 +886,7 @@ def exam_check(request):
         if user_answer[i] == correct_answer[i] :
             score = score + 10
     ua_test = "".join(user_answer)
-    exam = Exam(exam_id=int(exam_id)+1, student_id=request.user.id, answer=ua_test, score=score)
+    exam = Exam(exam_id=int(exam_id), student_id=request.user.id, answer=ua_test, score=score)
     exam.save()
     return JsonResponse({'status':'ok','answer':answer}, safe=False)
   

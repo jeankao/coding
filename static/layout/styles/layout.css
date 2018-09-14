@@ -178,5 +178,6 @@ table.tablesorter tr:hover td {
 .answer_list>input[name="ans"] {
     font-size: 72px;
     width: 100px;
+    height: 100px;
     text-align: center;
 }
