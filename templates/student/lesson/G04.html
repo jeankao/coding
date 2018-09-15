@@ -1,0 +1,244 @@
+    <div id="doc" class="markdown-body container-fluid" style="position: relative;"><h1 id="建立專案"><a class="anchor hidden-xs" href="#建立專案" title="建立專案"><span class="octicon octicon-link"></span></a>建立專案</h1><p>在終端機中按下Ctrl+C中斷程式執行，回到命令提示模式。</p><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> ~/workspace
+django-admin.py startproject mysite
+</div></div></code></pre><p>打完指令後，會產生一個mysite的資料夾</p><pre><code class="bash hljs">mysite/
+    manage.py
+    mysite/
+        __init__.py
+       settings.py
+       urls.py
+       wsgi.py               
+</code></pre><p>(2)修改mysite/mysite/settings.py，設定伺服器資料與時區。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span></div><div class="code">ALLOWED_HOSTS = [<span class="hljs-string">'*'</span>]
+
+TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
+</div></div></code></pre><p>(3)啟動 django</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> mysite
+sudo python3 manage.py runserver 0.0.0.0:80
+</div></div></code></pre><p>(4)在終端機會看到以下的訊息</p><p><img src="https://i.imgur.com/rNINAPk.png" alt=""></p><p>(5)django網站畫面如下：</p><p><img src="https://i.imgur.com/UGuUHZa.png" alt=""></p><h1 id="建立應用程式"><a class="anchor hidden-xs" href="#建立應用程式" title="建立應用程式"><span class="octicon octicon-link"></span></a>建立應用程式</h1><p>我們要建立一個圖文展示的應用程式</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">python3 manage.py startapp show
+</div></div></code></pre><p>下了這個指令後，會在mysite底下新增一個show資料夾，檔案結構如下：</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code">mysite/
+    manage.py
+    mysite/
+    show/
+        migrations/
+        __init__.py
+        admin.py
+        apps.py
+        models.py
+        tests.py
+        views.py
+</div></div></code></pre><p>修改mysite/settings.py以註冊應用程式 <ins>第8行</ins></p><pre><code class="python{1,2} hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span></div><div class="code"><span class="hljs-attribute">INSTALLED_APPS</span> = (
+        <span class="hljs-string">'django.contrib.admin'</span>,
+        <span class="hljs-string">'django.contrib.auth'</span>,
+        <span class="hljs-string">'django.contrib.contenttypes'</span>,
+        <span class="hljs-string">'django.contrib.sessions'</span>,
+        <span class="hljs-string">'django.contrib.messages'</span>,
+        <span class="hljs-string">'django.contrib.staticfiles'</span>,
+        <span class="hljs-string">'show.apps.ShowConfig'</span>,
+)
+</div></div></code></pre><p>要完成一個可以回應給使用者的畫面，需要有兩個步驟：</p><p>(1)設定網址(<a href="http://urls.py" target="_blank" done="">urls.py</a>)</p><p>(2)撰寫視圖函式(<a href="http://views.py" target="_blank" done="">views.py</a>)</p><p>打開 mysite/mysite/urls.py 裡面已有的設定如下：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+
+urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+]
+</div></div></code></pre><p>新增程式碼 <ins>第3,7行</ins></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> show <span class="hljs-keyword">import</span> views
+
+urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+    path(<span class="hljs-string">''</span>, views.homepage),   
+]
+</div></div></code></pre><p>打開mysite/show/views.py 修改為以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code"><span class="hljs-comment"># -*- coding: UTF-8 -*-</span>
+<span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+<span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> HttpResponse
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">homepage</span><span class="hljs-params">(request)</span>:</span>
+    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">'歡迎光臨我的網站'</span>)
+</div></div></code></pre><p>試著打開你的網站看看結果。</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">sudo python3 manage.py runserver 0.0.0.0:80
+</div></div></code></pre><p><img src="https://i.imgur.com/VtUe53Q.png" alt=""></p><h2 id="使用模版"><a class="anchor hidden-xs" href="#使用模版" title="使用模版"><span class="octicon octicon-link"></span></a>使用模版</h2><p>(1)建立模版目錄</p><p><img src="https://i.imgur.com/CbKP6tk.png" alt=""></p><p><img src="https://i.imgur.com/OnkHSVS.png" alt=""></p><p>(2)修改mysite/mysite/settings.py <ins>第4行</ins></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span></div><div class="code">TEMPLATES = [
+    {
+        <span class="hljs-string">'BACKEND'</span>: <span class="hljs-string">'django.template.backends.django.DjangoTemplates'</span>,
+        <span class="hljs-string">'DIRS'</span>: [<span class="hljs-string">'./templates'</span>,],
+        <span class="hljs-string">'APP_DIRS'</span>: <span class="hljs-keyword">True</span>,
+        <span class="hljs-string">'OPTIONS'</span>: {
+            <span class="hljs-string">'context_processors'</span>: [
+                <span class="hljs-string">'django.template.context_processors.debug'</span>,
+                <span class="hljs-string">'django.template.context_processors.request'</span>,
+                <span class="hljs-string">'django.contrib.auth.context_processors.auth'</span>,
+                <span class="hljs-string">'django.contrib.messages.context_processors.messages'</span>,
+            ],
+        },
+    },
+]
+</div></div></code></pre><p>(3)在模版目錄中建立網頁模版 index.html</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+        歡迎光臨我的網站
+    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p>(4)修改mysite/show/views.py</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span></div><div class="code"><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render_to_response
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">homepage</span><span class="hljs-params">(request)</span>:</span>
+    <span class="hljs-keyword">return</span> render_to_response(<span class="hljs-string">'index.html'</span>)
+</div></div></code></pre><h2 id="餐廳網站"><a class="anchor hidden-xs" href="#餐廳網站" title="餐廳網站"><span class="octicon octicon-link"></span></a>餐廳網站</h2><p>(1)建立靜態圖片目錄 mysite/show/static/show</p><p>(2)上傳圖片到雲端主機目錄中。</p><p><img src="https://i.imgur.com/Uj33k7W.png" alt=""></p><p><img src="https://i.imgur.com/X0wgFEg.png" alt="">food1.png</p><p><img src="https://i.imgur.com/OmT9F7W.png" alt="">food2.png</p><p><img src="https://i.imgur.com/XwYLjjs.png" alt="">food3.png</p><p>（3)修改 mysite/mysite/urls.py　 <ins>第6-7,11,12行</ins></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> show <span class="hljs-keyword">import</span> views
+<span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> include
+<span class="hljs-keyword">from</span> django.conf.urls.static <span class="hljs-keyword">import</span> static
+<span class="hljs-keyword">from</span> django.conf <span class="hljs-keyword">import</span> settings
+
+urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+    path(<span class="hljs-string">''</span>, views.homepage), 
+    path(<span class="hljs-string">'show/'</span>, include(<span class="hljs-string">'show.urls'</span>)),  
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+</div></div></code></pre><p>()新增檔案 mysite/show/urls.py</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> . <span class="hljs-keyword">import</span> views
+
+urlpatterns = [
+    path(<span class="hljs-string">'food/&lt;int:kind&gt;'</span>, views.food),   
+]
+</div></div></code></pre><p>(5)修改 mysite/template/index.html <ins>第6-8行</ins></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+        歡迎光臨我的網站<span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+        &#123;% for food in foods %}
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/show/food/{{forloop.counter}}"</span>&gt;</span>{{food}}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+        &#123;% endfor %}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p>(6)打開 mysite/show/views.py，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span></div><div class="code"><span class="hljs-comment"># -*- coding: UTF-8 -*-</span>
+<span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render_to_response
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">homepage</span><span class="hljs-params">(request)</span>:</span>
+    foods = [<span class="hljs-string">'三明治套餐'</span>, <span class="hljs-string">'鬆餅套餐'</span>, <span class="hljs-string">'漢堡套餐'</span>]
+    <span class="hljs-keyword">return</span> render_to_response(<span class="hljs-string">'index.html'</span>, {<span class="hljs-string">'foods'</span>:foods})
+  
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">food</span><span class="hljs-params">(request, kind)</span>:</span>
+    <span class="hljs-keyword">return</span> render_to_response(<span class="hljs-string">'food.html'</span>, {<span class="hljs-string">'kind'</span>:kind})  
+</div></div></code></pre><p>(6)新增 mysite/templates/food.html</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span></div><div class="code"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span> 
+    <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+      &#123;% load static %}
+       <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"&#123;% static 'show/food' %}{{kind}}.png"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><div dir="ltr" class="resize-sensor" style="position: absolute; left: -10px; top: -10px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;"><div class="resize-sensor-expand" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div></div><div class="resize-sensor-shrink" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div></div></div></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav"><li class=""><a href="#建立專案" title="建立專案">建立專案</a></li><li class=""><a href="#建立應用程式" title="建立應用程式">建立應用程式</a><ul class="nav"><li><a href="#使用模版" title="使用模版">使用模版</a></li><li class=""><a href="#餐廳網站" title="餐廳網站">餐廳網站</a></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;"  >
+        <div class="toc"><ul class="nav"><li class=""><a href="#建立專案" title="建立專案">建立專案</a></li><li class=""><a href="#建立應用程式" title="建立應用程式">建立應用程式</a><ul class="nav"><li class=""><a href="#使用模版" title="使用模版">使用模版</a></li><li class=""><a href="#餐廳網站" title="餐廳網站">餐廳網站</a></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
+ 

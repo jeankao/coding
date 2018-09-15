@@ -43,6 +43,168 @@
     </div>
     {% endif %}
   </div>
+{% elif lesson == "G04" %}
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <!--
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    -->
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/G04.html" %}
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/vIvCIH3-CIw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    -->
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      {% include "student/submitB.html" with index=4 %}
+    </div>
+    {% endif %}
+  </div>
+{% elif lesson == "G05" %}
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <!--
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    -->
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/G05.html" %}
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/vIvCIH3-CIw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    -->
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      {% include "student/submitB.html" with index=5 %}
+    </div>
+    {% endif %}
+  </div>
+{% elif lesson == "G06" %}
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <!--
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    -->
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/G06.html" %}
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/vIvCIH3-CIw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    -->
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      {% include "student/submitB.html" with index=6 %}
+    </div>
+    {% endif %}
+  </div>
+{% elif lesson == "G07" %}
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <!--
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    -->
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/G07.html" %}
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/vIvCIH3-CIw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    -->
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      {% include "student/submitB.html" with index=7 %}
+    </div>
+    {% endif %}
+  </div>
+{% elif lesson == "G19" %}
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <!--
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
+    </li>
+    {% endif %}
+-->
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/G19.html" %}
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/vIvCIH3-CIw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      {% include "student/submitB.html" with index=7 %}
+    </div>
+    {% endif %}
+  </div>
+    -->
 {% endif %}
 {% endblock %}
 

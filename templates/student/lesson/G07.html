@@ -1,0 +1,273 @@
+    <div id="doc" class="markdown-body container-fluid" style="position: relative;"><h1 id="使用者表單"><a class="anchor hidden-xs" href="#使用者表單" title="使用者表單"><span class="octicon octicon-link"></span></a>使用者表單</h1><p>在前面的章節中使用的 Django 內建的後臺管理界面對自訂的資料模型 <code>Poll</code> 以及 <code>Option</code> 進行操作。但後臺管理界面較偏向一般化的操作，可能無法滿足我們對操作流程的要求，此時可以透過使用者表單在頁面上收集使用者的輸入值，藉此對資料模型所對應的資料表進行新增、刪除、修改等操作。</p><p>舉例來說，想在檢視投票主題的頁面對該主題的投票選項進行操作，例如新增一個選項時，只需要填寫選項文字就好，其 <code>poll_id</code> 欄位就由程式自動判斷填入，這樣的需求就沒法直接透過建建的管理後臺達成。</p><h2 id="投票主題"><a class="anchor hidden-xs" href="#投票主題" title="投票主題"><span class="octicon octicon-link"></span></a>投票主題</h2><p>由於這個範例的資料比較單純，我們可以透過 Django 的通用編輯視圖(Generic editing views)類別來進行資料的「增(Create)」、「刪(Delete)」、「修(Update)」的動作。</p><h3 id="修改資料模型"><a class="anchor hidden-xs" href="#修改資料模型" title="修改資料模型"><span class="octicon octicon-link"></span></a>修改資料模型</h3><p>開啟 <code>poll/default/models.py</code>，修改 <code>Poll</code> 資料模型：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span></div><div class="code"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Poll</span><span class="hljs-params">(models.Model)</span>:</span>
+    <span class="hljs-comment"># 投票主題文字，至多 200 字</span>
+    subject = models.CharField(max_length=<span class="hljs-number">200</span>, verbose_name=<span class="hljs-string">'主題'</span>)
+    <span class="hljs-comment"># 投票建立日期，在建立時若未指定，則自動填入建立時的時間</span>
+    date_created = models.DateField(auto_now_add=<span class="hljs-keyword">True</span>)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> str(self.id) + <span class="hljs-string">")"</span> + self.subject
+</div></div></code></pre><h3 id="新增資料Create"><a class="anchor hidden-xs" href="#新增資料Create" title="新增資料Create"><span class="octicon octicon-link"></span></a>新增資料(Create)</h3><h4 id="路徑"><a class="anchor hidden-xs" href="#路徑" title="路徑"><span class="octicon octicon-link"></span></a>路徑</h4><p>修改 <code>poll/default/urls.py</code>，增加路徑規則：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="7"></span>
+<span data-linenumber="8"></span></div><div class="code">    path(<span class="hljs-string">'option/&lt;int:pk&gt;/'</span>, views.PollVote.as_view()),
+    path(<span class="hljs-string">'poll/create/'</span>, views.PollCreate.as_view()),
+</div></div></code></pre><ul>
+<li>新增<ins>第 8 行</ins>，讓 <code>poll/create/</code> 對應到新增投票主題的視圖。</li>
+</ul><h4 id="視圖"><a class="anchor hidden-xs" href="#視圖" title="視圖"><span class="octicon octicon-link"></span></a>視圖</h4><p>開啟 <code>poll/default/views.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="3"></span>
+<span data-linenumber="4"></span></div><div class="code"><span class="hljs-keyword">from</span> django.views.generic.edit <span class="hljs-keyword">import</span> CreateView, UpdateView, DeleteView
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> *
+</div></div></code></pre><ul>
+<li>新增<ins>第 3 行</ins>，從 <code>django.views.generic.edit</code> 引用 <code>CreateView</code>, <code>UpdateView</code> 以及 <code>DeleteView</code></li>
+</ul><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span></div><div class="code"><span class="hljs-comment"># 新增投票主題</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PollCreate</span><span class="hljs-params">(CreateView)</span>:</span>
+    model = Poll
+    fields = [<span class="hljs-string">'subject'</span>]    <span class="hljs-comment"># 指定要顯示的欄位</span>
+    success_url = <span class="hljs-string">'/poll/'</span>  <span class="hljs-comment"># 成功新增後要導向的路徑</span>
+    template_name = <span class="hljs-string">'general_form.html'</span> <span class="hljs-comment"># 要使用的頁面範本    </span>
+</div></div></code></pre><h4 id="範本"><a class="anchor hidden-xs" href="#範本" title="範本"><span class="octicon octicon-link"></span></a>範本</h4><p>新增通用表單範本檔案 <code>poll/default/templates/general_form.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+   &#123;% csrf_token %}
+   <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+       {{ form.as_table }}
+   <span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"送出"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/edCP81O.png" alt=""></kbd></p><div class="alert alert-info">
+<p><img alt=":bulb:" class="emoji" src="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/bulb.png" title=":bulb:"> <strong>CSRF token 是什麼？</strong></p>
+<p>CSRF 是一種 Web 上的攻擊手法，全稱是 Cross Site Request Forgery，跨站請求偽造，簡單的說就是在別的網站上偽裝為本網站使用者的編輯操作，造成資料被竄改、刪除…等。網站透過 CSRF Token 的使用，可以檢驗請求的真實性，以確保網站的資料安全。細節可參考以下網站說明：</p>
+<p>讓我們來談談 CSRF | TechBridge 技術共筆部落格<br>
+<a href="https://blog.techbridge.cc/2017/02/25/csrf-introduction/" target="_blank">https://blog.techbridge.cc/2017/02/25/csrf-introduction/</a></p>
+</div><h3 id="修改資料Update"><a class="anchor hidden-xs" href="#修改資料Update" title="修改資料Update"><span class="octicon octicon-link"></span></a>修改資料(Update)</h3><h4 id="網址"><a class="anchor hidden-xs" href="#網址" title="網址"><span class="octicon octicon-link"></span></a>網址</h4><p>開啟 <code>poll/default/urls.py</code>，增加以下路徑規則：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="9"></span></div><div class="code">    path(<span class="hljs-string">'poll/&lt;int:pk&gt;/update/'</span>, views.PollUpdate.as_view()),
+</div></div></code></pre><ul>
+<li>將 <code>poll/整數/update/</code> 的請求交由 <code>PollUpdate</code> 處理，並將路徑中的整數部份擷取出來當成參數，命名為 <code>pk</code></li>
+</ul><div class="alert alert-info">
+<p><img alt=":bulb:" class="emoji" src="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/bulb.png" title=":bulb:"> <strong>參數 <code>pk</code> 的作用</strong><br>
+Django 的通用視圖，若操作對象為某特定一筆記錄的話，它會透過 <code>pk</code> 這個參數來搜尋該視圖所參考的資料模型，將主鍵(Primary Key，未特別定義的話，Django 會自動建立一個 <code>id</code> 欄位，並將其設為主鍵，用以識別每筆記錄)值與 <code>pk</code> 相等的那筆記錄找出來。</p>
+<p>註：<code>pk</code> 就是 Primary Key 的簡寫</p>
+</div><h4 id="視圖1"><a class="anchor hidden-xs" href="#視圖1" title="視圖1"><span class="octicon octicon-link"></span></a>視圖</h4><p>開啟 <code>poll/default/views.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span></div><div class="code"><span class="hljs-comment"># 修改投票主題</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PollUpdate</span><span class="hljs-params">(UpdateView)</span>:</span>
+    model = Poll
+    fields = [<span class="hljs-string">'subject'</span>]        <span class="hljs-comment"># 指定要顯示的欄位</span>
+    success_url = <span class="hljs-string">'/poll/'</span>      <span class="hljs-comment"># 成功新增後要導向的路徑</span>
+    template_name = <span class="hljs-string">'general_form.html'</span> <span class="hljs-comment"># 要使用的頁面範本</span>
+</div></div></code></pre><h4 id="範本1"><a class="anchor hidden-xs" href="#範本1" title="範本1"><span class="octicon octicon-link"></span></a>範本</h4><p>與新增投票主題共用頁面範本 <code>general_form.html</code>，不另行設置。</p><p><kbd><img src="https://i.imgur.com/rRpfD6l.png" alt=""></kbd></p><h3 id="刪除資料Delete"><a class="anchor hidden-xs" href="#刪除資料Delete" title="刪除資料Delete"><span class="octicon octicon-link"></span></a>刪除資料(Delete)</h3><h4 id="網址1"><a class="anchor hidden-xs" href="#網址1" title="網址1"><span class="octicon octicon-link"></span></a>網址</h4><p>開啟 <code>poll/default/urls.py</code>，增加以下路徑規則：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="10"></span></div><div class="code">    path(<span class="hljs-string">'poll/&lt;int:pk&gt;/delete/'</span>, views.PollDelete.as_view()),
+</div></div></code></pre><h4 id="視圖2"><a class="anchor hidden-xs" href="#視圖2" title="視圖2"><span class="octicon octicon-link"></span></a>視圖</h4><p>開啟 <code>poll/default/views.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="41"></span>
+<span data-linenumber="42"></span>
+<span data-linenumber="43"></span>
+<span data-linenumber="44"></span>
+<span data-linenumber="45"></span></div><div class="code"><span class="hljs-comment"># 刪除投票主題</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PollDelete</span><span class="hljs-params">(DeleteView)</span>:</span>
+    model = Poll
+    success_url = <span class="hljs-string">'/poll/'</span>
+    template_name = <span class="hljs-string">"confirm_delete.html"</span>
+</div></div></code></pre><h4 id="範本2"><a class="anchor hidden-xs" href="#範本2" title="範本2"><span class="octicon octicon-link"></span></a>範本</h4><p>新增確認刪除頁面範本檔案 <code>poll/default/templates/confirm_delete.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>刪除紀錄<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>確定要刪除 {{ object }} 這筆紀錄嗎?<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    &#123;% csrf_token %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"是的，我要刪除"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/BCgNpCa.png" alt=""></kbd></p><h3 id="更新投票主題列表範本"><a class="anchor hidden-xs" href="#更新投票主題列表範本" title="更新投票主題列表範本"><span class="octicon octicon-link"></span></a>更新投票主題列表範本</h3><p>開啟 <code>poll/default/templates/default/poll_list.html</code>，修改為以下程式碼。</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>投票主題<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"create/"</span>&gt;</span>新增投票主題<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  &#123;% for poll in poll_list %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+    {{ poll.date_created }}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/"</span>&gt;</span>{{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/update/"</span>&gt;</span>修改<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  &#123;% endfor %}
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/so8rKwu.png" alt=""></kbd></p><h2 id="投票選項"><a class="anchor hidden-xs" href="#投票選項" title="投票選項"><span class="octicon octicon-link"></span></a>投票選項</h2><h3 id="新增資料Create1"><a class="anchor hidden-xs" href="#新增資料Create1" title="新增資料Create1"><span class="octicon octicon-link"></span></a>新增資料(Create)</h3><h4 id="路徑1"><a class="anchor hidden-xs" href="#路徑1" title="路徑1"><span class="octicon octicon-link"></span></a>路徑</h4><p>開啟 <code>poll/default/urls.py</code> ，增加以下路徑規則：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="11"></span></div><div class="code">    path(<span class="hljs-string">'option/create/&lt;int:pid&gt;/'</span>, views.OptionCreate.as_view()),
+</div></div></code></pre><h4 id="視圖3"><a class="anchor hidden-xs" href="#視圖3" title="視圖3"><span class="octicon octicon-link"></span></a>視圖</h4><p>開啟 <code>poll/default/views.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="47"></span>
+<span data-linenumber="48"></span>
+<span data-linenumber="49"></span>
+<span data-linenumber="50"></span>
+<span data-linenumber="51"></span>
+<span data-linenumber="52"></span>
+<span data-linenumber="53"></span>
+<span data-linenumber="54"></span>
+<span data-linenumber="55"></span>
+<span data-linenumber="56"></span>
+<span data-linenumber="57"></span>
+<span data-linenumber="58"></span></div><div class="code"><span class="hljs-comment"># 新增投票選項</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OptionCreate</span><span class="hljs-params">(CreateView)</span>:</span>
+    model = Option
+    fields = [<span class="hljs-string">'title'</span>]
+    template_name = <span class="hljs-string">'general_form.html'</span>
+    <span class="hljs-comment"># 成功新增選項後要導向其所屬的投票主題檢視頁面</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_success_url</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'/poll/'</span>+str(self.kwargs[<span class="hljs-string">'pid'</span>])+<span class="hljs-string">'/'</span>
+    <span class="hljs-comment"># 表單驗證，在此填上選項所屬的投票主題 id</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">form_valid</span><span class="hljs-params">(self, form)</span>:</span>
+        form.instance.poll_id = self.kwargs[<span class="hljs-string">'pid'</span>]
+        <span class="hljs-keyword">return</span> super().form_valid(form)
+</div></div></code></pre><h4 id="範本3"><a class="anchor hidden-xs" href="#範本3" title="範本3"><span class="octicon octicon-link"></span></a>範本</h4><p>與 <code>PollCreate</code>, <code>PollUpdate</code> 共用 <code>general_form.html</code> 即可，不另行定義頁面範本。</p><p><kbd><img src="https://i.imgur.com/nYwlJ9I.png" alt=""></kbd></p><p>因為在 <code>models.py</code> 裡定義 <code>Option</code> 的資料模型時，並未指定 <code>title</code> 這個欄位的標籤文字，所以預設會以欄位名稱當做輸入標籤文字。若想修改的話，可以在定義 <code>title</code> 欄位型態時，如下方程式碼區塊的<ins>第 18 行</ins>，額外指定 <code>verbose_name</code> 屬性即可，例：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span></div><div class="code"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Option</span><span class="hljs-params">(models.Model)</span>:</span>
+    <span class="hljs-comment"># 此選項屬於哪一個投票</span>
+    poll_id = models.IntegerField()
+    <span class="hljs-comment"># 選項文字</span>
+    title = models.CharField(max_length=<span class="hljs-number">200</span>, verbose_name=<span class="hljs-string">'投票選項'</span>)
+    <span class="hljs-comment"># 此選項被投票數</span>
+    count = models.IntegerField(default=<span class="hljs-number">0</span>)
+</div></div></code></pre><p>有另一種指定方式，在欄位型態的第一個參數直接放上標籤文字也可以，如：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="18"></span></div><div class="code">    title = models.CharField(<span class="hljs-string">'投票選項'</span>, max_length=<span class="hljs-number">200</span>)
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/S3hEPcF.png" alt=""></kbd></p><h3 id="修改資料Update1"><a class="anchor hidden-xs" href="#修改資料Update1" title="修改資料Update1"><span class="octicon octicon-link"></span></a>修改資料(Update)</h3><h4 id="網址2"><a class="anchor hidden-xs" href="#網址2" title="網址2"><span class="octicon octicon-link"></span></a>網址</h4><p>開啟 <code>poll/default/urls.py</code>，增加以下路徑規則：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="12"></span></div><div class="code">    path(<span class="hljs-string">'option/&lt;int:pk&gt;/update/'</span>, views.OptionUpdate.as_view()),
+</div></div></code></pre><h4 id="視圖4"><a class="anchor hidden-xs" href="#視圖4" title="視圖4"><span class="octicon octicon-link"></span></a>視圖</h4><p>開啟 <code>poll/default/views.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="60"></span>
+<span data-linenumber="61"></span>
+<span data-linenumber="62"></span>
+<span data-linenumber="63"></span>
+<span data-linenumber="64"></span>
+<span data-linenumber="65"></span>
+<span data-linenumber="66"></span>
+<span data-linenumber="67"></span></div><div class="code"><span class="hljs-comment"># 修改投票選項</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OptionUpdate</span><span class="hljs-params">(UpdateView)</span>:</span>
+    model = Option
+    fields = [<span class="hljs-string">'title'</span>]
+    template_name = <span class="hljs-string">'general_form.html'</span>
+    <span class="hljs-comment"># 修改成功後返回其所屬投票主題檢視頁面</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_success_url</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'/poll/'</span>+str(self.object.poll_id)+<span class="hljs-string">'/'</span>
+</div></div></code></pre><h4 id="範本4"><a class="anchor hidden-xs" href="#範本4" title="範本4"><span class="octicon octicon-link"></span></a>範本</h4><p>共用 <code>general_form.html</code> 即可，不需另行定義。</p><p><kbd><img src="https://i.imgur.com/hVJQBjl.png" alt=""></kbd></p><h3 id="刪除資料Delete1"><a class="anchor hidden-xs" href="#刪除資料Delete1" title="刪除資料Delete1"><span class="octicon octicon-link"></span></a>刪除資料(Delete)</h3><h4 id="網址3"><a class="anchor hidden-xs" href="#網址3" title="網址3"><span class="octicon octicon-link"></span></a>網址</h4><p>開啟 <code>poll/default/urls.py</code>，增加以下路徑規則：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="13"></span></div><div class="code">    path(<span class="hljs-string">'option/&lt;int:pk&gt;/delete/'</span>, views.OptionDelete.as_view()),
+</div></div></code></pre><p>另外，請修改投票主題檢視的路徑規則如下：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="6"></span></div><div class="code">    path(<span class="hljs-string">'poll/&lt;int:pk&gt;/'</span>, views.PollDetail.as_view(), name=<span class="hljs-string">'poll_view'</span>),
+</div></div></code></pre><h4 id="視圖5"><a class="anchor hidden-xs" href="#視圖5" title="視圖5"><span class="octicon octicon-link"></span></a>視圖</h4><p>修改 <code>poll/default/views.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="4"></span>
+<span data-linenumber="5"></span></div><div class="code"><span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> *
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> reverse
+</div></div></code></pre><p>另外，新增以下內容：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="70"></span>
+<span data-linenumber="71"></span>
+<span data-linenumber="72"></span>
+<span data-linenumber="73"></span>
+<span data-linenumber="74"></span>
+<span data-linenumber="75"></span>
+<span data-linenumber="76"></span></div><div class="code"><span class="hljs-comment"># 刪除投票選項</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OptionDelete</span><span class="hljs-params">(DeleteView)</span>:</span>
+    model = Option
+    template_name = <span class="hljs-string">'confirm_delete.html'</span>
+    <span class="hljs-comment"># 刪除成功後返回其所屬投票主題檢視頁面</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_success_url</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> reverse(<span class="hljs-string">'poll_view'</span>, kwargs={<span class="hljs-string">'pk'</span>: self.object.poll_id})
+</div></div></code></pre><div class="alert alert-info">
+<p><img alt=":bulb:" class="emoji" src="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/bulb.png" title=":bulb:"> <strong>為什麼要用 <code>reverse</code> 來產生路徑?</strong></p>
+<p>其實這種反向產生網址路徑的方法才是官方比較建議的做法。</p>
+<p>之前所示範的方式是自行組合出目的路徑，這樣比較直覺，但缺點是，日後若需調整路徑規則，就必須將視圖中所有相關的路徑全部修正到才行。</p>
+<p>反向產生網址路徑的做法，必須先為路徑規則命名，在視圖中只需指定要透過哪條規則來產生路徑，並提供所需參數即可，剩下的事情 <code>reverse</code> 會處理。例如：要將原本的 <code>poll/&lt;int:pk&gt;/</code> 改為 <code>poll/view/&lt;int:pk&gt;</code>，僅需修改 <code>urls.py</code> 即可，<code>views.py</code> 就不需要做任何調整。如此一來，跟路徑相關的操作就可以全部集中在 <code>urls.py</code> 處理。</p>
+</div><h4 id="範本5"><a class="anchor hidden-xs" href="#範本5" title="範本5"><span class="octicon octicon-link"></span></a>範本</h4><p>與 <code>PollDelete</code> 共用 <code>confirm_delete.html</code> 即可，不另行定義頁面範本。</p><p><kbd><img src="https://i.imgur.com/whNOaIU.png" alt=""></kbd></p><h3 id="更新投票主題檢視頁面範本"><a class="anchor hidden-xs" href="#更新投票主題檢視頁面範本" title="更新投票主題檢視頁面範本"><span class="octicon octicon-link"></span></a>更新投票主題檢視頁面範本</h3><p>開啟 <code>poll/default/templates/default/poll_detail.html</code>，修改為以下程式碼。</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/create/{{ poll.id }}"</span>&gt;</span>新增選項<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>小提示！直接按選項文字就可以投票囉！<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    &#123;% for option in options %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/{{ option.id }}/"</span>&gt;</span>{{ option.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> : {{ option.count }} 票 |
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/{{ option.id }}/update/"</span>&gt;</span>修改<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/{{ option.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    &#123;% endfor %}
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/gcCKgx6.png" alt=""></kbd></p><h2 id="根路徑重新導向"><a class="anchor hidden-xs" href="#根路徑重新導向" title="根路徑重新導向"><span class="octicon octicon-link"></span></a>根路徑重新導向</h2><p>先前在測試網站的時候，是使用 <code>http://your-host-address/poll/</code> 來存取服務。但是若僅以主機名稱 <code>http://your-host-address/</code> 來存取網站，會看到如下圖 Page not found 的錯誤訊息。</p><p>(<em><strong>註：<code>your-host-address</code> 請自行置換為執行專案的主機位址</strong></em>)</p><p><kbd><img src="https://i.imgur.com/kv9yHP7.png" alt=""></kbd></p><p>錯誤訊息的頁面上列出目前網站已定義的路徑規則，目前已定義的 10 條規則中，並不包含根路徑(也就是網站主機位址後不加其他路徑)的定義，因為找不到相對應的處理函式，所以產生了錯誤訊息。</p><p>在這個範例最主要的功能就是投票，因此，我們希望僅以主機名稱來存取網站時，會直接顯示投票主題列表，所以必須將根路徑重新導向到 <code>poll/</code> 來顯示投票主題列表。</p><p>修改 <code>poll/default/urls.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span></div><div class="code"><span class="hljs-keyword">from</span> . <span class="hljs-keyword">import</span> views
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
+
+urlpatterns = [
+    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'poll/'</span>)),
+    path(<span class="hljs-string">'poll/'</span>, views.PollList.as_view()),
+</div></div></code></pre><p>完成修改後，接下來僅以主機名稱 <code>http://your-host-address/</code> 來存取網站時，會被重新導向至 <code>http://your-host-address/poll/</code>，顯示投票主題列表頁面。</p></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav"><li class=""><a href="#使用者表單" title="使用者表單">使用者表單</a><ul class="nav"><li><a href="#投票主題" title="投票主題">投票主題</a><ul class="nav"><li><a href="#修改資料模型" title="修改資料模型">修改資料模型</a></li><li><a href="#新增資料Create" title="新增資料(Create)">新增資料(Create)</a></li><li><a href="#修改資料Update" title="修改資料(Update)">修改資料(Update)</a></li><li><a href="#刪除資料Delete" title="刪除資料(Delete)">刪除資料(Delete)</a></li><li><a href="#更新投票主題列表範本" title="更新投票主題列表範本">更新投票主題列表範本</a></li></ul></li><li><a href="#投票選項" title="投票選項">投票選項</a><ul class="nav"><li><a href="#新增資料Create1" title="新增資料(Create)">新增資料(Create)</a></li><li><a href="#修改資料Update1" title="修改資料(Update)">修改資料(Update)</a></li><li><a href="#刪除資料Delete1" title="刪除資料(Delete)">刪除資料(Delete)</a></li><li><a href="#更新投票主題檢視頁面範本" title="更新投票主題檢視頁面範本">更新投票主題檢視頁面範本</a></li></ul></li><li><a href="#根路徑重新導向" title="根路徑重新導向">根路徑重新導向</a></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;"  >
+        <div class="toc"><ul class="nav"><li class=""><a href="#使用者表單" title="使用者表單">使用者表單</a><ul class="nav"><li><a href="#投票主題" title="投票主題">投票主題</a><ul class="nav"><li><a href="#修改資料模型" title="修改資料模型">修改資料模型</a></li><li><a href="#新增資料Create" title="新增資料(Create)">新增資料(Create)</a></li><li><a href="#修改資料Update" title="修改資料(Update)">修改資料(Update)</a></li><li><a href="#刪除資料Delete" title="刪除資料(Delete)">刪除資料(Delete)</a></li><li><a href="#更新投票主題列表範本" title="更新投票主題列表範本">更新投票主題列表範本</a></li></ul></li><li><a href="#投票選項" title="投票選項">投票選項</a><ul class="nav"><li><a href="#新增資料Create1" title="新增資料(Create)">新增資料(Create)</a></li><li><a href="#修改資料Update1" title="修改資料(Update)">修改資料(Update)</a></li><li><a href="#刪除資料Delete1" title="刪除資料(Delete)">刪除資料(Delete)</a></li><li><a href="#更新投票主題檢視頁面範本" title="更新投票主題檢視頁面範本">更新投票主題檢視頁面範本</a></li></ul></li><li><a href="#根路徑重新導向" title="根路徑重新導向">根路徑重新導向</a></li></ul></li></ul></div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
