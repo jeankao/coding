@@ -68,8 +68,8 @@
 
     <span class="c"># 更新球的資料</span>
     <span class="n">ball</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">mag</span><span class="p">(</span><span class="n">ball</span><span class="o">.</span><span class="n">v</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ball</span><span class="o">.</span><span class="n">pos</span><span class="o">/</span><span class="n">r</span><span class="p">)</span>
-    <span class="n">ball</span><span class="o">.</span><span class="n">v</span> <span class="o">+=</span> <span class="n">ball</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">dt</span>
-    <span class="n">ball</span><span class="o">.</span><span class="n">pos</span> <span class="o">+=</span> <span class="n">ball</span><span class="o">.</span><span class="n">v</span><span class="o">*</span><span class="n">dt</span>
+    <span class="n">ball</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">v</span> + <span class="n">ball</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">dt</span>
+    <span class="n">ball</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">pos</span> + <span class="n">ball</span><span class="o">.</span><span class="n">v</span><span class="o">*</span><span class="n">dt</span>
 
 <span class="hll">    <span class="c"># 畫出x軸位置圖</span>
 </span><span class="hll">    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt</span>
