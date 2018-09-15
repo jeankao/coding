@@ -55,6 +55,8 @@ class Profile(models.Model):
   lock4 = models.IntegerField(default=1)  
   # VPhysics(P3)進度
   lock5 = models.IntegerField(default=1)    
+  # Django(P3)進度
+  lock6 = models.IntegerField(default=1)      
   
  
   def __unicode__(self):

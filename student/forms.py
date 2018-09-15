@@ -70,3 +70,8 @@ class SubmitCForm(forms.ModelForm):
             super(SubmitCForm, self).__init__(*args, **kwargs)
             self.fields['youtube'].label = "影片網址"
             self.fields['memo'].label = "心得感想"
+            
+class SubmitDForm(forms.Form):
+        screenshot = forms.CharField(widget=forms.HiddenInput())
+        memo = forms.CharField(widget=forms.Textarea)
+     

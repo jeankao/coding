@@ -1,0 +1,85 @@
+{% load tag %}
+{% block header %}
+<script language="javascript">
+    window.addEventListener('load', function (e) {
+        var node = document.getElementById('edit-box{{index}}');
+        node.onpaste = function (e) {
+            if (e.clipboardData && e.clipboardData.types) {
+                // Loop the data store in type and display it
+                for (var i = 0; i < e.clipboardData.types.length; ++i) {
+                    var key = e.clipboardData.types[i];
+                    var item = e.clipboardData.items[i];
+                    if (key === 'Files') {
+                        var file = item.getAsFile();
+                        var reader = new FileReader();
+                        reader.onload = function(evt) {
+                            var img = document.createElement('img');
+                            img.src = evt.target.result;
+                            //$(node).append(img);
+                            $(node).empty().append(img);
+                        };
+                        reader.readAsDataURL(file);
+                        return found = true;
+                    }
+                }
+            }
+        };
+        //$("#edit-box").focus();
+        $("#form{{index}}").submit(function(event) {
+            var img = $("img", $("#edit-box{{index}}"));
+            if (img.length < 1) {
+                alert("請先貼上螢幕擷圖後再按上傳");
+                event.preventDefault();
+            } else {
+                $("#screenshot{{index}}").val(img[0].src);
+            }
+        });
+		$("#id_memo{{index}}").focus();
+    });
+</script>
+{% endblock %}
+  <br>
+  {% if work_dict|hash_scorer:index > 0 %}
+  <button class="btn">
+    分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index|realname}}
+</button>
+<BR><BR>
+  {% endif %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/{{typing}}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}3{% elif 'D' in lesson %}4{% elif 'E' in lesson %}5{% elif 'G' in lesson%}8{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+    <input type="hidden" name="lesson" value={{lesson}}>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">心得感想：</label>
+        <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">執行結果：</label>
+        {% if work_dict|hash_scorer:index == 0 %}
+        <div id="edit-box{{index}}" class="form-control target" contenteditable="true" style="height:auto">
+            {% if work_dict|hash_workid:index %} 如果變更擷圖，請刪除原圖後重貼...
+            <img width=880 src="/{{ work_dict|hash_picture:index }}" /> 
+            {% else %}
+            請在此貼上螢幕擷圖... 
+            {% endif %}
+        </div>
+        <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" />
+        <div class="form-group">
+            <input id="submit" type="submit" class="btn-info" value="送出" />
+        </div>
+        {% else %}
+        <div>
+            <div id="edit-box{{index}}"></div>
+            <img width=880 src="/{{ work_dict|hash_picture:index }}">
+        </div>
+        {% endif %}
+    </div>
+</form>
+<br>
+<table class="table">
+    <tr>
+        {% if work_dict|hash_date:index %}
+        <td>
+            <a href="/student/work/show/{{typing}}/{{lesson_id}}/{{index}}/{{user.id}}">觀看({{work_dict|hash_date:index}})</a>
+        </td>
+        {% endif %}
+    </tr>
+</table>

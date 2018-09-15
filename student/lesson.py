@@ -3,6 +3,7 @@ lesson_list1 = []
 lesson_list2 = []
 lesson_list3 = []
 lesson_list4 = []
+lesson_list5 = []
 
 def reset():
     lesson_list1.append(["1",u"第1堂課：Scratch基本介紹",u"範例：綜合應用"])
@@ -97,5 +98,27 @@ def reset():
     lesson_list4.append(["7",u"多物件控制"])  
     lesson_list4.append(["8",u"多物件進階"])  
     lesson_list4.append(["9",u"多物件應用"])  
-    lesson_list4.append(["10",u"鍵盤與滑鼠控制"])      
+    lesson_list4.append(["10",u"鍵盤與滑鼠控制"])  
+    
+    lesson_list5.append(["1",u"HTML基礎"])
+    lesson_list5.append(["2",u"Python基礎"])   
+    lesson_list5.append(["3",u"安裝與架站"])  
+    lesson_list5.append(["4",u"專案與應用程式"])  
+    lesson_list5.append(["5",u"與資料庫互動"])  
+    lesson_list5.append(["6",u"視圖網址範本"])  
+    lesson_list5.append(["7",u"使用者表單"])  
+    lesson_list5.append(["8",u"實戰：留言板"])  
+    lesson_list5.append(["9",u"實戰：日誌"])  
+    lesson_list5.append(["10",u"實戰：記帳"])    
+    lesson_list5.append(["11",u"CSS基礎"])    
+    lesson_list5.append(["12",u"JavaScript基礎"])   
+    lesson_list5.append(["13",u"響應式網頁"])    
+    lesson_list5.append(["14",u"案例：投票"])  
+    lesson_list5.append(["15",u"案例：留言板"])  
+    lesson_list5.append(["16",u"案例：數位助理"])  
+    lesson_list5.append(["17",u"GitHub分享"])  
+    lesson_list5.append(["18",u"Heroku發佈"])  
+    lesson_list5.append(["8",u"實戰：留言板"])  
+    lesson_list5.append(["9",u"實戰：日誌"])  
+    lesson_list5.append(["10",u"實戰：記帳"])        
 reset()
