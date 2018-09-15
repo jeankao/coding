@@ -1,0 +1,469 @@
+{% extends "base.html" %}
+{% load tz %}
+{% load tag %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/js/annotator/annotator.min.css" type="text/css" media="all" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="/static/js/annotator/annotator-full.min.js"></script>
+{% if is_teacher %}
+<link rel="stylesheet" href="/static/js/annotator/annotator.touch.css" type="text/css" media="all" />
+<script type="text/javascript" src="/static/js/annotator/annotator.touch.min.js"></script>
+{% endif %}
+<style>
+.checked {
+    color: orange;
+}
+.rating{
+	float:right;
+}
+.animated {
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
+}
+
+.stars
+{
+    margin: 20px 0;
+    font-size: 24px;
+    color: #d17581;
+}	
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <button class="btn btn-success">{{forum.title}}</button>
+  <button class="btn btn-default">{{forum.teacher_id|realname}}老師</button>
+</div>
+<div class="row">
+<button class="btn btn-warning">素材</button>
+  <ul  class="list-group">
+    </li>
+    {% for work in contents %}
+    <li class="list-group-item material" id="m_{{ work.id }}">
+      <div class="panel panel-default">      
+      {% spaceless %}     
+        {% if work.types == 1 %}
+ <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 外部網址 
+ </div>
+  <div class="panel-body">
+    <a href="{{work.link}}" target="_blank">{% if work.title %}{{work.title}}{% else %}開啟連結{% endif %}</a>
+  </div>
+        {% elif work.types == 2 %}
+<div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> Youtube影片 
+	<img src="/static/images/video.gif"><a href="/teacher/event/video/{{classroom_id}}/{{forum.id}}/{{work.id}}/">全班統計</a>
+</div>
+  <div class="panel-body">
+    <div class="embed-responsive embed-responsive-16by9">
+    <div id="player{{work.id}}"></div>
+		</div>
+</div>          
+        {% elif work.types == 3 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 下載檔案
+</div>
+  <div class="panel-body"> <a href="/teacher/forum/download/{{work.id}}" target="_blank">{{work.title}}</a> </div>       
+        {% elif work.types == 4 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 自訂文字
+</div>
+        {% endif %} 
+  <div class="panel-body">
+    {{work.memo|memo|safe}}
+  </div>					
+        
+      {% endspaceless %}
+
+    </div>
+        </li>
+  {% endfor %}
+  </ul>
+      </div>
+
+	<div class="card">
+		<div class="card-header">{{user_id|realname}} --{{work_new.publication_date}}{% if publish %}(已發表){% else %}<font color=red>(尚未發表)</font>
+			{% if not forum.id|in_deadline:classroom_id == '' or works %}<button class="btn btn-default">繳交({{works.count}})</button>{% else %}<a href="/student/forum/submit/{{classroom_id}}/{{forum.id}}" class="btn btn-primary" role="btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 繳交({{works.count}})</a>{% endif %}
+			{% endif %}　
+			<span style="float:right">
+			<A href="/student/forum/history/{{user_id}}/{{forum.id}}/{{classroom_id}}"><img src="/static/images/edit.gif"> 歷史({{works|length}})</A>
+			</span>		
+			{% if user_id == request.user.id %}<a href="/student/forum/submit/{{classroom_id}}/{{index}}" class="btn btn-warning" role="btn">編輯</a>{% endif %}
+		</div>
+		{% if work_new or files %}
+    <div class="card-body">
+			<div class="memo-content" data-userid="{{user_id}}">
+				{{work_new.memo|memo|safe}}
+			</div>
+		<BR>
+		      {% for file in files %}
+			      {% if file.visible %}
+		  <BR><button class="btn btn-info">
+              {{forloop.revcounter}}
+        </button> 
+		          {{file.publication_date}}	
+			        {% if file.title|is_pic %}
+		<a href="/student/forum/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+			        {% else %}
+			<a href="/student/forum/download/{{file.id}}" target="_blank">{{file.title}}</a>
+			        {% endif %}
+            {% endif %}
+		      {% endfor %}
+    <hr>			
+          {% if request.user.id in work_first.id|likes %}
+    <a href="#" data-forumid="{{work_first.index}}" data-userid="{{ user_id }}" data-action="unlike" class="like btn btn-primary" role="btn"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true">讚</span></a>
+          {% else %}
+    <a href="#" data-forumid="{{work_first.index}}" data-userid="{{ user_id }}" data-action="like" class="like btn btn-default" role="btn"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true">讚</span></a>
+          {% endif %}
+    <a href="#" data-forumid="{{work_first.index}}" data-userid="{{user_id }}" class="people">
+    <span id="likes_count">{{work_new.like_count}}</span>人按讚
+    </a>
+    <a {% if request.user.id == user_id %}href="#"{% endif %} data-workid="{{work_first.index}}" class="btn btn-default reply" role="btn"><span class="glyphicon glyphicon-heart" aria-hidden="true">留言</span></a>
+			<a href="#" data-workid="{{work_first.id}}" class="guestbooks">
+			<span id="reply_count">{{replys|length}}</span>則留言
+		</a>
+											<span class="rating">				
+												<span class="staring">
+	  <span class="fa fa-star star1 {% if work_first.score >= 1 %}checked{% endif %}"></span>
+	  <span class="fa fa-star star2 {% if work_first.score >= 2 %}checked{% endif %}"></span>
+	  <span class="fa fa-star star3 {% if work_first.score >= 3 %}checked{% endif %}"></span>
+	  <span class="fa fa-star star4 {% if work_first.score >= 4 %}checked{% endif %}"></span>
+	  <span class="fa fa-star star5 {% if work_first.score >= 5 %}checked{% endif %}"></span>
+												</span>			        
+				</span>					
+							<div id="reply" style="display:none">
+							<textarea  autofocus name="reply" id="reply_memo" cols="30" rows="5" class="form-control list-group-item-text"></textarea>
+							<button class="reply_submit" data-workid={{work.id}} data-index={{work.index}} data-userid={{request.user.id}}>送出</button>
+
+						</div>		
+<div id="blockquote">
+               {% for reply in replys %}
+<blockquote>
+  <p>{{reply.memo}}</p>
+  <footer>{{reply.user_id|realname}} <cite title="Source Title">{{reply.publication_date}}</cite></footer>
+</blockquote>
+	{% endfor %}
+</div>
+</div>
+{% endif %}
+      </div>
+    
+  <div class="modal fade" tabindex="-1" role="dialog" id="vidModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+					 <a href="#" id="closevideo" class="btn btn-default pull-right" role="btn">關閉</a>								
+            <div id="vplayer"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  
+  <div class="modal fade" tabindex="-1" role="dialog" id="likes_people">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div id="people"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+	
+  <div class="modal fade" tabindex="-1" role="dialog" id="guestbook_modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div id="guestbook"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->	
+{% endblock %}
+
+{% block footer_script %}
+<script>
+function onPlayerReady(event) {
+  event.target.playVideo();
+}	
+function timeToSec(timestr) {
+  var hh = parseInt(timestr.substr(0, 2)), 
+      mm = parseInt(timestr.substr(3, 2)), 
+      ss = parseInt(timestr.substr(6, 2));
+    return (hh*3600)+(mm*60)+ss;
+}	
+var activePlayer = null;	
+var vidPlayer = null;	
+var vidMap = {
+  {% for work in contents %}
+  {% if work.types == 2 %}
+  'm_{{ work.id }}': '{{ work.youtube|video }}',
+	{% endif %}
+  {% endfor %} 	
+};
+$(window).on('beforeunload', function(){
+	        if (activePlayer) {
+            if (activePlayer.getPlayerState()==1) {
+            var currTime = secToTime(activePlayer.getCurrentTime().toFixed());
+            video_log(activePlayer.content_id,"PAUSE["+currTime+"]");
+            }
+        }
+});
+	 
+function onYouTubeIframeAPIReady() {
+	 {% for work in contents %}
+  {% if work.types == 2 %}	
+var player{{work.id}};
+
+	        player{{work.id}} = new YT.Player('player{{work.id}}', {
+          height: '390',
+          width: '640',
+          videoId: '{{work.youtube|video}}',
+          events: {
+         
+           'onStateChange': onPlayerStateChange
+          }
+			    });
+	        player{{work.id}}.content_id = {{work.id}}
+
+ 	{% endif %}
+  {% endfor %}
+  $('.btn-marker').click(function(event) {
+    var vid = vidMap['m_'+$(event.target).data('mid')];
+    var tsec = timeToSec($(event.target).data('time'));
+    if (!vidPlayer) {
+			vidPlayer = new YT.Player('vplayer', {
+        height: '315', 
+        width: '560', 
+        videoId: vid,
+        playerVars: {
+          start: tsec,
+        },
+        events: {
+          'onReady': onPlayerReady,
+        }
+      });
+    } else {
+      vidPlayer.stopVideo();
+      vidPlayer.loadVideoById(vid, tsec, 'large');
+      vidPlayer.seekTo(tsec);	
+    }
+    $('#vidModal').modal('show');
+  });
+}
+function video_log(youtube_id, log) {
+    $.post('/student/video/log/',
+        {'log': log,
+				 'youtube_id': youtube_id
+				},
+        function(data){}
+    );
+}
+function secToTime(sec) {
+    return (new Date(sec*1000)).toUTCString().split(' ')[4];
+}	 
+
+function onPlayerStateChange(event) {
+    activePlayer = event.target;
+    currTime = secToTime(activePlayer.getCurrentTime().toFixed());
+    switch(event.data) {
+        case YT.PlayerState.ENDED:
+            video_log(activePlayer.content_id, "STOP["+currTime+"]"); break;
+        case YT.PlayerState.PLAYING:
+            video_log(activePlayer.content_id, "PLAY["+currTime+"]"); break;
+        case YT.PlayerState.PAUSED:
+            video_log(activePlayer.content_id, "PAUSE["+currTime+"]"); break;
+    }
+}
+
+$('#vidModal').on('hidden.bs.modal', function (e) {
+  vidPlayer.stopVideo();
+});
+
+$(document).ready(function () {
+  //------------------------------------------------------------------------
+  // Load YouTube API library
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);  
+			
+	// Annotator
+	Annotator.Plugin.Message = function (element) {
+    function formatDateTime(d) {
+      function _(n) {
+        if (n < 10)
+          return '0'+n;
+        return ''+n;
+      }
+      return ''+d.getFullYear()+'/'+_(d.getMonth()+1)+'/'+_(d.getDate())+' '+_(d.getHours())+':'+_(d.getMinutes())+':'+_(d.getSeconds());
+    }
+    var plugin = {};
+    plugin.pluginInit = function () {
+      this.annotator.viewer.addField({
+        load: function (field, annotation) {          
+          field.innerHTML = formatDateTime(new Date(annotation.created))+" | " + annotation.supervisor;
+        }
+      })
+    };
+    return plugin;
+  }
+  $('.memo-content').each(function(index, element) {
+    var userid = $(element).data('userid');
+    $(element).annotator({% if not is_teacher %}{readOnly: true}{% endif %})
+      .annotator('addPlugin', 'Store', {
+        prefix: '/annotate', 
+        annotationData: {
+          'findex': {{forum.id}},
+          'stuid': userid,
+        },
+        loadFromSearch: {
+          'findex': {{forum.id}}, 
+          'stuid': userid,
+        }
+      })
+      {% if is_teacher %}.annotator('addPlugin', 'Touch'){% endif %}
+      .annotator('addPlugin', 'Message');		
+  });
+});
+	 
+</script>
+{% endblock %}
+
+{% block domready %}
+  $('a#closevideo').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+	  
+    $('#vidModal').modal('hide');
+
+  });		
+
+  $('input:radio').change(function(e){
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/student/forum/score/',
+      {
+        workid: $(launcher).data('workid'),
+        score: $(launcher).val(),
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+          //alert( $(launcher).val()+"分");
+
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );
+  });    
+
+	$('.reply_submit').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+	  
+    $.post('/student/forum/reply/',
+      {
+        index: $(launcher).data('index'),
+        userid: $(launcher).data('userid'),
+        workid: $(launcher).data('workid'),	
+	      reply: $(launcher).parent().find("textarea").val()
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+            $(launcher).parent().hide();
+            blockquote = '<blockquote><p>'+ $(launcher).parent().find("textarea").val()+'</p><footer>{{request.user.id|realname}} <cite title="Source Title">'+Date().toString()+'</cite></footer></blockquote>'	
+	          $(launcher).parent().parent().find("#blockquote").html(blockquote+$(launcher).parent().parent().find("#blockquote").html());
+            reply_count = parseInt($(launcher).parent().parent().find('#reply_count').html()) + 1;
+            $(launcher).parent().parent().find('#reply_count').html(reply_count);	
+
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );
+  });  
+	
+  $('a.reply').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+	  
+		$(launcher).parent().find("#reply_memo").val("");
+    $(launcher).parent().find("#reply").show();
+	  $(launcher).parent().find("#reply_memo").focus();
+  });
+
+  $('a.guestbooks').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/student/forum/guestbook/',
+      {
+        workid: $(launcher).data('workid'),
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+            $("#guestbook").html(data['replys']);
+            $('#guestbook_modal').modal('show');
+
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );
+  });  
+	
+  $('a.people').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/student/forum/people/',
+      {
+        forumid: $(launcher).data('forumid'),
+        userid: $(launcher).data('userid'),
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+            $("#people").html(data['likes']);
+            $('#likes_people').modal('show');
+
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );
+  });  
+  $('a.like').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/student/forum/like/',
+      {
+        forumid: $(launcher).data('forumid'),
+        userid: $(launcher).data('userid'),
+        action: $(launcher).data('action')
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+          var previous_action = $(launcher).data('action');
+		      if (previous_action == 'like') {
+               likes_count = parseInt($(launcher).parent().find('#likes_count').html()) + 1;
+               $(launcher).parent().find('#likes_count').html(likes_count);
+               $(launcher).removeClass("btn-default").addClass("btn-primary");
+               $(launcher).data('action', 'unlike');
+           } else {
+               $(launcher).removeClass("btn-primary").addClass("btn-default");
+               $(launcher).data('action', 'like');
+               likes_count = parseInt($(launcher).parent().find('#likes_count').html()) - 1;
+               $(launcher).parent().find('#likes_count').html(likes_count);
+           }
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );
+  });
+
+	{% endblock %}

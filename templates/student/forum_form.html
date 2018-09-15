@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<a href="/student/forum/{{classroom_id}}/{{index}}/" class="btn btn-success" role="btn">{{subject}}</a>
+{% if work.index > 0 and not work.publish %}
+<a href="/student/forum/publish/{{classroom_id}}/{{index}}/1/" class="btn btn-primary" role="btn">發表心得</a>
+{% endif %}
+  <ul class="list-group">
+    <li class="list-group-item">
+			<div id="result">心得</div>      
+      <div class="list-group-item-text">
+				{% if work.index|in_deadline:classroom_id == "" %}
+      <form action="" enctype="multipart/form-data" id="forum_form" method="post">
+        <input type=hidden name=memo_e id=memo_e value={{work.memo_e}}>
+        <input type=hidden name=memo_c id=memo_c value={{work.memo_c}}>
+        <textarea name="memo" id="memo" cols="30" rows="10" class="form-control list-group-item-text">{{work.memo}}</textarea>
+      {% for file in files %}
+        {% if file.visible %}
+      <div><button class="btn btn-info">
+        {{forloop.revcounter}}
+        </button>
+		  {{file.publication_date}}	        
+        {% if file.title|is_pic %}
+     <a href="/student/forum/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+			{% else %}
+			<a href="/student/forum/download/{{file.id}}" target="_blank">{{file.title}}</a>
+			{% endif %}
+      <A href="#" class="delete" data-fileid="{{file.id}}"><img src="/static/images/delete.gif"> 刪除</a>
+        </div>
+        {% endif %}
+		{% endfor %}
+           <input type=hidden name=index value={{index}}>           
+           檔案:<input id="file" name="file" type="file"/><input type="submit" value="送出">
+            {% csrf_token %}         
+        </form>       
+				{% else %}
+				<font color=red>超過繳交期限 {{work.index|in_deadline:classroom_id}} ，無法繳交作業。</font>
+				{% endif %}
+      </div>
+
+    </li>
+    {% for work in contents %}
+
+    <li class="list-group-item material" id="m_{{ work.id }}">
+      <div class="card">      
+      {% spaceless %}     
+        {% if work.types == 1 %}
+ <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 外部網址 
+ </div>
+  <div class="card-body">
+    <a href="{{work.link}}" target="_blank">{% if work.title %}{{work.title}}{% else %}開啟連結{% endif %}</a>
+  </div>
+        {% elif work.types == 2 %}
+<div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> Youtube影片
+	<img src="/static/images/video.gif"><a href="/teacher/event/video/{{classroom_id}}/{{index}}/{{work.id}}/">全班統計</a>
+	</div>
+  <div class="card-body">
+    <div class="embed-responsive embed-responsive-16by9">
+    <div id="player{{work.id}}"></div>
+		</div>
+</div>        
+        {% elif work.types == 3 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 下載檔案
+</div>
+  <div class="card-body"> <a href="/teacher/forum/download/{{work.id}}" target="_blank">{{work.title}}</a> </div>                        
+        {% elif work.types == 4 %}
+  <div class="panel-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 自訂文字
+</div>
+        {% endif %} 
+  <div class="card-body">
+    {{work.memo|memo|safe}}
+  </div>				
+      {% endspaceless %}
+      {% if work.types == 2 %}{% spaceless %}
+        <button type="button" class="btn btn-primary btn-xs btn-add-marker">＋新增時間標記</button>
+      {% endspaceless %}{% endif %}
+    </div>
+        </li>
+
+    {% endfor %}
+  </ul> 
+  <div class="modal fade" tabindex="-1" role="dialog" id="vidModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+					<div>
+					 <a href="#" id="closevideo" class="btn btn-default pull-right" role="btn">關閉</a>						
+					</div>
+            <div id="vplayer"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+{% endblock %}
+
+{% block footer_script %}
+<script>
+function secToTime(sec) {
+    return (new Date(sec*1000)).toUTCString().split(' ')[4];
+}
+var activePlayer=null;
+
+//------------------------------------------------------------
+var vidMap = {
+  {% for work in contents %}
+  {% if work.types == 2 %}
+  'm_{{ work.id }}': '{{ work.youtube|video }}',
+  {% endif %}
+  {% endfor %}  
+};
+
+$(window).on('beforeunload', function(){
+	        if (activePlayer) {
+            if (activePlayer.getPlayerState()==1) {
+            var currTime = secToTime(activePlayer.getCurrentTime().toFixed());
+            video_log(activePlayer.content_id,"PAUSE["+currTime+"]");
+            }
+        }
+});	
+var vidPlayer = null;
+function onPlayerReady(event) {
+  event.target.playVideo();
+}
+function timeToSec(timestr) {
+  var hh = parseInt(timestr.substr(0, 2)), 
+      mm = parseInt(timestr.substr(3, 2)), 
+      ss = parseInt(timestr.substr(6, 2));
+    return (hh*3600)+(mm*60)+ss;
+}
+	 
+function onYouTubeIframeAPIReady() {
+	 {% for work in contents %}
+  {% if work.types == 2 %}	
+var player{{work.id}};
+
+	        player{{work.id}} = new YT.Player('player{{work.id}}', {
+          height: '390',
+          width: '640',
+          videoId: '{{work.youtube|video}}',
+          events: {
+         
+           'onStateChange': onPlayerStateChange
+          }
+			    });
+	        player{{work.id}}.content_id = {{work.id}};
+
+ 	{% endif %}
+  {% endfor %}
+  $('.btn-marker').click(function(event) {
+    var vid = vidMap['m_'+$(event.target).data('mid')];
+    var tsec = timeToSec($(event.target).data('time'));
+    if (!vidPlayer) {
+      vidPlayer = new YT.Player('vplayer', {
+        height: '315', 
+        width: '560', 
+        videoId: vid,
+        playerVars: {
+          start: tsec,
+        },
+        events: {
+          'onReady': onPlayerReady,
+        }
+      });
+    } else {
+      vidPlayer.loadVideoById(vid, tsec, 'large');
+      vidPlayer.playVideo();
+    }
+    $('#vidModal').modal('show');
+  });  
+  $('.material iframe[src*="www.youtube.com"]').each(function(index, element) {
+      var materialID = $(element).parent().parent().parent().parent().attr('id');
+      var playerID = "player"+materialID.substring(2);
+      var player;
+      //$(element).attr('id', playerID);
+		  player = eval(playerID);
+		  //alert(player);
+      $(".btn-add-marker", $(element).parent().parent().parent().parent()).click(function(e) {
+				var commentID = '#memo';
+        var comment_body = $(commentID).val();
+        if (comment_body)
+          comment_body += "\n";
+        comment_body += "["+materialID+"#"+secToTime(player.getCurrentTime().toFixed())+"]";
+        $(commentID).val(comment_body).focus();
+      });
+  });
+}
+function video_log(youtube_id, log) {
+    $.post('/student/video/log/',
+        {'log': log,
+				 'youtube_id': youtube_id
+				},
+        function(data){}
+    );
+}
+
+function onPlayerStateChange(event) {
+    activePlayer = event.target;
+    currTime = secToTime(activePlayer.getCurrentTime().toFixed());
+    switch(event.data) {
+        case YT.PlayerState.ENDED:
+            video_log(activePlayer.content_id, "STOP["+currTime+"]"); break;
+        case YT.PlayerState.PLAYING:
+            video_log(activePlayer.content_id, "PLAY["+currTime+"]"); break;
+        case YT.PlayerState.PAUSED:
+            video_log(activePlayer.content_id, "PAUSE["+currTime+"]"); break;
+    }
+}
+	  	 	 	 
+//------------------------------------------------------------------------
+$('#vidModal').on('hidden.bs.modal', function (e) {
+  vidPlayer.stopVideo();
+});
+
+$(document).ready(function () {
+  //------------------------------------------------------------------------
+  // Load YouTube API library
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);  
+});
+</script>
+{% endblock %}
+
+{% block domready %}
+  $('a#closevideo').click(function(e){
+    var launcher = this;  
+    e.preventDefault();	  
+    $('#vidModal').modal('hide');
+  });		
+  $('a.delete').click(function(e){
+    if (confirm('確定要刪除嗎?')) {
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/student/forum/file_delete/',
+      {
+        fileid: $(launcher).data('fileid'),
+      },
+      function(data){
+        if (data['status'] == 'ok')
+        {
+           $(launcher).parent().hide();
+
+        } else {
+			   	alert("hello");
+	    	}
+      }
+    );}
+  });  
+
+function wordCount( val ){
+    var clean_message = val.replace(/\[m_\d+#\d+:\d+:\d+\]/g, '');
+    var chinese = clean_message.match(/[\u4E00-\u9FA5]/g);
+    var pure_english = clean_message.replace(/[\u4E00-\u9FA5]/g, '')
+    var wom = pure_english.match(/\w+/g);
+    return {
+      words : wom ? wom.length : 0,
+      chars : chinese ? chinese.length : 0,
+		};
+}
+
+$('#memo').on('input', function(e){
+  var v = wordCount(e.target.value);
+  console.log(e.target.value);
+  $('#result').html("心得(英:" + v.words + " / 中: " + v.chars + ")");
+  $('input#memo_e').val(v.words);
+  $('input#memo_c').val(v.chars);
+});
+	{% endblock %}

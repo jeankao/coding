@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<a href="/teacher/forum/0/0" class="btn btn-success" role="btn">所有討論</a>
+{% for level in levels %}
+        <a href="/teacher/forum/1/{{level.id}}" class="btn {% if categroy == '1' and  level.id|int_to_str == categroy_id %}btn-primary{% else %}btn-info{% endif %}" role="btn"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> {{level.title}}</a>
+{% endfor %}
+<BR>
+{% for domain in domains %}
+        <a href="/teacher/forum/2/{{domain.id}}" class="btn {% if categroy == '2' and  domain.id|int_to_str == categroy_id %}btn-primary{% else %}btn-warning{% endif %}" role="btn"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> {{domain.title}}</a>
+{% endfor %}
+<BR>
+<form action=""  method="GET">
+ <label class="inline">搜尋帳號：<input type="text" name = "account"><input type="submit" value="送出"/></label>    
+    </form>	
+<table class="table">
+            <tr>
+       
+                <td>時間</td>				
+                <td>{{classroom.name}}</td>
+ 							  <td>發佈者</td>      
+							<td colspan=3>功能</td>
+        {% for forum in forums %}
+            <tr>
+      
+		<td>{{forum.time}}</td>
+            <td>{{forum.title}}</td>
+		  <td>{{forum.teacher_id|realname}}</td>  
+						<td>	
+						{% if forum.teacher_id == request.user.id %}
+            <a href="/teacher/forum/edit/{{forum.classroom_id}}/{{forum.id}}" class="btn btn-default" role="btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改</a>
+   					<a href="/teacher/forum/category/{{forum.classroom_id}}/{{forum.id}}" class="btn btn-default" role="btn"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> 分類</a>
+						<a href="/teacher/forum/class/{{forum.id}}" class="btn btn-default" role="btn"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> 班級</a>
+            <a href="/teacher/forum/content/{{forum.id}}" class="btn btn-primary" role="btn"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> 素材</a>
+						{% else %}
+            <a href="/teacher/forum/show/{{forum.id}}" class="btn btn-primary" role="btn"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> 素材</a>
+					  {% endif %}
+							</td>
+					</tr>
+        {% endfor %}
+        </table>
+        {% load pagination %}
+        {% get_pagination %}
+{% endblock %}
+	
+		{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

@@ -62,6 +62,7 @@
 			<a href="/survey/pre_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課前問卷</a>
 			<a href="/survey/post_result{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">課後問卷</a>        
 			<a href="/student/announce/{{enroll.classroom_id}}" role="button" class="btn btn-success">公告</a>
+			<a href="/student/forum/{{enroll.classroom_id}}/0" role="button" class="btn btn-success">討論區</a>      
 		    <a href="/account/line" role="button" class="btn btn-success">我的私訊</a>
    			{% if request.user|has_group:"teacher" %}
 		    <a href="/account/line/class/{{enroll.classroom_id}}" role="button" class="btn btn-success">私訊同學</a>

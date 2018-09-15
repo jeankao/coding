@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<button type="button" class="btn btn-primary">{{forum.teacher_id|realname}}</button>
+<button type="button" class="btn btn-success">{{forum.title}}</button>
+<BR>
+{% for level in levels %}
+<a href="/teacher/forum/1/{{level.id}}" class="btn btn-info" role="btn">{{level.title}}</a>
+{% endfor %}
+<BR>
+{% for domain in domains %}
+<a href="/teacher/forum/2/{{domain.id}}" class="btn btn-warning" role="btn">{{domain.title}}</a>
+{% endfor %}
+        {% for work in contents %}
+ <div class="panel panel-default"> 
+              {% if work.types == 1 %}
+  </a>
+
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 外部網址 
+  </div>
+  <div class="panel-body">
+    <a href="{{work.link}}" target="_blank">{% if work.title %}{{work.title}}{% else %}開啟連結{% endif %}</a>
+  </div>
+            
+              {% elif work.types == 2 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> Youtube影片
+</div>
+  <div class="panel-body">
+    <div class="embed-responsive embed-responsive-16by9">
+               <iframe width="560" height="315" class="embed-responsive-item" src="https://www.youtube.com/embed/{{work.youtube|number}}?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+
+    </div>
+</div>          
+              {% elif work.types == 3 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 下載檔案
+</div>
+  <div class="panel-body"> <a href="/teacher/forum/download/{{work.id}}" target="_blank">{{work.title}}</a> </div>                        
+              {% endif %}
+    <div class="panel-body">{{ work.memo|memo|safe }}</div>
+  </div>
+  <div class="modal fade" tabindex="-1" role="dialog" id="vidModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div id="vplayer" class="embed-responsive-item"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+        {% endfor %}
+  
+<style>
+.modal-content iframe {
+  max-width: 100%;
+}
+</style>        
+{% endblock %}
+{% block footer_script %}
+<script>
+var vidMap = {
+  {% for work in contents %}
+{% if work.types == 2 %}
+  'm_{{ work.id }}': '{{ work.youtube|number }}',
+{% endif %}
+{% endfor %}  
+};
+var vidPlayer = null;
+function onPlayerReady(event) {
+  event.target.playVideo();
+}
+function timeToSec(timestr) {
+  var hh = parseInt(timestr.substr(0, 2)), 
+      mm = parseInt(timestr.substr(3, 2)), 
+      ss = parseInt(timestr.substr(6, 2));
+    return (hh*3600)+(mm*60)+ss;
+}
+function onYouTubeIframeAPIReady() {
+  $('.btn-marker').click(function(event) {
+    var vid = vidMap['m_'+$(event.target).data('mid')];
+    var tsec = timeToSec($(event.target).data('time'));
+    if (!vidPlayer) {
+      vidPlayer = new YT.Player('vplayer', {
+        videoId: vid,
+        playerVars: {
+          width: '560', 
+          height: '315',
+          start: tsec,
+        },
+        events: {
+          'onReady': onPlayerReady,
+        }
+      });
+    } else {
+      vidPlayer.loadVideoById(vid, tsec, 'large');
+      vidPlayer.playVideo();
+    }
+    $('#vidModal').modal('show');
+  });
+}
+$('#vidModal').on('hidden.bs.modal', function (e) {
+  vidPlayer.stopVideo();
+});
+$(document).ready(function () {
+  //------------------------------------------------------------------------
+  // Load YouTube API library
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);  
+});
+</script>
+{% endblock %}
+  	{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

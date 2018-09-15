@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block title %}Create a question{% endblock %}
+{% block content %}
+<button class="btn btn-success">{{forum.title}}</button>
+<button class="btn btn-warning">{{works.0.student_id|realname}}</button>
+{% for work in works %}
+  <div class="panel panel-default">
+    <div class="panel-heading"><button type="button" class="btn btn-success">{{forloop.revcounter}}</button> {{work.publication_date}} {% if work.publish %}(已發表){% else %}(未發表){% endif %}</div>
+    <div class="panel-body">{{ work.memo|memo|safe }}
+		{% for file in files %}
+      {% if file.work_id == work.id %}
+		  <BR><button class="btn btn-info">
+        {{forloop.revcounter}}
+        </button> 
+		  {{file.publication_date}}	
+			{% if file.title|is_pic %}
+		<a href="/student/forum/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+			{% else %}
+			<a href="/student/forum/download/{{file.id}}" target="_blank">{{file.title}}</a>
+			{% endif %}
+      {% if not file.visible %}
+        （{{file.delete_date}} 已刪除)
+      {% endif %}
+      {% endif %}
+		{% endfor %}    
+    </div>
+  </div>
+{% endfor %}
+  <div class="modal fade" tabindex="-1" role="dialog" id="vidModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+					 <a href="#" id="closevideo" class="btn btn-default pull-right" role="btn">關閉</a>						
+            <div id="vplayer" class="embed-responsive-item"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+<style>
+.modal-content iframe {
+  max-width: 100%;
+}
+</style>
+{% endblock %}
+
+{% block footer_script %}
+<script>
+var vidMap = {
+  {% for work in contents %}
+  {% if work.types == 2 %}
+  'm_{{ work.id }}': '{{ work.youtube|number }}',
+  {% endif %}
+  {% endfor %}  
+};
+
+var vidPlayer = null;
+function onPlayerReady(event) {
+  event.target.playVideo();
+}
+function timeToSec(timestr) {
+  var hh = parseInt(timestr.substr(0, 2)), 
+      mm = parseInt(timestr.substr(3, 2)), 
+      ss = parseInt(timestr.substr(6, 2));
+    return (hh*3600)+(mm*60)+ss;
+}
+
+function onYouTubeIframeAPIReady() {
+  $('.btn-marker').click(function(event) {
+    var vid = vidMap['m_'+$(event.target).data('mid')];
+    var tsec = timeToSec($(event.target).data('time'));
+    if (!vidPlayer) {
+      vidPlayer = new YT.Player('vplayer', {
+        videoId: vid,
+        playerVars: {
+          width: '560', 
+          height: '315',
+          start: tsec,
+        },
+        events: {
+          'onReady': onPlayerReady,
+        }
+      });
+    } else {
+      vidPlayer.loadVideoById(vid, tsec, 'large');
+      vidPlayer.playVideo();
+    }
+    $('#vidModal').modal('show');
+  });
+}
+
+$('#vidModal').on('hidden.bs.modal', function (e) {
+  vidPlayer.stopVideo();
+});
+
+$(document).ready(function () {
+  //------------------------------------------------------------------------
+  // Load YouTube API library
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);  
+});
+</script>
+{% endblock %}
+		
+{% block domready %}		
+  $('a#closevideo').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+	  
+    $('#vidModal').modal('hide');
+
+  });		
+
+	{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+<link href="/static/layout/styles/checkbox.css" rel="stylesheet" type="text/css" media="all">
+{% endblock %}
+{% block content %}
+
+         <form action="" enctype="multipart/form-data"  method="post">
+            <table class="table">
+            
+<tr><th nowrap>班級:</th><Td>
+              {% for classroom in classrooms %}
+             <label for="class{{forloop.counter}}" class="btn btn-danger">{{classroom.name}}<input  {% if classroom.id == classroom_id %}checked{% endif %} value="{{classroom.id}}" name="classrooms" type="checkbox" id="class{{forloop.counter}}" class="badgebox" value="{{classroom.id}}}"><span class="badge">&check;</span></label>
+              {% endfor %}
+  </TD></tr>
+            <tr><th><label for="id_title">討論主題:</label></th><td><input class="form-control list-group-item-text" id="id_title" maxlength="250" name="title" type="text" />
+  </table>
+           
+            {% csrf_token %}
+            <input type="submit" value="送出">
+        </form>
+{% endblock %}
+
+	{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

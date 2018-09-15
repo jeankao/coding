@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+	        <a href="" class="btn btn-success" role="btn">{{classroom.name}}</a>
+<BR>
+        <a href="/teacher/forum/add/{{classroom.id}}" class="btn btn-warning" role="btn"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> 新增討論</a>
+        <a href="/teacher/forum/grade/{{classroom.id}}/0" class="btn btn-warning" role="btn"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 班級成績</a>
+
+			{% for forum, fclass in forums %}
+<h2 id="{{forum.id}}"></h2>
+<div class="card">
+<div class="card-header">{{forum.title}}-- {{fclass.publication_date}} {{forum.teacher_id|realname}}老師 -- 期限:{% if not fclass.deadline %}無{% else %}{{fclass.deadline_date}}{% endif %}</div>
+  <div class="card-body">
+						{% if forum.teacher_id == request.user.id %}
+						<a href="/teacher/forum/edit/{{classroom.id}}/{{forum.id}}" class="btn btn-default" role="btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改</a>
+						<a href="/teacher/forum/class/{{forum.id}}" class="btn btn-default" role="btn"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> 班級</a>
+            <a href="/teacher/forum/deadline/{{classroom.id}}/{{forum.id}}" class="btn btn-default" role="btn"><span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span> 期限</a>		
+            <a href="/teacher/forum/content/{{forum.id}}" class="btn btn-primary" role="btn"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> 素材</a>
+            <a href="/teacher/forum/export/{{classroom.id}}/{{forum.id}}" class="btn btn-primary" role="btn"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> 匯出Word</a>		
+						{% else %}
+            <a href="/teacher/forum/show/{{forum.id}}" class="btn btn-primary" role="btn"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> 素材</a>								
+						{% endif %}
+           <a href="/student/forum/{{classroom.id}}/0/#{{forum.id}}" class="btn btn-warning" role="btn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 學生</a>						
+	</div>
+</div>
+        {% endfor %}
+	{% endblock %}
+	
+	{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}
+	

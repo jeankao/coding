@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<a href="" class="btn btn-success" role="btn">{{classroom_id|classname}}</a>
+<a href="/teacher/forum/grade/{{classroom_id}}/1" class="btn btn-warning" role="btn"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 匯出Excel</a>
+<table class="table">
+<tr>
+<td rowspan=2>座號</td>
+<Td rowspan=2>姓名</td>
+{% for forum in forums %}
+<td>{{forum}}</td>
+{% endfor %}
+</tr>
+<tr>
+{% for fclass in fclasses %}
+<td>{{fclass.publication_date}}
+</td>
+{% endfor %}
+</tr>
+<tr>
+{% for enroll, student_name, works in results %}
+<td>{{enroll.seat}}</td>
+<td>{{student_name}}</td>
+{% for work in works %}
+<td>{% if work.index %}<a href="/student/forum/show/{{work.index}}/{{enroll.student_id}}/{{classroom_id}}" target="_blank">{{work.score}}</a>{% endif %}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+	{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

@@ -36,6 +36,8 @@ class Profile(models.Model):
   work = models.IntegerField(default=0)
 	# 積分：擔任小老師
   assistant = models.IntegerField(default=0)
+	# 積分：討論區
+  forum = models.FloatField(default=0)	  
 	# 積分：創意秀
   creative = models.IntegerField(default=0)	
 	# 大頭貼等級

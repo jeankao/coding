@@ -16,6 +16,6 @@ urlpatterns = [
     url(r'^show/', include('show.urls')), 
     url(r'^photologue/', include('photologue.urls')),  
     url(r'^gallery/$', TemplateView.as_view(template_name="gallery.html")),
-	
+    url(r'^annotate/', include('annotate.urls')),	
 ]
 

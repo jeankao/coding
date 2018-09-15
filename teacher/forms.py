@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from account.models import Message
-from teacher.models import Classroom, TWork, CWork
+from teacher.models import Classroom, TWork, CWork, FWork, FClass, FContent
 from student.models import Work, Enroll
 
 # 新增一個課程表單
@@ -185,4 +185,49 @@ class Work3Form(forms.ModelForm):
             super(Work3Form, self).__init__(*args, **kwargs)
             self.fields['title'].label = "作業名稱"            
 
+# 新增一個課程表單
+class ForumCategroyForm(forms.ModelForm):
+        class Meta:
+           model = FWork
+           fields = ['domains', 'levels']
+        
+        def __init__(self, *args, **kwargs):
+            super(ForumCategroyForm, self).__init__(*args, **kwargs)			
+						
+# 新增一個繳交期長表單
+class ForumDeadlineForm(forms.ModelForm):
+        class Meta:
+           model = FClass
+           fields = ['deadline', 'deadline_date']
+        
+        def __init__(self, *args, **kwargs):
+            super(ForumDeadlineForm, self).__init__(*args, **kwargs)			
+
+						
+# 新增一個作業
+class ForumForm(forms.ModelForm):
+        class Meta:
+           model = FWork
+           fields = ['title']
+        
+        def __init__(self, *args, **kwargs):
+            super(ForumForm, self).__init__(*args, **kwargs)
+            self.fields['title'].label = "討論主題"
+            self.fields['title'].widget.attrs.update({'class' : 'form-control list-group-item-text'})									
+						
+# 新增一個作業
+class ForumContentForm(forms.ModelForm):
+        class Meta:
+           model = FContent
+           fields = ['forum_id', 'types', 'title', 'link', 'youtube', 'file', 'memo']
+        
+        def __init__(self, *args, **kwargs):
+            super(ForumContentForm, self).__init__(*args, **kwargs)
+            self.fields['forum_id'].required = False		
+            self.fields['title'].required = False						
+            self.fields['link'].required = False
+            self.fields['youtube'].required = False
+            self.fields['file'].required = False
+            self.fields['memo'].required = False						
+						
             

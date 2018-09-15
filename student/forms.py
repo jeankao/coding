@@ -74,4 +74,18 @@ class SubmitCForm(forms.ModelForm):
 class SubmitDForm(forms.Form):
         screenshot = forms.CharField(widget=forms.HiddenInput())
         memo = forms.CharField(widget=forms.Textarea)
+      
+class ForumSubmitForm(forms.Form):
+        memo =  forms.CharField(required=False)
+        memo_e =  forms.IntegerField(required=False)
+        memo_c =  forms.IntegerField(required=False)      
+        file = forms.FileField(required=False)
+      
+        def __init__(self, *args, **kwargs):
+            super(ForumSubmitForm, self).__init__(*args, **kwargs)
+            self.fields['memo'].label = "心得感想"
+            self.fields['memo_e'].label = "英文"
+            self.fields['memo_c'].label = "中文"            
+            self.fields['file'].label = "檔案"
+
      

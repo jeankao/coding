@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<link href="/static/layout/styles/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<style>
+  .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+  .toggle.ios .toggle-handle { border-radius: 20px; }
+</style>
+{% endblock %}
+{% block content %}
+<button class="btn btn-success">{{forum.title}}</button>
+	<div class="card card-default">
+  <div class="card-header">{{fclass.classroom_id|classname}}</div>
+		<div class="card-body">
+<label for="dtp_input1" class="col-md-2 control-label">
+                繳交期限
+              <input type="checkbox" {% if fclass.deadline %}checked{% endif %} data-forumid="{{fclass.forum_id}}" data-classroomid="{{fclass.classroom_id}}" data-status="{{fclass.deadline}}" data-toggle="toggle" data-style="ios" id="toggle">
+              </label>   
+<div class="container2" id="date" {% if not fclass.deadline %}style="display:none"{% endif %}>
+    <form action="" class="form-horizontal"  role="form">
+        <fieldset>
+            <div class="form-group">  
+                <div class="input-group date form_datetime col-md-5" data-date="{{fclass.deadline_date|date:'Y m d - h:i'}}" data-date-format="yyyy MM dd - hh:ii"  data-link-field="dtp_input1">
+                    <input id="deadline_date" class="form-control" size="16" type="text" value="{{fclass.deadline_date|date:'Y F d - H:i'}}" readonly data-forumid="{{fclass.forum_id}}" data-classroomid="{{fclass.classroom_id}}">
+                    
+					<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+				<input type="hidden" id="dtp_input1" value="" /><br/>
+            </div>
+        </fieldset>
+    </form>
+</div>
+</div>
+
+	{% for class in fclasses %}
+{% if not class.classroom_id == fclass.classroom_id %}
+  <div class="col-xs-12 col-sm-6 col-md-4 other_class" {% if not class.deadline %}style="display:none;"{% endif %}>
+	<div class="card">
+		<div class="card-header">{{class.classroom_id|classname}} --期限：<span class="deadline_string">{% if class.deadline %}{{class.deadline_date|date:'Y F d - H:i'}}{% else %}無{% endif %}</span></div>
+		<div class="card-body"><a data-forumid="{{class.forum_id}}" data-classroomid="{{class.classroom_id}}" href="#" role="btn" class="btn btn-primary apply">套用</a> <a data-forumid="{{class.forum_id}}" data-classroomid="{{class.classroom_id}}"  href="#" role="btn" class="btn btn-primary cancle">取消</a></div>
+	</div>
+</div>
+</div>
+	{% endif %}
+{% endfor %}
+</div>
+{% endblock %}
+{% block footer_script %}
+<script type="text/javascript" src="/static/layout/scripts/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        language:  'zh-TW',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+	$('.form_date').datetimepicker({
+        language:  'zh-TW',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
+	$('.form_time').datetimepicker({
+        language:  'zh-TW',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
+</script>
+{% endblock %}
+
+{% block domready %}
+$("#toggle").change(function(e) {
+    var launcher = this;  
+    e.preventDefault();
+
+	if ($(this).is(":checked")) {
+      $('#date').show();
+      $('.other_class').show();
+			$(launcher).data("status", "True")
+  } else {
+      $('#date').hide();
+      $('.other_class').hide();
+			$(launcher).data("status", "False")
+  }
+
+  $.post('/teacher/forum/deadline/set/',
+      {
+        forumid: $(launcher).data('forumid'),
+        classroomid: $(launcher).data('classroomid'),
+        status: $(launcher).data('status'),
+      },
+    );
+
+});
+
+$("#deadline_date").change(function(e) {
+    var launcher = this;  
+    e.preventDefault();
+  $.post('/teacher/forum/deadline/date/',
+      {
+        forumid: $(launcher).data('forumid'),
+        classroomid: $(launcher).data('classroomid'),
+        deadlinedate: $(launcher).val(),
+      },
+       function(data){
+      }
+		);
+});
+
+$(".apply").click(function(e) {
+    var launcher = this;  
+    e.preventDefault();
+  $.post('/teacher/forum/deadline/date/',
+      {
+        forumid: $(launcher).data('forumid'),
+        classroomid: $(launcher).data('classroomid'),
+        deadlinedate: $("#deadline_date").val(),
+      },
+       function(data){
+        //alert("hi");
+        $(launcher).parent().parent().find(".deadline_string").html($("#deadline_date").val());
+      }
+		);
+
+  $.post('/teacher/forum/deadline/set/',
+      {
+        forumid: $(launcher).data('forumid'),
+        classroomid: $(launcher).data('classroomid'),
+        status: "True",
+      },
+    );
+});
+$(".cancle").click(function(e) {
+    var launcher = this;  
+    e.preventDefault();
+
+  $.post('/teacher/forum/deadline/set/',
+      {
+        forumid: $(launcher).data('forumid'),
+        classroomid: $(launcher).data('classroomid'),
+        status: "False",
+      },
+      function(data){
+        //alert("hi");
+        $(launcher).parent().parent().find(".deadline_string").html("無");
+      }
+    );
+});
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

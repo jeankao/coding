@@ -2,6 +2,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from . import views
+from student.views import ForumListView
 
 urlpatterns = [
     url(r'^lessons/(?P<subject_id>[^/]+)/$', views.lessons),
@@ -53,4 +54,21 @@ urlpatterns = [
     url(r'^memo_word/(?P<classroom_id>\d+)/(?P<word>[^/]+)/$', views.memo_word),  	
     url(r'^memo_work_count/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.memo_work_count),        	
     url(r'^memo_work_word/(?P<classroom_id>\d+)/(?P<work_id>\d+)/(?P<word>[^/]+)/$', views.memo_work_word),    
+    #討論區
+    url(r'^forum/(?P<classroom_id>\d+)/(?P<bookmark>\d+)/$', login_required(ForumListView.as_view()), name='work-list'),  
+    url(r'^forum/submit/(?P<classroom_id>\d+)/(?P<index>\d+)/$', login_required(views.forum_submit)),    
+    url(r'^forum/file_delete/$', login_required(views.forum_file_delete)), 	
+    url(r'^forum/memo/(?P<classroom_id>\d+)/(?P<index>\d+)/(?P<action>\d+)/$', login_required(views.forum_memo)),  
+    url(r'^forum/show/(?P<index>\d+)/(?P<user_id>\d+)/(?P<classroom_id>\d+)/$', login_required(views.forum_show)), 	
+    url(r'^forum/history/(?P<user_id>\d+)/(?P<index>\d+)/(?P<classroom_id>\d+)/$', login_required(views.forum_history)),  
+    url(r'^forum/like/$', login_required(views.forum_like), name='like'),    
+    url(r'^forum/reply/$', login_required(views.forum_reply), name='reply'),    	
+    url(r'^forum/people/$', login_required(views.forum_people), name='people'), 
+    url(r'^forum/guestbook/$', login_required(views.forum_guestbook), name='guestbook'), 	
+    url(r'^forum/score/$', login_required(views.forum_score), name='score'),   
+    url(r'^forum/jieba/(?P<classroom_id>\d+)/(?P<index>\d+)/$', login_required(views.forum_jieba)), 	
+    url(r'^forum/word/(?P<classroom_id>\d+)/(?P<index>\d+)/(?P<word>[^/]+)/$', login_required(views.forum_word)),  
+	  url(r'^forum/download/(?P<file_id>\d+)/$', views.forum_download, name='forum-download'), 
+	  url(r'^forum/showpic/(?P<file_id>\d+)/$', login_required(views.forum_showpic), name='forum-showpic'), 	  
+	  url(r'^forum/publish/(?P<classroom_id>\d+)/(?P<index>\d+)/(?P<action>\d+)/$', login_required(views.forum_publish), name='forum-publish'), 	
 ]

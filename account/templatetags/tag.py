@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django import template
 from account.models import MessagePoll, School
-from student.models import Enroll, Work, WorkFile
+from student.models import Enroll, Work, WorkFile, SFWork
 from teacher.models import *
 from show.models import ShowGroup, Round, ShowReview
 from certificate.models import Certificate
@@ -13,6 +13,8 @@ from django.contrib.auth.models import Group
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
+import re
+import json
 
 register = template.Library()
 
@@ -293,3 +295,64 @@ def assistant(user_id):
     if assistants:
       return True
     return False
+  
+@register.filter
+def classname(classroom_id):
+    try: 
+        classroom = Classroom.objects.get(id=classroom_id)
+        return classroom.name
+    except ObjectDoesNotExist:
+        pass
+        return ""
+      
+@register.filter()
+def memo(text):
+  memo = re.sub(r"\n", r"<br/>", re.sub(r"\[m_(\d+)#(\d\d:\d\d:\d\d)\]", r"<button class='btn btn-default btn-xs btn-marker' data-mid='\1' data-time='\2'><span class='badge'>\1</span> \2</button>",text))
+  return memo
+
+@register.filter
+def alert(deadline):
+    if (deadline - timezone.now()).days < 2 and deadline > timezone.now():
+        return True
+    else:
+        return False
+      
+@register.filter
+def due(deadline):
+    return str(deadline-timezone.now()).split('.')[0]
+  
+@register.filter
+def in_deadline(forum_id, classroom_id):
+    try:
+        fclass = FClass.objects.get(forum_id=forum_id, classroom_id=classroom_id)
+    except ObjectDoesNotExist:
+        fclass = FClass(forum_id=forum_id, classroom_id=classroom_id)
+    if fclass.deadline:
+        if timezone.now() > fclass.deadline_date:
+            return fclass.deadline_date
+    return ""
+  
+@register.filter()
+def is_teacher(user_id, classroom_id):
+    classroom = Classroom.objects.get(id=classroom_id)
+    if user_id == classroom.teacher_id :
+      return True
+    else:
+      return False
+
+@register.filter()
+def is_assistant(user_id, classroom_id):
+    assistants = Assistant.objects.filter(classroom_id=classroom_id, user_id=user_id)
+    if len(assistants) > 0 :
+      return True
+    else:
+      return False
+    
+@register.filter()
+def likes(work_id):
+    sfwork = SFWork.objects.get(id=work_id)
+    jsonDec = json.decoder.JSONDecoder()    
+    if sfwork.likes:
+        likes = jsonDec.decode(sfwork.likes)
+        return likes
+    return []

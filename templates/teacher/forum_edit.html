@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+         <form action=""  method="post"  enctype="multipart/form-data">
+           <input type=hidden name="forum_id" value="{{forum_id}}">
+           <input type=hidden name="id" value="{{content.id}}">           
+           <input type=hidden name="types" value="{{content.types}}">
+         {% if content.types == 1 %}
+            文章褾題:<input id="id_title" maxlength="250" name="title" type="text" class="form-control list-group-item-text" placeholder="開啟連結" value="{{content.title}}">
+           文章網址:<input id="id_link" maxlength="250" name="link" type="text" value="{{content.link}}" class="form-control list-group-item-text">
+        {% elif content.types == 2 %}
+            影片網址:<input id="id_content_youtube" maxlength="250" name="youtube" type="text" value={{content.youtube}} class="form-control list-group-item-text"/>
+
+      {% elif content.types == 3 %}
+            檔案:<input id="id_content_file" name="content_file" type="file"/>
+        {% endif %}
+
+ {% csrf_token %}
+  <ul class="list-group">
+    <li class="list-group-item">
+      <h4 class="list-group-item-heading">說明</h4>
+      <div class="list-group-item-text">
+        <textarea name="memo" id="memo" cols="30" rows="10" class="form-control list-group-item-text">{{content.memo}}</textarea>
+        <input class="button button-default" type="submit" value="送出">
+      </div>      
+    </li>
+    <li class="list-group-item material" id="m_{{ content.id }}">
+      {% if content.types == 2 %}{% spaceless %}
+        <button type="button" class="btn btn-primary btn-xs btn-add-marker">＋新增時間標記</button>
+      {% endspaceless %}{% endif %}
+      {% spaceless %}
+        {% if content.types == 1 %}
+        <a href="{{content.link}}" target="_blank">{% if content.title %}{{content.title}}{% else %}開啟連結{% endif %}</a>
+        {% elif content.types == 2 %}
+          <div class="embed-responsive embed-responsive-16by9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{content.youtube|number}}?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+      </div>
+            {% elif content.types == 3 %}
+        <a href="/teacher/forum/download/{{content.id}}" target="_blank">{{content.title}}</a> 
+        {% endif %} 
+      {% endspaceless %}
+    </li>
+  </ul> 
+    </form>
+{% endblock %}
+{% block footer_script %}
+<script>
+function secToTime(sec) {
+    return (new Date(sec*1000)).toUTCString().split(' ')[4];
+}
+function onYouTubeIframeAPIReady() {
+  $('.material iframe[src*="www.youtube.com"]').each(function(index, element) {
+      var materialID = $(element).parent().parent().attr('id');
+      var playerID = materialID+'_player';
+      var player;
+      $(element).attr('id', playerID);
+      player = new YT.Player(playerID);
+      $(".btn-add-marker", $(element).parent().parent()).click(function(e) {
+        var commentID = '#memo';
+        var comment_body = $(commentID).val();
+        if (comment_body)
+          comment_body += "\n";
+        comment_body += "["+materialID+"#"+secToTime(player.getCurrentTime().toFixed())+"]";
+        $(commentID).val(comment_body).focus();
+      });
+  });
+}
+$(document).ready(function () {
+  //------------------------------------------------------------------------
+  // Load YouTube API library
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);  
+});
+</script>
+{% endblock %}
+	{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

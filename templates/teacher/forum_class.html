@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+<link href="/static/layout/styles/toggle.css" rel="stylesheet" type="text/css" media="all">	
+{% endblock %}
+{% block content %}
+<button type="button" class="btn btn-success">{{fwork.title}}</button>
+        <div class="row">
+        {% for classroom, open, deadline, deadline_date in classrooms %}
+  		<div class="col-xs-12 col-sm-4 col-md-3">
+<div class="card">
+  <div class="card-header">{{classroom.id|classname}}</div>
+  <div class="card-body"><div class="onoffswitch">
+    <input data-forumid="{{forum_id}}" data-classroomid="{{classroom.id}}" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch{{classroom.id}}" {% if open %}checked{% endif %}>
+    <label class="onoffswitch-label" for="myonoffswitch{{classroom.id}}">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+    <div>
+    <a href="/teacher/forum/deadline/{{classroom.id}}/{{forum_id}}">期限:{% if deadline %}{{deadline_date|date:"Y/m/d H:i:s"}}{% else %}無{% endif %}</a>
+    </div>         
+</div>
+        </div>
+
+          </div>
+        {% endfor %}
+</div>
+{% endblock %}
+{% block domready %}
+{% for classroom, open, deadline, deadline_date in classrooms %}
+    $('#myonoffswitch{{classroom.id}}').click(function(e){
+    var launcher = this;  
+    e.preventDefault();
+    $.post('/teacher/forum/class/switch/',
+      {
+        forumid: $(launcher).data('forumid'),
+        classroomid: $(launcher).data('classroomid'),
+        status: $(launcher).is(":checked"),
+      },
+      function(data){
+
+          if (data['status'] == 'true') {
+              //alert('開放討論主題');
+              $(launcher).prop("checked", true);
+          } else {
+              //alert('關閉討論主題');
+              $(launcher).prop("checked", false);
+          }
+
+      }
+    );
+    });
+{% endfor %}
+
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

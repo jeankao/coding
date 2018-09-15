@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',  
     'photologue',
     'sortedm2m',  
+    'annotate',  
 ]
 
 MIDDLEWARE_CLASSES = [

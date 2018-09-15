@@ -13,7 +13,7 @@ from student.models import Work
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils import timezone
 from django.utils.timezone import localtime
-from student.models import Enroll
+from student.models import Enroll, SFWork
 from certificate.models import Certificate
 from django.apps import apps
 from teacher.models import Classroom
@@ -479,7 +479,7 @@ def profile(request, user_id):
         hour_of_code = None
 
     # 計算積分    
-    credit = profile.work + profile.assistant + profile.creative
+    credit = profile.work + profile.assistant + profile.forum + profile.creative
       
     # 學校
     try:

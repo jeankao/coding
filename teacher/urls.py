@@ -2,6 +2,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from . import views
+from teacher.views import ForumListView, ForumCreateView, ForumContentListView, ForumContentCreateView, ForumClassListView, ForumAllListView, ForumEditUpdateView
 
 urlpatterns = [
     # 班級
@@ -57,5 +58,25 @@ urlpatterns = [
     #設定助教
     url(r'^assistant/$', login_required(views.AssistantClassroomListView.as_view())),
     url(r'^assistant/make/$', login_required(views.assistant_make), name='make'),
-
+    # 討論區
+    url(r'^forum/(?P<categroy>\d+)/(?P<categroy_id>\d+)/$', login_required(ForumAllListView.as_view()), name='forum-all'),  
+    url(r'^forum/show/(?P<forum_id>\d+)/$', login_required(views.forum_show), name='forum-show'),    
+    url(r'^forum/edit/(?P<classroom_id>\d+)/(?P<pk>\d+)/$', login_required(ForumEditUpdateView.as_view()), name='forum-edit'),   
+    url(r'^forum/(?P<classroom_id>\d+)/$', login_required(ForumListView.as_view()), name='forum-list'),
+    url(r'^forum/add/(?P<classroom_id>\d+)/$', login_required(ForumCreateView.as_view()), name='forum-add'),
+    url(r'^forum/category/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/$', login_required(views.forum_categroy), name='forum-category'),  
+    url(r'^forum/deadline/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/$', login_required(views.forum_deadline), name='forum-deadline'),  
+    url(r'^forum/deadline/set/$', login_required(views.forum_deadline_set), name='forum-deatline-set'), 
+    url(r'^forum/deadline/date/$', login_required(views.forum_deadline_date), name='forum-deatline-date'),   
+    url(r'^forum/deadline/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/$', login_required(views.forum_deadline), name='forum-category'),   
+    url(r'^forum/download/(?P<content_id>\d+)/$', views.forum_download, name='forum-download'),  
+    url(r'^forum/content/(?P<forum_id>\d+)/$', login_required(ForumContentListView.as_view()), name='forum-content'), 
+    url(r'^forum/content/add/(?P<forum_id>\d+)/$', login_required(ForumContentCreateView.as_view()), name='forum-content-add'),
+    url(r'^forum/content/delete/(?P<forum_id>\d+)/(?P<content_id>\d+)/$', login_required(views.forum_delete), name='forum-content-delete'),   
+    url(r'^forum/content/edit/(?P<forum_id>\d+)/(?P<content_id>\d+)/$', login_required(views.forum_edit), name='forum-content-edit'),    
+    #url(r'^forum/class/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/$', views.forum_class, name='forum-class'),  
+    url(r'^forum/class/(?P<forum_id>\d+)/$',  login_required(ForumClassListView.as_view()), name='forum-class'),    
+    url(r'^forum/export/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/$', login_required(views.forum_export), name='forum-export'),   
+    url(r'^forum/grade/(?P<classroom_id>\d+)/(?P<action>\d+)/$', login_required(views.forum_grade), name='forum-grade'),
+    url(r'^forum/class/switch/$', login_required(views.forum_switch), name='make'),    
 ]

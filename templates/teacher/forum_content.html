@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block title %} Teachers {% endblock %}
+{% block content %}
+        <a href="/teacher/forum/content/add/{{forum_id}}" class="btn btn-warning" role="btn"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> 新增素材</a>
+<button type="button" class="btn btn-success">{{fwork.title}}</button>
+
+        {% for work in contents %}
+ <div class="panel panel-default"> 
+              {% if work.types == 1 %}
+   <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.revcounter}}</button> 外部網址 
+    <A href="/teacher/forum/content/delete/{{forum_id}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/teacher/forum/content/edit/{{forum_id}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
+  </div>
+  <div class="panel-body">
+    <a href="{{work.link}}" target="_blank">{% if work.title %}{{work.title}}{% else %}開啟連結{% endif %}</a>
+  </div>
+            
+              {% elif work.types == 2 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.revcounter}}</button> Youtube影片
+    <A href="/teacher/forum/content/delete/{{forum_id}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/teacher/forum/content/edit/{{forum_id}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
+		<img src="/static/images/video.gif">記錄:
+		{% for class in fclasses %}
+     <a href="/teacher/event/video/{{class.classroom_id}}/{{forum_id}}/{{work.id}}">{{class.classroom_id|classname}}</a>|		
+    {% endfor %}
+	</div>
+  <div class="panel-body">
+    <div class="embed-responsive embed-responsive-16by9">
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <div id="player{{work.id}}"></div>
+    </div>
+</div>          
+              {% elif work.types == 3 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.revcounter}}</button> 下載檔案
+    <A href="/teacher/forum/content/delete/{{forum_id}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/teacher/forum/content/edit/{{forum_id}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
+</div>
+  <div class="panel-body"> <a href="/teacher/forum/download/{{work.id}}" target="_blank">{{work.title}}</a> </div>                        
+              {% elif work.types == 4 %}
+  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.revcounter}}</button> 自訂文字
+    <A href="/teacher/forum/content/delete/{{forum_id}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/teacher/forum/content/edit/{{forum_id}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
+</div>               
+{% endif %}
+    <div class="panel-body">{{ work.memo|memo|safe }}</div>
+
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="vidModal">   
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div id="vplayer" class="embed-responsive-item"></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</div>
+        {% endfor %}
+  
+<style>
+.modal-content iframe {
+  max-width: 100%;
+}
+</style>        
+{% endblock %}
+{% block footer_script %}
+<script>
+var vidMap = {
+  {% for work in contents %}
+{% if work.types == 2 %}
+  'm_{{ work.id }}': '{{ work.youtube|video }}',
+{% endif %}
+{% endfor %}  
+};
+var vidPlayer = null;
+function onPlayerReady(event) {
+  activePlayer = event.target;
+	//alert(activePlayer.content_id + ":" + activePlayer.getDuration())
+  $.post('/teacher/video/length/',
+        {'content_id': activePlayer.content_id,
+				 'length': activePlayer.getDuration(),
+				},
+        function(data){}
+   );
+}
+ 
+function timeToSec(timestr) {
+  var hh = parseInt(timestr.substr(0, 2)), 
+      mm = parseInt(timestr.substr(3, 2)), 
+      ss = parseInt(timestr.substr(6, 2));
+    return (hh*3600)+(mm*60)+ss;
+}
+function onYouTubeIframeAPIReady() {
+	 {% for work in contents %}
+  {% if work.types == 2 %}	
+var player{{work.id}};
+
+	        player{{work.id}} = new YT.Player('player{{work.id}}', {
+          height: '390',
+          width: '640',
+          videoId: '{{work.youtube|video}}',
+          events: {
+         
+           'onReady': onPlayerReady,
+          }
+			    });
+	        player{{work.id}}.content_id = {{work.id}}
+
+ 	{% endif %}
+  {% endfor %}
+  $('.btn-marker').click(function(event) {
+    var vid = vidMap['m_'+$(event.target).data('mid')];
+    var tsec = timeToSec($(event.target).data('time'));
+    if (!vidPlayer) {
+			vidPlayer = new YT.Player('vplayer', {
+        height: '315', 
+        width: '560', 
+        videoId: vid,
+        playerVars: {
+          start: tsec,
+        },
+        events: {
+          'onReady': onPlayerReady,
+        }
+      });
+    } else {
+      vidPlayer.stopVideo();
+      vidPlayer.loadVideoById(vid, tsec, 'large');
+      vidPlayer.seekTo(tsec);	
+    }
+    $('#vidModal').modal('show');
+  });
+}
+$('#vidModal').on('hidden.bs.modal', function (e) {
+  vidPlayer.stopVideo();
+});
+$(document).ready(function () {
+  //------------------------------------------------------------------------
+  // Load YouTube API library
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);  
+});
+</script>
+{% endblock %}
+	{% block domready %}
+	    $('body').css('background-image','url(/static/images/back1.gif)');
+	{% endblock %}

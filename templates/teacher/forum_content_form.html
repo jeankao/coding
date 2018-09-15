@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<a href="/teacher/forum/content/{{ forum.id }}" class="btn btn-success" role="btn">{{forum.title}}</a>
+<section class="wrapper">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a aria-control="tab1" data-toggle="tab" role="tab" href="#tab1">外部網址</a></li>
+    <li role="presentation"><a aria-control="tab2" data-toggle="tab" role="tab" href="#tab2">Youtube影片</a></li>
+    <li role="presentation"><a aria-control="tab3" data-toggle="tab" role="tab" href="#tab3">上傳檔案</a></li>
+    <li role="presentation"><a aria-control="tab4" data-toggle="tab" role="tab" href="#tab4">上傳文字</a></li>
+  </ul>
+  <section class="tab-content">
+    <article id="tab1" class="tab-pane fade in active" role="tabpanel">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type=hidden name=types value="1">
+        <input type=hidden name=forum_id value={{forum.id}}>
+        <div class="form-group">
+          <label for="id_content_title">文章標題</label>
+          <input id="id_content_title" maxlength="250" name="title" type="text" placeholder="開啟連結" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="id_content_link">文章網址</label>
+          <input id="id_content_link" maxlength="250" name="link" type="text" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="article-memo">說明</label>
+          <textarea name="memo" id="article-memo" rows="10" class="form-control"></textarea>
+        </div>
+        <input type="submit" value="送出" class="btn btn-default" />
+      </form>
+    </article>
+    <!--------------------------------------------------------->
+    <article id="tab2" class="tab-pane fade" role="tabpanel">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type=hidden name=types value="2">
+        <input type=hidden name=forum_id value={{forum.id}}>
+        <div class="form-group">
+          <label for="id_content_youtube">影片網址</label>
+          <input id="id_content_youtube" maxlength="250" name="youtube" type="text" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="youtube-memo">說明</label>
+          <textarea name="memo" id="youtube-memo" rows="10" class="form-control"></textarea>
+        </div>
+        <input type="submit" value="送出" class="btn btn-default" />
+      </form>
+    </article>
+    <!--------------------------------------------------------->
+    <article id="tab3" class="tab-pane fade" role="tabpanel">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type=hidden name="types" value="3">
+        <input type=hidden name=forum_id value={{forum.id}}>
+        <div class="form-group">
+          <label for="content_file">檔案</label>
+          <input id="content_file" name="content_file" type="file" />
+        </div>
+        <div class="form-group">
+          <label for="file-memo">說明</label>
+          <textarea name="memo" id="file-memo" rows="10" class="form-control"></textarea>
+        </div>
+        <input type="submit" value="送出" class="btn btn-default" />
+      </form>
+    </article>
+    <!--------------------------------------------------------->
+    <article id="tab4" class="tab-pane fade" role="tabpanel">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type=hidden name="types" value="4">
+        <input type=hidden name=forum_id value={{forum.id}}>
+        <div class="form-group">
+          <label for="text-memo">文字</label>
+          <textarea name="memo" id="text-memo" rows="10" class="form-control"></textarea>
+        </div>
+        <input type="submit" value="送出" class="btn btn-default" />
+      </form>
+    </article>
+  </section>
+</section>
+{% endblock %}
+
+{% block domready %}
+  $('body').css('background-image','url(/static/images/back1.gif)');
+{% endblock %}
