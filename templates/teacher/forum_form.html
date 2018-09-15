@@ -1,7 +1,92 @@
 {% extends "base.html" %}
 {% load tag %}
 {% block header %}
-<link href="/static/layout/styles/checkbox.css" rel="stylesheet" type="text/css" media="all">
+<style>
+/* The check */
+.check {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    padding-right: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.check input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #fff ;
+    border-color:#f8204f;
+    border-style:solid;
+    border-width:2px;
+}
+
+
+
+/* When the checkbox is checked, add a blue background */
+.check input:checked ~ .checkmark {
+    background-color: #fff  ;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.check input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.check .checkmark:after {
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid ;
+    border-color:#f8204f;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.cust-btn{
+	margin-bottom: 10px;
+	background-color: #f8204f;
+	border-width: 2px;
+	border-color: #f8204f;
+	color: #fff;
+}
+.cust-btn:hover{
+	
+	border-color: #f8204f;
+	background-color: #fff;
+	color: #f8204f;
+	border-radius: 20px;
+	transform-style: 2s;
+
+}
+</style>
 {% endblock %}
 {% block content %}
 
@@ -10,8 +95,11 @@
             
 <tr><th nowrap>班級:</th><Td>
               {% for classroom in classrooms %}
-             <label for="class{{forloop.counter}}" class="btn btn-danger">{{classroom.name}}<input  {% if classroom.id == classroom_id %}checked{% endif %} value="{{classroom.id}}" name="classrooms" type="checkbox" id="class{{forloop.counter}}" class="badgebox" value="{{classroom.id}}}"><span class="badge">&check;</span></label>
-              {% endfor %}
+  <label class="check ">{{classroom.name}}
+  <input  {% if classroom.id == classroom_id %}checked{% endif %} value="{{classroom.id}}" name="classrooms" type="checkbox" id="class{{forloop.counter}}" value="{{classroom.id}}}">
+  <span class="checkmark"></span>
+</label>
+  {% endfor %}
   </TD></tr>
             <tr><th><label for="id_title">討論主題:</label></th><td><input class="form-control list-group-item-text" id="id_title" maxlength="250" name="title" type="text" />
   </table>
@@ -21,6 +109,3 @@
         </form>
 {% endblock %}
 
-	{% block domready %}
-	    $('body').css('background-image','url(/static/images/back1.gif)');
-	{% endblock %}

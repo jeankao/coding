@@ -70,8 +70,11 @@ post_questions2 = [
         '9. 只要時間許可，我一定可以把程式學好',
         '10. 學完此課程後，我認為我能夠將程式設計課程所學到的（如問題解決、邏輯思考、與創造力等），運用到其他科目上。',
 ]
-
 # Create your views here.
+def select(request, lesson, classroom_id):
+    return render(request, 'survey/select.html', {'classroom_id':classroom_id, 'lesson':lesson})
+
+  # Create your views here.
 def pre_result1(request, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     enrolls = Enroll.objects.filter(classroom_id=classroom_id)

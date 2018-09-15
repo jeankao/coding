@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block header %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+{% block title %} 課後問卷 {% endblock %}
+{% block content %}
+<a href="/survey/pre_survey{{lesson}}/teacher/{{classroom_id}}" role="btn" class="btn btn-success">課前問卷</a>
+<a href="/survey/post_survey{{lesson}}/teacher/{{classroom_id}}" role="btn" class="btn btn-success">課前問卷</a>
+{% endblock %}

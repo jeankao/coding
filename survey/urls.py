@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from . import views
 
 urlpatterns = [
+    url(r'^select/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.select),
     url(r'^pre_survey1/$', views.pre_survey1),
     url(r'^post_survey1/$', views.post_survey1),  
     url(r'^pre_result1/(?P<classroom_id>\d+)/$', views.pre_result1),

@@ -1940,7 +1940,7 @@ def forum_grade(request, classroom_id, action):
 		response.write(xlsx_data)
 		return response
 	else :
-		return render_to_response('teacher/forum_grade.html',{'results':results, 'forums':forums, 'classroom_id':classroom_id, 'fclasses':fclasses}, context_instance=RequestContext(request))
+		return render(request, 'teacher/forum_grade.html',{'results':results, 'forums':forums, 'classroom_id':classroom_id, 'fclasses':fclasses})
 
 def forum_deadline(request, classroom_id, forum_id):
     forum = FWork.objects.get(id=forum_id)
