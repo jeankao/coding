@@ -79,7 +79,30 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
     {% else %}
         尚未繳交
     {% endif %}
-         
+  {% elif lesson == "8" %}
+       <br>
+    {% if work.memo %}
+        <font color=black>心得感想：</font><BR>
+        {{work.memo}}
+        <br>
+        <font color=black>執行結果：</font><BR>
+        <img width=880 src="/static/work/django/{{student.id}}/{{index}}/{{pic}}.jpg">                
+        <form action="" enctype="multipart/form-data"  method="post">
+            <table class="table" style="width:300px">
+                <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
+              {% if teacher %}
+<tr><td colspan=2><span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
+        <input type="checkbox" style="display: none;" name="assistant"/>
+    </span></td></tr>          
+              {% endif %}
+              <tr><td colspan=2><input type="submit" value="Submit"></td></tr>
+            </table>
+           {% csrf_token %}
+    {% else %}
+        尚未繳交
+    {% endif %}       
+          
   {% else %}
     <br>
     {% if work.code %}

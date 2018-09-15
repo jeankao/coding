@@ -330,6 +330,8 @@ class WorkListView(ListView):
             queryset = lesson_list4
         elif self.kwargs['lesson'] == "5":
             queryset = lesson_list2
+        elif self.kwargs['lesson'] == "8":
+            queryset = lesson_list5            
         else:
             queryset = lesson_list1
         return queryset
@@ -394,6 +396,8 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
             lesson_name = lesson_list4[int(index)-1][1]
         elif lesson == "5":
             lesson_name = lesson_list2[int(index)-1][1]
+        elif lesson == "8":
+            lesson_name = lesson_list5[int(index)-1][1]            
         else:
             lesson_name = lesson_list1[int(index)-1][1]
     elif typing == "1":
@@ -418,7 +422,7 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
         work3 = works[0]
         pic = work3.id
         if int(lesson) > 1 :
-            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/pandas'][int(lesson) - 2]
+            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/pandas', 'static/work/django'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=user_id, index=index)
             for work in works:
                 image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
