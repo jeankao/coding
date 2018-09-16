@@ -41,6 +41,7 @@ from docx.oxml.shared import OxmlElement, qn
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from datetime import datetime
+from helper import VideoLogHelper
 
 reload(sys)
 
