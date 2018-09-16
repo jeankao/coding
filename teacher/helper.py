@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from account.models import Log
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.timezone import localtime

@@ -163,3 +163,21 @@ class TeacherApply(models.Model):
   approver = models.IntegerField(default=0)
   memo = models.TextField()
   file =  models.FileField()
+  
+# 影片記錄
+class Log(models.Model):
+    # 使用者序號
+    user_id = models.IntegerField(default=0)
+		# 影片編號
+    youtube_id = models.IntegerField(default=0)
+    # 事件內容
+    event = models.CharField(max_length=100)
+	  # 發生時間 
+    publish = models.DateTimeField(default=timezone.now)
+
+    @property
+    def user(self):
+        return User.objects.get(id=self.user_id)
+	
+    def __unicode__(self):
+        return str(self.user_id)+'--'+self.event
