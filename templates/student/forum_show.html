@@ -38,38 +38,37 @@
   <button class="btn btn-success">{{forum.title}}</button>
   <button class="btn btn-default">{{forum.teacher_id|realname}}老師</button>
 </div>
-<div class="row">
 <button class="btn btn-warning">素材</button>
   <ul  class="list-group">
     </li>
     {% for work in contents %}
     <li class="list-group-item material" id="m_{{ work.id }}">
-      <div class="panel panel-default">      
+      <div class="card">      
       {% spaceless %}     
         {% if work.types == 1 %}
- <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 外部網址 
+ <div class="panel-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 外部網址 
  </div>
-  <div class="panel-body">
+  <div class="card-body">
     <a href="{{work.link}}" target="_blank">{% if work.title %}{{work.title}}{% else %}開啟連結{% endif %}</a>
   </div>
         {% elif work.types == 2 %}
-<div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> Youtube影片 
+<div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> Youtube影片 
 	<img src="/static/images/video.gif"><a href="/teacher/event/video/{{classroom_id}}/{{forum.id}}/{{work.id}}/">全班統計</a>
 </div>
-  <div class="panel-body">
+  <div class="card-body">
     <div class="embed-responsive embed-responsive-16by9">
     <div id="player{{work.id}}"></div>
 		</div>
 </div>          
         {% elif work.types == 3 %}
-  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 下載檔案
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 下載檔案
 </div>
-  <div class="panel-body"> <a href="/teacher/forum/download/{{work.id}}" target="_blank">{{work.title}}</a> </div>       
+  <div class="card-body"> <a href="/teacher/forum/download/{{work.id}}" target="_blank">{{work.title}}</a> </div>       
         {% elif work.types == 4 %}
-  <div class="panel-heading"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 自訂文字
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button> 自訂文字
 </div>
         {% endif %} 
-  <div class="panel-body">
+  <div class="card-body">
     {{work.memo|memo|safe}}
   </div>					
         
