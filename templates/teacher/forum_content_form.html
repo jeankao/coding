@@ -3,14 +3,14 @@
 {% block content %}
 <a href="/teacher/forum/content/{{ forum.id }}" class="btn btn-success" role="btn">{{forum.title}}</a>
 <section class="wrapper">
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a aria-control="tab1" data-toggle="tab" role="tab" href="#tab1">外部網址</a></li>
-    <li role="presentation"><a aria-control="tab2" data-toggle="tab" role="tab" href="#tab2">Youtube影片</a></li>
-    <li role="presentation"><a aria-control="tab3" data-toggle="tab" role="tab" href="#tab3">上傳檔案</a></li>
-    <li role="presentation"><a aria-control="tab4" data-toggle="tab" role="tab" href="#tab4">上傳文字</a></li>
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation" class="nav-item"><a class="nav-link active" aria-control="tab1" data-toggle="tab" role="tab" href="#tab1">外部網址</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" aria-control="tab2" data-toggle="tab" role="tab" href="#tab2">Youtube影片</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" aria-control="tab3" data-toggle="tab" role="tab" href="#tab3">上傳檔案</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" aria-control="tab4" data-toggle="tab" role="tab" href="#tab4">上傳文字</a></li>
   </ul>
-  <section class="tab-content">
-    <article id="tab1" class="tab-pane fade in active" role="tabpanel">
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
       <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type=hidden name=types value="1">
@@ -29,9 +29,9 @@
         </div>
         <input type="submit" value="送出" class="btn btn-default" />
       </form>
-    </article>
+    </div>    
     <!--------------------------------------------------------->
-    <article id="tab2" class="tab-pane fade" role="tabpanel">
+<div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2">
       <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type=hidden name=types value="2">
@@ -46,9 +46,9 @@
         </div>
         <input type="submit" value="送出" class="btn btn-default" />
       </form>
-    </article>
+    </div>    
     <!--------------------------------------------------------->
-    <article id="tab3" class="tab-pane fade" role="tabpanel">
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3">
       <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type=hidden name="types" value="3">
@@ -63,9 +63,9 @@
         </div>
         <input type="submit" value="送出" class="btn btn-default" />
       </form>
-    </article>
+    </div>    
     <!--------------------------------------------------------->
-    <article id="tab4" class="tab-pane fade" role="tabpanel">
+    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4">
       <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type=hidden name="types" value="4">
@@ -76,8 +76,8 @@
         </div>
         <input type="submit" value="送出" class="btn btn-default" />
       </form>
-    </article>
-  </section>
+    </div>        
+  </div>
 </section>
 {% endblock %}
 
