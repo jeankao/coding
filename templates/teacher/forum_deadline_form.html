@@ -31,7 +31,8 @@
             </div>
         </fieldset>
     </form>
-</div>
+    </div>
+    </div>
 </div>
 
 	{% for class in fclasses %}
@@ -40,12 +41,11 @@
 	<div class="card">
 		<div class="card-header">{{class.classroom_id|classname}} --期限：<span class="deadline_string">{% if class.deadline %}{{class.deadline_date|date:'Y F d - H:i'}}{% else %}無{% endif %}</span></div>
 		<div class="card-body"><a data-forumid="{{class.forum_id}}" data-classroomid="{{class.classroom_id}}" href="#" role="btn" class="btn btn-primary apply">套用</a> <a data-forumid="{{class.forum_id}}" data-classroomid="{{class.classroom_id}}"  href="#" role="btn" class="btn btn-primary cancle">取消</a></div>
-	</div>
 </div>
-</div>
+    </div>
 	{% endif %}
 {% endfor %}
-</div>
+
 {% endblock %}
 {% block footer_script %}
 <script type="text/javascript" src="/static/layout/scripts/bootstrap-datetimepicker.js" charset="UTF-8"></script>
