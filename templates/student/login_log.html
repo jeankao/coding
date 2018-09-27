@@ -2,7 +2,7 @@
 {% load tag %}
 {% block title %} Teachers {% endblock %}
 {% block content %}
-<h1>{{visitorlogs.0.user_id|realname}}的登入記錄</h1>
+<h1>{{visitorlogs.0.user_id|realname}}({{visitorlogs.0.user_id|username}})的登入記錄 </h1>
 <table>
 {% for visitorlog in visitorlogs %}
 <Tr><td>{{forloop.counter|add:page}}</td><td>{{visitorlog.time| date:"DATE_FORMAT"}}--{{visitorlog.time|date:"l"}}</td></Tr>

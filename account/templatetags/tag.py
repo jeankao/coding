@@ -72,7 +72,16 @@ def realname(user_id):
         return user.first_name
     except ObjectDoesNotExist:
         pass
-        return ""      
+        return ""     
+      
+@register.filter(takes_context=True)
+def username(user_id):
+    try: 
+        user = User.objects.get(id=user_id)
+        return user.username
+    except ObjectDoesNotExist:
+        pass
+        return ""           
 
 @register.filter(takes_context=True)
 def realname2(user_id):
