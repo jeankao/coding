@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^work/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView.as_view())),
     url(r'^work/word/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.work_word),  
     url(r'^work/class/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.work_class),
+    url(r'^work/group/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.work_group),  
     url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),
     #設定小教師
     url(r'^work/assistant/make/$', login_required(views.make)),

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load tag %}
 {% block content %}
-		 <button class="btn btn-info active">座號</button>
-		 <a href="/teacher/work/group/{{typing}}/{{lesson}}/{{classroom.id}}/{{index}}" role="button" class="btn">組別</a>
+		 <a href="/teacher/work/class/{{typing}}/{{lesson}}/{{classroom.id}}/{{index}}" role="button" class="btn">座號</a>
+     <button class="btn btn-info active">組別</button>
         <table class="table">
         <tr>
             <td>學生</td>

@@ -380,6 +380,43 @@ def work_class(request, typing, lesson, classroom_id, index):
     classmate_work = sorted(classmate_work, key=getKey)
     return render(request, 'teacher/work_class.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson})
 
+# 教師評分
+@login_required
+@user_passes_test(not_in_teacher_group, login_url='/')
+# 列出某作業所有同學名單
+def work_group(request, typing, lesson, classroom_id, index):
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    classmate_work = []
+    scorer_name = ""
+    for enroll in enrolls:
+        try:
+            work = Work.objects.get(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson)
+            if work.scorer > 0 :
+                scorer = User.objects.get(id=work.scorer)
+                scorer_name = scorer.first_name
+            else :
+                scorer_name = "1"
+        except ObjectDoesNotExist:
+            work = Work(typing=0, index=index, user_id=0, lesson_id=lesson)
+        except MultipleObjectsReturned:
+            work = Work.objects.filter(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson).last()
+        try:
+            group_name = EnrollGroup.objects.get(id=enroll.group).name
+        except ObjectDoesNotExist:
+            group_name = "沒有組別"
+        assistant = WorkAssistant.objects.filter(typing=0, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=index)
+        if assistant.exists():
+            classmate_work.append([enroll,work,1, scorer_name, group_name])
+        else :
+            classmate_work.append([enroll,work,0, scorer_name, group_name])
+    def getKey(custom):
+        return custom[4], custom[1].publication_date
+      
+    classmate_work = sorted(classmate_work, key=getKey)    
+    return render(request, 'teacher/work_group.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson})
+  
+  
 # (小)教師評分
 def scoring(request, lesson, classroom_id, user_id, index, typing):
     user = User.objects.get(id=request.user.id)
