@@ -56,6 +56,8 @@ urlpatterns = [
     url(r'^work3/edit/(?P<lesson>\d+)(?P<classroom_id>\d+)/$', views.work_edit),
     url(r'^work3/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class3),
     url(r'^work3/score/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work3_score),
+    # 各組小老師
+    url(r'^assistant/group/(?P<typing>\d+)/(?P<classroom_id>\d+)/$', views.assistant_group),	
     #設定助教
     url(r'^assistant/$', login_required(views.AssistantClassroomListView.as_view())),
     url(r'^assistant/make/$', login_required(views.assistant_make), name='make'),

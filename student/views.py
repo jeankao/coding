@@ -794,7 +794,7 @@ def progress(request, typing, lesson, unit, classroom_id):
     return render(request, 'student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list})
 
 # 查詢某作業分組小老師
-def work_group(request, typing, lesson, index, classroom_id):
+def work_group(request, typing, lesson, classroom_id):
         if lesson == "1":
             lesson_list = lesson_list1
         elif lesson == "2":
@@ -807,44 +807,36 @@ def work_group(request, typing, lesson, index, classroom_id):
             lesson_list = lesson_list2            
         else :
             lesson_list = lesson_list1
-        student_groups = []
-        lesson = Classroom.objects.get(id=classroom_id).lesson
-        groups = EnrollGroup.objects.filter(classroom_id=classroom_id)
-        try:
-                student_group = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).group
-        except ObjectDoesNotExist :
-                student_group = []
-        for group in groups:
-            enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group.id)
+        lessons = []
+        index = 0
+        for assignment in lesson_list:            
+            student_groups = []					         
+            enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
             group_assistants = []
+            assistants = []
             works = []
             scorer_name = ""
-            for enroll in enrolls:
-                try:
-                    work = Work.objects.get(user_id=enroll.student_id, index=index, lesson_id=lesson)
+            for enroll in enrolls: 
+                try:    
+                    work = Work.objects.get(user_id=enroll.student_id, index=lesson+1)
                     if work.scorer > 0 :
                         scorer = User.objects.get(id=work.scorer)
                         scorer_name = scorer.first_name
                     else :
                         scorer_name = "X"
                 except ObjectDoesNotExist:
-                    work = Work(lesson_id=lesson, index=index, user_id=1, score=-2)
-                except MultipleObjectsReturned:
-                    work = Work.objects.filter(user_id=enroll.student_id, index=index, lesson_id=lesson).order_by("-id")[0]
-                works.append([enroll, work.score, scorer_name, work.file])
+                    work = Work(index=lesson, user_id=1)
+                works.append([enroll, work.score, scorer_name, work.memo])
                 try :
-                    assistant = WorkAssistant.objects.get(typing=typing, student_id=enroll.student.id, classroom_id=classroom_id, lesson_id=lesson, index=index)
+                    assistant = Assistant.objects.get(student_id=enroll.student.id, classroom_id=classroom_id, lesson=lesson+1)
                     group_assistants.append(enroll)
+                    assistants.append(enroll.student_id)
                 except ObjectDoesNotExist:
                     pass
-            student_groups.append([group, works, group_assistants])
-        lesson_dict = {}
-        c = 0
-        for assignment in lesson_list:
-            c = c + 1
-            lesson_dict[c] = assignment[0]
-        assignment = lesson_dict[int(index)]
-        return render(request, 'student/work_group.html', {'lesson':lesson, 'assignment':assignment, 'student_groups':student_groups, 'classroom_id':classroom_id})
+            student_groups.append([group, works, group_assistants, assistants])
+            lessons.append([lesson_list[index], student_groups])
+            index = index + 1
+        return render(request, 'student/work_group.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
 
 # 解答
 def answer(request, lesson, index):

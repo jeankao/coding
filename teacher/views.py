@@ -2086,3 +2086,61 @@ class VideoListView(ListView):
             if not is_assistant(self.request.user, self.kwargs['classroom_id'] ):
                   return redirect('/')
         return super(VideoListView, self).render_to_response(context) 
+      
+# 列出所有作業小老師
+def assistant_group(request, typing, classroom_id):
+        # 限本班任課教師
+        if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
+            return redirect("/")    
+        classroom = Classroom.objects.get(id=classroom_id)
+        lesson = Classroom.objects.get(id=classroom_id).lesson        
+        if typing == "0":
+            if lesson == 1:
+                lesson_name = lesson_list1
+            elif lesson == 2:
+                lesson_name = lesson_list2
+            elif lesson == 3:
+                lesson_name = lesson_list3
+            elif lesson == 4:
+                lesson_name = lesson_list4
+            elif lesson == 5:
+                lesson_name = lesson_list2
+            elif lesson == 8:
+                lesson_name = lesson_list5       
+            else:
+                lesson_name = lesson_list1
+        elif typing == "1":
+            lesson_name = TWork.objects.get(classroom_id=classroom_id).title        
+        groups = [group for group in EnrollGroup.objects.filter(classroom_id=classroom_id)]				
+        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+        student_ids = map(lambda a: a.student_id, enroll_pool)
+        work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
+        user_pool = [user for user in User.objects.filter(id__in=work_pool.values('scorer'))]
+        assistant_pool = [assistant for assistant in WorkAssistant.objects.filter(classroom_id=classroom_id, typing=typing, lesson_id=lesson)]				
+        lessons = []		
+        index = 1
+        for assignment in lesson_name:
+                student_groups = []													
+                for group in groups:
+                    members = filter(lambda u: u.group == group.id, enroll_pool)
+                    group_assistants = []
+                    works = []
+                    scorer_name = ""
+                    for member in members:
+                        work = filter(lambda w: w.index == index and w.user_id == member.student_id, work_pool)
+                        if work:
+                            work = work[0]
+                            scorer = filter(lambda u: u.id == work.scorer, user_pool)
+                            scorer_name = scorer[0].first_name if scorer else 'X'
+                        else:
+                            work = Work(index=assignment[2], user_id=1, score=-2)
+                        works.append([member, work.score, scorer_name, work.memo])
+                        assistant = filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool)
+                        if assistant:
+                            group_assistants.append(member)
+                    group_name = EnrollGroup.objects.get(id=group.id).name
+                    student_groups.append([group, works, group_assistants, group_name])                    
+                lessons.append([assignment, student_groups])
+                index = index + 1
+        return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
+       

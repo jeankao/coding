@@ -121,7 +121,7 @@ class Work(models.Model):
     index = models.IntegerField()
     memo = models.TextField()
     publication_date = models.DateTimeField(default=timezone.now)
-    score = models.IntegerField(default=-1)
+    score = models.IntegerField(default=-2)
     scorer = models.IntegerField(default=0)
 		# scratch, microbit
     file = models.FileField()
