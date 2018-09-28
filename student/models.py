@@ -205,3 +205,21 @@ class SFReply(models.Model):
     user_id = models.IntegerField(default=0)
     memo =  models.TextField(default='')
     publication_date = models.DateTimeField(default=timezone.now)    
+    
+#Science1現象
+class Science1Work(models.Model):
+    student_id = models.IntegerField(default=0)
+    index = models.IntegerField(default=0)
+    publication_date = models.DateTimeField(default=timezone.now)
+
+    def __unicode__(self):
+        user = User.objects.filter(id=self.student_id)[0]
+        index = self.index
+        return user.first_name+"("+str(index)+")"
+
+class Science1Content(models.Model):
+    work_id =  models.IntegerField(default=0)
+    types = models.IntegerField(default=0)
+    text = models.TextField(default='')
+    pic = models.FileField(blank=True,null=True)
+    picname = models.CharField(max_length=60,null=True,blank=True)    

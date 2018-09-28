@@ -1,0 +1,31 @@
+         <form action=""  method="post"  enctype="multipart/form-data">
+           <input type=hidden name="typing" value="{{typing}}">
+           <input type=hidden name="lesson" value="{{lesson}}">           
+           <input type=hidden name="index" value="{{index}}">              
+           <input type=hidden name="types" value="{{content.types}}">
+        {% if content.types == 12 %}
+            檔案:<input id="id_content_file" name="content_file" type="file"/>
+        {% endif %}
+           
+
+ {% csrf_token %}
+  <ul class="list-group">
+    <li class="list-group-item">
+      <h4 class="list-group-item-heading">說明</h4>
+      <div class="list-group-item-text">
+        <textarea name="memo" id="memo" cols="30" rows="10" class="form-control list-group-item-text">{{content.memo}}</textarea>
+        <input class="button button-default" type="submit" value="送出">
+      </div>      
+    </li>
+    <li class="list-group-item material" id="m_{{ content.id }}">
+      {% if content.types == 2 %}{% spaceless %}
+        <button type="button" class="btn btn-primary btn-xs btn-add-marker">＋新增時間標記</button>
+      {% endspaceless %}{% endif %}
+      {% spaceless %}
+            {% if content.types == 12 %}
+        <img src=“/static/uplaod/{{request.userid}}/{{content.picname}}”</a> 
+        {% endif %} 
+      {% endspaceless %}
+    </li>
+  </ul> 
+    </form>

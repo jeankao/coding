@@ -1,0 +1,55 @@
+<section class="wrapper">
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab11" role="tab" aria-selected="true">上傳文字</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab12" role="tab" aria-selected="true">上傳圖片</a>
+    </li>
+  </ul>
+  <br/>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab11" role="tabpanel" aria-labelledby="tab11-tab">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type=hidden name="types" value="11">
+        <input type=hidden name="index" value="{{index}}">        
+        <div class="form-group">
+          <label for="text-memo">文字</label>
+          <textarea name="text" id="text-memo" rows="10" class="form-control"></textarea>
+        </div>
+        <input type="submit" value="送出" class="btn btn-info" />
+      </form>
+    </div>
+    <div class="tab-pane fade" id="tab12" role="tabpanel" aria-labelledby="tab12-tab">
+	      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type=hidden name="types" value="12">
+        <input type=hidden name="index" value="{{index}}"> 
+        <div class="form-group">
+          <label for="content_file">檔案</label>
+          <input id="content_file" name="pic" type="file" />
+        </div>
+        <input type="submit" value="送出" class="btn btn-info" />
+      </form>
+    </div>
+  </div>
+</section>
+<BR>
+{% for work in contents %}
+ <div class="card card-default"> 
+              {% if work.types == 12 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+    <A href="/student/work/content/delete/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/student/work/content/edit/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
+  </div>
+  <div class="card-body"><img src="/static/upload/{{ work.picname }}" style="max-width:900px"></div>                      
+              {% elif work.types == 11 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+    <A href="/student/work/content/delete/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/student/work/content/edit/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a> 
+  </div>  
+  <div class="card-body">{{ work.text }}</div>
+            {% endif %}
+</div>
+{% endfor %}

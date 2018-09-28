@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from teacher.models import Classroom
-from student.models import Enroll, EnrollGroup, Work
+from student.models import *
 
 class EnrollForm(forms.Form):
         password =  forms.CharField()
@@ -74,6 +74,19 @@ class SubmitCForm(forms.ModelForm):
 class SubmitDForm(forms.Form):
         screenshot = forms.CharField(widget=forms.HiddenInput())
         memo = forms.CharField(widget=forms.Textarea)
+      
+# 新增一個作業
+class SubmitF1Form(forms.ModelForm):
+        class Meta:
+           model = Science1Content
+           fields = ['work_id', 'types', 'text', 'pic']
+        
+        def __init__(self, *args, **kwargs):
+            super(SubmitF1Form, self).__init__(*args, **kwargs)
+            self.fields['work_id'].required = False	
+            self.fields['types'].required = False
+            self.fields['text'].required = False
+            self.fields['pic'].required = False	 
       
 class ForumSubmitForm(forms.Form):
         memo =  forms.CharField(required=False)

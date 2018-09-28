@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import RequestContext
 from student.lesson import *
 from django.views.generic import ListView, CreateView
-from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam, SFWork, SFReply, SFContent
+from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam, SFWork, SFReply, SFContent, Science1Work, Science1Content
 from teacher.models import Classroom, TWork, CWork, FWork, FContent, FClass
 from show.models import Round
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
@@ -443,8 +443,8 @@ def submit(request, typing, lesson, index):
     form = None
     work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if typing == "0":
-        if lesson in ["2", "3", "4", "5", "6", "7", "8"]:
-            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2, lesson_list5][int(lesson)-2][int(index)-1][1]
+        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9"]:
+            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2, lesson_list5, lesson_list2][int(lesson)-2][int(index)-1][1]
         else:
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
@@ -587,6 +587,43 @@ def submit(request, typing, lesson, index):
                 work.save()
                 return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))
+    elif lesson == "9":
+        if request.method == 'POST':
+            if typing == "1":
+                types = request.POST.get('types')   
+                index = request.POST.get('index')                   
+                if types == "11" or types == "12":
+                    form = SubmitF1Form(request.POST, request.FILES)                    
+                    if form.is_valid():
+                        obj = form.save(commit=False)
+                        try:
+                            work = Science1Work.objects.get(student_id=request.user.id, index=index)
+                        except ObjectDoesNotExist:
+                            work = Science1Work(student_id=request.user.id, index=index)                        
+                        except MultipleObjectsReturned:
+                            works = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+                            work = work[0]
+                        work.publication_date = timezone.now()
+                        work.save()
+                        obj.work_id=work.id
+                        if types == "12":
+                            myfile = request.FILES['pic']
+                            fs = FileSystemStorage()
+                            filename = uuid4().hex
+                            obj.picname = str(request.user.id)+"/"+filename
+                            fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
+                        obj.save()                    
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
+        else:
+            try:
+                work = Science1Work.objects.get(student_id=request.user.id, index=index)
+            except ObjectDoesNotExist:
+                work = Science1Work(student_id=request.user.id, index=index)                        
+            except MultipleObjectsReturned:
+                works = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+                work = work[0]
+            contents = Science1Content.objects.filter(work_id=work.id)
+            return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'contents':contents})                  
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 
 def show(request, typing, lesson, index, user_id):
@@ -1447,3 +1484,32 @@ def forum_file_delete(request):
     else:
         return JsonResponse({'status':'fail'}, safe=False)        
 
+def content_delete(request, typing, lesson, index, content_id):
+    instance = Science1Content.objects.get(id=content_id)
+    instance.delete()
+
+    return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
+  
+def content_edit(request, typing, lesson, index, content_id):
+    try:
+        instance = Science1Content.objects.get(id=content_id)
+    except:
+        pass
+    if request.method == 'POST':
+            content_id = request.POST.get("content_id")
+            try:
+                content = Science1Content.objects.get(id=content_id)
+            except ObjectDoesNotExist:
+	              content = Science1Content(types=form.cleaned_data['types'])
+            if content.types == 11:
+                content.text = request.POST.get("text", "")
+            elif content.types == 12:
+                myfile =  request.FILES.get("content_file", "")
+                fs = FileSystemStorage()
+                filename = uuid4().hex
+                content.picname = str(request.user.id)+"/"+filename
+                fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
+            content.save()
+            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1") 
+    return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'typing':typing, 'lesson':lesson, 'index':index})		
+	
