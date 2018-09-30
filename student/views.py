@@ -608,10 +608,10 @@ def submit(request, typing, lesson, index):
                         obj.work_id=work.id
                         if types == "12":
                             myfile = request.FILES['pic']
-                            fs = FileSystemStorage()
+                            fs = FileSystemStorage(settings.BASE_DIR+"static/upload/"+str(request.user.id)+"/")
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
-                            fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
+                            fs.save(filename, myfile)
                         obj.save()                    
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
                 elif types == "3":
@@ -659,10 +659,10 @@ def submit(request, typing, lesson, index):
                         obj.work_id=work.id
                         if types == "42":
                             myfile = request.FILES['pic']
-                            fs = FileSystemStorage()
+                            fs = FileSystemStorage(settings.BASE_DIR+"static/upload/"+str(request.user.id)+"/")
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
-                            fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
+                            fs.save(filename, myfile)
                         obj.save()                    
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
                       
