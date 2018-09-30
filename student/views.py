@@ -7,8 +7,8 @@ from django.http import HttpResponse, JsonResponse
 from django.template import RequestContext
 from student.lesson import *
 from django.views.generic import ListView, CreateView
-from student.models import Enroll, EnrollGroup, WorkAssistant, Work, WorkFile, Answer, Exam, SFWork, SFReply, SFContent, Science1Work, Science1Content
-from teacher.models import Classroom, TWork, CWork, FWork, FContent, FClass
+from student.models import *
+from teacher.models import *
 from show.models import Round
 from account.models import Message, MessagePoll, Profile, VisitorLog, PointHistory, LessonCounter, DayCounter, LogCounter
 from account.avatar import *
@@ -614,16 +614,81 @@ def submit(request, typing, lesson, index):
                             fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
                         obj.save()                    
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
+                elif types == "3":
+                    form = SubmitF3Form(request.POST, request.FILES)
+                    if form.is_valid():              
+                        work = Science3Work(index=index, student_id=request.user.id)
+                        
+                        dataURI = form.cleaned_data['screenshot']
+                        try:
+                            head, data = dataURI.split(',', 1)
+                            mime, b64 = head.split(';', 1)
+                            mtype, fext = mime.split('/', 1)
+                            binary_data = a2b_base64(data)
+
+                            prefix = 'static/work/science'
+                            directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
+                            image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
+
+                            if not os.path.exists(settings.BASE_DIR + "/" + directory):
+                                os.makedirs(settings.BASE_DIR + "/" + directory)
+                            with open(settings.BASE_DIR + "/" + image_file, 'wb') as fd:
+                                fd.write(binary_data)
+                                fd.close()
+                            work.picture=image_file
+                        except ValueError:
+                             path = dataURI.split('/', 3)
+                             work.picture=path[3]
+
+                        work.code=form.cleaned_data['code']
+                        work.save()
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab3")                  
+                if types == "41" or types == "42":
+                    form = SubmitF4Form(request.POST, request.FILES)                    
+                    if form.is_valid():
+                        obj = form.save(commit=False)
+                        try:
+                            work = Science4Work.objects.get(student_id=request.user.id, index=index)
+                        except ObjectDoesNotExist:
+                            work = Science4Work(student_id=request.user.id, index=index)                        
+                        except MultipleObjectsReturned:
+                            works = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+                            work = work[0]
+                        work.publication_date = timezone.now()
+                        work.save()
+                        obj.work_id=work.id
+                        if types == "42":
+                            myfile = request.FILES['pic']
+                            fs = FileSystemStorage()
+                            filename = uuid4().hex
+                            obj.picname = str(request.user.id)+"/"+filename
+                            fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
+                        obj.save()                    
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
+                      
         else:
             try:
-                work = Science1Work.objects.get(student_id=request.user.id, index=index)
+                work1 = Science1Work.objects.get(student_id=request.user.id, index=index)
             except ObjectDoesNotExist:
-                work = Science1Work(student_id=request.user.id, index=index)                        
+                work1 = Science1Work(student_id=request.user.id, index=index)                        
             except MultipleObjectsReturned:
-                works = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
-                work = work[0]
-            contents = Science1Content.objects.filter(work_id=work.id)
-            return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'contents':contents})                  
+                works1 = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+                work1 = works[0]
+            contents1 = Science1Content.objects.filter(work_id=work1.id).order_by("id")
+            try:
+                work4 = Science4Work.objects.get(student_id=request.user.id, index=index)
+            except ObjectDoesNotExist:
+                work4 = Science4Work(student_id=request.user.id, index=index)                        
+            except MultipleObjectsReturned:
+                works4 = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+                work4 = works[0]
+            contents4 = Science4Content.objects.filter(work_id=work4.id).order_by("id")            
+            works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+            if works3.exists():
+                work3 = works3[0]
+            else :
+                work3 = Science3Work(student_id=request.user.id, index=index)
+            return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 
 def show(request, typing, lesson, index, user_id):
@@ -1484,32 +1549,50 @@ def forum_file_delete(request):
     else:
         return JsonResponse({'status':'fail'}, safe=False)        
 
-def content_delete(request, typing, lesson, index, content_id):
+def content_delete(request, types, typing, lesson, index, content_id):
+  if types == "11" or types == "12":
     instance = Science1Content.objects.get(id=content_id)
     instance.delete()
 
     return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
+  elif types == "41" or types== "42":
+    instance = Science4Content.objects.get(id=content_id)
+    instance.delete()
+
+    return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
   
-def content_edit(request, typing, lesson, index, content_id):
+def content_edit(request, types, typing, lesson, index, content_id):
     try:
-        instance = Science1Content.objects.get(id=content_id)
+        if types == "11" or types == "12":      
+            instance = Science1Content.objects.get(id=content_id)
+        elif types == "41" or types== "42":    
+            instance = Science4Content.objects.get(id=content_id)          
     except:
         pass
     if request.method == 'POST':
             content_id = request.POST.get("content_id")
-            try:
-                content = Science1Content.objects.get(id=content_id)
-            except ObjectDoesNotExist:
-	              content = Science1Content(types=form.cleaned_data['types'])
-            if content.types == 11:
-                content.text = request.POST.get("text", "")
-            elif content.types == 12:
-                myfile =  request.FILES.get("content_file", "")
+            if types == "11" or types == "12":  
+                try:
+                    content = Science1Content.objects.get(id=content_id)
+                except ObjectDoesNotExist:
+	                  content = Science1Content(types= request.POST.get("types"))
+            elif types == "41" or types== "42":         
+                try:
+                    content = Science4Content.objects.get(id=content_id)
+                except ObjectDoesNotExist:
+	                  content = Science4Content(types= request.POST.get("types"))              
+            if content.types == 11 or content.types == 41:
+                content.text = request.POST.get("text")
+            elif content.types == 12 or content.types == 42:
+                myfile =  request.FILES.get("content_file")
                 fs = FileSystemStorage()
                 filename = uuid4().hex
                 content.picname = str(request.user.id)+"/"+filename
                 fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
             content.save()
-            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1") 
-    return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'typing':typing, 'lesson':lesson, 'index':index})		
+            if types == "11" or types == "12":                
+                return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1") 
+            elif types == "41" or types== "42":    
+                return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")               
+    return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'types':types, 'typing':typing, 'lesson':lesson, 'index':index})		
 	

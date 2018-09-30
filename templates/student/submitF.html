@@ -5,16 +5,16 @@
       <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">現象</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="true">資料建模</a>
+      <a class="nav-link" data-toggle="tab" href="#tab21" role="tab" aria-selected="true">資料建模</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="true">程式建模</a>
+      <a class="nav-link" data-toggle="tab" href="#tab22" role="tab" aria-selected="true">程式建模</a>
     </li>    
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">程式</a>
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">程式</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-selected="false">解釋</a>
+      <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-selected="false">解釋</a>
     </li>
   </ul>
   <br/>
@@ -22,17 +22,17 @@
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
 	{% include "student/submitF1.html" %}
     </div>
-    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-	{% include "student/submitF2.html" %}
+    <div class="tab-pane fade" id="tab21" role="tabpanel" aria-labelledby="tab2-tab">
+	{% include "student/submitF21.html" %}
     </div>
-    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+    <div class="tab-pane fade" id="tab22" role="tabpanel" aria-labelledby="tab3-tab">
+	{% include "student/submitF22.html" %}
+    </div>
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab4-tab">
 	{% include "student/submitF3.html" %}
     </div>
-    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab5-tab">
 	{% include "student/submitF4.html" %}
-    </div>
-    <div class="tab-pane fade" id="tab5" role="tabpanel" aria-labelledby="tab5-tab">
-	{% include "student/submitF5.html" %}
     </div> 
   </div>
 </section>

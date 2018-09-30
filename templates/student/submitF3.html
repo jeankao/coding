@@ -1,0 +1,84 @@
+{% load tag %}
+{% block header %}
+<script language="javascript">
+    window.addEventListener('load', function (e) {
+        var node = document.getElementById('edit-box{{index}}');
+        node.onpaste = function (e) {
+            if (e.clipboardData && e.clipboardData.types) {
+                // Loop the data store in type and display it
+                for (var i = 0; i < e.clipboardData.types.length; ++i) {
+                    var key = e.clipboardData.types[i];
+                    var item = e.clipboardData.items[i];
+                    if (key === 'Files') {
+                        var file = item.getAsFile();
+                        var reader = new FileReader();
+                        reader.onload = function(evt) {
+                            var img = document.createElement('img');
+                            img.src = evt.target.result;
+                            //$(node).append(img);
+                            $(node).empty().append(img);
+                        };
+                        reader.readAsDataURL(file);
+                        return found = true;
+                    }
+                }
+            }
+        };
+        //$("#edit-box").focus();
+        $("#form{{index}}").submit(function(event) {
+            var img = $("img", $("#edit-box{{index}}"));
+            if (img.length < 1) {
+                alert("請先貼上螢幕擷圖後再按上傳");
+                event.preventDefault();
+            } else {
+                $("#screenshot{{index}}").val(img[0].src);
+            }
+        });
+		$("#id_memo{{index}}").focus();
+    });
+	
+	function validateForm() {
+    /*
+	    if ($('input[name=help]:checked').length == 0) {
+            // do something here
+			      alert("請填寫創作過程!")
+            var row = document.getElementById('trp1')
+            row.style.backgroundColor = "#ffb0aa";       
+            top = row.offsetTop
+            window.scrollTo( 0, top );			
+			return false;
+        }
+       */
+	}
+</script>
+{% endblock %}
+  <br>
+<form name="myForm" id="form{{index}}" action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+        <input type=hidden name="types" value="3">
+        <input type=hidden name="index" value="{{index}}"> 
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">程式碼：</label>
+        <textarea class="form-control" id="id_code{{index}}" rows="5" name="code">{{work3.code}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">執行結果：</label>
+        {% if True %}
+        <div id="edit-box{{index}}" class="form-control target" contenteditable="true" style="height:auto">
+            {% if work3.picture %} 如果變更擷圖，請刪除原圖後重貼...
+            <img width=880 src="/{{work3.picture}}" /> 
+            {% else %}
+            請在此貼上螢幕擷圖... 
+            {% endif %}
+        </div>
+        <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" />
+        <div class="form-group">
+            <input id="submit" type="submit" class="btn-info" value="送出" />
+        </div>
+        {% else %}
+        <div>
+            <div id="edit-box{{index}}"></div>
+            <img width=880 src="/">
+        </div>
+        {% endif %}
+    </div>
+</form>

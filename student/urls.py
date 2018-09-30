@@ -27,7 +27,8 @@ urlpatterns = [
     #作業
     url(r'^work/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.work_list)),  
     url(r'^work/submit/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/$', views.submit),
-    url(r'^work/content/delete/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<content_id>\d+)/$', views.content_delete),  
+    url(r'^work/content/delete/(?P<types>\d+)/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<content_id>\d+)/$', views.content_delete),  
+    url(r'^work/content/edit/(?P<types>\d+)/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<content_id>\d+)/$', views.content_edit),  
     url(r'^work/show/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<user_id>\d+)/$', views.show),      
     url(r'^work/memo/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.memo),
     url(r'^work/class/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.work_class),  

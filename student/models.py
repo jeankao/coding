@@ -223,3 +223,35 @@ class Science1Content(models.Model):
     text = models.TextField(default='')
     pic = models.FileField(blank=True,null=True)
     picname = models.CharField(max_length=60,null=True,blank=True)    
+
+#Science4解釋
+class Science4Work(models.Model):
+    student_id = models.IntegerField(default=0)
+    index = models.IntegerField(default=0)
+    publication_date = models.DateTimeField(default=timezone.now)
+
+    def __unicode__(self):
+        user = User.objects.filter(id=self.student_id)[0]
+        index = self.index
+        return user.first_name+"("+str(index)+")"
+      
+class Science4Content(models.Model):
+    work_id =  models.IntegerField(default=0)
+    types = models.IntegerField(default=0)
+    text = models.TextField(default='')
+    pic = models.FileField(blank=True,null=True)
+    picname = models.CharField(max_length=60,null=True,blank=True)     
+    
+class Science3Work(models.Model):
+    student_id = models.IntegerField(default=0)
+    lesson = models.IntegerField(default=0)
+    typing = models.IntegerField(default=0)
+    index = models.IntegerField()
+    publication_date = models.DateTimeField(default=timezone.now)
+    picture = models.ImageField(upload_to = upload_path_handler, default = '/static/python/null.jpg')
+    code = models.TextField(default='')
+
+    def __unicode__(self):
+        user = User.objects.filter(id=self.user_id)[0]
+        index = self.index
+        return user.first_name+"("+str(index)+")"

@@ -36,18 +36,18 @@
   </div>
 </section>
 <BR>
-{% for work in contents %}
+{% for work in contents1 %}
  <div class="card card-default"> 
               {% if work.types == 12 %}
   <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
-    <A href="/student/work/content/delete/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
-    <a href="/student/work/content/edit/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
+    <A href="/student/work/content/delete/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/student/work/content/edit/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
   </div>
   <div class="card-body"><img src="/static/upload/{{ work.picname }}" style="max-width:900px"></div>                      
               {% elif work.types == 11 %}
   <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
-    <A href="/student/work/content/delete/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
-    <a href="/student/work/content/edit/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a> 
+    <A href="/student/work/content/delete/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
+    <a href="/student/work/content/edit/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a> 
   </div>  
   <div class="card-body">{{ work.text }}</div>
             {% endif %}
