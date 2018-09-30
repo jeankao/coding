@@ -1,0 +1,104 @@
+﻿<a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/0" role="btn" class="btn btn-default">新增變數</a>
+<a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/1" role="btn" class="btn btn-default">新增陣列</a>
+<a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/2" role="btn" class="btn btn-default">新增常數</a>
+ <div class="card card-default"> 
+  <div class="card-header">變數：
+  {% for data in data1 %}
+  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/0/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
+  {% endfor %}
+  </div>
+  <div class="card-header">陣列：
+  {% for data in data2 %}
+  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/1/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
+  {% endfor %}  
+  </div>
+  <div class="card-header">常數：
+  {% for data in data3 %}
+  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/2/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
+  {% endfor %}  
+  </div>
+  <div class="card-header">符號：
+  <button class="btn btn-info">(</button>
+  <button class="btn btn-info">)</button>
+  <button class="btn btn-info">+</button>
+  <button class="btn btn-info">-</button>
+  <button class="btn btn-info">*</button>
+  <button class="btn btn-info">/</button>
+  <button class="btn btn-info">^</button>  
+  </div>  
+  <div class="card-body">
+  <div id="block">
+  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">?</button>
+  <button class="btn btn-danger">=</button>
+  </div>
+  <BR><BR>
+  <button id="add" class="btn btn-default">新增方塊</button>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">請選擇變數</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+      {% for data in data1 %}
+      <a href="" role="btn" class="btn btn-info active">{{data.name}}</a>
+      {% endfor %}
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="myModa2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal body -->
+      <div class="modal-body">
+	  變數：
+      {% for data in data1 %}
+      <a href="" role="btn" class="btn btn-info active">{{data.name}}</a>
+      {% endfor %}
+<BR><BR>
+  陣列：
+  {% for data in data2 %}
+  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/1/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
+  {% endfor %}  
+  <BR><BR>
+  常數：
+  {% for data in data3 %}
+  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/2/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
+  {% endfor %}  
+  <BR><BR>
+  符號：
+  <button class="btn btn-info">(</button>
+  <button class="btn btn-info">)</button>
+  <button class="btn btn-info">+</button>
+  <button class="btn btn-info">-</button>
+  <button class="btn btn-info">*</button>
+  <button class="btn btn-info">/</button>
+  <button class="btn btn-info">^</button>  
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>

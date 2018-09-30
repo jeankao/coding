@@ -255,3 +255,9 @@ class Science3Work(models.Model):
         user = User.objects.filter(id=self.user_id)[0]
         index = self.index
         return user.first_name+"("+str(index)+")"
+
+class Science2Data(models.Model):
+    index = models.IntegerField(default=0)
+    student_id = models.IntegerField(default=0)
+    types =  models.IntegerField(default=0)
+    name =  models.CharField(max_length=250,null=True,blank=True)    

@@ -118,4 +118,7 @@ class ForumSubmitForm(forms.Form):
             self.fields['memo_c'].label = "中文"            
             self.fields['file'].label = "檔案"
 
-     
+class DataForm(forms.Form):
+        name =  forms.CharField(required=False)
+        index =  forms.IntegerField(widget=forms.HiddenInput())
+        types =  forms.IntegerField(widget=forms.HiddenInput())      

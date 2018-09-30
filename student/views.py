@@ -688,7 +688,10 @@ def submit(request, typing, lesson, index):
                 work3 = works3[0]
             else :
                 work3 = Science3Work(student_id=request.user.id, index=index)
-            return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
+            data1 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=0).order_by("id")
+            data2 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=1).order_by("id")
+            data3 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=2).order_by("id")				
+            return render(request, 'student/submit.html', {'form':form, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 
 def show(request, typing, lesson, index, user_id):
@@ -1596,3 +1599,31 @@ def content_edit(request, types, typing, lesson, index, content_id):
                 return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")               
     return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'types':types, 'typing':typing, 'lesson':lesson, 'index':index})		
 	
+# 資料建模
+def data_add(request, typing, lesson, index, types):
+        if request.method == 'POST':
+            form = DataForm(request.POST)
+            if form.is_valid():
+                data = Science2Data(name=form.cleaned_data['name'],student_id=request.user.id, index=form.cleaned_data['index'], types=form.cleaned_data['types'])
+                data.save()
+            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21") 
+        else:
+            form = DataForm()
+        return render(request, 'student/data_form.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'types':types})
+		
+# 資料建模
+def data_edit(request, typing, lesson, index, types, data_id):
+        if request.method == 'POST':
+            data = Science2Data.objects.get(id=request.POST.get('data_id'))
+            data.name = request.POST.get('name')
+            data.save()
+            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22") 
+        else:
+            data = Science2Data.objects.get(id=data_id)
+            return render(request, 'student/data_edit_form.html', {'types':types, 'data':data, 'typing':typing, 'lesson':lesson, 'index':index, 'data_id':data_id})		
+		
+def data_delete(request, typing, lesson, index, data_id):
+    instance = Science2Data.objects.get(id=data_id)
+    instance.delete()
+
+    return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22") 

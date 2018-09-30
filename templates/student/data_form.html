@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+      <form action="" enctype="multipart/form-data" id="forum_form" method="post">
+        <input type=hidden name=index value={{index}}>
+        <input type=hidden name=types value={{types}}>
+        <label class="form-group form-inline">{% if types == "2" %}數字{% else %}名稱{% endif %}：<input type=text name=name></label>        
+        <input type="submit" value="送出">
+            {% csrf_token %}         
+        </form>      
+{% endblock %}

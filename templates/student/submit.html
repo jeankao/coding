@@ -20,7 +20,6 @@
 $(function(){
   var hash = window.location.hash;
   hash && $('ul.nav a[href="' + hash + '"]').tab('show');
-
   $('.nav-tabs a').click(function (e) {
     $(this).tab('show');
     var scrollmem = $('body').scrollTop();
@@ -29,4 +28,15 @@ $(function(){
   });
 });
 </script>  
+{% endblock %}
+
+{% block domready %}
+{% if lesson == "9" %}
+  $('.select').click(function(e){
+    $("#select_model").show();
+  });
+  $('#add').click(function(e){
+      $("#block").append("<button type='button' class='btn btn-success' data-toggle='modal' data-target='#myModa2'>?</button>");
+  });
+{% endif %}
 {% endblock %}
