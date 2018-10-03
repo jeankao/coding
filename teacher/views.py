@@ -42,7 +42,7 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from datetime import datetime
 from helper import VideoLogHelper
-
+import re
 reload(sys)
 
 sys.setdefaultencoding('utf-8')
