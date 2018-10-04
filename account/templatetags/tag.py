@@ -361,7 +361,13 @@ def is_assistant(user_id, classroom_id):
 def likes(work_id):
     sfwork = SFWork.objects.get(id=work_id)
     jsonDec = json.decoder.JSONDecoder()    
+	
+
     if sfwork.likes:
         likes = jsonDec.decode(sfwork.likes)
         return likes
     return []
+	
+@register.filter()
+def list_item(list, index):
+    return list[index-1]

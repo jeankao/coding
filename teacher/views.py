@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from teacher.models import Classroom, ImportUser, TWork, Assistant, CWork, FWork, FClass, FContent
-from student.models import Enroll, EnrollGroup, Work, WorkAssistant, WorkFile, SFWork, SFReply, SFContent
+from student.models import *
 from account.models import Message, MessagePoll, MessageContent, PointHistory
 from account.avatar import *
 from teacher.forms import *
@@ -2143,4 +2143,32 @@ def assistant_group(request, typing, classroom_id):
                 lessons.append([assignment, student_groups])
                 index = index + 1
         return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
-       
+
+# 科學運算現象描述問題
+class Science1QuestionListView(ListView):
+    model = Science1Question
+    context_object_name = 'questions'
+    template_name = 'teacher/question_list.html'
+
+    def get_queryset(self):
+        queryset = Science1Question.objects.filter(work_id=self.kwargs['work_id']).order_by("-id")
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(Science1QuestionListView, self).get_context_data(**kwargs)
+        context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
+        context['lesson'] = self.kwargs['lesson']
+        context['work_id'] = self.kwargs['work_id']		
+        return context
+
+#新增一個問題
+class Science1QuestionCreateView(CreateView):
+    model = Science1Question
+    form_class = QuestionForm
+    template_name = 'form.html'
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.work_id = self.kwargs['work_id']
+        self.object.save()
+        return redirect("/teacher/work2/question/"+self.kwargs['lesson']+"/"+self.kwargs['classroom_id']+"/"+self.kwargs['work_id'])
+

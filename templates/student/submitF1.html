@@ -1,4 +1,6 @@
+{% load tag %}
 <section class="wrapper">
+  <h2>{{question.question}}</h2>
   <ul class="nav nav-pills" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" href="#tab11" role="tab" aria-selected="true">上傳文字</a>
@@ -14,6 +16,7 @@
         {% csrf_token %}
         <input type=hidden name="types" value="11">
         <input type=hidden name="index" value="{{index}}">        
+        <input type=hidden name="question_id" value="{{question.id}}">     		
         <div class="form-group">
           <label for="text-memo">文字</label>
           <textarea name="text" id="text-memo" rows="10" class="form-control"></textarea>
@@ -26,6 +29,7 @@
         {% csrf_token %}
         <input type=hidden name="types" value="12">
         <input type=hidden name="index" value="{{index}}"> 
+        <input type=hidden name="question_id" value="{{question.id}}">     			
         <div class="form-group">
           <label for="content_file">檔案</label>
           <input id="content_file" name="pic" type="file" />
@@ -36,10 +40,11 @@
   </div>
 </section>
 <BR>
-{% for work in contents1 %}
+{% for works in contents1|list_item:q_index %}
+{% for work in works %}
  <div class="card card-default"> 
               {% if work.types == 12 %}
-  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+  <div class="card-headfer"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
     <A href="/student/work/content/delete/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
     <a href="/student/work/content/edit/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
   </div>
@@ -52,4 +57,5 @@
   <div class="card-body">{{ work.text }}</div>
             {% endif %}
 </div>
+{% endfor %}
 {% endfor %}

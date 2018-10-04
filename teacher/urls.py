@@ -50,6 +50,10 @@ urlpatterns = [
     url(r'^work2/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView2.as_view())),
     url(r'^work2/edit/(?P<lesson>\d+)(?P<classroom_id>\d+)/$', views.work_edit),
     url(r'^work2/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class2),
+    url(r'^work2/question/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.Science1QuestionListView.as_view()),	
+    url(r'^work2/question/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.Science1QuestionCreateView.as_view()),
+    #url(r'^work2/question/edit/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/(?P<question_id>\d+)/$', views.work_question_edit),		
+    #url(r'^work2/question/delete/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/(?P<question_id>\d+)/$', views.work_question_delete),		
     # 檢核作業
     url(r'^work3/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkListView3.as_view())),
     url(r'^work3/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', login_required(views.WorkCreateView3.as_view())),

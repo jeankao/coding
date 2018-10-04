@@ -2,7 +2,7 @@
 from django import forms
 from account.models import Message
 from teacher.models import Classroom, TWork, CWork, FWork, FClass, FContent
-from student.models import Work, Enroll
+from student.models import *
 
 # 新增一個課程表單
 class ClassroomForm(forms.ModelForm):
@@ -231,3 +231,12 @@ class ForumContentForm(forms.ModelForm):
             self.fields['memo'].required = False						
 						
             
+# 新增一個作業
+class QuestionForm(forms.ModelForm):
+        class Meta:
+           model = Science1Question
+           fields = ['question']
+        
+        def __init__(self, *args, **kwargs):
+            super(QuestionForm, self).__init__(*args, **kwargs)
+            self.fields['question'].label = "問題"

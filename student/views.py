@@ -591,17 +591,18 @@ def submit(request, typing, lesson, index):
         if request.method == 'POST':
             if typing == "1":
                 types = request.POST.get('types')   
-                index = request.POST.get('index')                   
+                index = request.POST.get('index') 
+                question_id = request.POST.get('question_id')   				
                 if types == "11" or types == "12":
                     form = SubmitF1Form(request.POST, request.FILES)                    
                     if form.is_valid():
                         obj = form.save(commit=False)
                         try:
-                            work = Science1Work.objects.get(student_id=request.user.id, index=index)
+                            work = Science1Work.objects.get(student_id=request.user.id, index=index, question_id=question_id)
                         except ObjectDoesNotExist:
-                            work = Science1Work(student_id=request.user.id, index=index)                        
+                            work = Science1Work(student_id=request.user.id, index=index, question_id=question_id)                        
                         except MultipleObjectsReturned:
-                            works = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+                            works = Science1Work.objects.filter(student_id=request.user.id, index=index, question_id=question_id).order_by("-id")
                             work = work[0]
                         work.publication_date = timezone.now()
                         work.save()
@@ -667,14 +668,14 @@ def submit(request, typing, lesson, index):
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
                       
         else:
-            try:
-                work1 = Science1Work.objects.get(student_id=request.user.id, index=index)
-            except ObjectDoesNotExist:
-                work1 = Science1Work(student_id=request.user.id, index=index)                        
-            except MultipleObjectsReturned:
-                works1 = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
-                work1 = works[0]
-            contents1 = Science1Content.objects.filter(work_id=work1.id).order_by("id")
+            works1 = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+            contents1 = []
+            for work in works1:  
+                contents = Science1Content.objects.filter(work_id=work.id).order_by("id")
+                if len(contents)>0:
+                    contents1.append([contents])
+                else:
+                    contents1.append([[]])
             try:
                 work4 = Science4Work.objects.get(student_id=request.user.id, index=index)
             except ObjectDoesNotExist:
@@ -691,7 +692,9 @@ def submit(request, typing, lesson, index):
             data1 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=0).order_by("id")
             data2 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=1).order_by("id")
             data3 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=2).order_by("id")				
-            return render(request, 'student/submit.html', {'form':form, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
+            questions = Science1Question.objects.filter(work_id=index)			
+            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
+			
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 
 def show(request, typing, lesson, index, user_id):

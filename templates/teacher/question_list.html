@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+       <a href="/teacher/work2/question/add/{{classroom.lesson}}/{{classroom.id}}/{{work_id}}" role="button" class="btn btn-info active">新增問題</a>
+       <table class="table">
+		{% for work in questions %}
+            <tr>
+            <td>{{work.question}}</td>			
+            </tr>
+		{% endfor %}
+        </table>		
+{% endblock %}

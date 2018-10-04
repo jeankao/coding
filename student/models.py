@@ -207,7 +207,12 @@ class SFReply(models.Model):
     publication_date = models.DateTimeField(default=timezone.now)    
     
 #Science1現象
+class Science1Question(models.Model):
+    work_id = models.IntegerField(default=0)
+    question =  models.TextField(default='')
+
 class Science1Work(models.Model):
+    question_id = models.IntegerField(default=0)
     student_id = models.IntegerField(default=0)
     index = models.IntegerField(default=0)
     publication_date = models.DateTimeField(default=timezone.now)
