@@ -592,6 +592,7 @@ def submit(request, typing, lesson, index):
             if typing == "1":
                 types = request.POST.get('types')   
                 index = request.POST.get('index') 
+                q_index = request.POST.get('q_index')   					
                 question_id = request.POST.get('question_id')   				
                 if types == "11" or types == "12":
                     form = SubmitF1Form(request.POST, request.FILES)                    
@@ -609,12 +610,12 @@ def submit(request, typing, lesson, index):
                         obj.work_id=work.id
                         if types == "12":
                             myfile = request.FILES['pic']
-                            fs = FileSystemStorage(settings.BASE_DIR+"static/upload/"+str(request.user.id)+"/")
+                            fs = FileSystemStorage(settings.BASE_DIR+"/static/upload/"+str(request.user.id)+"/")
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
                         obj.save()                    
-                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#question"+q_index)
                 elif types == "3":
                     form = SubmitF3Form(request.POST, request.FILES)
                     if form.is_valid():              
@@ -668,14 +669,19 @@ def submit(request, typing, lesson, index):
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
                       
         else:
-            works1 = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
-            contents1 = []
-            for work in works1:  
-                contents = Science1Content.objects.filter(work_id=work.id).order_by("id")
-                if len(contents)>0:
-                    contents1.append([contents])
+            contents1 = [[]]
+            works_pool = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
+            questions = Science1Question.objects.filter(work_id=index)			
+            for question in questions:
+                works = filter(lambda w: w.question_id==question.id, works_pool)
+                if len(works) > 0:
+                    contents = Science1Content.objects.filter(work_id=works[0].id).order_by("id")
+                    if len(contents)>0:
+                        contents1.append([contents])
+                    else:
+				        contents1.append([[]])						
                 else:
-                    contents1.append([[]])
+				    contents1.append([[]])
             try:
                 work4 = Science4Work.objects.get(student_id=request.user.id, index=index)
             except ObjectDoesNotExist:

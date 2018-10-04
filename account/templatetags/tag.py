@@ -370,4 +370,4 @@ def likes(work_id):
 	
 @register.filter()
 def list_item(list, index):
-    return list[index-1]
+    return list[index]
