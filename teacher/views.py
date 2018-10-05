@@ -2172,3 +2172,36 @@ class Science1QuestionCreateView(CreateView):
         self.object.save()
         return redirect("/teacher/work2/question/"+self.kwargs['lesson']+"/"+self.kwargs['classroom_id']+"/"+self.kwargs['work_id'])
 
+def work2_science(request, classroom_id, index, user_id):
+    contents1 = [[]]
+    works_pool = Science1Work.objects.filter(student_id=user_id, index=index).order_by("-id")
+    questions = Science1Question.objects.filter(work_id=index)			
+    for question in questions:
+        works = filter(lambda w: w.question_id==question.id, works_pool)
+        if len(works) > 0:
+            contents = Science1Content.objects.filter(work_id=works[0].id).order_by("id")
+            if len(contents)>0:
+                contents1.append([contents])
+            else:
+                contents1.append([[]])						
+        else:
+            contents1.append([[]])
+    try:
+        work4 = Science4Work.objects.get(student_id=user_id, index=index)
+    except ObjectDoesNotExist:
+        work4 = Science4Work(student_id=user_id, index=index)                        
+    except MultipleObjectsReturned:
+        works4 = Science4Work.objects.filter(student_id=user_id, index=index).order_by("-id")
+        work4 = works[0]
+    contents4 = Science4Content.objects.filter(work_id=work4.id).order_by("id")            
+    works3 = Science3Work.objects.filter(student_id=user_id, index=index).order_by("-id")
+    if works3.exists():
+        work3 = works3[0]
+    else :
+        work3 = Science3Work(student_id=user_id, index=index)
+    data1 = Science2Data.objects.filter(index=index, student_id=user_id, types=0).order_by("id")
+    data2 = Science2Data.objects.filter(index=index, student_id=user_id, types=1).order_by("id")
+    data3 = Science2Data.objects.filter(index=index, student_id=user_id, types=2).order_by("id")				
+    questions = Science1Question.objects.filter(work_id=index)	
+    return render(request, 'teacher/work2_science.html', {'user_id':user_id, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
+			

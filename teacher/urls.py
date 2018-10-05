@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^work2/class/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.work_class2),
     url(r'^work2/question/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.Science1QuestionListView.as_view()),	
     url(r'^work2/question/add/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/$', views.Science1QuestionCreateView.as_view()),
+    url(r'^work2/science/(?P<classroom_id>\d+)/(?P<index>\d+)/(?P<user_id>\d+)/$', views.work2_science),
     #url(r'^work2/question/edit/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/(?P<question_id>\d+)/$', views.work_question_edit),		
     #url(r'^work2/question/delete/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<work_id>\d+)/(?P<question_id>\d+)/$', views.work_question_delete),		
     # 檢核作業

@@ -19,7 +19,11 @@
                     {%  endif %}
                         </a><br/>
                 {% else %}
+				        {% if typing == 1 and classroom.lesson == 9 %}
+						<a href="/teacher/work2/science/{{classroom.id}}/{{index}}/{{list.0.student_id}}">{{list.0.seat}}){{list.0.student.first_name}}</a><br/>
+						{% else %}
                         {{list.0.seat}}){{list.0.student.first_name}}-尚未繳交<br/>
+						{% endif %}
                 {% endif %}
                 </td>
                 <td>{{list.4}}</td>

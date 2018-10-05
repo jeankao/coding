@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+		 <button class="btn btn-info active">{{user_id|realname}}</button>
+		 
+		 {% for question in questions %}
+		 <h2>{{question.question}}</h2>
+{% for works in contents1|list_item:forloop.counter %}
+{% for work in works %}
+
+ <div class="card card-default"> 
+              {% if work.types == 12 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+  </div>
+  <div class="card-body"><img src="/static/upload/{{ work.picname }}" style="max-width:900px"></div>                      
+              {% elif work.types == 11 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+  </div>  
+  <div class="card-body">{{ work.text|memo|safe }}</div>
+            {% endif %}
+</div>
+{% endfor %}
+{% endfor %}
+{% endfor %}
+
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">程式碼：</label>
+        {{work3.code|code_highlight|safe}}
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">執行結果：</label>
+            <img width=880 src="/{{work3.picture}}" /> 
+    </div>
+	
+{% for work in contents4 %}
+ <div class="card card-default"> 
+              {% if work.types == 42 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+  </div>
+  <div class="card-body"><img src="/static/upload/{{ work.picname }}" style="max-width:900px"></div>                      
+              {% elif work.types == 41 %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
+  </div>  
+  <div class="card-body">{{ work.text|memo|safe }}</div>
+            {% endif %}
+</div>
+{% endfor %}
+{% endblock %}
