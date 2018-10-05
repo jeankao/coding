@@ -1,3 +1,4 @@
+{% load tag %}
 <section class="wrapper">
   <ul class="nav nav-pills" id="myTab" role="tablist">
     <li class="nav-item">
@@ -49,7 +50,7 @@
     <A href="/student/work/content/delete/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
     <a href="/student/work/content/edit/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a> 
   </div>  
-  <div class="card-body">{{ work.text }}</div>
+  <div class="card-body">{{ work.text|memo|safe }}</div>
             {% endif %}
 </div>
 {% endfor %}
