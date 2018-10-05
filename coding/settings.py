@@ -157,11 +157,6 @@ FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # 先去 Google 申請 API Key 
 # https://www.google.com/recaptcha/admin
 # 再將 SITE_KEY 與 SECRET_KEY 置換下方內容

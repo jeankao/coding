@@ -596,8 +596,8 @@ def submit(request, typing, lesson, index):
                 question_id = request.POST.get('question_id')   				
                 if types == "11" or types == "12":
                     form = SubmitF1Form(request.POST, request.FILES)                    
-                    if form.is_valid():
-                        obj = form.save(commit=False)
+                    if form.is_valid():                        
+                        obj = form.save(commit=False)						
                         try:
                             work = Science1Work.objects.get(student_id=request.user.id, index=index, question_id=question_id)
                         except ObjectDoesNotExist:
@@ -614,6 +614,7 @@ def submit(request, typing, lesson, index):
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
+                        obj.pic = ""
                         obj.save()                    
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#question"+q_index)
                 elif types == "3":
@@ -661,10 +662,11 @@ def submit(request, typing, lesson, index):
                         obj.work_id=work.id
                         if types == "42":
                             myfile = request.FILES['pic']
-                            fs = FileSystemStorage(settings.BASE_DIR+"static/upload/"+str(request.user.id)+"/")
+                            fs = FileSystemStorage(settings.BASE_DIR+"/static/upload/"+str(request.user.id)+"/")
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
+                        obj.pic = ""							
                         obj.save()                    
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
                       
