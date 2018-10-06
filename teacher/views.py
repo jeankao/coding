@@ -2178,6 +2178,8 @@ class Science1QuestionAnswerView(ListView):
             works = filter(lambda w: w.student_id==enroll.student_id, work_pool)
             if works:
 			    contents = filter(lambda w: w.work_id==works[0].id, content_pool)
+            else :
+                contents = []
             queryset.append([enroll, contents])
         return queryset
 
