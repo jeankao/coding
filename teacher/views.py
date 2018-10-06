@@ -2168,7 +2168,7 @@ class Science1QuestionAnswerView(ListView):
     template_name = 'teacher/question_answer.html'
 
     def get_queryset(self):
-        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
+        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'], seat__gt=0).order_by('seat')]
         student_ids = map(lambda a: a.student_id, enroll_pool)
         work_pool = Science1Work.objects.filter(student_id__in=student_ids, question_id=self.kwargs['q_id'])
         work_ids = map(lambda a: a.id, work_pool)
