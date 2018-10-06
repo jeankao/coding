@@ -411,8 +411,8 @@ def work_list(request, typing, lesson, classroom_id):
     lessons = []
 
     if typing == "0":
-        if lesson in ["2", "3", "4", "5", "6", "7", "8"]:
-            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2, lesson_list5][int(lesson)-2]
+        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9"]:
+            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2, lesson_list5, lesson_list2][int(lesson)-2]
         else:
             assignments = lesson_list1
     elif typing == "1":
