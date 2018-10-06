@@ -16,7 +16,7 @@ File: Layout CSS
 @import url("portfolio.css");
 @import url("pygments.css");
 
-html{overflow-y:scroll;}
+/*html{overflow-y:scroll;}*/
 body{margin:0; padding:0; font-size:16px; font-family:Georgia, "Times New Roman", Times, serif; color:#000000; background-color:#E0E0E0;}
 
 .btn {
@@ -181,3 +181,11 @@ table.tablesorter tr:hover td {
     height: 100px;
     text-align: center;
 }
+
+/* expression editor */
+ul.exp-item-list {display: inline-flex; min-width: 20pt; padding: 3pt; position: relative; margin-bottom: 0}
+ul.exp-item-list>.exp-item {display: inline-flex;}
+ul.exp-item-list a {background-color: transparent; color: white}
+ul.exp-item-list a:hover {text-decoration: none}
+.exp-editor .card-body ul.exp-item-list {border: 1px dashed grey}
+.exp-editor>.card-header {padding-top: .1em; padding-bottom: .1em}

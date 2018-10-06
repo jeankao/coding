@@ -1,104 +1,92 @@
-﻿<a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/0" role="btn" class="btn btn-default">新增變數</a>
-<a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/1" role="btn" class="btn btn-default">新增陣列</a>
-<a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/2" role="btn" class="btn btn-default">新增常數</a>
- <div class="card card-default"> 
+﻿<div class="btn-group mb-2" role="group">
+  <a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/0" role="btn" class="btn btn-default btn-sm">新增變數</a>
+  <a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/1" role="btn" class="btn btn-default btn-sm">新增陣列</a>
+  <a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/2" role="btn" class="btn btn-default btn-sm">新增常數</a>
+</div>
+<div class="card card-default exp-editor">
   <div class="card-header">變數：
-  {% for data in data1 %}
-  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/0/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
-  {% endfor %}
+    <ul class="exp-item-list">
+      {% for data in data1 %}
+      <li class="btn btn-info btn-sm exp-item exp-item-var">
+        <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/0/{{data.id}}">{{data.name}}</a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
   <div class="card-header">陣列：
-  {% for data in data2 %}
-  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/1/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
-  {% endfor %}  
+    <ul class="exp-item-list">
+      {% for data in data2 %}
+      <li class="btn btn-info btn-sm exp-item">
+        <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/1/{{data.id}}">{{data.name}}</a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
   <div class="card-header">常數：
-  {% for data in data3 %}
-  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/2/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
-  {% endfor %}  
+    <ul class="exp-item-list">
+      {% for data in data3 %}
+      <li class="btn btn-info btn-sm exp-item">
+        <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/2/{{data.id}}">{{data.name}}</a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
   <div class="card-header">符號：
-  <button class="btn btn-info">(</button>
-  <button class="btn btn-info">)</button>
-  <button class="btn btn-info">+</button>
-  <button class="btn btn-info">-</button>
-  <button class="btn btn-info">*</button>
-  <button class="btn btn-info">/</button>
-  <button class="btn btn-info">^</button>  
-  </div>  
-  <div class="card-body">
-  <div id="block">
-  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">?</button>
-  <button class="btn btn-danger">=</button>
+    <ul class="exp-item-list sortable">
+      <li class="btn btn-info btn-sm exp-item">(</li>
+      <li class="btn btn-info btn-sm exp-item">)</li>
+      <li class="btn btn-info btn-sm exp-item">+</li>
+      <li class="btn btn-info btn-sm exp-item">-</li>
+      <li class="btn btn-info btn-sm exp-item">*</li>
+      <li class="btn btn-info btn-sm exp-item">/</li>
+      <li class="btn btn-info btn-sm exp-item">^</li>
+    </ul>
   </div>
-  <BR><BR>
-  <button id="add" class="btn btn-default">新增方塊</button>
-  </div>
-</div>
-
-<!-- The Modal -->
-<div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">請選擇變數</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <div class="card-body pt-1 exp-trash">
+    <span class="badge badge-dark">請將上面的元件方塊拖曳至下方運算式的虛線框內...</span>
+    <div class="exp-list">
+      <div class="exp">
+        <ul class="exp-lhs exp-item-list">
+          <li class="btn btn-warning btn-sm">?</li>
+        </ul>
+        <ul class="d-inline-block pl-0">
+          <li class="btn btn-dark btn-sm">=</li>
+        </ul>
+        <ul class="exp-rhs exp-item-list sortable">
+        </ul>
       </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-      {% for data in data1 %}
-      <a href="" role="btn" class="btn btn-info active">{{data.name}}</a>
-      {% endfor %}
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
-
     </div>
   </div>
 </div>
 
-<!-- The Modal -->
-<div class="modal" id="myModa2">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Modal body -->
-      <div class="modal-body">
-	  變數：
-      {% for data in data1 %}
-      <a href="" role="btn" class="btn btn-info active">{{data.name}}</a>
-      {% endfor %}
-<BR><BR>
-  陣列：
-  {% for data in data2 %}
-  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/1/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
-  {% endfor %}  
-  <BR><BR>
-  常數：
-  {% for data in data3 %}
-  <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/2/{{data.id}}" role="btn" class="btn btn-info active">{{data.name}}</a>
-  {% endfor %}  
-  <BR><BR>
-  符號：
-  <button class="btn btn-info">(</button>
-  <button class="btn btn-info">)</button>
-  <button class="btn btn-info">+</button>
-  <button class="btn btn-info">-</button>
-  <button class="btn btn-info">*</button>
-  <button class="btn btn-info">/</button>
-  <button class="btn btn-info">^</button>  
-      </div>
+<script>
+$(function() {
+  $('.exp-item').draggable({
+    connectToSortable: '.exp-rhs',
+    helper: "clone",
+    revert: "invalid",
+  });
 
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
+  $('.exp-item-var').draggable({
+    connectToSortable: '.exp-rhs, .exp-lhs',
+    helper: "clone",
+    revert: "invalid",
+  });
 
-    </div>
-  </div>
-</div>
+  $('.exp-lhs').sortable({
+    receive: function(event, ui) {
+      $(this).empty().append($(ui.item).clone());
+    },
+  }).disableSelection();
+
+  $('.exp-trash').sortable({
+    receive: function(event, ui) {
+      $(ui.item).detach();
+    }
+  });
+
+  $('.sortable').sortable({
+    connectWith: '.exp-trash',
+  }).disableSelection();
+});
+</script>
