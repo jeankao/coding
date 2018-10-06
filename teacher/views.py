@@ -333,7 +333,9 @@ class WorkListView(ListView):
         elif self.kwargs['lesson'] == "5":
             queryset = lesson_list2
         elif self.kwargs['lesson'] == "8":
-            queryset = lesson_list5            
+            queryset = lesson_list5  
+        elif self.kwargs['lesson'] == "9":
+            queryset = lesson_list2   			
         else:
             queryset = lesson_list1
         return queryset
