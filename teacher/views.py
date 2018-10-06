@@ -2160,6 +2160,34 @@ class Science1QuestionListView(ListView):
         context['lesson'] = self.kwargs['lesson']
         context['work_id'] = self.kwargs['work_id']		
         return context
+		
+# 科學運算現象描述問題
+class Science1QuestionAnswerView(ListView):
+    model = Science1Work
+    context_object_name = 'works'
+    template_name = 'teacher/question_answer.html'
+
+    def get_queryset(self):
+        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
+        student_ids = map(lambda a: a.student_id, enroll_pool)
+        work_pool = Science1Work.objects.filter(student_id__in=student_ids, question_id=self.kwargs['q_id'])
+        work_ids = map(lambda a: a.id, work_pool)
+        content_pool = Science1Content.objects.filter(work_id__in=work_ids)
+        queryset = []
+        for enroll in enroll_pool:
+            works = filter(lambda w: w.student_id==enroll.student_id, work_pool)
+            if works:
+			    contents = filter(lambda w: w.work_id==works[0].id, content_pool)
+            queryset.append([enroll, contents])
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(Science1QuestionAnswerView, self).get_context_data(**kwargs)
+        context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
+        context['lesson'] = self.kwargs['lesson']
+        context['work_id'] = self.kwargs['work_id']
+        context['question'] = Science1Question.objects.get(id=self.kwargs['q_id'])		
+        return context		
 
 #新增一個問題
 class Science1QuestionCreateView(CreateView):

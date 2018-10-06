@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+       <h1>{{question.question}}</h1>
+       {% for enroll, contents in works %}
+  <div class="card-header"><button type="button" class="btn btn-default">{{enroll.student_id|realname}}</button>
+  </div>	   	   
+	   {% for work in contents %}
+  <div class="card card-default"> 
+              {% if work.types == 12 %}
+  <div class="card-body"><img src="/static/upload/{{ work.picname }}" style="max-width:900px"></div>                      
+              {% elif work.types == 11 %}
+  <div class="card-body">{{ work.text|memo|safe }}</div>
+            {% endif %}
+</div>
+        {% endfor %}
+       {% endfor %}	   
+{% endblock %}
