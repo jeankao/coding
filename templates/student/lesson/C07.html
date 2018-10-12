@@ -7,23 +7,28 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="n">primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">:</span>
-        <span class="nb">max</span> <span class="o">=</span> <span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">primes</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">break</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
-                        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-                        <span class="k">break</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">2</span>
+    <span class="nb">max</span> <span class="o">=</span> <span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">primes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">2</span>
 <span class="k">print</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="450" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=primes%20%3D%20%5B2%5D%0An%20%3D%203%0Awhile%20n%20%3C%20100%20%3A%0A%20%20%20%20max%20%3D%20n%20**%200.5%0A%20%20%20%20for%20i%20in%20primes%3A%0A%20%20%20%20%20%20%20%20if%20n%20%25%20i%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20break%0A%20%20%20%20%20%20%20%20if%20i%20%3E%20max%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20primes.append%28n%29%0A%20%20%20%20%20%20%20%20%20%20%20%20break%0A%20%20%20%20n%20%3D%20n%20%2B%202%0Aprint%28primes%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習2:求費式數列前20項數字</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">fibonacci</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">fibonacci</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
-        <span class="n">a1</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">a2</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">fibonacci</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">a2</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fibonacci</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">fibonacci</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="330" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=fibonacci%20%3D%20%5B1,1%5D%0Awhile%20len%28fibonacci%29%20%3C%2020%3A%0A%20%20%20%20a1%20%3D%20fibonacci%5B-2%5D%0A%20%20%20%20a2%20%3D%20fibonacci%5B-1%5D%0A%20%20%20%20fibonacci.append%28a1%2Ba2%29%0Aprint%28fibonacci%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>

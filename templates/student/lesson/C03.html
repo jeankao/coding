@@ -7,38 +7,47 @@
 <p>【最後目標】求600851475143的最大質因數是多少？</p>
 <p>練習1：印出120的所有因數</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">121</span><span class="p">):</span>
-        <span class="k">if</span> <span class="mi">120</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span><span class="mi">0</span> <span class="p">:</span>
-                <span class="k">print(i)</span>
+    <span class="k">if</span> <span class="mi">120</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span><span class="mi">0</span> <span class="p">:</span>
+        <span class="k">print(i)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="300" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=for%20i%20in%20range%281,121%29%3A%0A%20%20%20%20if%20120%20%25%20i%20%3D%3D0%20%3A%0A%20%20%20%20%20%20%20%20print%28i%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習2：判斷是否為質數</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span>  <span class="nf">is_prime</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="bp">False</span>
-        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
 
 <span class="n">number</span> <span class="o">=</span> <span class="nb">int(input</span><span class="p">(</span><span class="s">&#39;請輸入數字&#39;</span><span class="p">))</span>
 <span class="k">if</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;您輸入的是質數&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;您輸入的是質數&#39;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;您輸入的不是質數&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;您輸入的不是質數&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="450" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=def%20%20is_prime%28value%29%3A%0A%20%20%20%20for%20i%20in%20range%282,%20value%29%3A%0A%20%20%20%20%20%20%20%20if%20value%20%25%20i%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20False%0A%20%20%20%20return%20True%0A%0Anumber%20%3D%20int%28input%28'%E8%AB%8B%E8%BC%B8%E5%85%A5%E6%95%B8%E5%AD%97'%29%29%0Aif%20is_prime%28number%29%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E6%98%AF%E8%B3%AA%E6%95%B8'%29%0Aelse%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E4%B8%8D%E6%98%AF%E8%B3%AA%E6%95%B8'%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=9&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%2220%22%5D&textReferences=false"> </iframe>
+
 <p>練習3：找出隨機數字串列中的最大數</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
 
 <span class="n">numbers</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="nb">max</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">number</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">99</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
-                <span class="nb">max</span> <span class="o">=</span> <span class="n">number</span>
-        <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">99</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">number</span>
+    <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">max</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="450" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=import%20random%0A%0Anumbers%20%3D%20%5B%5D%0Amax%20%3D%200%0Afor%20i%20in%20range%2810%29%3A%0A%20%20%20%20number%20%3D%20random.randint%280,99%29%0A%20%20%20%20if%20number%20%3E%20max%3A%0A%20%20%20%20%20%20%20%20max%20%3D%20number%0A%20%20%20%20numbers.append%28number%29%0Aprint%28numbers%29%0Aprint%28max%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>如果要找120的質因數，只需檢查比<img src="/static/lesson/euler/sqr.png">小的因數是否為質數即可。</p>
 <p>使用開根號指令求<img src="/static/lesson/euler/sqr.png"></p>
 <p>120**0.5</p>

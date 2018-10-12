@@ -24,10 +24,10 @@
 <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">string</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 <span class="k">while</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">digit</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">10</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">[</span><span class="n">digit</span><span class="p">]</span> <span class="o">+</span> <span class="n">decimal</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">+</span> <span class="n">string</span>
-        <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">//</span> <span class="mi">10</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">digit</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">10</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">[</span><span class="n">digit</span><span class="p">]</span> <span class="o">+</span> <span class="n">decimal</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">+</span> <span class="n">string</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">//</span> <span class="mi">10</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="k">print(string)</span>
 </pre></div>
 </div>
@@ -36,9 +36,9 @@
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;請輸入數字&#39;</span><span class="p">))</span>
 <span class="n">reverse</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">while</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">digit</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">10</span>
-                <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">digit</span>
-                <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">//</span> <span class="mi">10</span>
+    <span class="n">digit</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">10</span>
+    <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">digit</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">//</span> <span class="mi">10</span>
 <span class="k">print</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span>
 </pre></div>
 </div>

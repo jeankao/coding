@@ -7,10 +7,13 @@
 <p>練習1：使用條件式迴圈列出1~100所有數字。</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="k">while</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
-        <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="300" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=number%20%3D%201%0Awhile%20number%20%3C%3D%20100%3A%0A%20%20%20%20print%28number%29%0A%20%20%20%20number%20%3D%20number%20%2B%201&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習2：使用計次式迴圈列出費式數列前100項。</p>
 <p>從1開始：1，1，2，3，5，8，13，21，34，55，89，……</p>
 <p>因為這不是等差數列，需要3個變數來指定，先指定a1=第1項，a2=第2項，a3=a1+a2，下一回，將a2的值指定給a1，a3的值指定給a2，而新的a3還是取a1+a2，這樣不斷循環。</p>
@@ -19,28 +22,37 @@
 <span class="k">print</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">101</span><span class="p">):</span>
-        <span class="n">a3</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">a3</span><span class="p">)</span>
-        <span class="n">a1</span> <span class="o">=</span> <span class="n">a2</span>
-        <span class="n">a2</span> <span class="o">=</span> <span class="n">a3</span>
+    <span class="n">a3</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a3</span><span class="p">)</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="n">a2</span>
+    <span class="n">a2</span> <span class="o">=</span> <span class="n">a3</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="400" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=a1%20%3D%201%0Aa2%20%3D%201%0Aprint%28a1%29%0Aprint%28a2%29%0Afor%20i%20in%20range%283,%20101%29%3A%0A%20%20%20%20a3%20%3D%20a1%20%2B%20a2%0A%20%20%20%20print%28a3%29%0A%20%20%20%20a1%20%3D%20a2%0A%20%20%20%20a2%20%3D%20a3&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習3：判斷偶數方法： 48 % 2 得到0 ，49%1 會得到1</p>
 <p>%是餘數計算</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>number = int(input('請輸入數字:'))
 if number % 2 == 0:
-        print('您輸入的是偶數')
+    print('您輸入的是偶數')
 else:
-        print('您輸入的是奇數')
+    print('您輸入的是奇數')
 </pre></div>
 </div>
+
+<iframe width="800" height="380" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=number%20%3D%20int%28input%28'%E8%AB%8B%E8%BC%B8%E5%85%A5%E6%95%B8%E5%AD%97%3A'%29%29%0Aif%20number%20%25%202%20%3D%3D%200%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E6%98%AF%E5%81%B6%E6%95%B8'%29%0Aelse%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E6%98%AF%E5%A5%87%E6%95%B8'%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習4：求1~100的數字和</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">):</span>
-        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">i</span>
-<span class="k">print</span> <span class="nb">sum</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">i</span>
+<span class="k">print</span>(<span class="nb">sum</span>)
 </pre></div>
 </div>
+
+<iframe width="800" height="340" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=sum%20%3D%200%0Afor%20i%20in%20range%281,%20101%29%3A%0A%20%20%20%20sum%20%3D%20sum%20%2B%20i%0Aprint%28sum%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>你並不知道有多少項，先列出4百萬以內的項，判斷如果該項是偶數就把它加進來。</p>
 
 
