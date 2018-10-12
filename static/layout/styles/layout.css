@@ -183,7 +183,7 @@ table.tablesorter tr:hover td {
 }
 
 /* expression editor */
-ul.exp-item-list {display: inline-flex; min-width: 20pt; padding: 3pt; position: relative; margin-bottom: 0}
+ul.exp-item-list {display: inline-flex; min-width: 20pt; padding: 3pt; position: relative; margin-bottom: 0; list-style: none}
 ul.exp-item-list>.exp-item {display: inline-flex;}
 ul.exp-item-list a {background-color: transparent; color: white}
 ul.exp-item-list a:hover {text-decoration: none}
