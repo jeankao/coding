@@ -6,29 +6,40 @@
 
   <p>練習1：用for迴圈印出小於10的正整數</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-        <span class="k">print(i)</span>
+    <span class="k">print(i)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="280" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=for%20i%20in%20range%281,%2010%29%3A%0A%20%20%20%20print%28i%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習2：判斷輸入值是否為3的倍數</p>
 <div class="highlight-python"><div class="highlight"><pre>number = int(input('請輸入數字'))
 if number % 3 == 0:
-        print('您輸入的是3的倍數')
+    print('您輸入的是3的倍數')
 else :
-        print('您輸入的不是3的倍數')
+    print('您輸入的不是3的倍數')
 </pre></div>
 </div>
+
+<iframe width="800" height="380" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=number%20%3D%20int%28input%28'%E8%AB%8B%E8%BC%B8%E5%85%A5%E6%95%B8%E5%AD%97'%29%29%0Aif%20number%20%25%203%20%3D%3D%200%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E6%98%AF3%E7%9A%84%E5%80%8D%E6%95%B8'%29%0Aelse%20%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E4%B8%8D%E6%98%AF3%E7%9A%84%E5%80%8D%E6%95%B8'%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習3：計算小於100的正整數和</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
-        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">i</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">i</span>
 <span class="k">print(sum)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="300" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=sum%20%3D%200%0Afor%20i%20in%20range%281,%20100%29%3A%0A%20%20%20%20sum%20%3D%20sum%20%2B%20i%0Aprint%28sum%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習4：判斷是否為2或3的倍數</p>
 <div class="highlight-python"><div class="highlight"><pre>number = int(input('請輸入數字'))
 if number % 2 == 0 or number % 3 == 0:
-        print('您輸入的是2或3的倍數')
+    print('您輸入的是2或3的倍數')
 else :
-        print('您輸入的不是2也不是3的倍數')
+    print('您輸入的不是2也不是3的倍數')
 </pre></div>
 </div>
+
+<iframe width="800" height="400" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=number%20%3D%20int%28input%28'%E8%AB%8B%E8%BC%B8%E5%85%A5%E6%95%B8%E5%AD%97'%29%29%0Aif%20number%20%25%202%20%3D%3D%200%20or%20number%20%25%203%20%3D%3D%200%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E6%98%AF2%E6%88%963%E7%9A%84%E5%80%8D%E6%95%B8'%29%0Aelse%20%3A%0A%20%20%20%20print%28'%E6%82%A8%E8%BC%B8%E5%85%A5%E7%9A%84%E4%B8%8D%E6%98%AF2%E4%B9%9F%E4%B8%8D%E6%98%AF3%E7%9A%84%E5%80%8D%E6%95%B8'%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>

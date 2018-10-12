@@ -5,19 +5,22 @@
 <p>練習1：找出1,2,3,4,5,6,7,8,9,10都能除盡的最小正整數。</p>
 <p>最直覺的方法，就是使用窮舉法，一個一個去測試是否滿足條件。</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="bp">False</span>
-        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
 
 <span class="n">number</span> <span class="o">=</span> <span class="mi">11</span>
 <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">find</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
-                <span class="k">break</span>
-        <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">find</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+        <span class="k">break</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="550" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=def%20find%28value%29%3A%0A%20%20%20%20for%20i%20in%20range%281,%2011%29%3A%0A%20%20%20%20%20%20%20%20if%20value%20%25%20i%20%3E%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20False%0A%20%20%20%20return%20True%0A%0Anumber%20%3D%2011%0Awhile%20True%3A%0A%20%20%20%20if%20find%28number%29%3A%0A%20%20%20%20%20%20%20%20break%0A%20%20%20%20number%20%3D%20number%20%2B%201%0Aprint%28number%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>雖然可以用窮舉法來找答案，但是這個方法很沒有效率，尤其是隨著條件增加，要耗費更多時間。</p>
 <p>要找出1-10都能除盡的最小正整數，用這個方法尚能接受。</p>
 <p>但是如果是要找出1-20都能除盡的最小正整數，還是用這種暴力法來求解，並不是好方法。</p>
@@ -33,26 +36,31 @@
 <span class="n">b</span> <span class="o">=</span> <span class="mi">221</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
 <span class="k">while</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">m</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">m</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
 <span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="400" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=a%20%3D%20481%0Ab%20%3D%20221%0Am%20%3D%20a%20%25%20b%0Awhile%20%28m%20%3E%200%29%3A%0A%20%20%20%20a%20%3D%20b%0A%20%20%20%20b%20%3D%20m%0A%20%20%20%20m%20%3D%20a%20%25%20b%0Aprint%28b%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+
 <p>練習3：運用兩數乘積除以最大公因數求得最小公倍數</p>
 <p>已知a、b兩數相乘等於其最大公因乘以最小公倍數，即 axb=(a,b)*[a,b]</p>
 <p>那麼找出最大公因數後就可以拿來求最小公倍數。</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">GCD</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">m</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-                <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
-                <span class="n">b</span> <span class="o">=</span> <span class="n">m</span>
-                <span class="n">m</span> <span class="o">=</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
-        <span class="k">return</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">b</span>
 
 <span class="k">def</span> <span class="nf">LCM</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">//</span> <span class="n">GCD</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">//</span> <span class="n">GCD</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">LCM</span><span class="p">(</span><span class="mi">481</span><span class="p">,</span> <span class="mi">221</span><span class="p">))</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="450" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=def%20GCD%28a,%20b%29%3A%0A%20%20%20%20m%20%3D%20a%20%25%20b%0A%20%20%20%20while%20%28m%20%3E%200%29%3A%0A%20%20%20%20%20%20%20%20a%20%3D%20b%0A%20%20%20%20%20%20%20%20b%20%3D%20m%0A%20%20%20%20%20%20%20%20m%20%3D%20a%20%25%20b%0A%20%20%20%20return%20b%0A%0Adef%20LCM%28a,%20b%29%3A%0A%20%20%20%20return%20a%20*%20b%20//%20GCD%28a,%20b%29%0A%0Aprint%28LCM%28481,%20221%29%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>

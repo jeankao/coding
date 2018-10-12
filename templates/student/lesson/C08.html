@@ -34,9 +34,9 @@
 
 <span class="c"># 讀取檔案</span>
 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>    <span class="c">#依序讀取每行</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>    <span class="c">#去掉每行頭尾空白</span>
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">line</span> <span class="p">:</span>
-                <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">char</span><span class="p">))</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>    <span class="c">#去掉每行頭尾空白</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">line</span> <span class="p">:</span>
+        <span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">char</span><span class="p">))</span>
 
 <span class="c"># 關閉檔案</span>
 <span class="nb">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -49,7 +49,9 @@
 
 <span class="n">product</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-        <span class="n">product</span> <span class="o">=</span> <span class="n">product</span> <span class="o">*</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">product</span> <span class="o">*</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
 </pre></div>
 </div>
+
+<iframe width="800" height="330" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=numbers%20%3D%20%5B9,9,8,9%5D%0A%0Aproduct%20%3D%201%0Afor%20i%20in%20range%284%29%3A%0A%20%20%20%20product%20%3D%20product%20*%20numbers%5Bi%5D%0Aprint%28product%29&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
