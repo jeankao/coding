@@ -31,8 +31,8 @@ class Enroll(models.Model):
     certificate3_date = models.DateTimeField(default=timezone.now)
     # 實戰高手證書
     certificate4 = models.BooleanField(default=False)
-    certificate4_date = models.DateTimeField(default=timezone.now)  
-    
+    certificate4_date = models.DateTimeField(default=timezone.now)
+
     # 自訂作業
     score_memo = models.IntegerField(default=0)
     # 12堂課 心得成績
@@ -62,22 +62,22 @@ class Enroll(models.Model):
     # Vphysics3
     certificate_microbit = models.BooleanField(default=False)
     certificate_microbit_date = models.DateTimeField(default=timezone.now)
-    score_memo_microbit =  models.IntegerField(default=0)    
-    
+    score_memo_microbit =  models.IntegerField(default=0)
+
     @property
     def classroom(self):
         return Classroom.objects.get(id=self.classroom_id)
 
     @property
     def student(self):
-        return User.objects.get(id=self.student_id)      
+        return User.objects.get(id=self.student_id)
 
     def __str__(self):
         return str(self.id) + ":" + str(self.classroom_id)
 
     class Meta:
         unique_together = ('student_id', 'classroom_id',)
-        
+
     def set_foo(self, x):
         self.groupshow = json.dumps(x)
 
@@ -164,25 +164,25 @@ class Exam(models.Model):
     answer = models.TextField()
     score = models.IntegerField()
     test_time = models.DateTimeField(default=timezone.now)
-    
+
 #討論區作業
 class SFWork(models.Model):
     student_id = models.IntegerField(default=0)
     index = models.IntegerField()
     memo = models.TextField(default='')
     memo_e =  models.IntegerField(default=0)
-    memo_c = models.IntegerField(default=0)		
+    memo_c = models.IntegerField(default=0)
     publish = models.BooleanField(default=False)
     publication_date = models.DateTimeField(default=timezone.now)
     reply_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=0)
     scorer = models.IntegerField(default=0)
     comment = models.TextField(default='',null=True,blank=True)
-    comment_publication_date = models.DateTimeField(default=timezone.now)		
+    comment_publication_date = models.DateTimeField(default=timezone.now)
     likes = models.TextField(default='')
-    like_count = models.IntegerField(default=0)	
+    like_count = models.IntegerField(default=0)
     reply = models.IntegerField(default=0)
-		
+
     def __unicode__(self):
         user = User.objects.filter(id=self.student_id)[0]
         index = self.index
@@ -193,9 +193,9 @@ class SFContent(models.Model):
     student_id = models.IntegerField(default=0)
     work_id = models.IntegerField(default=0)
     title =  models.CharField(max_length=250,null=True,blank=True)
-    filename = models.CharField(max_length=60,null=True,blank=True)    
+    filename = models.CharField(max_length=60,null=True,blank=True)
     publication_date = models.DateTimeField(default=timezone.now)
-    delete_date = models.DateTimeField(default=timezone.now)		
+    delete_date = models.DateTimeField(default=timezone.now)
     visible = models.BooleanField(default=True)
 
 #討論留言
@@ -204,8 +204,8 @@ class SFReply(models.Model):
     work_id =  models.IntegerField(default=0)
     user_id = models.IntegerField(default=0)
     memo =  models.TextField(default='')
-    publication_date = models.DateTimeField(default=timezone.now)    
-    
+    publication_date = models.DateTimeField(default=timezone.now)
+
 #Science1現象
 class Science1Question(models.Model):
     work_id = models.IntegerField(default=0)
@@ -227,7 +227,7 @@ class Science1Content(models.Model):
     types = models.IntegerField(default=0)
     text = models.TextField(default='')
     pic = models.FileField(blank=True,null=True)
-    picname = models.CharField(max_length=60,null=True,blank=True)    
+    picname = models.CharField(max_length=60,null=True,blank=True)
 
 #Science4解釋
 class Science4Work(models.Model):
@@ -239,14 +239,14 @@ class Science4Work(models.Model):
         user = User.objects.filter(id=self.student_id)[0]
         index = self.index
         return user.first_name+"("+str(index)+")"
-      
+
 class Science4Content(models.Model):
     work_id =  models.IntegerField(default=0)
     types = models.IntegerField(default=0)
     text = models.TextField(default='')
     pic = models.FileField(blank=True,null=True)
-    picname = models.CharField(max_length=60,null=True,blank=True)     
-    
+    picname = models.CharField(max_length=60,null=True,blank=True)
+
 class Science3Work(models.Model):
     student_id = models.IntegerField(default=0)
     lesson = models.IntegerField(default=0)
@@ -265,4 +265,9 @@ class Science2Data(models.Model):
     index = models.IntegerField(default=0)
     student_id = models.IntegerField(default=0)
     types =  models.IntegerField(default=0)
-    name =  models.CharField(max_length=250,null=True,blank=True)    
+    name =  models.CharField(max_length=250,null=True,blank=True)
+
+class Science2Expression(models.Model):
+    index = models.IntegerField(default=0)
+    student_id = models.IntegerField(default=0)
+    expr_json = models.TextField(default='{vars:[], arrs:[], strs:[], nums:[], exprs:[]}')

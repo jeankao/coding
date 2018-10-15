@@ -88,7 +88,7 @@ def lessons(request, subject_id):
         elif subject_id == "D":
             lock = profile.lock4
         elif subject_id == "E":
-            lock = profile.lock5            
+            lock = profile.lock5
         else:
             lock = profile.lock1
     else :
@@ -286,7 +286,7 @@ def group_open(request, classroom_id, action):
 class ClassroomList(ListView):
     context_object_name = 'classrooms'
     paginate_by = 30
-    template_name = 'student/classroom.html'  
+    template_name = 'student/classroom.html'
 
     def get_queryset(self):
         classrooms = []
@@ -318,7 +318,7 @@ class ClassroomAdd(ListView):
                 classroom_teachers.append([classroom,classroom.teacher.first_name,1])
             else:
                 classroom_teachers.append([classroom,classroom.teacher.first_name,0])
-        return classroom_teachers      
+        return classroom_teachers
 
 # 加入班級
 def classroom_enroll(request, classroom_id):
@@ -420,7 +420,7 @@ def work_list(request, typing, lesson, classroom_id):
     elif typing == "2":
         assignments = CWork.objects.filter(classroom_id=classroom_id).order_by("-id")
     else :
-        assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")        
+        assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
     work_dict = dict(((work.index, work) for work in Work.objects.filter(typing=typing, user_id=request.user.id, lesson_id=lesson)))
 
     for idx, assignment in enumerate(assignments):
@@ -462,7 +462,7 @@ def submit(request, typing, lesson, index):
                 if lesson == "6":
                     fs = FileSystemStorage(settings.BASE_DIR+"/static/work/microbit/"+str(request.user.id)+"/")
                 else :
-                    fs = FileSystemStorage(settings.BASE_DIR+"/static/work/scratch/"+str(request.user.id)+"/")                  
+                    fs = FileSystemStorage(settings.BASE_DIR+"/static/work/scratch/"+str(request.user.id)+"/")
                 filename = uuid4().hex
                 fs.save(filename, myfile)
             form = SubmitAForm(request.POST, request.FILES)
@@ -492,7 +492,7 @@ def submit(request, typing, lesson, index):
             return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
     elif lesson == "4":
         if request.method == 'POST':
-            form = SubmitCForm(request.POST)    
+            form = SubmitCForm(request.POST)
             if form.is_valid():
                 try:
                     work = Work.objects.get(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
@@ -502,14 +502,14 @@ def submit(request, typing, lesson, index):
                     if len(answers)>0 :
                         points = 1
                     else :
-                        points = 3                    
+                        points = 3
                     update_avatar(request.user.id, 1, points)
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
                     history.save()
                     profile = Profile.objects.get(user=request.user)
                     if typing == "0":
-                        profile.lock4 +=1                            
+                        profile.lock4 +=1
                         profile.save()
                 except MultipleObjectsReturned:
                     pass
@@ -517,8 +517,8 @@ def submit(request, typing, lesson, index):
                 work.youtube=form.cleaned_data['youtube']
                 work.memo=form.cleaned_data['memo']
                 work.save()
-                return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))  
-            return redirect('/student/lesson/'+request.POST.get("lesson", ""))              
+                return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
+            return redirect('/student/lesson/'+request.POST.get("lesson", ""))
     elif lesson == "2" or lesson == "3" or lesson == "5" or lesson == "7" or lesson == "8":
         if request.method == 'POST':
             if lesson == "8":
@@ -534,7 +534,7 @@ def submit(request, typing, lesson, index):
                     if len(answers)>0 :
                         points = 1
                     else :
-                        points = 3                    
+                        points = 3
                     update_avatar(request.user.id, 1, points)
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message=str(points)+'分--繳交作業<'+lesson_name+'>', url="/student/work/show/"+lesson+"/"+index)
@@ -546,7 +546,7 @@ def submit(request, typing, lesson, index):
                         elif lesson == "3":
                             profile.lock3 +=1
                         elif lesson == "5":
-                            profile.lock5 +=1 
+                            profile.lock5 +=1
                         elif lesson == "8":
                             profile.lock6 +=1
                         else:
@@ -590,18 +590,18 @@ def submit(request, typing, lesson, index):
     elif lesson == "9":
         if request.method == 'POST':
             if typing == "1":
-                types = request.POST.get('types')   
-                index = request.POST.get('index') 
-                q_index = request.POST.get('q_index')   					
-                question_id = request.POST.get('question_id')   				
+                types = request.POST.get('types')
+                index = request.POST.get('index')
+                q_index = request.POST.get('q_index')
+                question_id = request.POST.get('question_id')
                 if types == "11" or types == "12":
-                    form = SubmitF1Form(request.POST, request.FILES)                    
-                    if form.is_valid():                        
-                        obj = form.save(commit=False)						
+                    form = SubmitF1Form(request.POST, request.FILES)
+                    if form.is_valid():
+                        obj = form.save(commit=False)
                         try:
                             work = Science1Work.objects.get(student_id=request.user.id, index=index, question_id=question_id)
                         except ObjectDoesNotExist:
-                            work = Science1Work(student_id=request.user.id, index=index, question_id=question_id)                        
+                            work = Science1Work(student_id=request.user.id, index=index, question_id=question_id)
                         except MultipleObjectsReturned:
                             works = Science1Work.objects.filter(student_id=request.user.id, index=index, question_id=question_id).order_by("-id")
                             work = work[0]
@@ -615,13 +615,28 @@ def submit(request, typing, lesson, index):
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
                         obj.pic = ""
-                        obj.save()                    
+                        obj.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#question"+q_index)
+                elif types == "21": # 資料建模
+                    form = SubmitF21Form(request.POST)
+                    if form.is_valid():
+                        exprid = request.POST['exprid']
+                        if exprid:
+                            try:
+                                expr = Science2Expression.objects.get(id=exprid)
+                            except ObjectDoesNotExist:
+                                expr = Science2Expression(index=index, student_id=request.user.id)
+                        else:
+                            expr = Science2Expression(index=index, student_id=request.user.id)
+                        expr.expr_json = request.POST['jsonstr']
+                        expr.save()
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21")
+                    return redirect('/')
                 elif types == "3":
                     form = SubmitF3Form(request.POST, request.FILES)
-                    if form.is_valid():              
+                    if form.is_valid():
                         work = Science3Work(index=index, student_id=request.user.id)
-                        
+
                         dataURI = form.cleaned_data['screenshot']
                         try:
                             head, data = dataURI.split(',', 1)
@@ -645,15 +660,15 @@ def submit(request, typing, lesson, index):
 
                         work.code=form.cleaned_data['code']
                         work.save()
-                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab3")                  
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab3")
                 if types == "41" or types == "42":
-                    form = SubmitF4Form(request.POST, request.FILES)                    
+                    form = SubmitF4Form(request.POST, request.FILES)
                     if form.is_valid():
                         obj = form.save(commit=False)
                         try:
                             work = Science4Work.objects.get(student_id=request.user.id, index=index)
                         except ObjectDoesNotExist:
-                            work = Science4Work(student_id=request.user.id, index=index)                        
+                            work = Science4Work(student_id=request.user.id, index=index)
                         except MultipleObjectsReturned:
                             works = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
                             work = work[0]
@@ -666,14 +681,14 @@ def submit(request, typing, lesson, index):
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
-                        obj.pic = ""							
-                        obj.save()                    
+                        obj.pic = ""
+                        obj.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
-                      
+
         else:
             contents1 = [[]]
             works_pool = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
-            questions = Science1Question.objects.filter(work_id=index)			
+            questions = Science1Question.objects.filter(work_id=index)
             for question in questions:
                 works = filter(lambda w: w.question_id==question.id, works_pool)
                 if len(works) > 0:
@@ -681,28 +696,32 @@ def submit(request, typing, lesson, index):
                     if len(contents)>0:
                         contents1.append([contents])
                     else:
-				        contents1.append([[]])						
+				        contents1.append([[]])
                 else:
 				    contents1.append([[]])
             try:
                 work4 = Science4Work.objects.get(student_id=request.user.id, index=index)
             except ObjectDoesNotExist:
-                work4 = Science4Work(student_id=request.user.id, index=index)                        
+                work4 = Science4Work(student_id=request.user.id, index=index)
             except MultipleObjectsReturned:
                 works4 = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
                 work4 = works[0]
-            contents4 = Science4Content.objects.filter(work_id=work4.id).order_by("id")            
+            contents4 = Science4Content.objects.filter(work_id=work4.id).order_by("id")
             works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
             if works3.exists():
                 work3 = works3[0]
             else :
                 work3 = Science3Work(student_id=request.user.id, index=index)
+            try:
+                expr = Science2Expression.objects.get(student_id=request.user.id, index=index)
+            except ObjectDoesNotExist:
+                expr = Science2Expression(student_id=request.user.id, index=index)
             data1 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=0).order_by("id")
             data2 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=1).order_by("id")
-            data3 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=2).order_by("id")				
-            questions = Science1Question.objects.filter(work_id=index)			
-            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
-			
+            data3 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=2).order_by("id")
+            questions = Science1Question.objects.filter(work_id=index)
+            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'expr': expr})
+
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 
 def show(request, typing, lesson, index, user_id):
@@ -736,7 +755,7 @@ class WorkListView(ListView):
         queryset = []
         timezone = pytz.timezone("Asia/Taipei")
         start = timezone.localize(datetime(2018,4,1))
-        end = timezone.localize(datetime.now())     
+        end = timezone.localize(datetime.now())
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
             work = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
@@ -764,7 +783,7 @@ class WorkDayListView(ListView):
             work_pool = Work.objects.filter(lesson_id__in=[2,4]).order_by("-id")
         else:
             work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson']).order_by("-id")
-        timezone = pytz.timezone("Asia/Taipei")    
+        timezone = pytz.timezone("Asia/Taipei")
         day = timezone.localize(datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date'])))
         works = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
         return works
@@ -800,9 +819,9 @@ def work_class(request, typing, lesson, classroom_id, index):
     enrollgroup_dict = dict(((group.id, enrollgroup) for enrollgroup in EnrollGroup.objects.filter(classroom_id=classroom_id)))
     if enroll.group == 0 :
          group_name = "沒有組別"
-    else : 
+    else :
         group_name = enrollgroup_dict[enroll.group].name
-    
+
     for enroll in enroll_pool:
         works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
         if works :
@@ -811,8 +830,8 @@ def work_class(request, typing, lesson, classroom_id, index):
             datas.append([enroll, "", group_name])
 
     return render(request, 'student/work_class.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas})
-  
-  
+
+
 def work_download(request, typing, lesson, index, user_id, workfile_id):
     workfile = WorkFile.objects.get(id=workfile_id)
     username = User.objects.get(id=user_id).first_name
@@ -823,18 +842,18 @@ def work_download(request, typing, lesson, index, user_id, workfile_id):
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
         lesson_name = TWork.objects.get(id=index).title
-    
+
     if lesson == "1":
         filename = username + "_" + lesson_name.decode("utf-8")  + ".sb2"
         download =  settings.BASE_DIR + "/static/work/scratch/" + str(user_id) + "/" + workfile.filename
     elif lesson == "6":
         filename = username + "_" + lesson_name.decode("utf-8")  + ".hex"
-        download =  settings.BASE_DIR + "/static/work/microbit/" + str(user_id) + "/" + workfile.filename      
+        download =  settings.BASE_DIR + "/static/work/microbit/" + str(user_id) + "/" + workfile.filename
     wrapper = FileWrapper(file( download, "rb" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
-    response['Content-Length'] = os.path.getsize(download)    
+    response['Content-Length'] = os.path.getsize(download)
     # It's usually a good idea to set the 'Content-Length' header too.
     # You can also set any other required headers: Cache-Control, etc.
     return response
@@ -876,7 +895,7 @@ def progress(request, typing, lesson, unit, classroom_id):
           elif lesson == "4":
               lesson_list = lesson_list4
           elif lesson == "5":
-              lesson_list = lesson_list2              
+              lesson_list = lesson_list2
           else:
               lesson_list = lesson_list3
           for assignment in lesson_list:
@@ -906,7 +925,7 @@ def progress(request, typing, lesson, unit, classroom_id):
               bar.append([assignment, works[0]])
             else:
               bar.append([assignment, False])
-          bars.append([enroll, bar])         
+          bars.append([enroll, bar])
     return render(request, 'student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list})
 
 # 查詢某作業分組小老師
@@ -920,20 +939,20 @@ def work_group(request, typing, lesson, classroom_id):
         elif lesson == "4":
             lesson_list = lesson_list4
         elif lesson == "5":
-            lesson_list = lesson_list2            
+            lesson_list = lesson_list2
         else :
             lesson_list = lesson_list1
         lessons = []
         index = 0
-        for assignment in lesson_list:            
-            student_groups = []					         
+        for assignment in lesson_list:
+            student_groups = []
             enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
             group_assistants = []
             assistants = []
             works = []
             scorer_name = ""
-            for enroll in enrolls: 
-                try:    
+            for enroll in enrolls:
+                try:
                     work = Work.objects.get(user_id=enroll.student_id, index=lesson+1)
                     if work.scorer > 0 :
                         scorer = User.objects.get(id=work.scorer)
@@ -1007,7 +1026,7 @@ def exam_check(request):
     exam = Exam(exam_id=int(exam_id), student_id=request.user.id, answer=ua_test, score=score)
     exam.save()
     return JsonResponse({'status':'ok','answer':answer}, safe=False)
-  
+
 def memo_user(request, lesson, classroom_id, user_id):
     user = User.objects.get(id=user_id)
     if not is_classmate(user, classroom_id):
@@ -1023,26 +1042,26 @@ def memo_user(request, lesson, classroom_id, user_id):
     elif lesson == "4":
         lesson_list = copy.deepcopy(lesson_list4)
     elif lesson == "5":
-        lesson_list = copy.deepcopy(lesson_list2)      
+        lesson_list = copy.deepcopy(lesson_list2)
     else :
-        lesson_list = copy.deepcopy(lesson_list1)   
+        lesson_list = copy.deepcopy(lesson_list1)
     works = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=0).order_by("-id")
     for work in works:
         lesson_list[work.index-1].append(work.memo)
-        
+
     tworks = TWork.objects.filter(classroom_id=classroom_id)
     assignments = []
     for twork in tworks:
       assignments.append([twork])
     works2 = Work.objects.filter(lesson_id=lesson, user_id=user_id, typing=1).order_by("-id")
     for work in works2:
-        assignments[0].append(work.memo)    
+        assignments[0].append(work.memo)
     return render(request, 'student/memo_user.html', {'works':works, 'lesson_list':lesson_list, 'assignments':assignments, 'student': user})
 
 # 查詢某班級心得
 def memo_all(request, classroom_id):
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        classroom_name = Classroom.objects.get(id=classroom_id).name     
+        classroom_name = Classroom.objects.get(id=classroom_id).name
         return render(request, 'student/memo_all.html', {'enrolls':enrolls, 'classroom_name':classroom_name})
 
 # 查詢某班級心得統計
@@ -1059,7 +1078,7 @@ def memo_count(request, classroom_id):
         memo = memo.rstrip('\r\n')
         seglist = jieba.cut(memo, cut_all=False)
         hash = {}
-        for item in seglist: 
+        for item in seglist:
             if item in hash:
                 hash[item] += 1
             else:
@@ -1069,10 +1088,10 @@ def memo_count(request, classroom_id):
         error=""
         for key, value in sorted(hash.items(), key=lambda x: x[1], reverse=True):
             if ord(key[0]) > 32 :
-                count += 1	
+                count += 1
                 words.append([key, value])
                 if count == 30:
-                    break       
+                    break
         return render(request, 'student/memo_count.html', {'total':works.count(), 'words':words, 'enrolls':enrolls, 'classroom':classroom})
 
 
@@ -1091,7 +1110,7 @@ def memo_work_count(request, classroom_id, work_id):
         memo = memo.rstrip('\r\n')
         seglist = jieba.cut(memo, cut_all=False)
         hash = {}
-        for item in seglist: 
+        for item in seglist:
             if item in hash:
                 hash[item] += 1
             else:
@@ -1103,10 +1122,10 @@ def memo_work_count(request, classroom_id, work_id):
             if ord(key[0]) > 32 :
                 words.append([key, value])
                 if count == 30:
-                    break                  
+                    break
         return render(request, 'student/memo_work_count.html', {'words':words, 'enrolls':enrolls, 'classroom':classroom,  'work_id':work_id, 'lesson':lesson_list[int(work_id)-1][2]})
 
-			
+
 # 查詢某班某詞句心得
 def memo_word(request, classroom_id, word):
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
@@ -1116,9 +1135,9 @@ def memo_word(request, classroom_id, word):
         classroom = Classroom.objects.get(id=classroom_id)
         works = Work.objects.filter(user_id__in=members, memo__contains=word, lesson_id=classroom.lesson).order_by('index')
         for work in works:
-            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')        
+            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
         return render(request, 'student/memo_word.html', {'word':word, 'works':works, 'classroom':classroom})
-		
+
 # 查詢某班某作業某詞句心得
 def memo_work_word(request, classroom_id, work_id, word):
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
@@ -1128,10 +1147,10 @@ def memo_work_word(request, classroom_id, work_id, word):
         classroom = Classroom.objects.get(id=classroom_id)
         works = Work.objects.filter(user_id__in=members, index=work_id, memo__contains=word)
         for work in works:
-            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')          
+            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
         return render(request, 'student/memo_work_word.html', {'word':word, 'works':works, 'classroom':classroom, 'lesson':lesson_list[int(work_id)-1][2]})
-		
-		
+
+
 # 查詢個人心得
 def memo_show(request, user_id, unit,classroom_id, score):
     user_name = User.objects.get(id=user_id).first_name
@@ -1158,16 +1177,16 @@ def memo_show(request, user_id, unit,classroom_id, score):
         #enroll_group = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id).group
     user = User.objects.get(id=user_id)
     return render(request, 'student/memo_show.html', {'classroom_id': classroom_id, 'works':works, 'lesson_list':lesson_list, 'user_name': user_name, 'unit':unit, 'score':score})
-  
+
 # 列出所有討論主題
 class ForumListView(ListView):
     model = SFWork
     context_object_name = 'works'
-    template_name = 'student/forum_list.html'    
-    
+    template_name = 'student/forum_list.html'
+
     def get_queryset(self):
         queryset = []
-        fclass_dict = dict(((fclass.forum_id, fclass) for fclass in FClass.objects.filter(classroom_id=self.kwargs['classroom_id'])))	
+        fclass_dict = dict(((fclass.forum_id, fclass) for fclass in FClass.objects.filter(classroom_id=self.kwargs['classroom_id'])))
         #fclasses = FClass.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-id")
         fworks = FWork.objects.filter(id__in=fclass_dict.keys()).order_by("-id")
         sfwork_pool = SFWork.objects.filter(student_id=self.request.user.id).order_by("-id")
@@ -1179,15 +1198,15 @@ class ForumListView(ListView):
                 queryset.append([fwork, False, fclass_dict[fwork.id], 0])
         def getKey(custom):
             return custom[2].publication_date, custom[2].forum_id
-        queryset = sorted(queryset, key=getKey, reverse=True)	
+        queryset = sorted(queryset, key=getKey, reverse=True)
         return queryset
-        
+
     def get_context_data(self, **kwargs):
         context = super(ForumListView, self).get_context_data(**kwargs)
         context['classroom_id'] = self.kwargs['classroom_id']
         context['bookmark'] =  self.kwargs['bookmark']
         context['fclasses'] = dict(((fclass.forum_id, fclass) for fclass in FClass.objects.filter(classroom_id=self.kwargs['classroom_id'])))
-        return context	    
+        return context
 
     # 限本班同學
     def render_to_response(self, context):
@@ -1195,7 +1214,7 @@ class ForumListView(ListView):
             enroll = Enroll.objects.get(student_id=self.request.user.id, classroom_id=self.kwargs['classroom_id'])
         except ObjectDoesNotExist :
             return redirect('/')
-        return super(ForumListView, self).render_to_response(context)    
+        return super(ForumListView, self).render_to_response(context)
 
 # 發表心得
 def forum_publish(request, classroom_id, index, action):
@@ -1209,7 +1228,7 @@ def forum_publish(request, classroom_id, index, action):
             update_avatar(request.user.id, 3, 2)
             # History
             history = PointHistory(user_id=request.user.id, kind=1, message=u'2分--繳交討論區作業<'+fwork.title+'>', url='/student/forum/memo/'+classroom_id+'/'+index+'/'+action)
-            history.save()								
+            history.save()
         except ObjectDoesNotExist:
             pass
         return redirect("/student/forum/memo/"+classroom_id+"/"+index+"/0")
@@ -1217,7 +1236,7 @@ def forum_publish(request, classroom_id, index, action):
         return redirect("/student/forum/memo/"+classroom_id+"/"+index+"/0")
     else :
         return render(request, 'student/forum_publish.html', {'classroom_id': classroom_id, 'index': index})
-	
+
 
 def forum_submit(request, classroom_id, index):
         scores = []
@@ -1240,13 +1259,13 @@ def forum_submit(request, classroom_id, index):
                 content.filename = str(request.user.id)+"/"+filename
                 fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
                 content.save()
-            if form.is_valid():							
+            if form.is_valid():
                 work.memo=form.cleaned_data['memo']
                 work.memo_e = form.cleaned_data['memo_e']
-                work.memo_c = form.cleaned_data['memo_c']								
+                work.memo_c = form.cleaned_data['memo_c']
                 work.save()
                 if not works:
-                    return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")	
+                    return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
                 elif not works[0].publish:
                     return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
                 return redirect("/student/forum/memo/"+classroom_id+"/"+index+"/0")
@@ -1266,7 +1285,7 @@ def forum_submit(request, classroom_id, index):
 def forum_show(request, index, user_id, classroom_id):
 		user = User.objects.get(id=user_id)
 		if not (is_classmate(user, classroom_id) or is_teacher(request.user, classroom_id)) :
-			return redirect("/")	
+			return redirect("/")
 		forum = FWork.objects.get(id=index)
 		teacher_id = forum.teacher_id
 		work = []
@@ -1279,13 +1298,13 @@ def forum_show(request, index, user_id, classroom_id):
 			work_new = works[0]
 			work_first = works.last()
 			publish = work_first.publish
-			replys = SFReply.objects.filter(index=index, work_id=work_first.id).order_by("-id")	
-			files = SFContent.objects.filter(index=index, student_id=user_id, visible=True).order_by("-id")	
+			replys = SFReply.objects.filter(index=index, work_id=work_first.id).order_by("-id")
+			files = SFContent.objects.filter(index=index, student_id=user_id, visible=True).order_by("-id")
 		else :
 			work_new = SFWork(index=index, student_id=user_id)
-			work_first = SFWork(index=index, student_id=user_id)			
+			work_first = SFWork(index=index, student_id=user_id)
 		return render(request, 'student/forum_show.html', {'work_new': work_new, 'work_first':work_first, 'publish':publish, 'classroom_id':classroom_id, 'contents':contents, 'replys':replys, 'files':files, 'forum':forum, 'user_id':user_id, 'teacher_id':teacher_id, 'works': works, 'is_teacher':is_teacher(request.user, classroom_id)})
-		
+
  # 查詢某作業所有同學心得
 def forum_memo(request, classroom_id, index, action):
 	if not is_classmate(request.user, classroom_id):
@@ -1299,10 +1318,10 @@ def forum_memo(request, classroom_id, index, action):
 	if action == "2":
 		works_pool = SFWork.objects.filter(index=index, score=5).order_by("-id")
 	else:
-	  # 一次取得所有 SFWork	
+	  # 一次取得所有 SFWork
 	  works_pool = SFWork.objects.filter(index=index).order_by("-id", "publish")
-	reply_pool = SFReply.objects.filter(index=index).order_by("-id")	
-	file_pool = SFContent.objects.filter(index=index, visible=True).order_by("-id")	
+	reply_pool = SFReply.objects.filter(index=index).order_by("-id")
+	file_pool = SFContent.objects.filter(index=index, visible=True).order_by("-id")
 	for enroll in enrolls:
 		works = filter(lambda w: w.student_id==enroll.student_id, works_pool)
 		# 對未作答學生不特別處理，因為 filter 會傳回 []
@@ -1317,24 +1336,24 @@ def forum_memo(request, classroom_id, index, action):
 		else :
 			replys = []
 			if not action == "2" :
-				files = filter(lambda w: w.student_id==enroll.student_id, file_pool)		
+				files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
 				datas.append([enroll, works, replys, files])
 	def getKey(custom):
 		if custom[1]:
 			if action == "3":
 				return custom[1][-1].like_count
 			elif action == "2":
-				return custom[1][-1].score, custom[1][0].publication_date		
+				return custom[1][-1].score, custom[1][0].publication_date
 			elif action == "1":
 				return -custom[0].seat
 			else :
-				return custom[1][0].reply_date, -custom[0].seat			
+				return custom[1][0].reply_date, -custom[0].seat
 		else:
 			return -custom[0].seat
-	datas = sorted(datas, key=getKey, reverse=True)	
+	datas = sorted(datas, key=getKey, reverse=True)
 
 	return render(request, 'student/forum_memo.html', {'action':action, 'replys':replys, 'datas': datas, 'contents':contents, 'teacher_id':teacher_id, 'subject':subject, 'classroom_id':classroom_id, 'index':index, 'is_teacher':is_teacher(request.user, classroom_id)})
-	
+
 def forum_history(request, user_id, index, classroom_id):
 		work = []
 		contents = FContent.objects.filter(forum_id=index).order_by("-id")
@@ -1345,10 +1364,10 @@ def forum_history(request, user_id, index, classroom_id):
 			if works[0].publish or user_id==str(request.user.id) or is_teacher(request.user, classroom_id):
 				return render(reuqest, 'student/forum_history.html', {'forum': forum, 'classroom_id':classroom_id, 'works':works, 'contents':contents, 'files':files, 'index':index})
 		return redirect("/")
-			
+
 def forum_like(request):
-    forum_id = request.POST.get('forumid')  
-    classroom_id = request.POST.get('classroomid')  		
+    forum_id = request.POST.get('forumid')
+    classroom_id = request.POST.get('classroomid')
     user_id = request.POST.get('userid')
     action = request.POST.get('action')
     likes = []
@@ -1362,18 +1381,18 @@ def forum_like(request):
             jsonDec = json.decoder.JSONDecoder()
             if action == "like":
                 if sfwork.likes:
-                    likes = jsonDec.decode(sfwork.likes)                     
+                    likes = jsonDec.decode(sfwork.likes)
                     if not request.user.id in likes:
                         likes.append(request.user.id)
                 else:
                     likes.append(request.user.id)
                 sfwork.likes = json.dumps(likes)
-                sfwork.like_count = len(likes)								
+                sfwork.like_count = len(likes)
                 sfwork.save()
                 update_avatar(request.user.id, 3, 0.1)
                 # History
                 history = PointHistory(user_id=request.user.id, kind=3, message=u'+0.1分--討論區按讚<'+fwork.title+'><'+user.first_name+'>', url="/student/forum/memo/"+classroom_id+"/"+forum_id+"/0/#"+user_id)
-                history.save()										
+                history.save()
             else:
                 if sfwork.likes:
                     likes = jsonDec.decode(sfwork.likes)
@@ -1382,27 +1401,27 @@ def forum_like(request):
                         sfwork.likes = json.dumps(likes)
                         sfwork.like_count = len(likes)
                         sfwork.save()
-                        #積分 
+                        #積分
                         update_avatar(request.user.id, 3, -0.1)
                         # History
                         history = PointHistory(user_id=request.user.id, kind=3, message=u'-0.1分--討論區按讚取消<'+fwork.title+'><'+user.first_name+'>', url="/student/forum/memo/"+classroom_id+"/"+forum_id+"/0/#"+user_id)
-                        history.save()		               
+                        history.save()
         except ObjectDoesNotExist:
-            sfworks = []            
-        
+            sfworks = []
+
         return JsonResponse({'status':'ok', 'likes':sfworks[0].likes}, safe=False)
     else:
-        return JsonResponse({'status':'fail'}, safe=False)        
+        return JsonResponse({'status':'fail'}, safe=False)
 
 def forum_reply(request):
-    forum_id = request.POST.get('forumid')  
-    classroom_id = request.POST.get('classroomid')		
+    forum_id = request.POST.get('forumid')
+    classroom_id = request.POST.get('classroomid')
     user_id = request.POST.get('userid')
-    work_id = request.POST.get('workid')		
+    work_id = request.POST.get('workid')
     text = request.POST.get('reply')
     fwork = FWork.objects.get(id=forum_id)
     user = User.objects.get(id=user_id)
-    if forum_id:       
+    if forum_id:
         reply = SFReply(index=forum_id, work_id=work_id, user_id=user_id, memo=text, publication_date=timezone.now())
         reply.save()
         sfwork = SFWork.objects.get(id=work_id)
@@ -1411,15 +1430,15 @@ def forum_reply(request):
         update_avatar(request.user.id, 3, 0.2)
         # History
         history = PointHistory(user_id=request.user.id, kind=3, message=u'0.2分--討論區留言<'+fwork.title+'><'+user.first_name+'>', url='/student/forum/memo/'+classroom_id+'/'+forum_id+'/0/#'+user_id)
-        history.save()		              
-				
+        history.save()
+
         return JsonResponse({'status':'ok'}, safe=False)
     else:
-        return JsonResponse({'status':'fail'}, safe=False)        
+        return JsonResponse({'status':'fail'}, safe=False)
 
-			
+
 def forum_guestbook(request):
-    work_id = request.POST.get('workid')  
+    work_id = request.POST.get('workid')
     guestbooks = "<table class=table>"
     if work_id:
         try :
@@ -1432,10 +1451,10 @@ def forum_guestbook(request):
         guestbooks += '</table>'
         return JsonResponse({'status':'ok', 'replys': guestbooks}, safe=False)
     else:
-        return JsonResponse({'status':'fail'}, safe=False)        
-			
+        return JsonResponse({'status':'fail'}, safe=False)
+
 def forum_people(request):
-    forum_id = request.POST.get('forumid')  
+    forum_id = request.POST.get('forumid')
     user_id = request.POST.get('userid')
     likes = []
     sfworks = []
@@ -1446,22 +1465,22 @@ def forum_people(request):
             sfwork = sfworks[0]
             jsonDec = json.decoder.JSONDecoder()
             if sfwork.likes:
-                likes = jsonDec.decode(sfwork.likes)  
+                likes = jsonDec.decode(sfwork.likes)
                 for like in reversed(likes):
                   user = User.objects.get(id=like)
                   names.append('<button type="button" class="btn btn-default">'+user.first_name+'</button>')
         except ObjectDoesNotExist:
-            sfworks = []                   
+            sfworks = []
         return JsonResponse({'status':'ok', 'likes':names}, safe=False)
     else:
-        return JsonResponse({'status':'fail'}, safe=False)        
+        return JsonResponse({'status':'fail'}, safe=False)
 
 def forum_score(request):
-    work_id = request.POST.get('workid')  
-    classroom_id = request.POST.get('classroomid')  
-    user_id = request.POST.get('userid')  		
+    work_id = request.POST.get('workid')
+    classroom_id = request.POST.get('classroomid')
+    user_id = request.POST.get('userid')
     score = request.POST.get('score')
-    comment = request.POST.get('comment')		
+    comment = request.POST.get('comment')
     if work_id and is_teacher(request.user, classroom_id):
         sfwork = SFWork.objects.get(id=work_id)
         sfwork.score = score
@@ -1471,10 +1490,10 @@ def forum_score(request):
         sfwork.save()
         return JsonResponse({'status':'ok'}, safe=False)
     else:
-        return JsonResponse({'status':'fail'}, safe=False)        
+        return JsonResponse({'status':'fail'}, safe=False)
 
 # 統計某討論主題所有同學心得
-def forum_jieba(request, classroom_id, index): 
+def forum_jieba(request, classroom_id, index):
     classroom = Classroom.objects.get(id=classroom_id)
     enrolls = Enroll.objects.filter(classroom_id=classroom_id)
     works = []
@@ -1493,7 +1512,7 @@ def forum_jieba(request, classroom_id, index):
     memo = memo.rstrip('\r\n')
     seglist = jieba.cut(memo, cut_all=False)
     hash = {}
-    for item in seglist: 
+    for item in seglist:
         if item in hash:
             hash[item] += 1
         else:
@@ -1503,10 +1522,10 @@ def forum_jieba(request, classroom_id, index):
     error=""
     for key, value in sorted(hash.items(), key=lambda x: x[1], reverse=True):
         if ord(key[0]) > 32 :
-            count += 1	
+            count += 1
             words.append([key, value])
             if count == 100:
-                break       
+                break
     return render(request, 'student/forum_jieba.html', {'index': index, 'words':words, 'enrolls':enrolls, 'classroom':classroom, 'subject':subject})
 
 # 查詢某班某詞句心得
@@ -1526,14 +1545,14 @@ def forum_word(request, classroom_id, index, word):
                 pass
         classroom = Classroom.objects.get(id=classroom_id)
         for work, seat in datas:
-            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')          
+            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
         return render(request, 'student/forum_word.html', {'word':word, 'datas':datas, 'classroom':classroom})
-		
+
 # 下載檔案
 def forum_download(request, file_id):
     content = SFContent.objects.get(id=file_id)
     filename = content.title
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))		
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     download =  BASE_DIR + "/static/upload/" + content.filename
     wrapper = FileWrapper(file( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
@@ -1542,7 +1561,7 @@ def forum_download(request, file_id):
     # It's usually a good idea to set the 'Content-Length' header too.
     # You can also set any other required headers: Cache-Control, etc.
     return response
-	
+
 # 顯示圖片
 def forum_showpic(request, file_id):
         content = SFContent.objects.get(id=file_id)
@@ -1550,7 +1569,7 @@ def forum_showpic(request, file_id):
 
 # ajax刪除檔案
 def forum_file_delete(request):
-    file_id = request.POST.get('fileid')  
+    file_id = request.POST.get('fileid')
     if file_id:
         try:
             file = SFContent.objects.get(id=file_id)
@@ -1558,10 +1577,10 @@ def forum_file_delete(request):
             file.delete_date = timezone.now()
             file.save()
         except ObjectDoesNotExist:
-            file = []           
+            file = []
         return JsonResponse({'status':'ok'}, safe=False)
     else:
-        return JsonResponse({'status':'fail'}, safe=False)        
+        return JsonResponse({'status':'fail'}, safe=False)
 
 def content_delete(request, types, typing, lesson, index, content_id):
   if types == "11" or types == "12":
@@ -1574,27 +1593,27 @@ def content_delete(request, types, typing, lesson, index, content_id):
     instance.delete()
 
     return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
-  
+
 def content_edit(request, types, typing, lesson, index, content_id):
     try:
-        if types == "11" or types == "12":      
+        if types == "11" or types == "12":
             instance = Science1Content.objects.get(id=content_id)
-        elif types == "41" or types== "42":    
-            instance = Science4Content.objects.get(id=content_id)          
+        elif types == "41" or types== "42":
+            instance = Science4Content.objects.get(id=content_id)
     except:
         pass
     if request.method == 'POST':
             content_id = request.POST.get("content_id")
-            if types == "11" or types == "12":  
+            if types == "11" or types == "12":
                 try:
                     content = Science1Content.objects.get(id=content_id)
                 except ObjectDoesNotExist:
 	                  content = Science1Content(types= request.POST.get("types"))
-            elif types == "41" or types== "42":         
+            elif types == "41" or types== "42":
                 try:
                     content = Science4Content.objects.get(id=content_id)
                 except ObjectDoesNotExist:
-	                  content = Science4Content(types= request.POST.get("types"))              
+	                  content = Science4Content(types= request.POST.get("types"))
             if content.types == 11 or content.types == 41:
                 content.text = request.POST.get("text")
             elif content.types == 12 or content.types == 42:
@@ -1604,12 +1623,12 @@ def content_edit(request, types, typing, lesson, index, content_id):
                 content.picname = str(request.user.id)+"/"+filename
                 fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
             content.save()
-            if types == "11" or types == "12":                
-                return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1") 
-            elif types == "41" or types== "42":    
-                return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")               
-    return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'types':types, 'typing':typing, 'lesson':lesson, 'index':index})		
-	
+            if types == "11" or types == "12":
+                return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab1")
+            elif types == "41" or types== "42":
+                return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
+    return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'types':types, 'typing':typing, 'lesson':lesson, 'index':index})
+
 # 資料建模
 def data_add(request, typing, lesson, index, types):
         if request.method == 'POST':
@@ -1617,24 +1636,24 @@ def data_add(request, typing, lesson, index, types):
             if form.is_valid():
                 data = Science2Data(name=form.cleaned_data['name'],student_id=request.user.id, index=form.cleaned_data['index'], types=form.cleaned_data['types'])
                 data.save()
-            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21") 
+            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21")
         else:
             form = DataForm()
         return render(request, 'student/data_form.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'types':types})
-		
+
 # 資料建模
 def data_edit(request, typing, lesson, index, types, data_id):
         if request.method == 'POST':
             data = Science2Data.objects.get(id=request.POST.get('data_id'))
             data.name = request.POST.get('name')
             data.save()
-            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22") 
+            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22")
         else:
             data = Science2Data.objects.get(id=data_id)
-            return render(request, 'student/data_edit_form.html', {'types':types, 'data':data, 'typing':typing, 'lesson':lesson, 'index':index, 'data_id':data_id})		
-		
+            return render(request, 'student/data_edit_form.html', {'types':types, 'data':data, 'typing':typing, 'lesson':lesson, 'index':index, 'data_id':data_id})
+
 def data_delete(request, typing, lesson, index, data_id):
     instance = Science2Data.objects.get(id=data_id)
     instance.delete()
 
-    return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22") 
+    return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22")

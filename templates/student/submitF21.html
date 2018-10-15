@@ -1,66 +1,48 @@
-﻿<div class="btn-group mb-2" role="group">
-  <!--
-  <a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/0" role="btn" class="btn btn-default btn-sm">新增變數</a>
-  <a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/1" role="btn" class="btn btn-default btn-sm">新增陣列</a>
-  <a href="/student/work/data/add/{{typing}}/{{lesson}}/{{index}}/2" role="btn" class="btn btn-default btn-sm">新增常數</a>
-  -->
-  <button class="btn btn-warning btn-sm new-block" id="new-var" data-type="var" data-toggle="modal" data-target="#new-element" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">新增變數</button>
-  <button class="btn btn-danger btn-sm new-block" id="new-arr" data-type="arr" data-toggle="modal" data-target="#new-element" data-class="btn-danger" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">新增陣列</button>
-  <button class="btn btn-success btn-sm new-block" id="new-const" data-type="const" data-toggle="modal" data-target="#new-element" data-class="btn-success" data-pattern="[0-9]+">新增常數</button>
-</div>
-<div class="card card-default exp-editor">
-  <div class="card-header">變數：
-    <ul class="exp-item-list" id="var-list">
-      {% for data in data1 %}
-      <li class="btn btn-info btn-sm exp-item exp-item-var">
-        <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/0/{{data.id}}">{{data.name}}</a>
-      </li>
-      {% endfor %}
+<div class="card card-default expr-editor">
+  <div class="card-header">
+    <button class="btn btn-outline-warning btn-sm new-block" id="new-var" data-type="var" data-toggle="modal" data-target="#new-element" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">　變數　 +</button>
+    <ul class="expr-item-list" id="var-list"></ul>
+  </div>
+  <div class="card-header">
+    <button class="btn btn-outline-danger btn-sm new-block" id="new-arr" data-type="arr" data-toggle="modal" data-target="#new-element" data-class="btn-danger" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">　陣列　  +</button>
+    <ul id="arr-list" class="expr-arr-list"></ul>
+  </div>
+  <div class="card-header">
+    <button class="btn btn-outline-success btn-sm new-block" id="new-str-const" data-type="str-const" data-toggle="modal" data-target="#new-element" data-class="btn-success" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">文字常數 +</button>
+    <ul class="expr-item-list" id="str-const-list"></ul>
+  </div>
+  <div class="card-header">
+    <button class="btn btn-outline-success btn-sm new-block" id="new-num-const" data-type="num-const" data-toggle="modal" data-target="#new-element" data-class="btn-success" data-pattern="[0-9]+">數字常數 +</button>
+    <ul class="expr-item-list" id="num-const-list"></ul>
+  </div>
+  <div class="card-header">
+    <button class="btn btn-outline-info btn-sm" id="new-var" disabled>　符號　 </button>
+    <ul class="expr-item-list sortable">
+      <li class="btn btn-info btn-sm expr-item">(</li>
+      <li class="btn btn-info btn-sm expr-item">)</li>
+      <li class="btn btn-info btn-sm expr-item">+</li>
+      <li class="btn btn-info btn-sm expr-item">-</li>
+      <li class="btn btn-info btn-sm expr-item">*</li>
+      <li class="btn btn-info btn-sm expr-item">/</li>
+      <li class="btn btn-info btn-sm expr-item">^</li>
     </ul>
   </div>
-  <div class="card-header">陣列：
-    <ul id="arr-list" style="list-style: none">
-      {% for data in data2 %}
-      <li class="btn btn-info btn-sm exp-item">
-        <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/1/{{data.id}}">{{data.name}}</a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="card-header">常數：
-    <ul class="exp-item-list" id="const-list">
-      {% for data in data3 %}
-      <li class="btn btn-info btn-sm exp-item">
-        <a href="/student/work/data/edit/{{typing}}/{{lesson}}/{{index}}/2/{{data.id}}">{{data.name}}</a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="card-header">符號：
-    <ul class="exp-item-list sortable">
-      <li class="btn btn-info btn-sm exp-item">(</li>
-      <li class="btn btn-info btn-sm exp-item">)</li>
-      <li class="btn btn-info btn-sm exp-item">+</li>
-      <li class="btn btn-info btn-sm exp-item">-</li>
-      <li class="btn btn-info btn-sm exp-item">*</li>
-      <li class="btn btn-info btn-sm exp-item">/</li>
-      <li class="btn btn-info btn-sm exp-item">^</li>
-    </ul>
-  </div>
-  <div class="card-body pt-1 exp-trash">
-    <span class="badge badge-dark">請將上面的元件方塊拖曳至下方運算式的虛線框內...</span>
-    <div class="exp-list">
-      <div class="exp">
-        <ul class="exp-lhs exp-item-list">
-          <li class="btn btn-warning btn-sm">?</li>
-        </ul>
-        <ul class="d-inline-block pl-0">
-          <li class="btn btn-dark btn-sm">=</li>
-        </ul>
-        <ul class="exp-rhs exp-item-list sortable">
-        </ul>
-      </div>
+  <div class="card-body pt-1 expr-trash">
+    <div class="mb-2">
+      <button class="btn btn-sm btn-outline-dark" id="new-exp">新增運算式</button> <span class="badge badge-dark">請將上面的元件方塊拖曳至下方運算式的虛線框內...</span>
     </div>
+    <div id="expr-list" class="expr-list">
+    </div>
+  </div>
+  <div class="card-footer pt-1">
+    <form id="expr-form" action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="exprid" value="{{expr.id|default:'0'}}">
+      <input type="hidden" name="types" value="21">
+      <input type="hidden" name="index" value="{{index}}">
+      <input type="hidden" name="jsonstr" id="jsonstr" value="">
+    </form>
+    <button class="btn btn-info form-control" id="expr-submit">送出</button>
   </div>
 </div>
 
@@ -93,5 +75,7 @@
     </div>
   </div>
 </div>
-
+<script>
+var exprjson = {{ expr.expr_json|safe }};
+</script>
 <script type="text/javascript" src="/static/js/expression-editor.js"></script>

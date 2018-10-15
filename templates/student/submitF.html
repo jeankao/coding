@@ -23,7 +23,7 @@
     <ul class="nav nav-pills" id="myTab2" role="tablist">
 	{% for question in questions %}
     <li class="nav-item">
-      <a class="nav-link{% if forloop.counter == 1 %} active{% endif %}"" data-toggle="tab" href="#question{{forloop.counter}}" role="tab" aria-selected="true">{{forloop.counter}}</a>
+      <a class="nav-link{% if forloop.counter == 1 %} active{% endif %}" data-toggle="tab" href="#question{{forloop.counter}}" role="tab" aria-selected="true">{{forloop.counter}}</a>
     </li>
 	{% endfor %}
 	</ul>	
