@@ -17,7 +17,7 @@
   </div>
   <div class="card-header">
     <button class="btn btn-outline-info btn-sm" id="new-var" disabled>　符號　 </button>
-    <ul class="expr-item-list sortable">
+    <ul class="expr-item-list">
       <li class="btn btn-info btn-sm expr-item">(</li>
       <li class="btn btn-info btn-sm expr-item">)</li>
       <li class="btn btn-info btn-sm expr-item">+</li>
@@ -27,7 +27,10 @@
       <li class="btn btn-info btn-sm expr-item">^</li>
     </ul>
   </div>
-  <div class="card-body pt-1 expr-trash">
+  <div class="card-body pt-1" style="position: relative">
+    <div class="expr-trash">
+      <img src="/static/images/trash.png" alt="">
+    </div>
     <div class="mb-2">
       <button class="btn btn-sm btn-outline-dark" id="new-exp">新增運算式</button> <span class="badge badge-dark">請將上面的元件方塊拖曳至下方運算式的虛線框內...</span>
     </div>

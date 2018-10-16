@@ -183,10 +183,15 @@ table.tablesorter tr:hover td {
 }
 
 /* expression editor */
-ul.expr-item-list {display: inline-flex; min-width: 20pt; padding: 3pt; position: relative; margin-bottom: 0; list-style: none}
+ul.expr-item-list {display: inline-block; min-width: 20pt; padding: 3pt; margin-bottom: 0; list-style: none}
 ul.expr-arr-list {min-width: 20pt; padding: 3pt; position: relative; margin-bottom: 0; list-style: none}
-ul.expr-item-list>.expr-item {display: inline-flex;}
+ul.expr-item-list>.expr-item {display: inline-block;}
 ul.expr-item-list a {background-color: transparent; color: white}
 ul.expr-item-list a:hover {text-decoration: none}
 .expr-editor .card-body ul.expr-item-list {border: 1px dashed grey}
 .expr-editor>.card-header {padding-top: .1em; padding-bottom: .1em}
+.expr-trash {position: absolute; right: 5pt; top: 5pt; padding: 3pt; border: 1px solid silver}
+/*
+.arr-wrapper>.expr-item-list {display: none;}
+.arr-wrapper:hover>.expr-item-list {display: inline-block;}
+*/
