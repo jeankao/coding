@@ -57,7 +57,7 @@ $(function () {
   function newArrBlock(name, size) {
     var wrapper = $('<ul class="expr-item-list" data-name="'+name+'" data-size="'+size+'"></ul>');
     for (var i = 0; i < size; i++) {
-      newBlock('arr', '['+i+']', wrapper);
+      newBlock('arr', i, wrapper);
     }
     wrapper.appendTo($('<li class="arr-wrapper"><span class="btn btn-sm btn-danger">'+name+'</span></li>').appendTo($('#arr-list')));
     return wrapper;
@@ -135,7 +135,7 @@ $(function () {
           helper: function() {
             var name = $(this).parent().data('name');
             if ($(this).hasClass('expr-item arr'))
-              return $(this).clone().prepend(name);
+              return $(this).clone().prepend(name+'[').append(']');
             return $(this).clone();
           },
         });
@@ -185,7 +185,7 @@ $(function () {
     helper: function() {
       var name = $(this).parent().data('name');
       if ($(this).hasClass('expr-item arr'))
-        return $(this).clone().prepend(name);
+        return $(this).clone().prepend(name+'[').append(']');
       return $(this).clone();
     },
   });
