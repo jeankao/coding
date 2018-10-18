@@ -194,7 +194,7 @@ class ShowUpdateView(UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(object=self.object, form=form, members=members, show_id=self.object.id)
-        return self.render(request, context)
+        return self.render_to_response(context)
 
     def get_object(self, queryset=None):
         obj = ShowGroup.objects.get(id=self.kwargs['group_show'])
@@ -220,8 +220,8 @@ class ShowUpdateView(UpdateView):
         if is_member : 
             if classroom.lesson == 1 and filepath :
                 myfile = self.request.FILES['file']
-                fs = FileSystemStorage()
-                filename = "static/show/"+self.kwargs['group_show']+"/"+uuid4().hex+".sb2"
+                fs = FileSystemStorage(settings.BASE_DIR+"/static/show/"+self.kwargs['group_show']+"/")
+                filename = uuid4().hex+".sb2"
                 fs.save(filename, myfile)
                 obj.file = filename	
             #save object
@@ -321,7 +321,7 @@ class ReviewUpdateView(UpdateView):
         round = Round.objects.get(id=self.kwargs['round_id'])
         teacher = is_teacher(self.request.user, round.classroom_id)				
         context = self.get_context_data(teacher=teacher, showfiles=showfiles, show=show, form=form, members=members, review=self.object, scores=scores, score=score, reviews=reviews)
-        return self.render(request, context)
+        return self.render_to_response(context)
 
     def get_object(self, queryset=None):
         try :
