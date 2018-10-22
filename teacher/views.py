@@ -745,21 +745,22 @@ def grade(request, typing, lesson, unit, classroom_id):
       else :
         lesson_list = CWork.objects.filter(classroom_id=classroom_id)
       for index, assignment in enumerate(lesson_list):
-            if typing == "0": 
+            if typing == "0": 			    
                 if unit == "1":
-                    works = list(filter(lambda w: w.index == index+1, stu_works))
-                elif unit == "2":
-                    works = list(filter(lambda w: w.index == index+1+17, stu_works))
-                elif unit == "3":
-                    works = list(filter(lambda w: w.index == index+1+17+8, stu_works))
-                elif unit == "4":
-                     works = list(filter(lambda w: w.index == index+1+17+8+8, stu_works))
+                    work_index = index + 1
 
+                elif unit == "2":
+                    work_index = index + 1 + 17
+                elif unit == "3":
+                    work_index = index + 1 + 17 + 8
+                elif unit == "4":
+                    work_index = index + 1 + 17 + 8 + 8
+                works = list(filter(lambda w: w.index == work_index, stu_works))
             else :
                 works = list(filter(lambda w: w.index == assignment.id, stu_works))
             works_count = len(works)
             if works_count == 0:
-                enroll_score.append(["X", index])
+                enroll_score.append(["X", work_index])
                 if typing == "0" or typing == "1":
                     if not lesson == "4":
                         total += 60
@@ -838,7 +839,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
             else:
                 work = works[-1]
                 enroll_score.append([work.score, index])
-                if work.score == -1:
+                if work.score == -2:
                     if typing == "0" or typing == "1":
                           if not lesson == "4":
                               total += 80
@@ -895,7 +896,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
       worksheet.write(row, 3, grade)     
       index = 4
       for score, index2 in enroll_score:
-          if score == -1 :
+          if score == -2 :
               worksheet.write(row, index, "V")
           else :
               worksheet.write(row, index, score)
