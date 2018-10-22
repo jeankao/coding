@@ -1,22 +1,21 @@
 <div class="card card-default expr-editor">
   <div class="card-header">
-    <button class="btn btn-outline-warning btn-sm new-block" id="new-var" data-type="var" data-toggle="modal" data-target="#new-element" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">　變數　 +</button>
+    <button class="btn btn-outline-warning btn-sm" id="new-var" data-type="var" data-toggle="modal" data-target="#modal-new-element" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">一般變數 +</button>
     <ul class="expr-item-list" id="var-list"></ul>
   </div>
   <div class="card-header">
-    <button class="btn btn-outline-danger btn-sm new-block" id="new-arr" data-type="arr" data-toggle="modal" data-target="#new-element" data-class="btn-danger" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">　陣列　  +</button>
+    <button class="btn btn-outline-danger btn-sm" id="new-arr" data-type="arr" data-toggle="modal" data-target="#modal-new-array" data-class="btn-danger" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">陣列變數 +</button>
     <ul id="arr-list" class="expr-arr-list"></ul>
   </div>
   <div class="card-header">
-    <button class="btn btn-outline-success btn-sm new-block" id="new-str-const" data-type="str-const" data-toggle="modal" data-target="#new-element" data-class="btn-success" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">文字常數 +</button>
-    <ul class="expr-item-list" id="str-const-list"></ul>
+    <button class="btn btn-outline-success btn-sm" id="new-literal" disabled>　字面值　 </button>
+    <ul class="expr-item-list">
+      <li class="btn btn-success btn-sm expr-item literal str">字串</li>
+      <li class="btn btn-success btn-sm expr-item literal num">數值</li>
+    </ul>
   </div>
   <div class="card-header">
-    <button class="btn btn-outline-success btn-sm new-block" id="new-num-const" data-type="num-const" data-toggle="modal" data-target="#new-element" data-class="btn-success" data-pattern="[0-9]+">數字常數 +</button>
-    <ul class="expr-item-list" id="num-const-list"></ul>
-  </div>
-  <div class="card-header">
-    <button class="btn btn-outline-info btn-sm" id="new-var" disabled>　符號　 </button>
+    <button class="btn btn-outline-info btn-sm" id="new-op" disabled>　符　號　 </button>
     <ul class="expr-item-list">
       <li class="btn btn-info btn-sm expr-item">(</li>
       <li class="btn btn-info btn-sm expr-item">)</li>
@@ -29,7 +28,7 @@
   </div>
   <div class="card-body pt-1" style="position: relative">
     <div class="expr-trash">
-      <img src="/static/images/trash.png" alt="">
+      <img src="/static/images/trash.png" alt="trash">
     </div>
     <div class="mb-2">
       <button class="btn btn-sm btn-outline-dark" id="new-exp">新增運算式</button> <span class="badge badge-dark">請將上面的元件方塊拖曳至下方運算式的虛線框內...</span>
@@ -50,14 +49,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="new-element" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-new-element" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="modal-title" id="exampleModalLabel">新增變數</div>
       </div>
       <div class="modal-body">
         <form id="new-element-form form-inline">
@@ -78,6 +74,206 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-literal-value" role="dialog" aria-labelledby="modal-literal-value-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-literal-value-title">新增字面值(Literal)</div>
+      </div>
+      <div class="modal-body form-inline">
+        <input type="text" name="literal-value" id="literal-value" class="form-control" />
+        <button class="btn btn-primary" id="literal-value-ok">確定</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="literal-value-close">關閉</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-new-array" role="dialog" aria-labelledby="modal-new-array-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-new-array-title">新增陣列</div>
+      </div>
+      <div class="modal-body">
+        <div class="form-inline">
+          <div class="form-group">
+            <input type="text" name="arr-name" id="arr-name" class="form-control mr-2" placeholder="陣列名稱" />
+            <div class="form-check mr-2">
+              <input type="checkbox" name="arr-2d" id="arr-2d" class="form-check-input">
+              <label for="arr-2d" class="form-check-label">二維陣列</label>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <div id="div-arr-rows">
+              <input type="number" name="arr-rows" id="arr-rows" class="form-control" min="1" max="10" value="1" /> 列
+            </div>
+            <div id="div-arr-cols">
+              <input type="number" name="arr-cols" id="arr-cols" class="form-control" min="1" max="10" value="1" /> 行
+            </div>
+          </div>
+        </div>
+        <hr>
+        <table class="table table-sm text-center align-middle">
+          <tbody>
+            <tr>
+              <th></th>
+              <th>0</th>
+              <th>1</th>
+              <th>2</th>
+              <th>3</th>
+              <th>4</th>
+              <th>5</th>
+              <th>6</th>
+              <th>7</th>
+              <th>8</th>
+              <th>9</th>
+            </tr>
+            <tr>
+              <th>0</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>1</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>2</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>3</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>4</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>5</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>6</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>7</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>8</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+            <tr>
+              <th>9</th>
+              <td><input type="text" value="0"></td>
+              <td><input type="text" value="1"></td>
+              <td><input type="text" value="2"></td>
+              <td><input type="text" value="3"></td>
+              <td><input type="text" value="4"></td>
+              <td><input type="text" value="5"></td>
+              <td><input type="text" value="6"></td>
+              <td><input type="text" value="7"></td>
+              <td><input type="text" value="8"></td>
+              <td><input type="text" value="9"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" id="new-arr-ok">確定</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="new-arr-close">關閉</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 var exprjson = {{ expr.expr_json|safe }};
 </script>

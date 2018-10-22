@@ -191,3 +191,7 @@ ul.expr-item-list a:hover {text-decoration: none}
 .expr-editor .card-body ul.expr-item-list {border: 1px dashed grey}
 .expr-editor>.card-header {padding-top: .1em; padding-bottom: .1em}
 .expr-trash {position: absolute; right: 5pt; top: 5pt; padding: 3pt; border: 1px solid silver}
+
+#modal-new-array th, #modal-new-array th {text-align: center; vertical-align: middle}
+
+body {padding-right: 0 !important}
