@@ -747,16 +747,16 @@ def grade(request, typing, lesson, unit, classroom_id):
       for index, assignment in enumerate(lesson_list):
             if typing == "0": 
                 if unit == "1":
-                    works = filter(lambda w: w.index == index+1, stu_works)
+                    works = list(filter(lambda w: w.index == index+1, stu_works))
                 elif unit == "2":
-                    works = filter(lambda w: w.index == index+1+17, stu_works)
+                    works = list(filter(lambda w: w.index == index+1+17, stu_works))
                 elif unit == "3":
-                    works = filter(lambda w: w.index == index+1+17+8, stu_works)
+                    works = list(filter(lambda w: w.index == index+1+17+8, stu_works))
                 elif unit == "4":
-                     works = filter(lambda w: w.index == index+1+17+8+8, stu_works)		
+                     works = list(filter(lambda w: w.index == index+1+17+8+8, stu_works))
 
             else :
-                works = filter(lambda w: w.index == assignment.id, stu_works)
+                works = list(filter(lambda w: w.index == assignment.id, stu_works))
             works_count = len(works)
             if works_count == 0:
                 enroll_score.append(["X", index])
