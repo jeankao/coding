@@ -876,16 +876,16 @@ def progress(request, typing, lesson, unit, classroom_id):
       if typing == "0":
           if lesson == "1":
               if unit == "1":
-                  lesson_list = lesson_list1[0:17]
+                  lesson_list = lesson_list1[0:17]				  
               elif unit == "2":
                   lesson_list = lesson_list1[17:25]
-                  index = 17
+                  index = 18
               elif unit == "3":
                   lesson_list = lesson_list1[25:33]
-                  index = 25
+                  index = 26
               elif unit == "4":
                   lesson_list = lesson_list1[33:41]
-                  index = 33
+                  index = 34
               else:
                   lesson_list = lesson_list1[0:17]
           elif lesson == "2":

@@ -727,6 +727,8 @@ def grade(request, typing, lesson, unit, classroom_id):
     for enroll in enrolls:
       enroll_score = []
       total = 0
+      memo = 0 
+      grade = 0
       stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
       if typing == "0":
         if lesson == "1":
@@ -744,7 +746,15 @@ def grade(request, typing, lesson, unit, classroom_id):
         lesson_list = CWork.objects.filter(classroom_id=classroom_id)
       for index, assignment in enumerate(lesson_list):
             if typing == "0": 
-                works = filter(lambda w: w.index == index+1, stu_works)
+                if unit == "1":
+                    works = filter(lambda w: w.index == index+1, stu_works)
+                elif unit == "2":
+                    works = filter(lambda w: w.index == index+1+17, stu_works)
+                elif unit == "3":
+                    works = filter(lambda w: w.index == index+1+17+8, stu_works)
+                elif unit == "4":
+                     works = filter(lambda w: w.index == index+1+17+8+8, stu_works)		
+
             else :
                 works = filter(lambda w: w.index == assignment.id, stu_works)
             works_count = len(works)
@@ -756,27 +766,31 @@ def grade(request, typing, lesson, unit, classroom_id):
             else:
                 work = works[-1]
                 enroll_score.append([work.score, index])
-                if work.score == -1:
+                if work.score == -2:
                     if typing == "0" or typing == "1":
                           if not lesson == "4":
                               total += 80
                 else:
                     total += work.score
 
-            if lesson == "1":
-                memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
-            elif lesson == "2":
-                memo = enroll.score_memo_vphysics
-            elif lesson == "3":
-                memo = enroll.score_memo_euler
-            elif lesson == "4":
-                memo = enroll.score_memo_vphysics2
-            elif lesson == "5":
-                memo = enroll.score_memo_vphysics3
-            if typing == "2":
-                grade = total
-            else :
+            if typing == "0":
+                if lesson == "1":
+                    memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
+                elif lesson == "2":
+                    memo = enroll.score_memo_vphysics
+                elif lesson == "3":
+                    memo = enroll.score_memo_euler
+                elif lesson == "4":
+                    memo = enroll.score_memo_vphysics2
+                elif lesson == "5":
+                    memo = enroll.score_memo_vphysics3
+                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)					
+            elif typing == "1":
+                memo = enroll.score_memo_custom
                 grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
+            elif typing == "2":
+                memo = enroll.score_memo_check
+                grade = total
       data.append([enroll, enroll_score, memo, grade])
     return render(request, 'teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data})
 
