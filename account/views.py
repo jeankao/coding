@@ -635,12 +635,12 @@ class LineCreateView(CreateView):
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
                 content = MessageContent()
-                fs = FileSystemStorage()
+                fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.user.id)+"/")
                 filename = uuid4().hex
                 content.title = file.name
                 content.message_id = self.object.id
-                content.filename = str(self.request.user.id)+"/"+filename
-                fs.save("static/attach/"+str(self.request.user.id)+"/"+filename, file)
+                content.filename = str(self.request.user.id)+"/" + filename
+                fs.save(filename, file)
                 content.save()
         # 訊息
         messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
@@ -681,12 +681,12 @@ class LineReplyView(CreateView):
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
                 content = MessageContent()
-                fs = FileSystemStorage()
+                fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.users.id)+"/")
                 filename = uuid4().hex
                 content.title = file.name
                 content.message_id = self.object.id
                 content.filename = str(self.request.user.id)+"/"+filename
-                fs.save("static/attach/"+str(self.request.user.id)+"/"+filename, file)
+                fs.save(filename, file)
                 content.save()
         # 訊息
         messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
