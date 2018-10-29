@@ -1,6 +1,6 @@
 <div class="card card-default expr-editor">
   <div class="card-header">
-    <button class="btn btn-outline-warning btn-sm" id="new-var" data-type="var" data-toggle="modal" data-target="#modal-new-element" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">一般變數 +</button>
+    <button class="btn btn-outline-warning btn-sm" id="new-var" data-type="var" data-toggle="modal" data-target="#modal-new-var" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">一般變數 +</button>
     <ul class="expr-item-list" id="var-list"></ul>
   </div>
   <div class="card-header">
@@ -49,27 +49,23 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modal-new-element" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-new-var" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-title" id="exampleModalLabel">新增變數</div>
       </div>
       <div class="modal-body">
-        <form id="new-element-form form-inline">
+        <form id="new-var-form form-inline">
           <div class="form-group">
             <label for="">名稱</label>
-            <input type="text" class="form-control" id="elementName" />
-          </div>
-          <div class="form-group" id="form-group-elementNumber">
-            <label for="">數量</label>
-            <input class="form-control" id="elementNumber" type="number" min="1" max="10" />
+            <input type="text" class="form-control" id="varName" />
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-        <button type="button" class="btn btn-primary" id="new-element-ok">新增</button>
+        <button type="button" class="btn btn-primary" id="new-var-ok">新增</button>
       </div>
     </div>
   </div>
