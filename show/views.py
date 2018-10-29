@@ -295,7 +295,7 @@ class ReviewUpdateView(UpdateView):
         score2 = reviews.aggregate(Sum('score2')).values()[0]
         score3 = reviews.aggregate(Sum('score3')).values()[0]
         score = [self.object.score1, self.object.score2,self.object.score3]
-        if reviews.count() > 0 :
+        if len(reviews) > 0 :
             score0 = score0 / reviews.count()     
             score1 = score1 / reviews.count()     
             score2 = score2 / reviews.count()  
@@ -308,13 +308,13 @@ class ReviewUpdateView(UpdateView):
                     return 1
                 else :
                     return 2
-            if show_category(self.kwargs['show_id']) == "1":
+            if show_category(self.kwargs['show_id']) == 1:
                 scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  reviews.count()]
             else :
                 scores = [math.ceil(score0*10)/10, 0, 0, reviews.count()]
         else :
             scores = [0,0,0,0]
-        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id']+",")
+        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         showfiles = ShowFile.objects.filter(show_id=self.kwargs['show_id']).order_by("-id")
@@ -340,7 +340,7 @@ class ReviewUpdateView(UpdateView):
             classroom_id = Round.objects.get(id=round_id).classroom_id
             member = Enroll.objects.get(classroom_id=classroom_id, student_id=self.request.user.id)
             # credit
-            update_avatar(member.student, 4, 1)
+            update_avatar(member.student_id, 4, 1)
             # History
             show = ShowGroup.objects.get(id=self.kwargs['show_id'])			
             history = PointHistory(user_id=member.student_id, kind=4, message=u'1分--評分創意秀<'+show.title+'>', url='/show/detail/'+str(show.id))
@@ -373,7 +373,7 @@ class ReviewListView(ListView):
             review = ShowReview(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
             review.save()        
         show = ShowGroup.objects.get(id=self.kwargs['show_id']) 
-        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id']+",")
+        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
         reviews = ShowReview.objects.filter(show_id=self.kwargs['show_id'], done=True)
         score1 = reviews.aggregate(Sum('score1')).values()[0]
         score2 = reviews.aggregate(Sum('score2')).values()[0]
