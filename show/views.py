@@ -53,7 +53,7 @@ def group(request, round_id):
         try:
                 group_show = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).groupshow
                 if group_show:
-                    student_group = map(str, group_show[1:-2].split(","))
+                    student_group = map(int, group_show.split(","))
                 else :
                     student_group = []
         except ObjectDoesNotExist :
@@ -69,8 +69,8 @@ def group(request, round_id):
         nogroup = list(enrolls)       
         for enroll in enrolls:
             if enroll.groupshow:
-              groups = map(str, group_show[1:-2].split(","))
-              if round_id in groups:
+              groups = map(int, enroll.groupshow.split(","))
+              if int(round_id) in groups:
                 nogroup.remove(enroll)
         nogroup = sorted(nogroup, key=getKey)             
         return render(request, 'show/group.html', {'shows':shows, 'round_id':round_id, 'nogroup': nogroup, 'group_show_open':group_show_open, 'teacher':is_teacher(request.user, classroom_id), 'student_groups':student_groups, 'classroom_id':classroom_id, 'student_group':student_group})
