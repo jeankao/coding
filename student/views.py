@@ -632,6 +632,21 @@ def submit(request, typing, lesson, index):
                         expr.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21")
                     return redirect('/')
+                elif types == "22": # 流程建模
+                    form = SubmitF22Form(request.POST)
+                    if form.is_valid():
+                        flowid = request.POST['flowid']
+                        if flowid:
+                            try:
+                                flow = Science2Flow.objects.get(id=flowid)
+                            except ObjectDoesNotExist:
+                                flow = Science2Flow(index=index, student_id=request.user.id)
+                        else:
+                            flow = Science2Flow(index=index, student_id=request.user.id)
+                        flow.flow_json = request.POST['flowjson']
+                        flow.save()
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22")
+                    return redirect('/')
                 elif types == "3":
                     form = SubmitF3Form(request.POST, request.FILES)
                     if form.is_valid():
@@ -716,11 +731,15 @@ def submit(request, typing, lesson, index):
                 expr = Science2Expression.objects.get(student_id=request.user.id, index=index)
             except ObjectDoesNotExist:
                 expr = Science2Expression(student_id=request.user.id, index=index)
+            try:
+                flow = Science2Flow.objects.get(student_id=request.user.id, index=index)
+            except ObjectDoesNotExist:
+                flow = Science2Flow(student_id=request.user.id, index=index)
             data1 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=0).order_by("id")
             data2 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=1).order_by("id")
             data3 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=2).order_by("id")
             questions = Science1Question.objects.filter(work_id=index)
-            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'expr': expr})
+            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'expr': expr, 'flow': flow})
 
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 

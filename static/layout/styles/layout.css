@@ -194,4 +194,11 @@ ul.expr-item-list a:hover {text-decoration: none}
 
 #modal-new-array th, #modal-new-array th {text-align: center; vertical-align: middle}
 
+/* flow editor */
+#flow-container .flow-content {display: flex; align-content: space-between}
+#flow-container .flow-item {text-align: center}
+#flow-container .flow-item::after {content: url(/static/images/down.png); text-align: center}
+#flow-container .flow-item:last-child::after {content: none}
+#flow-container .flow-op {display: flex; float: right}
+
 body {padding-right: 0 !important}

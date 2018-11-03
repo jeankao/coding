@@ -1,4 +1,37 @@
 $(function () {
+  //
+  // flow editor
+  //
+  $('#flow-container').sortable();
+
+  function _new_flow_item(content) {
+    var flow = $('<div class="flow-item"><div class="flow-content"><textarea class="form-control" placeholder="請輸入流程說明文字...">'+content+'</textarea><div class="flow-op"><button class="btn btn-sm btn-danger flow-delete">刪除</button></div></div></div>');
+    flow.appendTo('#flow-container');
+    $('textarea', flow).focus();
+    $('.flow-delete').click(function(event) {
+      $(this).parent().parent().parent().detach();
+    });
+  }
+  $('#new-flow').click(function(event) {
+    _new_flow_item('');
+  });
+
+  $('#flow-submit').click(function(event) {
+    var flow_text = $('#flow-container textarea');
+    var size = flow_text.length;
+    var data = [];
+    for (var i = 0; i < size; i++) {
+      data.push($(flow_text[i]).val());
+    }
+    $('#flowjson').val(JSON.stringify(data));
+    console.log(JSON.stringify(data));
+    // $('#flow-form').submit();
+  });
+
+  //
+  // expression editor
+  //
+
   const CS_VAR = 'btn-warning',
         CS_ARR = 'btn-danger',
         CS_CONST = 'btn-success',

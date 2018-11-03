@@ -274,4 +274,9 @@ class Science2Data(models.Model):
 class Science2Expression(models.Model):
     index = models.IntegerField(default=0)
     student_id = models.IntegerField(default=0)
-    expr_json = models.TextField(default='{vars:[], arrs:[], strs:[], nums:[], exprs:[]}')
+    expr_json = models.TextField(default='{vars:[], arrs:[], exprs:[]}')
+
+class Science2Flow(models.Model):
+    index = models.IntegerField(default=0)
+    student_id = models.IntegerField(default=0)
+    flow_json = models.TextField(default='[]')

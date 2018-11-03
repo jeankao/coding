@@ -91,6 +91,9 @@ class SubmitF1Form(forms.ModelForm):
 class SubmitF21Form(forms.Form):
     jsonstr = forms.CharField(widget=forms.Textarea)
 
+class SubmitF22Form(forms.Form):
+    flowjson = forms.CharField(widget=forms.Textarea)
+
 class SubmitF3Form(forms.Form):
     code = forms.CharField(widget=forms.Textarea)
     screenshot = forms.CharField(widget=forms.HiddenInput())

@@ -1,0 +1,17 @@
+<div class="card card-default flow-editor">
+  <div class="card-header">
+    <button id="new-flow" class="btn btn-sm btn-outline-dark">新增流程</button>
+  </div>
+  <div id="flow-container" class="card-body">
+  </div>
+  <div class="card-footer pt-1">
+    <form id="flow-form" action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="flowid" value="{{flow.id|default:'0'}}">
+      <input type="hidden" name="types" value="22">
+      <input type="hidden" name="index" value="{{index}}">
+      <input type="hidden" name="flowjson" id="flowjson" value="">
+    </form>
+    <button class="btn btn-info form-control" id="flow-submit">送出</button>
+  </div>
+</div>
