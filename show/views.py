@@ -310,13 +310,18 @@ class ReviewUpdateView(UpdateView):
                 scores = [math.ceil(score0*10)/10, 0, 0, reviews.count()]
         else :
             scores = [0,0,0,0]
-        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id']+",")
+        pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
+        members = []
+        for member in pmembers:
+            groups = member.groupshow.split(",")
+            if self.kwargs['show_id'] in groups:
+                members.append(member)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         showfiles = ShowFile.objects.filter(show_id=self.kwargs['show_id']).order_by("-id")
         round = Round.objects.get(id=self.kwargs['round_id'])
         teacher = is_teacher(self.request.user, round.classroom_id)				
-        context = self.get_context_data(teacher=teacher, showfiles=showfiles, show=show, form=form, members=members, review=self.object, scores=scores, score=score, reviews=reviews)
+        context = self.get_context_data(groups=groups, teacher=teacher, showfiles=showfiles, show=show, form=form, members=members, review=self.object, scores=scores, score=score, reviews=reviews)
         return self.render_to_response(context)
 
     def get_object(self, queryset=None):

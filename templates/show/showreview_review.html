@@ -29,7 +29,6 @@ $("#id_score").rating({min:1, max:5, step:1, size:'lg'});
             {% if form.errors %}
             <h1>表單資料有誤</h1>
             {% endif %}
-
   <h1>組別：{{show.name}}</h1>
   <h1>組員：{% for member in members %}<A href="/account/profile/{{member.student.id}}"><img src="/static/avatar/s{{ member.student.profile.avatar }}.png"></a>({{member.seat}}){{member.student.first_name}}{% endfor %}</h1>
   <h1>{{ show.title }}</h1>
