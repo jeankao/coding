@@ -1,4 +1,4 @@
-<div class="card card-default expr-editor">
+﻿<div class="card card-default expr-editor">
   <div class="card-header">
     <button class="btn btn-outline-warning btn-sm" id="new-var" data-type="var" data-toggle="modal" data-target="#modal-new-var" data-class="btn-warning" data-pattern="[A-Z_a-z][A-Za-z_0-9]*">一般變數 +</button>
     <ul class="expr-item-list" id="var-list"></ul>
@@ -37,9 +37,9 @@
     </div>
   </div>
   <div class="card-footer pt-1">
-    <form id="expr-form" action="" method="POST" enctype="multipart/form-data">
+    <form id="expr-form" action="" method="POST">
       {% csrf_token %}
-      <input type="hidden" name="exprid" value="{{expr.id|default:'0'}}">
+      <input type="hidden" name="jsonid" value="{{expr.id|default:'0'}}">
       <input type="hidden" name="types" value="21">
       <input type="hidden" name="index" value="{{index}}">
       <input type="hidden" name="jsonstr" id="jsonstr" value="">
@@ -130,133 +130,133 @@
             </tr>
             <tr>
               <th>0</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>1</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>2</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>3</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>4</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>5</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>6</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>7</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>8</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
             <tr>
               <th>9</th>
-              <td><input type="text" value="0"></td>
-              <td><input type="text" value="1"></td>
-              <td><input type="text" value="2"></td>
-              <td><input type="text" value="3"></td>
-              <td><input type="text" value="4"></td>
-              <td><input type="text" value="5"></td>
-              <td><input type="text" value="6"></td>
-              <td><input type="text" value="7"></td>
-              <td><input type="text" value="8"></td>
-              <td><input type="text" value="9"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
             </tr>
           </tbody>
         </table>
@@ -271,7 +271,7 @@
 
 
 <script>
-var exprjson = {{ expr.expr_json|safe }};
-var flowjson = {{ flow.flow_json|safe }};
+var exprjson = {{ expr.json|safe }};
+var flowjson = {{ flow.json|safe }};
 </script>
 <script type="text/javascript" src="/static/js/expression-editor.js"></script>

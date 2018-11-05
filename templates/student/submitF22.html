@@ -5,12 +5,12 @@
   <div id="flow-container" class="card-body">
   </div>
   <div class="card-footer pt-1">
-    <form id="flow-form" action="" method="POST" enctype="multipart/form-data">
+    <form id="flow-form" action="" method="POST">
       {% csrf_token %}
-      <input type="hidden" name="flowid" value="{{flow.id|default:'0'}}">
+      <input type="hidden" name="jsonid" value="{{flow.id|default:'0'}}">
       <input type="hidden" name="types" value="22">
       <input type="hidden" name="index" value="{{index}}">
-      <input type="hidden" name="flowjson" id="flowjson" value="">
+      <input type="hidden" name="jsonstr" id="jsonstr" value="">
     </form>
     <button class="btn btn-info form-control" id="flow-submit">送出</button>
   </div>

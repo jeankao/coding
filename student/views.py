@@ -33,43 +33,40 @@ import json
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
-    return  user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
+    return user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
 
 # 判斷是否為同班同學
 def is_classmate(user, classroom_id):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
     student_ids = map(lambda a: a.student_id, enroll_pool)
-    if user.id in student_ids:
-        return True
-    else:
-        return False
+    return user.id in student_ids
 
 # 課程瀏覽記錄
 def statics_lesson(request, lesson):
-		try :
-			counter = LessonCounter.objects.get(name=lesson)
-			counter.hit = counter.hit + 1
-		except ObjectDoesNotExist:
-			counter = LessonCounter(name=lesson, hit=1)
-		except MultipleObjectsReturned:
-			counters = LessonCounter.objects.filter(name=lesson)
-			counter = counter[0]
-			counter.hit = counter.hit + 1
-		counter.save()
-		day = str(datetime.now())[0:4]+str(datetime.now())[5:7]+str(datetime.now())[8:10]
-		try :
-			daycounter = DayCounter.objects.get(day=day)
-			daycounter.hit = daycounter.hit + 1
-		except ObjectDoesNotExist:
-			daycounter = DayCounter(day=day, hit=1)
-		except MultipleObjectsReturned:
-			daycounters = DayCounter.objects.filter(day=day)
-			daycounter = daycounters[0]
-			daycounter.hit = daycounter.hit + 1
-		daycounter.save()
-		log = LogCounter(counter_id=counter.id, counter_ip=request.META['REMOTE_ADDR'])
-		log.save()
-		return counter.hit
+    try :
+        counter = LessonCounter.objects.get(name=lesson)
+        counter.hit = counter.hit + 1
+    except ObjectDoesNotExist:
+        counter = LessonCounter(name=lesson, hit=1)
+    except MultipleObjectsReturned:
+        counters = LessonCounter.objects.filter(name=lesson)
+        counter = counter[0]
+        counter.hit = counter.hit + 1
+    counter.save()
+    day = str(datetime.now())[0:4]+str(datetime.now())[5:7]+str(datetime.now())[8:10]
+    try :
+        daycounter = DayCounter.objects.get(day=day)
+        daycounter.hit = daycounter.hit + 1
+    except ObjectDoesNotExist:
+        daycounter = DayCounter(day=day, hit=1)
+    except MultipleObjectsReturned:
+        daycounters = DayCounter.objects.filter(day=day)
+        daycounter = daycounters[0]
+        daycounter.hit = daycounter.hit + 1
+    daycounter.save()
+    log = LogCounter(counter_id=counter.id, counter_ip=request.META['REMOTE_ADDR'])
+    log.save()
+    return counter.hit
 
 
 # 各種課程
@@ -183,83 +180,79 @@ def lesson(request, lesson):
 
 # 查看班級學生
 def classmate(request, classroom_id):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        enroll_group = []
-        classroom=Classroom.objects.get(id=classroom_id)
-        for enroll in enrolls:
-            login_times = len(VisitorLog.objects.filter(user_id=enroll.student_id))
-            if enroll.group > 0 :
-                enroll_group.append([enroll, EnrollGroup.objects.get(id=enroll.group).name, login_times])
-            else :
-                enroll_group.append([enroll, "沒有組別", login_times])
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    enroll_group = []
+    classroom=Classroom.objects.get(id=classroom_id)
+    for enroll in enrolls:
+        login_times = len(VisitorLog.objects.filter(user_id=enroll.student_id))
+        if enroll.group > 0 :
+            enroll_group.append([enroll, EnrollGroup.objects.get(id=enroll.group).name, login_times])
+        else :
+            enroll_group.append([enroll, "沒有組別", login_times])
 
-        return render(request, 'student/classmate.html', {'classroom':classroom, 'enrolls':enroll_group})
+    return render(request, 'student/classmate.html', {'classroom':classroom, 'enrolls':enroll_group})
 
 # 顯示所有組別
 def group(request, classroom_id):
-        student_groups = []
-        classroom = Classroom.objects.get(id=classroom_id)
-        group_open = Classroom.objects.get(id=classroom_id).group_open
-        groups = EnrollGroup.objects.filter(classroom_id=classroom_id)
-        try:
-                student_group = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).group
-        except ObjectDoesNotExist :
-                student_group = []
-        for group in groups:
-            enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group.id)
-            student_groups.append([group, enrolls, classroom.group_size-len(enrolls)])
+    student_groups = []
+    classroom = Classroom.objects.get(id=classroom_id)
+    group_open = Classroom.objects.get(id=classroom_id).group_open
+    groups = EnrollGroup.objects.filter(classroom_id=classroom_id)
+    try:
+            student_group = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).group
+    except ObjectDoesNotExist :
+            student_group = []
+    for group in groups:
+        enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group.id)
+        student_groups.append([group, enrolls, classroom.group_size-len(enrolls)])
 
-        #找出尚未分組的學生
-        def getKey(custom):
-            return custom.seat
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id)
-        nogroup = []
-        for enroll in enrolls:
-            if enroll.group == 0 :
-		        nogroup.append(enroll)
-	    nogroup = sorted(nogroup, key=getKey)
-
-        return render(request, 'student/group.html', {'nogroup': nogroup, 'group_open': group_open, 'student_groups':student_groups, 'classroom':classroom, 'student_group':student_group, 'teacher': is_teacher(request.user, classroom_id)})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    nogroup = []
+    for enroll in enrolls:
+        if enroll.group == 0 :
+            nogroup.append(enroll)
+    nogroup = sorted(nogroup, key=lambda s: s.seat)
+    return render(request, 'student/group.html', {'nogroup': nogroup, 'group_open': group_open, 'student_groups':student_groups, 'classroom':classroom, 'student_group':student_group, 'teacher': is_teacher(request.user, classroom_id)})
 
 # 新增組別
 def group_add(request, classroom_id):
-        if request.method == 'POST':
-            classroom_name = Classroom.objects.get(id=classroom_id).name
-            form = GroupForm(request.POST)
-            if form.is_valid():
-                group = EnrollGroup(name=form.cleaned_data['name'],classroom_id=int(classroom_id))
-                group.save()
+    if request.method == 'POST':
+        classroom_name = Classroom.objects.get(id=classroom_id).name
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            group = EnrollGroup(name=form.cleaned_data['name'],classroom_id=int(classroom_id))
+            group.save()
 
-                return redirect('/student/group/'+classroom_id)
-        else:
-            form = GroupForm()
-        return render(request, 'form.html', {'form':form})
+            return redirect('/student/group/'+classroom_id)
+    else:
+        form = GroupForm()
+    return render(request, 'form.html', {'form':form})
 
 # 設定組別人數
 def group_size(request, classroom_id):
-        if request.method == 'POST':
-            form = GroupSizeForm(request.POST)
-            if form.is_valid():
-                classroom = Classroom.objects.get(id=classroom_id)
-                classroom.group_size = form.cleaned_data['group_size']
-                classroom.save()
-
-                return redirect('/student/group/'+classroom_id)
-        else:
+    if request.method == 'POST':
+        form = GroupSizeForm(request.POST)
+        if form.is_valid():
             classroom = Classroom.objects.get(id=classroom_id)
-            form = GroupSizeForm(instance=classroom)
-        return render(request, 'form.html', {'form':form})
+            classroom.group_size = form.cleaned_data['group_size']
+            classroom.save()
+
+            return redirect('/student/group/'+classroom_id)
+    else:
+        classroom = Classroom.objects.get(id=classroom_id)
+        form = GroupSizeForm(instance=classroom)
+    return render(request, 'form.html', {'form':form})
 
 # 加入組別
 def group_enroll(request, classroom_id,  group_id):
-        classroom = Classroom.objects.get(id=classroom_id)
-        members = Enroll.objects.filter(group=group_id)
-        if len(members) < classroom.group_size:
-            group_name = EnrollGroup.objects.get(id=group_id).name
-            enroll = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
-            enroll.update(group=group_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    members = Enroll.objects.filter(group=group_id)
+    if len(members) < classroom.group_size:
+        group_name = EnrollGroup.objects.get(id=group_id).name
+        enroll = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
+        enroll.update(group=group_id)
 
-        return redirect('/student/group/'+classroom_id)
+    return redirect('/student/group/'+classroom_id)
 
 # 刪除組別
 def group_delete(request, group_id, classroom_id):
@@ -275,7 +268,6 @@ def group_open(request, classroom_id, action):
     if action == "1":
         classroom.group_open=True
         classroom.save()
-
     else :
         classroom.group_open=False
         classroom.save()
@@ -322,26 +314,26 @@ class ClassroomAdd(ListView):
 
 # 加入班級
 def classroom_enroll(request, classroom_id):
-        scores = []
-        if request.method == 'POST':
-            form = EnrollForm(request.POST)
-            if form.is_valid():
-                try:
-                    classroom = Classroom.objects.get(id=classroom_id)
-                    if classroom.password == form.cleaned_data['password']:
-                        try:
-                            enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id)
-                        except ObjectDoesNotExist:
-                            enroll = Enroll(classroom_id=classroom_id, student_id=request.user.id, seat=form.cleaned_data['seat'])
-                        enroll.save()
-                    else:
-                        return render(request, 'message.html', {'message':"選課密碼錯誤"})
-                except Classroom.DoesNotExist:
-                    pass
-                return redirect("/student/group/" + str(classroom.id))
-        else:
-            form = EnrollForm()
-        return render(request, 'form.html', {'form':form})
+    scores = []
+    if request.method == 'POST':
+        form = EnrollForm(request.POST)
+        if form.is_valid():
+            try:
+                classroom = Classroom.objects.get(id=classroom_id)
+                if classroom.password == form.cleaned_data['password']:
+                    try:
+                        enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id)
+                    except ObjectDoesNotExist:
+                        enroll = Enroll(classroom_id=classroom_id, student_id=request.user.id, seat=form.cleaned_data['seat'])
+                    enroll.save()
+                else:
+                    return render(request, 'message.html', {'message':"選課密碼錯誤"})
+            except Classroom.DoesNotExist:
+                pass
+            return redirect("/student/group/" + str(classroom.id))
+    else:
+        form = EnrollForm()
+    return render(request, 'form.html', {'form':form})
 
 # 修改座號
 def seat_edit(request, enroll_id, classroom_id):
@@ -617,35 +609,22 @@ def submit(request, typing, lesson, index):
                         obj.pic = ""
                         obj.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#question"+q_index)
-                elif types == "21": # 資料建模
-                    form = SubmitF21Form(request.POST)
+                elif types in ["21", "22"]: # 資料建模, 流程建模
+                    form = SubmitF2Form(request.POST)
+                    model_type = int(types == "22")
                     if form.is_valid():
-                        exprid = request.POST['exprid']
-                        if exprid:
+                        jsonid = request.POST['jsonid']
+                        if jsonid:
                             try:
-                                expr = Science2Expression.objects.get(id=exprid)
+                                json = Science2Json.objects.get(id=jsonid)
                             except ObjectDoesNotExist:
-                                expr = Science2Expression(index=index, student_id=request.user.id)
+                                json = Science2Json(index=index, student_id=request.user.id, model_type=model_type)
                         else:
-                            expr = Science2Expression(index=index, student_id=request.user.id)
-                        expr.expr_json = request.POST['jsonstr']
-                        expr.save()
-                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21")
-                    return redirect('/')
-                elif types == "22": # 流程建模
-                    form = SubmitF22Form(request.POST)
-                    if form.is_valid():
-                        flowid = request.POST['flowid']
-                        if flowid:
-                            try:
-                                flow = Science2Flow.objects.get(id=flowid)
-                            except ObjectDoesNotExist:
-                                flow = Science2Flow(index=index, student_id=request.user.id)
-                        else:
-                            flow = Science2Flow(index=index, student_id=request.user.id)
-                        flow.flow_json = request.POST['flowjson']
-                        flow.save()
-                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22")
+                            json = Science2Json(index=index, student_id=request.user.id, model_type=model_type)
+
+                        json.json = request.POST['jsonstr']
+                        json.save()
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab"+types)
                     return redirect('/')
                 elif types == "3":
                     form = SubmitF3Form(request.POST, request.FILES)
@@ -699,7 +678,6 @@ def submit(request, typing, lesson, index):
                         obj.pic = ""
                         obj.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
-
         else:
             contents1 = [[]]
             works_pool = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
@@ -728,18 +706,15 @@ def submit(request, typing, lesson, index):
             else :
                 work3 = Science3Work(student_id=request.user.id, index=index)
             try:
-                expr = Science2Expression.objects.get(student_id=request.user.id, index=index)
+                expr = Science2Json.objects.get(student_id=request.user.id, index=index, model_type=0)
             except ObjectDoesNotExist:
-                expr = Science2Expression(student_id=request.user.id, index=index)
+                expr = Science2Json(student_id=request.user.id, index=index, model_type=0, json='{vars:[], arrs:[], exprs:[]}')
             try:
-                flow = Science2Flow.objects.get(student_id=request.user.id, index=index)
+                flow = Science2Json.objects.get(student_id=request.user.id, index=index, model_type=1)
             except ObjectDoesNotExist:
-                flow = Science2Flow(student_id=request.user.id, index=index)
-            data1 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=0).order_by("id")
-            data2 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=1).order_by("id")
-            data3 = Science2Data.objects.filter(index=index, student_id=request.user.id, types=2).order_by("id")
+                flow = Science2Json(student_id=request.user.id, index=index, model_type=1, json='[]')
             questions = Science1Question.objects.filter(work_id=index)
-            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'expr': expr, 'flow': flow})
+            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'expr': expr, 'flow': flow})
 
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 
@@ -895,7 +870,7 @@ def progress(request, typing, lesson, unit, classroom_id):
       if typing == "0":
           if lesson == "1":
               if unit == "1":
-                  lesson_list = lesson_list1[0:17]				  
+                  lesson_list = lesson_list1[0:17]
               elif unit == "2":
                   lesson_list = lesson_list1[17:25]
                   index = 18
@@ -949,48 +924,48 @@ def progress(request, typing, lesson, unit, classroom_id):
 
 # 查詢某作業分組小老師
 def work_group(request, typing, lesson, classroom_id):
-        if lesson == "1":
-            lesson_list = lesson_list1
-        elif lesson == "2":
-            lesson_list = lesson_list2
-        elif lesson == "3":
-            lesson_list = lesson_list3
-        elif lesson == "4":
-            lesson_list = lesson_list4
-        elif lesson == "5":
-            lesson_list = lesson_list2
-        else :
-            lesson_list = lesson_list1
-        lessons = []
-        index = 0
-        for assignment in lesson_list:
-            student_groups = []
-            enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
-            group_assistants = []
-            assistants = []
-            works = []
-            scorer_name = ""
-            for enroll in enrolls:
-                try:
-                    work = Work.objects.get(user_id=enroll.student_id, index=lesson+1)
-                    if work.scorer > 0 :
-                        scorer = User.objects.get(id=work.scorer)
-                        scorer_name = scorer.first_name
-                    else :
-                        scorer_name = "X"
-                except ObjectDoesNotExist:
-                    work = Work(index=lesson, user_id=1)
-                works.append([enroll, work.score, scorer_name, work.memo])
-                try :
-                    assistant = Assistant.objects.get(student_id=enroll.student.id, classroom_id=classroom_id, lesson=lesson+1)
-                    group_assistants.append(enroll)
-                    assistants.append(enroll.student_id)
-                except ObjectDoesNotExist:
-                    pass
-            student_groups.append([group, works, group_assistants, assistants])
-            lessons.append([lesson_list[index], student_groups])
-            index = index + 1
-        return render(request, 'student/work_group.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
+    if lesson == "1":
+        lesson_list = lesson_list1
+    elif lesson == "2":
+        lesson_list = lesson_list2
+    elif lesson == "3":
+        lesson_list = lesson_list3
+    elif lesson == "4":
+        lesson_list = lesson_list4
+    elif lesson == "5":
+        lesson_list = lesson_list2
+    else :
+        lesson_list = lesson_list1
+    lessons = []
+    index = 0
+    for assignment in lesson_list:
+        student_groups = []
+        enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
+        group_assistants = []
+        assistants = []
+        works = []
+        scorer_name = ""
+        for enroll in enrolls:
+            try:
+                work = Work.objects.get(user_id=enroll.student_id, index=lesson+1)
+                if work.scorer > 0 :
+                    scorer = User.objects.get(id=work.scorer)
+                    scorer_name = scorer.first_name
+                else :
+                    scorer_name = "X"
+            except ObjectDoesNotExist:
+                work = Work(index=lesson, user_id=1)
+            works.append([enroll, work.score, scorer_name, work.memo])
+            try :
+                assistant = Assistant.objects.get(student_id=enroll.student.id, classroom_id=classroom_id, lesson=lesson+1)
+                group_assistants.append(enroll)
+                assistants.append(enroll.student_id)
+            except ObjectDoesNotExist:
+                pass
+        student_groups.append([group, works, group_assistants, assistants])
+        lessons.append([lesson_list[index], student_groups])
+        index = index + 1
+    return render(request, 'student/work_group.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
 
 # 解答
 def answer(request, lesson, index):
@@ -1079,95 +1054,95 @@ def memo_user(request, lesson, classroom_id, user_id):
 
 # 查詢某班級心得
 def memo_all(request, classroom_id):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        classroom_name = Classroom.objects.get(id=classroom_id).name
-        return render(request, 'student/memo_all.html', {'enrolls':enrolls, 'classroom_name':classroom_name})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    classroom_name = Classroom.objects.get(id=classroom_id).name
+    return render(request, 'student/memo_all.html', {'enrolls':enrolls, 'classroom_name':classroom_name})
 
 # 查詢某班級心得統計
 def memo_count(request, classroom_id):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        members = []
-        for enroll in enrolls:
-            members.append(enroll.student_id)
-        classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members, lesson_id=classroom.lesson)
-        memo = ""
-        for work in works:
-            memo += work.memo
-        memo = memo.rstrip('\r\n')
-        seglist = jieba.cut(memo, cut_all=False)
-        hash = {}
-        for item in seglist:
-            if item in hash:
-                hash[item] += 1
-            else:
-                hash[item] = 1
-        words = []
-        count = 0
-        error=""
-        for key, value in sorted(hash.items(), key=lambda x: x[1], reverse=True):
-            if ord(key[0]) > 32 :
-                count += 1
-                words.append([key, value])
-                if count == 30:
-                    break
-        return render(request, 'student/memo_count.html', {'total':works.count(), 'words':words, 'enrolls':enrolls, 'classroom':classroom})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    members = []
+    for enroll in enrolls:
+        members.append(enroll.student_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    works = Work.objects.filter(user_id__in=members, lesson_id=classroom.lesson)
+    memo = ""
+    for work in works:
+        memo += work.memo
+    memo = memo.rstrip('\r\n')
+    seglist = jieba.cut(memo, cut_all=False)
+    hash = {}
+    for item in seglist:
+        if item in hash:
+            hash[item] += 1
+        else:
+            hash[item] = 1
+    words = []
+    count = 0
+    error=""
+    for key, value in sorted(hash.items(), key=lambda x: x[1], reverse=True):
+        if ord(key[0]) > 32 :
+            count += 1
+            words.append([key, value])
+            if count == 30:
+                break
+    return render(request, 'student/memo_count.html', {'total':works.count(), 'words':words, 'enrolls':enrolls, 'classroom':classroom})
 
 
 
 # 查詢某班級某作業心得統計
 def memo_work_count(request, classroom_id, work_id):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        members = []
-        for enroll in enrolls:
-            members.append(enroll.student_id)
-        classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members, index=int(work_id), lesson_id=classroom.lesson)
-        memo = ""
-        for work in works:
-            memo += work.memo
-        memo = memo.rstrip('\r\n')
-        seglist = jieba.cut(memo, cut_all=False)
-        hash = {}
-        for item in seglist:
-            if item in hash:
-                hash[item] += 1
-            else:
-                hash[item] = 1
-        words = []
-        count = 0
-        for key, value in sorted(hash.items(), key=lambda x: x[1], reverse=True):
-            count += 1
-            if ord(key[0]) > 32 :
-                words.append([key, value])
-                if count == 30:
-                    break
-        return render(request, 'student/memo_work_count.html', {'words':words, 'enrolls':enrolls, 'classroom':classroom,  'work_id':work_id, 'lesson':lesson_list[int(work_id)-1][2]})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    members = []
+    for enroll in enrolls:
+        members.append(enroll.student_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    works = Work.objects.filter(user_id__in=members, index=int(work_id), lesson_id=classroom.lesson)
+    memo = ""
+    for work in works:
+        memo += work.memo
+    memo = memo.rstrip('\r\n')
+    seglist = jieba.cut(memo, cut_all=False)
+    hash = {}
+    for item in seglist:
+        if item in hash:
+            hash[item] += 1
+        else:
+            hash[item] = 1
+    words = []
+    count = 0
+    for key, value in sorted(hash.items(), key=lambda x: x[1], reverse=True):
+        count += 1
+        if ord(key[0]) > 32 :
+            words.append([key, value])
+            if count == 30:
+                break
+    return render(request, 'student/memo_work_count.html', {'words':words, 'enrolls':enrolls, 'classroom':classroom,  'work_id':work_id, 'lesson':lesson_list[int(work_id)-1][2]})
 
 
 # 查詢某班某詞句心得
 def memo_word(request, classroom_id, word):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        members = []
-        for enroll in enrolls:
-            members.append(enroll.student_id)
-        classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members, memo__contains=word, lesson_id=classroom.lesson).order_by('index')
-        for work in works:
-            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
-        return render(request, 'student/memo_word.html', {'word':word, 'works':works, 'classroom':classroom})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    members = []
+    for enroll in enrolls:
+        members.append(enroll.student_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    works = Work.objects.filter(user_id__in=members, memo__contains=word, lesson_id=classroom.lesson).order_by('index')
+    for work in works:
+        work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
+    return render(request, 'student/memo_word.html', {'word':word, 'works':works, 'classroom':classroom})
 
 # 查詢某班某作業某詞句心得
 def memo_work_word(request, classroom_id, work_id, word):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        members = []
-        for enroll in enrolls:
-            members.append(enroll.student_id)
-        classroom = Classroom.objects.get(id=classroom_id)
-        works = Work.objects.filter(user_id__in=members, index=work_id, memo__contains=word)
-        for work in works:
-            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
-        return render(request, 'student/memo_work_word.html', {'word':word, 'works':works, 'classroom':classroom, 'lesson':lesson_list[int(work_id)-1][2]})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    members = []
+    for enroll in enrolls:
+        members.append(enroll.student_id)
+    classroom = Classroom.objects.get(id=classroom_id)
+    works = Work.objects.filter(user_id__in=members, index=work_id, memo__contains=word)
+    for work in works:
+        work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
+    return render(request, 'student/memo_work_word.html', {'word':word, 'works':works, 'classroom':classroom, 'lesson':lesson_list[int(work_id)-1][2]})
 
 
 # 查詢個人心得
@@ -1258,71 +1233,71 @@ def forum_publish(request, classroom_id, index, action):
 
 
 def forum_submit(request, classroom_id, index):
-        scores = []
+    scores = []
+    works = SFWork.objects.filter(index=index, student_id=request.user.id).order_by("-id")
+    contents = FContent.objects.filter(forum_id=index).order_by("id")
+    fwork = FWork.objects.get(id=index)
+    if request.method == 'POST':
+        form = ForumSubmitForm(request.POST, request.FILES)
+        #第一次上傳加上積分
         works = SFWork.objects.filter(index=index, student_id=request.user.id).order_by("-id")
-        contents = FContent.objects.filter(forum_id=index).order_by("id")
-        fwork = FWork.objects.get(id=index)
-        if request.method == 'POST':
-            form = ForumSubmitForm(request.POST, request.FILES)
-            #第一次上傳加上積分
-            works = SFWork.objects.filter(index=index, student_id=request.user.id).order_by("-id")
-            work = SFWork(index=index, student_id=request.user.id, publish=False)
+        work = SFWork(index=index, student_id=request.user.id, publish=False)
+        work.save()
+        if request.FILES:
+            content = SFContent(index=index, student_id=request.user.id)
+            myfile =  request.FILES.get("file", "")
+            fs = FileSystemStorage()
+            filename = uuid4().hex
+            content.title = myfile.name
+            content.work_id = work.id
+            content.filename = str(request.user.id)+"/"+filename
+            fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
+            content.save()
+        if form.is_valid():
+            work.memo=form.cleaned_data['memo']
+            work.memo_e = form.cleaned_data['memo_e']
+            work.memo_c = form.cleaned_data['memo_c']
             work.save()
-            if request.FILES:
-                content = SFContent(index=index, student_id=request.user.id)
-                myfile =  request.FILES.get("file", "")
-                fs = FileSystemStorage()
-                filename = uuid4().hex
-                content.title = myfile.name
-                content.work_id = work.id
-                content.filename = str(request.user.id)+"/"+filename
-                fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
-                content.save()
-            if form.is_valid():
-                work.memo=form.cleaned_data['memo']
-                work.memo_e = form.cleaned_data['memo_e']
-                work.memo_c = form.cleaned_data['memo_c']
-                work.save()
-                if not works:
-                    return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
-                elif not works[0].publish:
-                    return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
-                return redirect("/student/forum/memo/"+classroom_id+"/"+index+"/0")
-            else:
-                return render_to_response('student/forum_form.html', {'error':form.errors}, context_instance=RequestContext(request))
+            if not works:
+                return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
+            elif not works[0].publish:
+                return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
+            return redirect("/student/forum/memo/"+classroom_id+"/"+index+"/0")
         else:
-            if not works.exists():
-                work = SFWork(index=0, publish=False)
-                form = ForumSubmitForm()
-            else:
-                work = works[0]
-                form = ForumSubmitForm()
-            files = SFContent.objects.filter(index=index, student_id=request.user.id,visible=True).order_by("-id")
-            subject = FWork.objects.get(id=index).title
-        return render(request, 'student/forum_form.html', {'classroom_id':classroom_id, 'subject':subject, 'files':files, 'index': index, 'fwork':fwork, 'works':works, 'work':work, 'form':form, 'scores':scores, 'index':index, 'contents':contents})
+            return render_to_response('student/forum_form.html', {'error':form.errors}, context_instance=RequestContext(request))
+    else:
+        if not works.exists():
+            work = SFWork(index=0, publish=False)
+            form = ForumSubmitForm()
+        else:
+            work = works[0]
+            form = ForumSubmitForm()
+        files = SFContent.objects.filter(index=index, student_id=request.user.id,visible=True).order_by("-id")
+        subject = FWork.objects.get(id=index).title
+    return render(request, 'student/forum_form.html', {'classroom_id':classroom_id, 'subject':subject, 'files':files, 'index': index, 'fwork':fwork, 'works':works, 'work':work, 'form':form, 'scores':scores, 'index':index, 'contents':contents})
 
 def forum_show(request, index, user_id, classroom_id):
-		user = User.objects.get(id=user_id)
-		if not (is_classmate(user, classroom_id) or is_teacher(request.user, classroom_id)) :
-			return redirect("/")
-		forum = FWork.objects.get(id=index)
-		teacher_id = forum.teacher_id
-		work = []
-		replys = []
-		files = []
-		works = SFWork.objects.filter(index=index, student_id=user_id).order_by("-id")
-		contents = FContent.objects.filter(forum_id=index).order_by("id")
-		publish = False
-		if len(works)> 0:
-			work_new = works[0]
-			work_first = works.last()
-			publish = work_first.publish
-			replys = SFReply.objects.filter(index=index, work_id=work_first.id).order_by("-id")
-			files = SFContent.objects.filter(index=index, student_id=user_id, visible=True).order_by("-id")
-		else :
-			work_new = SFWork(index=index, student_id=user_id)
-			work_first = SFWork(index=index, student_id=user_id)
-		return render(request, 'student/forum_show.html', {'work_new': work_new, 'work_first':work_first, 'publish':publish, 'classroom_id':classroom_id, 'contents':contents, 'replys':replys, 'files':files, 'forum':forum, 'user_id':user_id, 'teacher_id':teacher_id, 'works': works, 'is_teacher':is_teacher(request.user, classroom_id)})
+    user = User.objects.get(id=user_id)
+    if not (is_classmate(user, classroom_id) or is_teacher(request.user, classroom_id)) :
+        return redirect("/")
+    forum = FWork.objects.get(id=index)
+    teacher_id = forum.teacher_id
+    work = []
+    replys = []
+    files = []
+    works = SFWork.objects.filter(index=index, student_id=user_id).order_by("-id")
+    contents = FContent.objects.filter(forum_id=index).order_by("id")
+    publish = False
+    if len(works)> 0:
+        work_new = works[0]
+        work_first = works.last()
+        publish = work_first.publish
+        replys = SFReply.objects.filter(index=index, work_id=work_first.id).order_by("-id")
+        files = SFContent.objects.filter(index=index, student_id=user_id, visible=True).order_by("-id")
+    else :
+        work_new = SFWork(index=index, student_id=user_id)
+        work_first = SFWork(index=index, student_id=user_id)
+    return render(request, 'student/forum_show.html', {'work_new': work_new, 'work_first':work_first, 'publish':publish, 'classroom_id':classroom_id, 'contents':contents, 'replys':replys, 'files':files, 'forum':forum, 'user_id':user_id, 'teacher_id':teacher_id, 'works': works, 'is_teacher':is_teacher(request.user, classroom_id)})
 
  # 查詢某作業所有同學心得
 def forum_memo(request, classroom_id, index, action):
@@ -1374,15 +1349,15 @@ def forum_memo(request, classroom_id, index, action):
 	return render(request, 'student/forum_memo.html', {'action':action, 'replys':replys, 'datas': datas, 'contents':contents, 'teacher_id':teacher_id, 'subject':subject, 'classroom_id':classroom_id, 'index':index, 'is_teacher':is_teacher(request.user, classroom_id)})
 
 def forum_history(request, user_id, index, classroom_id):
-		work = []
-		contents = FContent.objects.filter(forum_id=index).order_by("-id")
-		works = SFWork.objects.filter(index=index, student_id=user_id).order_by("-id")
-		files = SFContent.objects.filter(index=index, student_id=user_id).order_by("-id")
-		forum = FWork.objects.get(id=index)
-		if len(works)> 0 :
-			if works[0].publish or user_id==str(request.user.id) or is_teacher(request.user, classroom_id):
-				return render(reuqest, 'student/forum_history.html', {'forum': forum, 'classroom_id':classroom_id, 'works':works, 'contents':contents, 'files':files, 'index':index})
-		return redirect("/")
+    work = []
+    contents = FContent.objects.filter(forum_id=index).order_by("-id")
+    works = SFWork.objects.filter(index=index, student_id=user_id).order_by("-id")
+    files = SFContent.objects.filter(index=index, student_id=user_id).order_by("-id")
+    forum = FWork.objects.get(id=index)
+    if len(works)> 0 :
+        if works[0].publish or user_id==str(request.user.id) or is_teacher(request.user, classroom_id):
+            return render(reuqest, 'student/forum_history.html', {'forum': forum, 'classroom_id':classroom_id, 'works':works, 'contents':contents, 'files':files, 'index':index})
+    return redirect("/")
 
 def forum_like(request):
     forum_id = request.POST.get('forumid')
@@ -1549,23 +1524,23 @@ def forum_jieba(request, classroom_id, index):
 
 # 查詢某班某詞句心得
 def forum_word(request, classroom_id, index, word):
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        work_ids = []
-        datas = []
-        pos = word.index(' ')
-        word = word[0:pos]
-        for enroll in enrolls:
-            try:
-                works = SFWork.objects.filter(index=index, student_id=enroll.student_id,memo__contains=word).order_by("-id")
-                if works:
-                    work_ids.append(works[0].id)
-                    datas.append([works[0], enroll.seat])
-            except ObjectDoesNotExist:
-                pass
-        classroom = Classroom.objects.get(id=classroom_id)
-        for work, seat in datas:
-            work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
-        return render(request, 'student/forum_word.html', {'word':word, 'datas':datas, 'classroom':classroom})
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+    work_ids = []
+    datas = []
+    pos = word.index(' ')
+    word = word[0:pos]
+    for enroll in enrolls:
+        try:
+            works = SFWork.objects.filter(index=index, student_id=enroll.student_id,memo__contains=word).order_by("-id")
+            if works:
+                work_ids.append(works[0].id)
+                datas.append([works[0], enroll.seat])
+        except ObjectDoesNotExist:
+            pass
+    classroom = Classroom.objects.get(id=classroom_id)
+    for work, seat in datas:
+        work.memo = work.memo.replace(word, '<font color=red>'+word+'</font>')
+    return render(request, 'student/forum_word.html', {'word':word, 'datas':datas, 'classroom':classroom})
 
 # 下載檔案
 def forum_download(request, file_id):
@@ -1583,8 +1558,8 @@ def forum_download(request, file_id):
 
 # 顯示圖片
 def forum_showpic(request, file_id):
-        content = SFContent.objects.get(id=file_id)
-        return render(reuqest, 'student/forum_showpic.html', {'content':content})
+    content = SFContent.objects.get(id=file_id)
+    return render(reuqest, 'student/forum_showpic.html', {'content':content})
 
 # ajax刪除檔案
 def forum_file_delete(request):
@@ -1647,32 +1622,3 @@ def content_edit(request, types, typing, lesson, index, content_id):
             elif types == "41" or types== "42":
                 return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
     return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'types':types, 'typing':typing, 'lesson':lesson, 'index':index})
-
-# 資料建模
-def data_add(request, typing, lesson, index, types):
-        if request.method == 'POST':
-            form = DataForm(request.POST)
-            if form.is_valid():
-                data = Science2Data(name=form.cleaned_data['name'],student_id=request.user.id, index=form.cleaned_data['index'], types=form.cleaned_data['types'])
-                data.save()
-            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab21")
-        else:
-            form = DataForm()
-        return render(request, 'student/data_form.html', {'form':form, 'typing':typing, 'lesson':lesson, 'index':index, 'types':types})
-
-# 資料建模
-def data_edit(request, typing, lesson, index, types, data_id):
-        if request.method == 'POST':
-            data = Science2Data.objects.get(id=request.POST.get('data_id'))
-            data.name = request.POST.get('name')
-            data.save()
-            return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22")
-        else:
-            data = Science2Data.objects.get(id=data_id)
-            return render(request, 'student/data_edit_form.html', {'types':types, 'data':data, 'typing':typing, 'lesson':lesson, 'index':index, 'data_id':data_id})
-
-def data_delete(request, typing, lesson, index, data_id):
-    instance = Science2Data.objects.get(id=data_id)
-    instance.delete()
-
-    return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab22")

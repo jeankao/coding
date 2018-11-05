@@ -2,10 +2,13 @@ $(function () {
   //
   // flow editor
   //
-  $('#flow-container').sortable();
+  $('#flow-container').sortable({
+    placeholder: 'ui-state-highlight',
+  });
 
   function _new_flow_item(content) {
     var flow = $('<div class="flow-item"><div class="flow-content"><textarea class="form-control" placeholder="請輸入流程說明文字...">'+content+'</textarea><div class="flow-op"><button class="btn btn-sm btn-danger flow-delete">刪除</button></div></div></div>');
+    $('.flow-content', flow).prepend($('<span class="ui-icon ui-icon-arrow-4"></span>'));
     flow.appendTo('#flow-container');
     $('textarea', flow).focus();
     $('.flow-delete').click(function(event) {
@@ -23,10 +26,22 @@ $(function () {
     for (var i = 0; i < size; i++) {
       data.push($(flow_text[i]).val());
     }
-    $('#flowjson').val(JSON.stringify(data));
-    console.log(JSON.stringify(data));
-    // $('#flow-form').submit();
+    $('input[name="jsonstr"]', '#flow-form').val(JSON.stringify(data));
+    $('#flow-form').submit();
   });
+
+  function initFlowElements() {
+    var items = flowjson;
+    var size = items.length;
+
+    for (var i = 0; i < size; i++) {
+      item = items[i];
+      console.log(item);
+      _new_flow_item(item);
+    }
+  }
+
+  initFlowElements();
 
   //
   // expression editor
@@ -69,7 +84,7 @@ $(function () {
     //console.log('_arr_expr_block', item_str);
     var container = $('<ul class="expr-rhs expr-item-list"></ul>');
     var tokens = item_str.match(/\w+|[\(\)+\-*\/^]/g);
-    for (var i = 0; i < tokens.length; i++) 
+    for (var i = 0; i < tokens.length; i++)
       newBlock(getType(tokens[i].trim()), tokens[i].trim(), container);
     container.appendTo(parent);
   }
@@ -316,7 +331,6 @@ $(function () {
     return expr;
   });
 
-
   function _var_arr_helper() {
     var name = $(this).parent().data('name');
     if ($(this).hasClass('expr-item arr')) {
@@ -328,7 +342,6 @@ $(function () {
       return $(this).clone().html('&nbsp;');
     return $(this).clone();
   }
-
 
   $modal_new_var.on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget);

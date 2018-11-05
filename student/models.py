@@ -64,9 +64,9 @@ class Enroll(models.Model):
     certificate_microbit_date = models.DateTimeField(default=timezone.now)
     score_memo_microbit =  models.IntegerField(default=0)
     # 自訂作業
-    score_memo_custom =  models.IntegerField(default=0)	
+    score_memo_custom =  models.IntegerField(default=0)
     # 檢核作業
-    score_memo_check =  models.IntegerField(default=0)		
+    score_memo_check =  models.IntegerField(default=0)
 
     @property
     def classroom(self):
@@ -265,18 +265,9 @@ class Science3Work(models.Model):
         index = self.index
         return user.first_name+"("+str(index)+")"
 
-class Science2Data(models.Model):
+# 資料建模，流程建模
+class Science2Json(models.Model):
     index = models.IntegerField(default=0)
     student_id = models.IntegerField(default=0)
-    types =  models.IntegerField(default=0)
-    name =  models.CharField(max_length=250,null=True,blank=True)
-
-class Science2Expression(models.Model):
-    index = models.IntegerField(default=0)
-    student_id = models.IntegerField(default=0)
-    expr_json = models.TextField(default='{vars:[], arrs:[], exprs:[]}')
-
-class Science2Flow(models.Model):
-    index = models.IntegerField(default=0)
-    student_id = models.IntegerField(default=0)
-    flow_json = models.TextField(default='[]')
+    model_type = models.IntegerField(default=0) # 0: 資料建模, 1: 流程建模
+    json = models.TextField(default='')

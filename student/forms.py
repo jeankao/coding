@@ -88,11 +88,9 @@ class SubmitF1Form(forms.ModelForm):
         self.fields['text'].required = False
         self.fields['pic'].required = False
 
-class SubmitF21Form(forms.Form):
+# 資料建模，流程建模
+class SubmitF2Form(forms.Form):
     jsonstr = forms.CharField(widget=forms.Textarea)
-
-class SubmitF22Form(forms.Form):
-    flowjson = forms.CharField(widget=forms.Textarea)
 
 class SubmitF3Form(forms.Form):
     code = forms.CharField(widget=forms.Textarea)
