@@ -336,7 +336,7 @@ class ReviewUpdateView(UpdateView):
             classroom_id = Round.objects.get(id=round_id).classroom_id
             member = Enroll.objects.get(classroom_id=classroom_id, student_id=self.request.user.id)
             # credit
-            update_avatar(member.student, 4, 1)
+            update_avatar(member.student_id, 4, 1)
             # History
             show = ShowGroup.objects.get(id=self.kwargs['show_id'])			
             history = PointHistory(user_id=member.student_id, kind=4, message=u'1分--評分創意秀<'+show.title+'>', url='/show/detail/'+str(show.id))
