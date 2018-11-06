@@ -1559,7 +1559,7 @@ def forum_download(request, file_id):
 # 顯示圖片
 def forum_showpic(request, file_id):
     content = SFContent.objects.get(id=file_id)
-    return render(reuqest, 'student/forum_showpic.html', {'content':content})
+    return render(request, 'student/forum_showpic.html', {'content':content})
 
 # ajax刪除檔案
 def forum_file_delete(request):
