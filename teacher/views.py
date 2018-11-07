@@ -496,6 +496,18 @@ def scoring(request, lesson, classroom_id, user_id, index, typing):
 
                 works.update(score=form.cleaned_data['score'])
                 works.update(scorer=request.user.id)
+                works.update(comment=form.cleaned_data['comment'])
+				
+                if form.cleaned_data['comment']:
+                    # create Message
+                    title = u"<" + request.user.first_name+ u">給了評語<" + lesson_name.decode('utf8') + u">"
+                    url = "/student/work/show/" + typing + "/" + lesson + "/" + index + "/" + str(enroll.student_id)
+                    message = Message(title=title, url=url, time=timezone.now())
+                    message.save()		
+
+                    # message for group member
+                    messagepoll = MessagePoll(message_id = message.id,reader_id=enroll.student_id)
+                    messagepoll.save()					
 
             if is_teacher(request.user, classroom_id) or is_assistant(request.user, classroom_id):
                 if form.cleaned_data['assistant']:

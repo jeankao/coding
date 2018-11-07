@@ -18,7 +18,8 @@ class ShowGroup(models.Model):
     body = models.TextField()    
     #scratch
     file = models.FileField()
-		#python
+    site = models.CharField(max_length=250)
+	#python
     picture = models.ImageField(upload_to = upload_path_handler, default = '/static/python/null.jpg')   
     code = models.TextField()
     youtube = models.CharField(max_length=250)

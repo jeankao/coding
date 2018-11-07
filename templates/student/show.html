@@ -21,7 +21,9 @@ menu:"‘false"
 var attributes = {};
 swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.2.0","expressInstall.swf", flashvars, params, attributes);
 </script>
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    <div>評分者：{{ work.scorer|realname}}</div>
+    {% if work.score > 0 %}<div>分數：{{ work.score}}</div>{% endif %}
+    {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	
     <div>心得感想：</div>
     <div>{{ work.memo }}</div>
     <div>程式：</div>

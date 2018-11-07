@@ -18,15 +18,17 @@ class GroupForm(forms.ModelForm):
 class ShowForm1(forms.ModelForm):
         class Meta:
            model = ShowGroup
-           fields = ['file','title','body', 'youtube']
+           fields = ['file','site','title','body', 'youtube']
            
         def __init__(self, *args, **kwargs):
             super(ShowForm1, self).__init__(*args, **kwargs)
             self.fields['title'].label = "作品主題"
             self.fields['file'].label = "作品檔案"
             self.fields['body'].label = "作品說明"
+            self.fields['site'].label = "作品網址"				
             self.fields['youtube'].label = "Youtube網址"												
             self.fields['file'].required = False
+            self.fields['site'].required = False			
             self.fields['youtube'].required = False
             
 # Python作品		

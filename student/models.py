@@ -135,6 +135,7 @@ class Work(models.Model):
     helps = models.IntegerField(default=0, choices=HELP_CHOICES)
     answer = models.BooleanField(default=False)
     youtube = models.TextField(default='')
+    comment = models.TextField(default='')
 
     def __unicode__(self):
         user = User.objects.filter(id=self.user_id)[0]

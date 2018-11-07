@@ -371,3 +371,9 @@ def likes(work_id):
 @register.filter()
 def list_item(list, index):
     return list[index]
+	
+@register.filter()
+def scratch(site):
+    url = site.split("projects/")
+    open = url[0] + "projects/embed/" + url[1]
+    return open

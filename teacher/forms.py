@@ -47,7 +47,7 @@ class ScoreForm(forms.ModelForm):
     
         class Meta:
            model = Work
-           fields = ['score']
+           fields = ['score', 'comment']
 		   
         def __init__(self, user, *args, **kwargs): 
             super(ScoreForm, self).__init__(*args, **kwargs)
