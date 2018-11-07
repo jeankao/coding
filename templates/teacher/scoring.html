@@ -45,12 +45,12 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
                 <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
                             {% if teacher %}
 <tr><td colspan=2><span class="button-checkbox">
+ <textarea  name="comment" id="id_comment" class="form-control animated comment" cols="50" placeholder="請寫下評語(可留白)" rows="5">{% if work.comment %}{{work.comment}}{% endif %}</textarea>
+</span></td></tr> 	
+<tr><td colspan=2><span class="button-checkbox">
         <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
         <input type="checkbox" style="display: none;" name="assistant"/>
     </span></td></tr>              
-<tr><td colspan=2><span class="button-checkbox">
- <textarea  name="comment" id="id_comment" class="form-control animated comment" cols="50" placeholder="請寫下評語(可留白)" rows="5">{% if work.comment %}{{work.comment}}{% endif %}</textarea>
-</span></td></tr> 	
               {% endif %}
               <tr><td colspan=2><input type="submit" value="Submit"></td></tr>
             </table>
@@ -71,10 +71,15 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
             <table class="table" style="width:300px">
                 <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
               {% if teacher %}
+			  <tr><td colspan=2><span class="button-checkbox">
+ <textarea  name="comment" id="id_comment" class="form-control animated comment" cols="50" placeholder="請寫下評語(可留白)" rows="5">{% if work.comment %}{{work.comment}}{% endif %}</textarea>
+</span></td></tr> 	
+
 <tr><td colspan=2><span class="button-checkbox">
         <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
         <input type="checkbox" style="display: none;" name="assistant"/>
     </span></td></tr>          
+	
               {% endif %}
               <tr><td colspan=2><input type="submit" value="Submit"></td></tr>
             </table>
@@ -94,6 +99,10 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
             <table class="table" style="width:300px">
                 <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
               {% if teacher %}
+<tr><td colspan=2><span class="button-checkbox">
+ <textarea  name="comment" id="id_comment" class="form-control animated comment" cols="50" placeholder="請寫下評語(可留白)" rows="5">{% if work.comment %}{{work.comment}}{% endif %}</textarea>
+</span></td></tr> 	
+			  
 <tr><td colspan=2><span class="button-checkbox">
         <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
         <input type="checkbox" style="display: none;" name="assistant"/>
@@ -133,6 +142,10 @@ swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.
             <table class="table" style="width:300px">
                 <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>
               {% if teacher %}
+<tr><td colspan=2><span class="button-checkbox">
+ <textarea  name="comment" id="id_comment" class="form-control animated comment" cols="50" placeholder="請寫下評語(可留白)" rows="5">{% if work.comment %}{{work.comment}}{% endif %}</textarea>
+</span></td></tr> 	
+			  
 <tr><td colspan=2><span class="button-checkbox">
         <button type="button" class="btn" data-color="primary" style="width:100%">設為小老師</button>
         <input type="checkbox" style="display: none;" name="assistant"/>
