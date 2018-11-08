@@ -51,6 +51,7 @@ class ScoreForm(forms.ModelForm):
 		   
         def __init__(self, user, *args, **kwargs): 
             super(ScoreForm, self).__init__(*args, **kwargs)
+            self.fields['comment'].required = False			
             self.initial['score'] = 100		
             if user.groups.all().count() == 0 :
                 del self.fields['assistant']
