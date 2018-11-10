@@ -420,7 +420,7 @@ class RankListView(ListView):
             students = []
             for member in pmembers:
                 groups = member.groupshow.split(",")
-                if self.kwargs['show_id'] in groups:
+                if str(show.id) in groups:
                     students.append(member)
             reviews = ShowReview.objects.filter(show_id=show.id, done=True)	
             if reviews.count() > 0 :			
