@@ -4,16 +4,18 @@
 {% load tz %}
 {% block content %}
 <h1>創意秀評分情況</h1>
-<table>
+<table class="table">
 <tr>
 <TD>姓名</TD>
 {% for show in lists.items.0.1 %}
+<td>{{lists.items.0.1|length}}</td>
 <td>{% if show.2.done %}<a href="/show/detail/{{round_id}}/{{show.2.id}}">{% endif %}{{show.2.name}}</a><BR>{% for member in show.3 %}({{member.seat}}){{member.student.first_name}}<BR>{% endfor %}</td>
 {% endfor %}
 </tr>
   {% for key, value in lists.items %}
 	<tr>
 	<td>({{value.0.0.seat}}){{value.0.0.student.first_name}}</td>
+	<td>{{value.0.4}}</td>	
     {% for review in value %}
 	    {% if review.1.done %}
 		<td>V</td>

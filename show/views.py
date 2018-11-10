@@ -478,6 +478,7 @@ class TeacherListView(ListView):
             if not shows.exists():
                 lists[enroll.id].append([enroll])
             else :
+                counter = 0
                 for show in shows:
                     pmembers = Enroll.objects.filter(groupshow__icontains=str(show.id))
                     members = []
@@ -489,7 +490,9 @@ class TeacherListView(ListView):
                         review = ShowReview.objects.get(show_id=show.id, student_id=enroll.student_id)
                     except ObjectDoesNotExist:
                         review = ShowReview(show_id=show.id)
-                    lists[enroll.id].append([enroll, review, show, members])
+                    if review.done:
+                        counter += 1
+                    lists[enroll.id].append([enroll, review, show, members, counter])
         lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][0][0].seat))
         return lists
         
