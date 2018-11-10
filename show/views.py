@@ -165,7 +165,7 @@ class ShowListView(generic.ListView):
     template_name = 'show/round_list.html'
     
     def get_queryset(self):
-        shows = Round.objects.filter(classroom_id=self.kwargs['classroom_id'])        
+        shows = Round.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-id")      
         return shows
       
     def get_context_data(self, **kwargs):
@@ -379,7 +379,12 @@ class ReviewListView(ListView):
             review = ShowReview(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
             review.save()        
         show = ShowGroup.objects.get(id=self.kwargs['show_id']) 
-        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id']+",")
+        pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
+        members = []
+        for member in pmembers:
+            groups = member.groupshow.split(",")
+            if self.kwargs['show_id'] in groups:
+                members.append(member)
         reviews = ShowReview.objects.filter(show_id=self.kwargs['show_id'], done=True)
         score1 = reviews.aggregate(Sum('score1')).values()[0]
         score2 = reviews.aggregate(Sum('score2')).values()[0]
@@ -411,7 +416,12 @@ class RankListView(ListView):
         classroom_id = show.classroom_id				
         shows = ShowGroup.objects.filter(round_id=self.kwargs['round_id'])
         for show in shows :
-            students = Enroll.objects.filter(groupshow__icontains=str(show.id)+",")
+            pmembers = Enroll.objects.filter(groupshow__icontains=str(show.id))
+            students = []
+            for member in pmembers:
+                groups = member.groupshow.split(",")
+                if self.kwargs['show_id'] in groups:
+                    students.append(member)
             reviews = ShowReview.objects.filter(show_id=show.id, done=True)	
             if reviews.count() > 0 :			
                 score = reviews.aggregate(Sum('score'+self.kwargs['rank_id'])).values()[0]/reviews.count()
@@ -425,7 +435,12 @@ class RankListView(ListView):
 def show_download(request, show_id, showfile_id):
     showfile = ShowFile.objects.get(id=showfile_id)
     show = ShowGroup.objects.get(id=show_id)
-    members = Enroll.objects.filter(groupshow__icontains=show_id+",")
+    pmembers = Enroll.objects.filter(groupshow__icontains=show_id)
+    members = []
+    for member in pmembers:
+        groups = member.groupshow.split(",")
+        if str(show_id) in groups:
+            members.append(member)
     username = ""
     for member in members:
         username = username + member.student.first_name + "_"
@@ -464,7 +479,12 @@ class TeacherListView(ListView):
                 lists[enroll.id].append([enroll])
             else :
                 for show in shows:
-                    members = Enroll.objects.filter(groupshow__icontains=str(show.id)+",")
+                    pmembers = Enroll.objects.filter(groupshow__icontains=str(show.id))
+                    members = []
+                    for member in pmembers:
+                        groups = member.groupshow.split(",")
+                        if str(show.id) in groups:
+                            members.append(member)
                     try: 
                         review = ShowReview.objects.get(show_id=show.id, student_id=enroll.student_id)
                     except ObjectDoesNotExist:
@@ -486,7 +506,12 @@ class ScoreListView(ListView):
         classroom_name = Classroom.objects.get(id=classroom_id).name
         shows = ShowGroup.objects.filter(round_id=show.id)
         for showa in shows:
-            members = Enroll.objects.filter(groupshow__icontains=str(showa.id)+",")
+            pmembers = Enroll.objects.filter(groupshow__icontains=str(showa.id))
+            members = []
+            for member in pmembers:
+                groups = member.groupshow.split(",")
+                if str(showa.id) in groups:
+                    members.append(member)
             reviews = ShowReview.objects.filter(show_id=showa.id, done=True)
             score1 = reviews.aggregate(Sum('score1')).values()[0]
             score2 = reviews.aggregate(Sum('score2')).values()[0]
@@ -540,7 +565,12 @@ def GalleryDetail(request, show_id):
         scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  reviews.count()]
     else :
         scores = [0,0,0,0]        
-    members = Enroll.objects.filter(groupshow__icontains=show_id+",")
+    pmembers = Enroll.objects.filter(groupshow__icontains=str(show_id))
+    members = []
+    for member in pmembers:
+        groups = member.groupshow.split(",")
+        if str(show_id) in groups:
+            members.append(member)
 
     classroom_id = Round.objects.get(id=show.round_id).classroom_id
     showfiles = ShowFile.objects.filter(show_id=show.id)
