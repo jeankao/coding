@@ -462,7 +462,7 @@ class TeacherListView(ListView):
 			
     def get_context_data(self, **kwargs):
         context = super(TeacherListView, self).get_context_data(**kwargs)
-        context['round_id'] = self.kwargs['round_id']
+        context['round_id'] = self.kwargs['round_id']		
         return context
 
     def get_queryset(self):
@@ -472,7 +472,7 @@ class TeacherListView(ListView):
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
         classroom_name = Classroom.objects.get(id=classroom_id).name
         for enroll in enrolls:
-            counter = 0		
+            counter = 0
             lists[enroll.id] = []	            
             shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
             if not shows.exists():
@@ -488,10 +488,10 @@ class TeacherListView(ListView):
                     try: 
                         review = ShowReview.objects.get(show_id=show.id, student_id=enroll.student_id)
                     except ObjectDoesNotExist:
-                        review = ShowReview(show_id=show.id)
+                        review = ShowReview(show_id=show.id)                    
                     if review.done:
                         counter = counter + 1
-                lists[enroll.id].append([enroll, review, show, members, counter])
+                    lists[enroll.id].append([enroll, review, show, members, counter])
         lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][0][0].seat))
         return lists
         

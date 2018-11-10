@@ -15,7 +15,9 @@
   {% for key, value in lists.items %}
 	<tr>
 	<td>({{value.0.0.seat}}){{value.0.0.student.first_name}}</td>
-	<td>{{value.0.4}}</td>	
+	{% with value|last as last %}
+	<td>{{last.4}}</td>	
+    {% endwith %}	
     {% for review in value %}
 	    {% if review.1.done %}
 		<td>V</td>
