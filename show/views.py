@@ -491,7 +491,7 @@ class TeacherListView(ListView):
                         review = ShowReview(show_id=show.id)
                     if review.done:
                         counter = counter + 1
-                    lists[enroll.id].append([enroll, review, show, members, counter])
+                lists[enroll.id].append([enroll, review, show, members, counter])
         lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][0][0].seat))
         return lists
         
