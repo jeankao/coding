@@ -467,7 +467,6 @@ class TeacherListView(ListView):
 
     def get_queryset(self):
         lists = {}
-        counter = 0
         round = Round.objects.get(id=self.kwargs['round_id'])
         classroom_id = round.classroom_id								
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
@@ -491,7 +490,7 @@ class TeacherListView(ListView):
                     except ObjectDoesNotExist:
                         review = ShowReview(show_id=show.id)
                     if review.done:
-                        counter += 1
+                        counter = counter + 1
                     lists[enroll.id].append([enroll, review, show, members, counter])
         lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][0][0].seat))
         return lists
