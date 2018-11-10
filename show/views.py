@@ -472,12 +472,12 @@ class TeacherListView(ListView):
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
         classroom_name = Classroom.objects.get(id=classroom_id).name
         for enroll in enrolls:
+            counter = 0		
             lists[enroll.id] = []	            
             shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
             if not shows.exists():
                 lists[enroll.id].append([enroll])
             else :
-                counter = 0
                 for show in shows:
                     pmembers = Enroll.objects.filter(groupshow__icontains=str(show.id))
                     members = []
