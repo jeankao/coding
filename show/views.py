@@ -207,7 +207,12 @@ class ShowUpdateView(UpdateView):
             filepath = False
           
         # 限制小組成員才能上傳
-        members = Enroll.objects.filter(groupshow__icontains=self.kwargs['group_show'])
+        pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
+        members = []
+        for member in pmembers:
+            groups = member.groupshow.split(",")
+            if self.kwargs['show_id'] in groups:
+                members.append(member)		
         is_member = False
         for member in members :
             if self.request.user.id == member.student_id:
@@ -304,7 +309,7 @@ class ReviewUpdateView(UpdateView):
                     return 1
                 else :
                     return 2
-            if show_category(self.kwargs['show_id']) == "1":
+            if show_category(self.kwargs['show_id']) == 1:
                 scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  reviews.count()]
             else :
                 scores = [math.ceil(score0*10)/10, 0, 0, reviews.count()]
