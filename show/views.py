@@ -207,13 +207,13 @@ class ShowUpdateView(UpdateView):
             filepath = False
           
         # 限制小組成員才能上傳
-        pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
+        pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['group_show'])
         members = []
         for member in pmembers:
             groups = member.groupshow.split(",")
-            if self.kwargs['show_id'] in groups:
+            if self.kwargs['group_show'] in groups:
                 members.append(member)		
-        is_member = False
+        is_member = True
         for member in members :
             if self.request.user.id == member.student_id:
                 is_member = True
