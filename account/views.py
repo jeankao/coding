@@ -222,17 +222,7 @@ def register(request):
             group.user_set.add(new_user)													
             
             profile = Profile(user=new_user)
-            profile.save()
-            
-            # create Message
-            title = "申請成為教師以進行開班授課"
-            url = "/account/teacher/apply"
-            message = Message(title=title, url=url, time=timezone.now())
-            message.save()                        
-        
-            # message for member
-            messagepoll = MessagePoll(message_id = message.id,reader_id=new_user.id)
-            messagepoll.save() 	      						
+            profile.save()				
                         
             return render(request, 'registration/register_done.html',{'new_user': new_user})
     else:
