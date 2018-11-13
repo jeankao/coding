@@ -47,7 +47,7 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'email')
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -58,8 +58,7 @@ class RegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.fields['username'].label = "帳號"
-        self.fields['first_name'].label = "真實姓名"
-        self.fields['last_name'].label = "學校名稱"
+        self.fields['first_name'].label = "暱稱"
         self.fields['email'].label = "電子郵件"
         self.fields['password'].label = "密碼"
         self.fields['password2'].label = "再次確認密碼"

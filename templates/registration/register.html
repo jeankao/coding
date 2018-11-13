@@ -23,17 +23,3 @@
   </form>
 {% endblock %}
 
-{% block domready %}
-  // Replace TextInput with 3 Select elements
-  $('#id_last_name').parent().load('/static/school_template.html', null, function() {
-    reset_county();
-    var school = location.href.match(/\?school=(\d+)\/(\d+)\/(\d+)/);
-    if (school && school.length == 4) {
-      $('#county').val(school[1]);
-      reset_zone();
-      $('#zone').val(school[2]);
-      reset_school();
-      $('#schools').val(school[3]);
-    }
-  });
-{% endblock %}
