@@ -106,7 +106,7 @@ urlpatterns = [
 <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>投票主題<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
   &#123;% for poll in poll_list %}
-  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>{{ poll.date_created }} <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/"</span>&gt;</span>{{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>&#123;{ poll.date_created }} <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ poll.id }}/"</span>&gt;</span>&#123;{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
   &#123;% endfor %}
 <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
 &#123;% endblock %}
@@ -156,10 +156,10 @@ urlpatterns = [
 <span data-linenumber="10"></span></div><div class="code">&#123;% extends "base.html" %}
 
 &#123;% block content %}
-<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>&#123;{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
     &#123;% for option in options %}
-    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>{{ option.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>&#123;{ option.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
     &#123;% endfor %}
 <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
 &#123;% endblock %}
