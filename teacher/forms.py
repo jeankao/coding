@@ -77,11 +77,12 @@ class ScoreBForm(forms.ModelForm):
     
         class Meta:
            model = Work
-           fields = ['score']
+           fields = ['score', 'comment']
 		   
         def __init__(self, user, *args, **kwargs): 
             super(ScoreBForm, self).__init__(*args, **kwargs)
             self.initial['score'] = 10		
+            self.fields['comment'].required = False				
             if user.groups.all().count() == 0 :
                 del self.fields['assistant']
                 
