@@ -738,6 +738,7 @@ def grade(request, typing, lesson, unit, classroom_id):
     lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
+      enroll_grade = []
       total = 0
       memo = 0 
       grade = 0
@@ -745,7 +746,7 @@ def grade(request, typing, lesson, unit, classroom_id):
       if typing == "0":
         if lesson == "1":
             if unit == "1":
-                lesson_list = lesson_list[0:17]
+                lesson_list = lesson_list[0:17]			
             elif unit == "2":
                 lesson_list = lesson_list[17:25]
             elif unit == "3":
@@ -760,7 +761,6 @@ def grade(request, typing, lesson, unit, classroom_id):
             if typing == "0": 			    
                 if unit == "1":
                     work_index = index + 1
-
                 elif unit == "2":
                     work_index = index + 1 + 17
                 elif unit == "3":
@@ -2264,3 +2264,34 @@ def work2_science(request, classroom_id, index, user_id):
     questions = Science1Question.objects.filter(work_id=index)	
     return render(request, 'teacher/work2_science.html', {'user_id':user_id, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
 			
+# 查閱全班測驗卷成績
+def exam_list(request, classroom_id):
+        # 限本班任課教師
+        if not is_teacher(request.user, classroom_id):
+            return redirect("homepage")
+        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
+        classroom_name=""
+        enroll_exam = []		
+        for enroll in enrolls:
+            classroom_name = enroll.classroom.name
+            exam_list = []
+            for exam_id in range(3):
+                exams = Exam.objects.filter(student_id=enroll.student_id, exam_id=exam_id+1)
+                total = 0
+                times = 0
+                for exam in exams:
+                    total += exam.score
+                    times += 1
+                exam_list.append(total)
+                exam_list.append(times)
+            enroll_exam.append([enroll, exam_list])
+        return render(request, 'teacher/exam_list.html', {'classroom_id':classroom_id, 'classroom_name':classroom_name, 'enroll_exam':enroll_exam})
+
+# 查詢某項測驗的所有資料
+def exam_detail(request, classroom_id, student_id, exam_id):
+        # 限本班任課教師
+        if not is_teacher(request.user, classroom_id):
+            return redirect("homepage")
+        exams = Exam.objects.filter(student_id=student_id, exam_id=exam_id)
+        enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=student_id)  
+        return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})

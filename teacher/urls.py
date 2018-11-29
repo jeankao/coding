@@ -92,4 +92,8 @@ urlpatterns = [
     url(r'^event/video/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/(?P<work_id>\d+)/$', views.EventVideoView.as_view()),
     url(r'^event/video/length/$', views.video_length),	
 		url(r'^event/video/user/(?P<classroom_id>\d+)/(?P<content_id>\d+)/(?P<user_id>\d+)/$', VideoListView.as_view()),   
+    #測驗卷
+    url(r'^exam/(?P<classroom_id>\d+)/$', views.exam_list),
+    url(r'^exam_detail/(?P<classroom_id>\d+)/(?P<student_id>\d+)/(?P<exam_id>\d+)/$', views.exam_detail), 
+		
 ]
