@@ -50,7 +50,7 @@
 <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
    &#123;% csrf_token %}
    <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
-       {{ form.as_table }}
+       &#123;{ form.as_table }}
    <span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"送出"</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
@@ -102,7 +102,7 @@ Django 的通用視圖，若操作對象為某特定一筆記錄的話，它會�
 &#123;% block content %}
 <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>刪除紀錄<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>確定要刪除 {{ object }} 這筆紀錄嗎?<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>確定要刪除 &#123;{ object }} 這筆紀錄嗎?<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
     &#123;% csrf_token %}
     <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"是的，我要刪除"</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
@@ -130,10 +130,10 @@ Django 的通用視圖，若操作對象為某特定一筆記錄的話，它會�
 <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
   &#123;% for poll in poll_list %}
   <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
-    {{ poll.date_created }}
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/"</span>&gt;</span>{{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/update/"</span>&gt;</span>修改<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ poll.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;{ poll.date_created }}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ poll.id }}/"</span>&gt;</span>&#123;{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ poll.id }}/update/"</span>&gt;</span>修改<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ poll.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
   &#123;% endfor %}
 <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
@@ -233,15 +233,15 @@ Django 的通用視圖，若操作對象為某特定一筆記錄的話，它會�
 <span data-linenumber="16"></span></div><div class="code">&#123;% extends "base.html" %}
 
 &#123;% block content %}
-<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/create/{{ poll.id }}"</span>&gt;</span>新增選項<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>&#123;{ poll.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/create/&#123;{ poll.id }}"</span>&gt;</span>新增選項<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>小提示！直接按選項文字就可以投票囉！<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
     &#123;% for option in options %}
     <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/{{ option.id }}/"</span>&gt;</span>{{ option.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> : {{ option.count }} 票 |
-        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/{{ option.id }}/update/"</span>&gt;</span>修改<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
-        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/{{ option.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/&#123;{ option.id }}/"</span>&gt;</span>&#123;{ option.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> : &#123;{ option.count }} 票 |
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/&#123;{ option.id }}/update/"</span>&gt;</span>修改<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> |
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/option/&#123;{ option.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
     &#123;% endfor %}
 <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
