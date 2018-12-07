@@ -61,7 +61,9 @@
         {% else %}
           <img src="/static/images/edit.gif"> 歷史({{works|length}})
         {% endif %}
-        <a href="/account/line/add/{{classroom_id}}/{{enroll.student_id}}"><img src="/static/images/icon-email.gif">私訊</a>
+		{% if works.0.publish and request.user.id|is_teacher:enroll.classroom_id  %}
+          <img src="/static/images/edit.gif"> <a onclick="return confirm('確定要退回嗎?')" href="/teacher/forum/publish/reject/{{classroom_id}}/{{index}}/{{enroll.student_id}}">重交</a>
+        {% endif %}		  
       </span>
       <!--{% if enroll.student_id == request.user.id %}<a href="/student/forum/submit/{{classroom_id}}/{{index}}" class="btn btn-primary" role="btn">編輯</a>{% endif %}-->
     </div>
@@ -144,12 +146,13 @@
           </blockquote>
         {% endfor %}
       </div>
+	  </div>
     {% endif %}
     {% endif %}
-	{% endwith %}
-    </div>	
-	</div>
+</div>
+	{% endwith %}	
 {% endfor %}
+
 
 <div class="modal fade" tabindex="-1" role="dialog" id="vidModal">
   <div class="modal-dialog modal-lg" role="document">

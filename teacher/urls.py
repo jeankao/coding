@@ -88,7 +88,8 @@ urlpatterns = [
     url(r'^forum/export/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/$', login_required(views.forum_export), name='forum-export'),   
     url(r'^forum/grade/(?P<classroom_id>\d+)/(?P<action>\d+)/$', login_required(views.forum_grade), name='forum-grade'),
     url(r'^forum/class/switch/$', login_required(views.forum_switch), name='make'), 
-	  # 影片觀看記錄
+    url(r'^forum/publish/reject/(?P<classroom_id>\d+)/(?P<index>\d+)/(?P<user_id>\d+)', views.ForumPublishReject.as_view()),
+	# 影片觀看記錄
     url(r'^event/video/(?P<classroom_id>\d+)/(?P<forum_id>\d+)/(?P<work_id>\d+)/$', views.EventVideoView.as_view()),
     url(r'^event/video/length/$', views.video_length),	
 		url(r'^event/video/user/(?P<classroom_id>\d+)/(?P<content_id>\d+)/(?P<user_id>\d+)/$', VideoListView.as_view()),   

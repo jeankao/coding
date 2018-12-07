@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, RedirectView
 from teacher.models import Classroom, ImportUser, TWork, Assistant, CWork, FWork, FClass, FContent
 from student.models import *
 from account.models import Message, MessagePoll, MessageContent, PointHistory
@@ -2054,8 +2054,28 @@ def forum_deadline_date(request):
     #fclass.deadline_date = deadline_date.strftime('%d/%m/%Y')
     fclass.deadline_date = datetime.strptime(deadline_date, '%Y %B %d - %H:%M')
     fclass.save()
-    return JsonResponse({'status':deadline_date}, safe=False)             
-        
+    return JsonResponse({'status':deadline_date}, safe=False)     
+	
+class ForumPublishReject(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+      index = self.kwargs['index']
+      classroom_id = self.kwargs['classroom_id']
+      user_id = self.kwargs['user_id']
+      try:
+          fwork = FWork.objects.get(id=index)
+          works = SFWork.objects.filter(index=index, student_id=user_id).order_by("-id")
+          work = works[0]
+          work.publish = False
+          work.save()
+          update_avatar(user_id, 4, -2)
+          # History
+          history = PointHistory(user_id=user_id, kind=4, message=u'-2分--退回討論區作業<'+fwork.title+'>', url='/student/forum/memo/'+str(classroom_id)+'/'+str(index)+'/0')
+          history.save()								
+      except ObjectDoesNotExist:
+            pass
+      return "/student/forum/memo/"+str(classroom_id)+"/"+str(index)+"/0"
+	
+	
 # 影片觀看時間統計
 class EventVideoView(ListView):
     context_object_name = 'events'
