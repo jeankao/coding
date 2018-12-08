@@ -21,9 +21,10 @@ urlpatterns = [
     # 關於我們
     url(r'^about/$', views.about),  
     # 連絡我們
-    url(r'^contact/$', views.contact),  
-    # 數據統計
-    url(r'^statics/zone/$', views.statics_zone),    
+    url(r'^contact/$', views.contact),
+    # 教材研發
+    url(r'^people/$', views.people),	
+    # 數據統計 
     url(r'^statics/lesson/$', views.statics_lesson),      
     #訪客
     url(r'^statics/login/$', views.VisitorListView.as_view()),    

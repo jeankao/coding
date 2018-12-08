@@ -101,6 +101,9 @@ def about(request):
 
 def contact(request):   
     return render(request, 'account/contact.html')	  	
+
+def people(request):   
+    return render(request, 'account/people.html')	
     
 def statics_zone(request):
     cities = County.objects.all()
