@@ -171,7 +171,7 @@
     </div>
     {% endif %}
   </div>
-{% elif lesson == "G19" %}
+{% elif lesson == "G08" %}
   <ul class="nav nav-pills" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
@@ -180,18 +180,18 @@
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
     </li>
-    
+   --> 
     {% if user.is_authenticated %}
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
     </li>
     {% endif %}
--->
+
   </ul>
   <br />
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
-      {% include "student/lesson/G19.html" %}
+      {% include "student/lesson/G08.html" %}
     </div>
     <!--
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">

@@ -13,7 +13,7 @@
 TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
 </div></div></code></pre><p>(3)啟動 django</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> mysite
-python manage.py runserver 0.0.0.0:80
+python manage.py runserver 0:80
 </div></div></code></pre><p>(4)在終端機會看到以下的訊息</p><p><img src="https://i.imgur.com/rNINAPk.png" alt=""></p><p>(5)django網站畫面如下：</p><p><img src="https://i.imgur.com/UGuUHZa.png" alt=""></p><h1 id="建立應用程式"><a class="anchor hidden-xs" href="#建立應用程式" title="建立應用程式"><span class="octicon octicon-link"></span></a>建立應用程式</h1><p>我們要建立一個圖文展示的應用程式</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">python manage.py startapp show
 </div></div></code></pre><p>下了這個指令後，會在mysite底下新增一個show資料夾，檔案結構如下：</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
@@ -53,7 +53,7 @@ python manage.py runserver 0.0.0.0:80
         <span class="hljs-string">'django.contrib.staticfiles'</span>,
         <span class="hljs-string">'show'</span>,
 )
-</div></div></code></pre><p>要完成一個可以回應給使用者的畫面，需要有兩個步驟：</p><p>(1)設定網址(<a href="http://urls.py" target="_blank">urls.py</a>)</p><p>(2)撰寫視圖函式(<a href="http://views.py" target="_blank">views.py</a>)</p><p>打開 mysite/mysite/urls.py 裡面已有的設定如下：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><p>要完成一個可以回應給使用者的畫面，需要有兩個步驟：</p><p>(1)設定網址(urls.py)</p><p>(2)撰寫視圖函式(views.py)</p><p>打開 mysite/mysite/urls.py 裡面已有的設定如下：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>
@@ -207,8 +207,8 @@ urlpatterns = [
     <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span> 
     <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-      您點的是{{kind}}號餐<span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/static/images/food{{kind}}.png"</span>&gt;</span>
+      您點的是&#123;{kind}}號餐<span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/static/images/food&#123;{kind}}.png"</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </div></div></code></pre><div dir="ltr" class="resize-sensor" style="position: absolute; left: -10px; top: -10px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;"><div class="resize-sensor-expand" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div></div><div class="resize-sensor-shrink" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div></div></div></div>

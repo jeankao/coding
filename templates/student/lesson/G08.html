@@ -1,0 +1,466 @@
+<div id="doc" class="markdown-body container-fluid comment-enabled" style="position: relative;"><h1 id="實戰：留言板"><a class="anchor hidden-xs" href="#實戰：留言板" title="實戰：留言板"><span class="octicon octicon-link"></span></a>實戰：留言板</h1><h2 id="建立專案與應用程式"><a class="anchor hidden-xs" href="#建立專案與應用程式" title="建立專案與應用程式"><span class="octicon octicon-link"></span></a>建立專案與應用程式</h2><p>我們要建立一個留言板的應用程式</p><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">django-admin.py startproject guestbook
+</div></div></code></pre><p>打完指令後，會產生一個guestbook的資料夾</p><pre><code class="bash hljs">guestbook/
+    manage.py
+    guestbook/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+</code></pre><p>(2)建立一個應用程式</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> guestbook
+python manage.py startapp web
+</div></div></code></pre><p>修改 <code>guestbook/guestbook/settings.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span>
+<span data-linenumber="40"></span>
+<span data-linenumber="41"></span></div><div class="code">ALLOWED_HOSTS = [<span class="hljs-string">'*'</span>]
+
+
+<span class="hljs-comment"># Application definition</span>
+
+INSTALLED_APPS = [
+    <span class="hljs-string">'django.contrib.admin'</span>,
+    <span class="hljs-string">'django.contrib.auth'</span>,
+    <span class="hljs-string">'django.contrib.contenttypes'</span>,
+    <span class="hljs-string">'django.contrib.sessions'</span>,
+    <span class="hljs-string">'django.contrib.messages'</span>,
+    <span class="hljs-string">'django.contrib.staticfiles'</span>,
+    <span class="hljs-string">'web'</span>,
+]
+</div></div></code></pre><ul>
+<li>修改<ins>第 28 行</ins>：允許以任何主機名稱來存取專案網站。</li>
+<li>新增<ins>第 40 行</ins>：將方才新增的應用程式 <code>web</code> 加入專案中。</li>
+</ul><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="107"></span>
+<span data-linenumber="108"></span>
+<span data-linenumber="109"></span></div><div class="code">LANGUAGE_CODE = <span class="hljs-string">'zh-hant'</span>
+
+TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
+</div></div></code></pre><ul>
+<li>修改<ins>第 107 行</ins>，將預設的管理介面語系改為正體中文。</li>
+<li>修改<ins>第 109 行</ins>，將時區改為臺北時間。</li>
+</ul><h2 id="定義資料模型"><a class="anchor hidden-xs" href="#定義資料模型" title="定義資料模型"><span class="octicon octicon-link"></span></a>定義資料模型</h2><p>修改 <code>guestbook/web/models.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span></div><div class="code"><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models
+
+<span class="hljs-comment"># Create your models here.</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Message</span><span class="hljs-params">(models.Model)</span>:</span>
+    user = models.CharField(<span class="hljs-string">"姓名"</span>, max_length=<span class="hljs-number">50</span>)
+    subject = models.CharField(<span class="hljs-string">"主旨"</span>, max_length=<span class="hljs-number">200</span>)
+    content = models.TextField(<span class="hljs-string">"內容"</span>)
+    publication_date = models.DateTimeField(<span class="hljs-string">"留言日期"</span>, auto_now_add=<span class="hljs-keyword">True</span>)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.subject
+</div></div></code></pre><ul>
+<li>新增<ins>第 5 - 12 行</ins>，定義留言資料模型
+<ul>
+<li><ins>第 11, 12 行</ins>，定義 <code>__str__()</code> 方法，回傳資料代表字串</li>
+</ul>
+</li>
+</ul><p>執行以下指令建立資料庫</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span></div><div class="code">python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+</div></div></code></pre><ul>
+<li><ins>第 1 行</ins>，建立資料庫異動腳本</li>
+<li><ins>第 2 行</ins>，將異動腳本實際套用到資料庫</li>
+<li><ins>第 3 行</ins>，建立網站管理帳號</li>
+</ul><p>完成後，啟用專案網站服務</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">python manage.py runserver 0:80
+</div></div></code></pre><h2 id="視圖、網址、範本、表單"><a class="anchor hidden-xs" href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單"><span class="octicon octicon-link"></span></a>視圖、網址、範本、表單</h2><p>我們要建立相對應的網頁，首先定義專案的路徑規則。開啟 <code>guestbook/guestbook/urls.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path, include
+
+urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+    path(<span class="hljs-string">''</span>, include(<span class="hljs-string">'web.urls'</span>)),
+]
+</div></div></code></pre><p>接著定義自訂應用程式 <code>web</code> 的路徑規則。新增檔案 <code>guestbook/web/urls.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
+<span class="hljs-keyword">from</span> .views <span class="hljs-keyword">import</span> *
+
+urlpatterns = [
+    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'message/'</span>)),
+    path(<span class="hljs-string">'message/'</span>, MessageList.as_view()),
+    path(<span class="hljs-string">'message/&lt;int:pk&gt;/'</span>, MessageDetail.as_view()), 
+    path(<span class="hljs-string">'message/create/'</span>, MessageCreate.as_view()), 
+]
+</div></div></code></pre><p>開啟 <code>guestbook/web/views.py</code>，修改為以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span></div><div class="code"><span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> ListView, DetailView, CreateView, UpdateView, DeleteView
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> reverse
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> Message
+
+<span class="hljs-comment"># 留言列表</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MessageList</span><span class="hljs-params">(ListView)</span>:</span>
+    model = Message
+    ordering = [<span class="hljs-string">'-id'</span>]      <span class="hljs-comment"># 以 id 欄位值由大至小反向排序</span>
+
+<span class="hljs-comment"># 留言檢視</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MessageDetail</span><span class="hljs-params">(DetailView)</span>:</span>
+    model = Message
+
+<span class="hljs-comment"># 新增留言</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MessageCreate</span><span class="hljs-params">(CreateView)</span>:</span>
+    model = Message
+    fields = [<span class="hljs-string">'user'</span>, <span class="hljs-string">'subject'</span>, <span class="hljs-string">'content'</span>]     <span class="hljs-comment"># 僅顯示 user, subject, content 這 3 個欄位</span>
+    success_url = <span class="hljs-string">'/message/'</span>                   <span class="hljs-comment"># 新增成功後，導向留言列表</span>
+    template_name = <span class="hljs-string">'form.html'</span>                 <span class="hljs-comment"># 指定欲使用的頁面範本</span>
+</div></div></code></pre><p>建立目錄 <code>guestbook/web/templates/web</code></p><p>新增專案網站基底範本 <code>guestbook/web/templates/base.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span></div><div class="code"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-hant"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>留言板<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>留言板<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/"</span>&gt;</span>首頁<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/message/create/"</span>&gt;</span>新增留言<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    &#123;% block content %}&#123;% endblock %}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p>新增留言列表頁面範本 <code>guestbook/web/templates/web/message_list.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span></div><div class="code">&#123;% extends 'base.html' %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  &#123;% for message in message_list %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+    &#123;{ message.publication_date }}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ message.id }}"</span>&gt;</span>&#123;{ message.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  &#123;% endfor %}
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p>新增留言檢視頁面範本 <code>guestbook/web/templates/web/message_detail.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>姓名<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+  &#123;{ message.user }}<span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>主旨<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+  &#123;{ message.subject }}<span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>內容<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+  &#123;{ message.content|linebreaks }}<span class="hljs-tag">&lt;<span class="hljs-name">BR</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p>新增共用表單頁面範本 <code>guestbook/web/templates/form.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code">&#123;% extends 'base.html' %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+ &#123;% csrf_token %}
+ <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+   &#123;{ form.as_table }}
+ <span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"送出"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><h2 id="使用者登入與登出"><a class="anchor hidden-xs" href="#使用者登入與登出" title="使用者登入與登出"><span class="octicon octicon-link"></span></a>使用者登入與登出</h2><p>修改專案設定檔 <code>guestbook/guestbook/settings.py</code>，新增以下 2 行</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="123"></span>
+<span data-linenumber="124"></span></div><div class="code"><span class="hljs-comment"># 登入後重新導向首頁 (預設會導向 /accounts/profile/)</span>
+LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>
+</div></div></code></pre><p>修改 <code>guestbook/guestbook/urls.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span></div><div class="code">urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+    path(<span class="hljs-string">''</span>, include(<span class="hljs-string">'web.urls'</span>)),
+    path(<span class="hljs-string">'accounts/'</span>, include(<span class="hljs-string">'django.contrib.auth.urls'</span>)),
+]
+</div></div></code></pre><p>開啟 <code>guestbook/guestbook/settings.py</code>，修改程式碼： <ins>第4行</ins></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span></div><div class="code">TEMPLATES = [
+    {
+        ...
+        <span class="hljs-string">'DIRS'</span>: [<span class="hljs-string">'templates'</span>],
+        <span class="hljs-string">'APP_DIRS'</span>: <span class="hljs-keyword">True</span>,
+        ...
+</div></div></code></pre><p>新增資料夾 <code>guestbook/templates/registration</code></p><p>新增登入頁面範本 <code>guestbook/templates/registration/login.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+  &#123;% csrf_token %}
+  &#123;{ form.as_p }}
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"登入"</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p>新增登出頁面範本 <code>guestbook/templates/registration/logged_out.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span></div><div class="code">&#123;% extends "bast.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>您已登出!!<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>  
+
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;% url 'login'%}"</span>&gt;</span>請按此處重新登入<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p>修改專案基底頁面範本 <code>guestbook/web/templates/base.htm</code>，修改為以下程式碼：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span></div><div class="code"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-hant"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>留言板<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>留言板<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/"</span>&gt;</span>首頁<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/message/create"</span>&gt;</span>新增留言<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% if user.is_authenticated %}
+      &#123;{ user.username }} <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;% url 'logout' %}"</span>&gt;</span>登出<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% else %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;% url 'login' %}"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% endif %}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">hr</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    &#123;% block content %}&#123;% endblock %}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><h2 id="限制登入後才能刪除留言"><a class="anchor hidden-xs" href="#限制登入後才能刪除留言" title="限制登入後才能刪除留言"><span class="octicon octicon-link"></span></a>限制登入後才能刪除留言</h2><p>開啟 <code>guestbook/web/urls.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
+<span class="hljs-keyword">from</span> .views <span class="hljs-keyword">import</span> *
+
+urlpatterns = [
+    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'message/'</span>)),
+    path(<span class="hljs-string">'message/'</span>, MessageListView.as_view()),
+    path(<span class="hljs-string">'message/&lt;int:pk&gt;/'</span>, MessageDetailView.as_view()),
+    path(<span class="hljs-string">'message/create/'</span>, MessageCreate.as_view()),
+    path(<span class="hljs-string">'message/&lt;int:pk&gt;/delete/'</span>, MessageDelete.as_view()),
+]
+</div></div></code></pre><ul>
+<li>新增<ins>第 10 行</ins>，定義「刪除留言」的存取路徑</li>
+</ul><p>開啟 <code>guestbook/web/views.py</code>，新增以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span></div><div class="code"><span class="hljs-comment"># 刪除留言</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MessageDelete</span><span class="hljs-params">(DeleteView)</span>:</span>
+    model = Message
+    success_url = <span class="hljs-string">'/message/'</span>                <span class="hljs-comment"># 刪除成功返回留言列表</span>
+    template_name = <span class="hljs-string">'confirm_delete.html'</span>
+</div></div></code></pre><p>新增刪除留言頁面範本 <code>guestbook/web/templates/confirm_delete.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>刪除記錄<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>您確定要刪除「&#123;{ object }}」這筆記錄嗎?<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"POST"</span>&gt;</span>
+  &#123;% csrf_token %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"是的，我要刪除"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p>開啟 <code>guestbook/web/templates/web/message_list.html</code>，修改為以下程式碼：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  &#123;% for message in message_list %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+    &#123;{ message.publication_date }}
+    &#123;% if user.is_authenticated %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ message.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% endif %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ message.id }}/"</span>&gt;</span>&#123;{ message.subject }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  &#123;% endfor %}
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><div dir="ltr" class="resize-sensor" style="position: absolute; left: -10px; top: -10px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;"><div class="resize-sensor-expand" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div></div><div class="resize-sensor-shrink" style="position: absolute; left: -10px; top: -10px; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div></div></div></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav">
+<li class=""><a href="#實戰：留言板" title="實戰：留言板">實戰：留言板</a><ul class="nav">
+<li><a href="#建立專案與應用程式" title="建立專案與應用程式">建立專案與應用程式</a></li>
+<li><a href="#定義資料模型" title="定義資料模型">定義資料模型</a></li>
+<li><a href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單">視圖、網址、範本、表單</a></li>
+<li><a href="#使用者登入與登出" title="使用者登入與登出">使用者登入與登出</a></li>
+<li><a href="#限制登入後才能刪除留言" title="限制登入後才能刪除留言">限制登入後才能刪除留言</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;"  >
+        <div class="toc"><ul class="nav">
+<li class=""><a href="#實戰：留言板" title="實戰：留言板">實戰：留言板</a><ul class="nav">
+<li><a href="#建立專案與應用程式" title="建立專案與應用程式">建立專案與應用程式</a></li>
+<li><a href="#定義資料模型" title="定義資料模型">定義資料模型</a></li>
+<li><a href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單">視圖、網址、範本、表單</a></li>
+<li><a href="#使用者登入與登出" title="使用者登入與登出">使用者登入與登出</a></li>
+<li><a href="#限制登入後才能刪除留言" title="限制登入後才能刪除留言">限制登入後才能刪除留言</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
+</div>

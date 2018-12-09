@@ -1,6 +1,5 @@
-    <div id="doc" class="markdown-body container-fluid" style="position: relative;"><h1 id="與資料庫互動"><a class="anchor hidden-xs" href="#與資料庫互動" title="與資料庫互動"><span class="octicon octicon-link"></span></a>與資料庫互動</h1><p>我們建立一個簡單的線上投票網站當成範例。</p><p>在終端機中按下 <kbd>Ctrl</kbd> + <kbd>C</kbd> 中斷程式執行，回到命令提示模式。</p><h2 id="建立專案與應用程式"><a class="anchor hidden-xs" href="#建立專案與應用程式" title="建立專案與應用程式"><span class="octicon octicon-link"></span></a>建立專案與應用程式</h2><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
-<span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> ~/workspace
-django-admin.py startproject poll
+    <div id="doc" class="markdown-body container-fluid" style="position: relative;"><h1 id="與資料庫互動"><a class="anchor hidden-xs" href="#與資料庫互動" title="與資料庫互動"><span class="octicon octicon-link"></span></a>與資料庫互動</h1><p>我們建立一個簡單的線上投票網站當成範例。</p><p>在終端機中按下 <kbd>Ctrl</kbd> + <kbd>C</kbd> 中斷程式執行，回到命令提示模式。</p><h2 id="建立專案與應用程式"><a class="anchor hidden-xs" href="#建立專案與應用程式" title="建立專案與應用程式"><span class="octicon octicon-link"></span></a>建立專案與應用程式</h2><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper">
+<div class="code">django-admin.py startproject poll
 </div></div></code></pre><p>打完指令後，會產生一個 <code>poll</code> 的資料夾</p><pre><code class="bash hljs">poll/
     manage.py
     poll/
@@ -10,7 +9,7 @@ django-admin.py startproject poll
         wsgi.py
 </code></pre><p>(2)建立一個應用程式</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> poll
-python3 manage.py startapp default
+python manage.py startapp default
 </div></div></code></pre><h2 id="調整專案設定值"><a class="anchor hidden-xs" href="#調整專案設定值" title="調整專案設定值"><span class="octicon octicon-link"></span></a>調整專案設定值</h2><p>修改 <code>poll/poll/settings.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="28"></span>
 <span data-linenumber="29"></span>
 <span data-linenumber="30"></span>
@@ -84,10 +83,10 @@ TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
     count = models.IntegerField(default=<span class="hljs-number">0</span>)
 </div></div></code></pre><p>執行以下指令建立資料庫</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
-<span data-linenumber="3"></span></div><div class="code">sudo python3 manage.py makemigrations
-sudo python3 manage.py migrate
-sudo python3 manage.py createsuperuser
-</div></div></code></pre><p><kbd><img src="https://i.imgur.com/cb4aBh9.png" alt=""></kbd></p><h2 id="連結網站管理頁面"><a class="anchor hidden-xs" href="#連結網站管理頁面" title="連結網站管理頁面"><span class="octicon octicon-link"></span></a>連結網站管理頁面</h2><p>開啟網站服務</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">sudo python3 manage.py runserver 0:80
+<span data-linenumber="3"></span></div><div class="code">sudo python manage.py makemigrations
+sudo python manage.py migrate
+sudo python manage.py createsuperuser
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/cb4aBh9.png" alt=""></kbd></p><h2 id="連結網站管理頁面"><a class="anchor hidden-xs" href="#連結網站管理頁面" title="連結網站管理頁面"><span class="octicon octicon-link"></span></a>連結網站管理頁面</h2><p>開啟網站服務</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">sudo python manage.py runserver 0:80
 </div></div></code></pre><p>請在瀏覽器中輸入以下網址，以後入 Django 內建的管理後臺</p><p><code>http://your-host-address/admin</code></p><p>(<em><strong>註：<code>your-host-address</code> 請自行置換為執行專案的主機位址</strong></em>)</p><p><kbd><img src="https://i.imgur.com/UzWjT6k.png" alt=""></kbd></p><p>輸入超級管理員的帳號密碼後，登入網站管理後臺</p><p><kbd><img src="https://i.imgur.com/XaUT2C5.png" alt=""></kbd></p><h3 id="將自訂資料模型也納入內建管理後臺"><a class="anchor hidden-xs" href="#將自訂資料模型也納入內建管理後臺" title="將自訂資料模型也納入內建管理後臺"><span class="octicon octicon-link"></span></a>將自訂資料模型也納入內建管理後臺</h3><p>修改 <code>poll/default/admin.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
