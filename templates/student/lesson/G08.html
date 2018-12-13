@@ -365,8 +365,8 @@ LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>
 
 urlpatterns = [
     path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'message/'</span>)),
-    path(<span class="hljs-string">'message/'</span>, MessageListView.as_view()),
-    path(<span class="hljs-string">'message/&lt;int:pk&gt;/'</span>, MessageDetailView.as_view()),
+    path(<span class="hljs-string">'message/'</span>, MessageList.as_view()),
+    path(<span class="hljs-string">'message/&lt;int:pk&gt;/'</span>, MessageDetail.as_view()),
     path(<span class="hljs-string">'message/create/'</span>, MessageCreate.as_view()),
     path(<span class="hljs-string">'message/&lt;int:pk&gt;/delete/'</span>, MessageDelete.as_view()),
 ]
