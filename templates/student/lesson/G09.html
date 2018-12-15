@@ -1,0 +1,639 @@
+    <div id="doc" class="markdown-body container-fluid comment-enabled" style="position: relative;"><h1 id="實戰：日誌"><a class="anchor hidden-xs" href="#實戰：日誌" title="實戰：日誌"><span class="octicon octicon-link"></span></a>實戰：日誌</h1><p>接下來我們要建立個人數位助理的網站專案，在這個專案中有 2 個獨立的功能：日誌以及記帳。</p><h2 id="建立專案與應用程式"><a class="anchor hidden-xs" href="#建立專案與應用程式" title="建立專案與應用程式"><span class="octicon octicon-link"></span></a>建立專案與應用程式</h2><h3 id="建立新專案"><a class="anchor hidden-xs" href="#建立新專案" title="建立新專案"><span class="octicon octicon-link"></span></a>建立新專案</h3><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">django-admin.py startproject assistant
+</div></div></code></pre><p>打完指令後，會產生一個 <code>assistant</code> 的資料夾</p><pre><code class="bash hljs">assistant/
+    manage.py
+    assistant/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+</code></pre><h3 id="在專案下建立應用程式"><a class="anchor hidden-xs" href="#在專案下建立應用程式" title="在專案下建立應用程式"><span class="octicon octicon-link"></span></a>在專案下建立應用程式</h3><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> assistant
+python manage.py startapp web
+</div></div></code></pre><p>修改 <code>assistant/assistant/settings.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span>
+<span data-linenumber="31"></span>
+<span data-linenumber="32"></span>
+<span data-linenumber="33"></span>
+<span data-linenumber="34"></span>
+<span data-linenumber="35"></span>
+<span data-linenumber="36"></span>
+<span data-linenumber="37"></span>
+<span data-linenumber="38"></span>
+<span data-linenumber="39"></span>
+<span data-linenumber="40"></span>
+<span data-linenumber="41"></span></div><div class="code">ALLOWED_HOSTS = [<span class="hljs-string">'*'</span>]
+
+
+<span class="hljs-comment"># Application definition</span>
+
+INSTALLED_APPS = [
+    <span class="hljs-string">'web'</span>,
+    <span class="hljs-string">'django.contrib.admin'</span>,
+    <span class="hljs-string">'django.contrib.auth'</span>,
+    <span class="hljs-string">'django.contrib.contenttypes'</span>,
+    <span class="hljs-string">'django.contrib.sessions'</span>,
+    <span class="hljs-string">'django.contrib.messages'</span>,
+    <span class="hljs-string">'django.contrib.staticfiles'</span>,
+]
+</div></div></code></pre><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="55"></span>
+<span data-linenumber="56"></span>
+<span data-linenumber="57"></span>
+<span data-linenumber="58"></span>
+<span data-linenumber="59"></span>
+<span data-linenumber="60"></span>
+<span data-linenumber="61"></span>
+<span data-linenumber="62"></span>
+<span data-linenumber="63"></span>
+<span data-linenumber="64"></span>
+<span data-linenumber="65"></span>
+<span data-linenumber="66"></span>
+<span data-linenumber="67"></span>
+<span data-linenumber="68"></span>
+<span data-linenumber="69"></span></div><div class="code">TEMPLATES = [
+    {
+        <span class="hljs-string">'BACKEND'</span>: <span class="hljs-string">'django.template.backends.django.DjangoTemplates'</span>,
+        <span class="hljs-string">'DIRS'</span>: [<span class="hljs-string">'templates'</span>],
+        <span class="hljs-string">'APP_DIRS'</span>: <span class="hljs-keyword">True</span>,
+        <span class="hljs-string">'OPTIONS'</span>: {
+            <span class="hljs-string">'context_processors'</span>: [
+                <span class="hljs-string">'django.template.context_processors.debug'</span>,
+                <span class="hljs-string">'django.template.context_processors.request'</span>,
+                <span class="hljs-string">'django.contrib.auth.context_processors.auth'</span>,
+                <span class="hljs-string">'django.contrib.messages.context_processors.messages'</span>,
+            ],
+        },
+    },
+]
+</div></div></code></pre><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="104"></span>
+<span data-linenumber="105"></span>
+<span data-linenumber="106"></span>
+<span data-linenumber="107"></span>
+<span data-linenumber="108"></span>
+<span data-linenumber="109"></span></div><div class="code"><span class="hljs-comment"># Internationalization</span>
+<span class="hljs-comment"># https://docs.djangoproject.com/en/2.1/topics/i18n/</span>
+
+LANGUAGE_CODE = <span class="hljs-string">'zh-hant'</span>
+
+TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
+</div></div></code></pre><h2 id="資料庫"><a class="anchor hidden-xs" href="#資料庫" title="資料庫"><span class="octicon octicon-link"></span></a>資料庫</h2><p>修改 <code>assistant/web/models.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span></div><div class="code"><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models
+
+<span class="hljs-comment"># Create your models here.</span>
+<span class="hljs-comment"># 日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Journal</span><span class="hljs-params">(models.Model)</span>:</span>
+    content = models.TextField(<span class="hljs-string">"內容"</span>)
+    created = models.DateField(auto_now_add=<span class="hljs-keyword">True</span>)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.content
+</div></div></code></pre><ul>
+<li>新增<ins>第 4 - 10 行</ins>，定義日誌資料表</li>
+</ul><p>執行以下指令建立資料庫：</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span></div><div class="code">python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+</div></div></code></pre><p>開啟網站服務</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">python manage.py runserver 0:80
+</div></div></code></pre><h2 id="網址、視圖、範本、表單"><a class="anchor hidden-xs" href="#網址、視圖、範本、表單" title="網址、視圖、範本、表單"><span class="octicon octicon-link"></span></a>網址、視圖、範本、表單</h2><h3 id="網址"><a class="anchor hidden-xs" href="#網址" title="網址"><span class="octicon octicon-link"></span></a>網址</h3><p>我們要建立相對應的網頁，開啟 <code>assistant/assistant/urls.py</code>，修改為以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path, include
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
+
+urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'journal/'</span>)), 
+    path(<span class="hljs-string">'journal/'</span>, include(<span class="hljs-string">'journal.urls'</span>)),
+]
+</div></div></code></pre><p>新增檔案 <code>assistant/web/urls.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
+<span class="hljs-keyword">from</span> .views <span class="hljs-keyword">import</span> JournalList, JournalCreate, JournalUpdate, JournalDelete
+
+urlpatterns = [
+    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'journal/'</span>)),
+    path(<span class="hljs-string">'journal/'</span>, JournalList.as_view()), 
+    path(<span class="hljs-string">'journal/create/'</span>, JournalCreate.as_view()),
+    path(<span class="hljs-string">'journal/&lt;int:pk&gt;/update/'</span>, JournalUpdate.as_view()), 
+    path(<span class="hljs-string">'journal/&lt;int:pk&gt;/delete/'</span>, JournalDelete.as_view()),
+]
+</div></div></code></pre><h3 id="視圖"><a class="anchor hidden-xs" href="#視圖" title="視圖"><span class="octicon octicon-link"></span></a>視圖</h3><p>開啟 <code>assistant/web/views.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span></div><div class="code"><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> ListView, CreateView, UpdateView, DeleteView
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> Journal
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-comment"># 日誌列表</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalList</span><span class="hljs-params">(ListView)</span>:</span>
+    model = Journal
+    ordering = [<span class="hljs-string">'-id'</span>]      <span class="hljs-comment"># 依 id 欄位反向排序(新的在前面)</span>
+
+<span class="hljs-comment"># 新增日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalCreate</span><span class="hljs-params">(CreateView)</span>:</span>
+    model = Journal
+    fields = [<span class="hljs-string">'content'</span>]            <span class="hljs-comment"># 自動產生表單時僅顯示 content 欄位</span>
+    success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
+    template_name = <span class="hljs-string">'form.html'</span>
+
+<span class="hljs-comment"># 修改日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalUpdate</span><span class="hljs-params">(UpdateView)</span>:</span>
+    model = Journal
+    fields = [<span class="hljs-string">'content'</span>]            <span class="hljs-comment"># 自動產生表單時僅顯示 content 欄位</span>
+    success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
+    template_name = <span class="hljs-string">'form.html'</span>
+
+<span class="hljs-comment"># 刪除日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalDelete</span><span class="hljs-params">(DeleteView)</span>:</span>
+    model = Journal
+    success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
+    template_name = <span class="hljs-string">'confirm_delete.html'</span>
+</div></div></code></pre><h3 id="範本"><a class="anchor hidden-xs" href="#範本" title="範本"><span class="octicon octicon-link"></span></a>範本</h3><p>為了將所有的頁面範本集中管理，前面在專案設定檔中已經指定了頁面範本的搜尋路徑，接下來我們就將所有的頁面範本都放在這個資料夾下。</p><h4 id="建立頁面範本資料夾"><a class="anchor hidden-xs" href="#建立頁面範本資料夾" title="建立頁面範本資料夾"><span class="octicon octicon-link"></span></a>建立頁面範本資料夾</h4><p>新增頁面範本資料夾 <code>assistant/templates</code></p><p>建立 <code>web</code> 應用程式的頁面範本資料夾 <code>assistant/templates/web</code></p><h4 id="新增頁面範本"><a class="anchor hidden-xs" href="#新增頁面範本" title="新增頁面範本"><span class="octicon octicon-link"></span></a>新增頁面範本</h4><p>新增網站基底頁面範本 <code>assistant/templates/base.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span></div><div class="code"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-hant"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>數位助理<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>數位助理<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/journal/"</span>&gt;</span>日誌列表<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/journal/create/"</span>&gt;</span>寫日誌<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;% block content %}&#123;% endblock %}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>    
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/RnABGPy.png" alt=""></kbd></p><p>新增<strong>日誌列表</strong>頁面範本 <code>assistant/templates/web/journal_list.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span></div><div class="code">&#123;% extends 'base.html' %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>我的日誌：<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>時間<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>項目<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>操作<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+  &#123;% for journal in journal_list %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;{ journal.created|date:"l" }}&#123;{ journal.created }}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ journal.id }}/update/"</span>&gt;</span>&#123;{ journal.content }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ journal.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+  &#123;% endfor %}
+<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/SvMN8dC.png" alt=""></kbd></p><p>新增<strong>共用編輯表單</strong>頁面範本 <code>assistant/templates/form.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span></div><div class="code">&#123;% extends 'base.html' %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+  &#123;% csrf_token %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+    &#123;{ form.as_table }}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"送出"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/5cv1li4.png" alt=""></kbd></p><p>新增<strong>共用刪除表單</strong>頁面範本 <code>assistant/templates/confirm_delete.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span></div><div class="code">&#123;% extends 'base.html' %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>刪除紀錄<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#123;{ object }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>確定要刪除這筆記錄嗎？<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+  &#123;% csrf_token %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"是的，我要刪除"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/n3ndKMz.png" alt=""></kbd></p><h2 id="使用者登入與登出"><a class="anchor hidden-xs" href="#使用者登入與登出" title="使用者登入與登出"><span class="octicon octicon-link"></span></a>使用者登入與登出</h2><h3 id="新增登入登出路徑規則"><a class="anchor hidden-xs" href="#新增登入登出路徑規則" title="新增登入登出路徑規則"><span class="octicon octicon-link"></span></a>新增登入登出路徑規則</h3><p>開啟 <code>assistant/assistant/urls.py</code>，新增以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span></div><div class="code">urlpatterns = [
+    path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
+    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'journal/'</span>)), 
+    path(<span class="hljs-string">'journal/'</span>, include(<span class="hljs-string">'journal.urls'</span>)),
+    path(<span class="hljs-string">'accounts/'</span>, include(<span class="hljs-string">'django.contrib.auth.urls'</span>)),
+]
+</div></div></code></pre><p>開啟專案設定檔 <code>assistant/assistant/settings.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="123"></span>
+<span data-linenumber="124"></span></div><div class="code"><span class="hljs-comment"># Redirect to home URL after login (Default redirects to /accounts/profile/)</span>
+LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>    <span class="hljs-comment"># 設定登人後導向的頁面</span>
+</div></div></code></pre><h3 id="登入登出頁面範本"><a class="anchor hidden-xs" href="#登入登出頁面範本" title="登入登出頁面範本"><span class="octicon octicon-link"></span></a>登入登出頁面範本</h3><p>新增資料夾 <code>assistant/templates/registration</code></p><p>新增<strong>登入</strong>頁面範本 <code>assistant/templates/registration/login.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+&#123;% if form.errors %}
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>帳號或密碼不符合，請再試一次。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+&#123;% endif %}
+
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">""</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+  &#123;% csrf_token %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>帳號：<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;{ form.username }}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>密碼：<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;{ form.password }}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"登入"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/oxCInBF.png" alt=""></kbd></p><p>新增<strong>登出</strong>頁面範本 <code>assistant/templates/registration/logged_out.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span></div><div class="code">&#123;% extends "base.html" %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>您已登出!!<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>  
+
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;% url 'login'%}"</span>&gt;</span>請按此處重新登入<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/wHRd0wp.png" alt=""></kbd></p><p>修改<strong>網站基底</strong>頁面範本 <code>assistant/templates/base.htm</code>，加上登出/登入連結：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span></div><div class="code"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"zh-hant"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>數位助理<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>數位助理<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/journal/"</span>&gt;</span>日誌列表<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/journal/create/"</span>&gt;</span>寫日誌<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% if user.is_authenticated %}
+      &#123;{ user.username }} <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;% url 'logout' %}"</span>&gt;</span>登出<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% else %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;% url 'login' %}"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% endif %}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;% block content %}&#123;% endblock %}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/LBzpmYM.png" alt=""></kbd><br>
+<kbd><img src="https://i.imgur.com/jCgto7m.png" alt=""></kbd></p><h2 id="限制登入後才能執行日記功能"><a class="anchor hidden-xs" href="#限制登入後才能執行日記功能" title="限制登入後才能執行日記功能"><span class="octicon octicon-link"></span></a>限制登入後才能執行日記功能</h2><p>到目前為止，雖然提供了使用者登人與登出的功能，但實際上使用者登入與否並不影響他在這個網站上所能進行的操作，即使在沒登入的狀態也能寫日誌、修改日誌、甚至刪除日誌。</p><p>你可能會想到在可以頁面範本中檢查使用者的登入狀況，再決定是否要顯示相關的連結。但是，看不到連結，不代表不能手動在網址列打上這些功能的存取路徑，一旦使用者「猜」到他想執行的操作所對應到的路徑，他可以自己打在網址列上，再讓瀏覽器送出存取請求來執行他想進行的動作。</p><p>為了做好網站的權限管控，不能只把不讓使用者操作的連結藏起來就好，而是應該在處理使用者請求執行某項功能的時候，要同時檢核他的權限。</p><p>這個範例的需求比較簡單，因為它是個人用的數位助理，所以只要檢查使用者是否已登人就好，不需要更複雜的權限管理。</p><p>開啟 <code>assistant/web/views.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span>
+<span data-linenumber="26"></span>
+<span data-linenumber="27"></span>
+<span data-linenumber="28"></span>
+<span data-linenumber="29"></span>
+<span data-linenumber="30"></span></div><div class="code"><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+<span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> ListView, CreateView, UpdateView, DeleteView
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> Journal
+<span class="hljs-keyword">from</span> django.contrib.auth.mixins <span class="hljs-keyword">import</span> LoginRequiredMixin
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-comment"># 日誌列表</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalList</span><span class="hljs-params">(LoginRequiredMixin, ListView)</span>:</span>
+    model = Journal
+    ordering = [<span class="hljs-string">'-id'</span>]      <span class="hljs-comment"># 依 id 欄位反向排序(新的在前面)</span>
+
+<span class="hljs-comment"># 新增日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalCreate</span><span class="hljs-params">(LoginRequiredMixin, CreateView)</span>:</span>
+    model = Journal
+    fields = [<span class="hljs-string">'content'</span>]            <span class="hljs-comment"># 自動產生表單時僅顯示 content 欄位</span>
+    success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
+    template_name = <span class="hljs-string">'form.html'</span>
+
+<span class="hljs-comment"># 修改日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalUpdate</span><span class="hljs-params">(LoginRequiredMixin, pdateView)</span>:</span>
+    model = Journal
+    fields = [<span class="hljs-string">'content'</span>]            <span class="hljs-comment"># 自動產生表單時僅顯示 content 欄位</span>
+    success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
+    template_name = <span class="hljs-string">'form.html'</span>
+
+<span class="hljs-comment"># 刪除日誌</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalDelete</span><span class="hljs-params">(LoginRequiredMixin, DeleteView)</span>:</span>
+    model = Journal
+    success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
+    template_name = <span class="hljs-string">'confirm_delete.html'</span>
+</div></div></code></pre><h2 id="分頁顯示"><a class="anchor hidden-xs" href="#分頁顯示" title="分頁顯示"><span class="octicon octicon-link"></span></a>分頁顯示</h2><p>在日誌列表的頁面上，會將所有的日誌記錄全部列出來，但當日誌經過一段時間的累積之後，在同一個頁面上要顯示所有的日誌，有可能會因為數量太大，而導致頁面產生的速度過慢。因此一般的網站在處理清單式的頁面的時候，通常都會採用分頁的手法，將所有紀錄拆分成多頁顯示，每一項最多僅顯示固定筆數的紀錄。</p><h3 id="修改視圖，加入分頁設定"><a class="anchor hidden-xs" href="#修改視圖，加入分頁設定" title="修改視圖，加入分頁設定"><span class="octicon octicon-link"></span></a>修改視圖，加入分頁設定</h3><p>開啟 <code>assistant/web/views.py</code>，修改 <code>JournalList</code> 類別：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span></div><div class="code"><span class="hljs-comment"># 日誌列表</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalList</span><span class="hljs-params">(LoginRequiredMixin, ListView)</span>:</span>
+    model = Journal
+    ordering = [<span class="hljs-string">'-id'</span>]      <span class="hljs-comment"># 依 id 欄位反向排序(新的在前面)</span>
+    paginate_by = <span class="hljs-number">3</span>         <span class="hljs-comment"># 設定每頁最多顯示的資料筆數</span>
+</div></div></code></pre><h3 id="處理頁面範本，加入分頁連結"><a class="anchor hidden-xs" href="#處理頁面範本，加入分頁連結" title="處理頁面範本，加入分頁連結"><span class="octicon octicon-link"></span></a>處理頁面範本，加入分頁連結</h3><p>在視圖中指定 <code>paginate_by</code> 屬性值，<code>ListView</code> 會自動依據這個設定取出目前面頁的資料量。因此頁面範本中只能取得最多 <code>paginated_by</code> 筆數的紀錄，但在頁面上顯示這些紀錄後，我們目前的頁面範本並不會自動顯示上一頁、下一頁、或其他分頁頁碼的連結。這部份不是 <code>ListView</code> 的工作，頁面如何呈現，該呈現什麼，這是頁面範本的任務。因此需要修改頁面範本，來規範這些分頁的連結該出現在何處，以及如何呈現這些分頁連結。</p><h4 id="建立分頁連結範本"><a class="anchor hidden-xs" href="#建立分頁連結範本" title="建立分頁連結範本"><span class="octicon octicon-link"></span></a>建立分頁連結範本</h4><p>首先新增分頁連結的範本 <code>assistant/templates/pagination.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span></div><div class="code">&#123;% if is_paginated %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  &#123;% if page_obj.has_previous %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"?page=&#123;{ page_obj.previous_page_number }}"</span>&gt;</span>上一頁<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  &#123;% endif %}
+  &#123;% for page in paginator.page_range %}
+    &#123;% if page == page_obj.number %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">font</span> <span class="hljs-attr">color</span>=<span class="hljs-string">"red"</span>&gt;</span>&#123;{ page }}<span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% else %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"?page=&#123;{ page }}"</span>&gt;</span>&#123;{ page }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    &#123;% endif %}
+  &#123;% endfor %}
+  &#123;% if page_obj.has_next %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"?page=&#123;{ page_obj.next_page_number }}"</span>&gt;</span>下一頁<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  &#123;% endif %}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+&#123;% endif %}
+</div></div></code></pre><p>這個分頁連結的範本所產生的 HTML 碼並不是一個完整的頁面，僅產生分頁連結的部份而已。若有其他的頁面範本需要產生分頁連結的時候，可以在頁面範本中透過底下的標籤來引用分頁連結範本：</p><pre><code class="python hljs">&#123;% include <span class="hljs-string">'pagination.html'</span> %}
+</code></pre><h4 id="將分頁連結加入日誌列表"><a class="anchor hidden-xs" href="#將分頁連結加入日誌列表" title="將分頁連結加入日誌列表"><span class="octicon octicon-link"></span></a>將分頁連結加入日誌列表</h4><p>開啟日誌列表頁面範本 <code>assistant/templates/web/journal_list.html</code>，修改為以下程式碼：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span></div><div class="code">&#123;% extends 'base.html' %}
+
+&#123;% block content %}
+<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>我的日誌<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>時間<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>項目<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">th</span>&gt;</span>操作<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+  &#123;% for journal in journal_list %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;{ journal.created|date:"l" }}&#123;{ journal.created }}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ journal.id }}/update/"</span>&gt;</span>&#123;{ journal.content }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"&#123;{ journal.id }}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+  &#123;% endfor %}
+<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+&#123;% include 'pagination.html' %}
+&#123;% endblock %}
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/tDKN887.png" alt=""></kbd></p></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav">
+<li class=""><a href="#實戰：日誌" title="實戰：日誌">實戰：日誌</a><ul class="nav">
+<li><a href="#建立專案與應用程式" title="建立專案與應用程式">建立專案與應用程式</a><ul class="nav">
+<li><a href="#建立新專案" title="建立新專案">建立新專案</a></li>
+<li><a href="#在專案下建立應用程式" title="在專案下建立應用程式">在專案下建立應用程式</a></li>
+</ul>
+</li>
+<li><a href="#資料庫" title="資料庫">資料庫</a></li>
+<li><a href="#網址、視圖、範本、表單" title="網址、視圖、範本、表單">網址、視圖、範本、表單</a><ul class="nav">
+<li><a href="#網址" title="網址">網址</a></li>
+<li><a href="#視圖" title="視圖">視圖</a></li>
+<li><a href="#範本" title="範本">範本</a></li>
+</ul>
+</li>
+<li><a href="#使用者登入與登出" title="使用者登入與登出">使用者登入與登出</a><ul class="nav">
+<li><a href="#新增登入登出路徑規則" title="新增登入登出路徑規則">新增登入登出路徑規則</a></li>
+<li><a href="#登入登出頁面範本" title="登入登出頁面範本">登入登出頁面範本</a></li>
+</ul>
+</li>
+<li><a href="#限制登入後才能執行日記功能" title="限制登入後才能執行日記功能">限制登入後才能執行日記功能</a></li>
+<li><a href="#分頁顯示" title="分頁顯示">分頁顯示</a><ul class="nav">
+<li><a href="#修改視圖，加入分頁設定" title="修改視圖，加入分頁設定">修改視圖，加入分頁設定</a></li>
+<li><a href="#處理頁面範本，加入分頁連結" title="處理頁面範本，加入分頁連結">處理頁面範本，加入分頁連結</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;"  >
+        <div class="toc"><ul class="nav">
+<li class=""><a href="#實戰：日誌" title="實戰：日誌">實戰：日誌</a><ul class="nav">
+<li><a href="#建立專案與應用程式" title="建立專案與應用程式">建立專案與應用程式</a><ul class="nav">
+<li><a href="#建立新專案" title="建立新專案">建立新專案</a></li>
+<li><a href="#在專案下建立應用程式" title="在專案下建立應用程式">在專案下建立應用程式</a></li>
+</ul>
+</li>
+<li><a href="#資料庫" title="資料庫">資料庫</a></li>
+<li><a href="#網址、視圖、範本、表單" title="網址、視圖、範本、表單">網址、視圖、範本、表單</a><ul class="nav">
+<li><a href="#網址" title="網址">網址</a></li>
+<li><a href="#視圖" title="視圖">視圖</a></li>
+<li><a href="#範本" title="範本">範本</a></li>
+</ul>
+</li>
+<li><a href="#使用者登入與登出" title="使用者登入與登出">使用者登入與登出</a><ul class="nav">
+<li><a href="#新增登入登出路徑規則" title="新增登入登出路徑規則">新增登入登出路徑規則</a></li>
+<li><a href="#登入登出頁面範本" title="登入登出頁面範本">登入登出頁面範本</a></li>
+</ul>
+</li>
+<li><a href="#限制登入後才能執行日記功能" title="限制登入後才能執行日記功能">限制登入後才能執行日記功能</a></li>
+<li><a href="#分頁顯示" title="分頁顯示">分頁顯示</a><ul class="nav">
+<li><a href="#修改視圖，加入分頁設定" title="修改視圖，加入分頁設定">修改視圖，加入分頁設定</a></li>
+<li><a href="#處理頁面範本，加入分頁連結" title="處理頁面範本，加入分頁連結">處理頁面範本，加入分頁連結</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>

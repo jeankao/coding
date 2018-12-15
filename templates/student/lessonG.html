@@ -203,6 +203,38 @@
     </div>
     {% endif %}
   </div>
+{% elif lesson == "G09" %}
+  <ul class="nav nav-pills" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">講義</a>
+    </li>
+    <!--
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-selected="false">影片</a>
+    </li>
+    -->
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">作業</a>
+    </li>
+    {% endif %}
+  </ul>
+  <br />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+      {% include "student/lesson/G09.html" %}
+    </div>
+    <!--
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab4">
+      <iframe width="880" height="520" src="https://www.youtube.com/embed/vIvCIH3-CIw?autoplay=0&autostart=0&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    -->
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      {% include "student/submitE.html" with index=9 %}
+    </div>
+    {% endif %}
+  </div>
 {% endif %}
 {% endblock %}
 
