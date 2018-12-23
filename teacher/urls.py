@@ -96,5 +96,5 @@ urlpatterns = [
     #測驗卷
     url(r'^exam/(?P<classroom_id>\d+)/$', views.exam_list),
     url(r'^exam_detail/(?P<classroom_id>\d+)/(?P<student_id>\d+)/(?P<exam_id>\d+)/$', views.exam_detail), 
-		
+	url(r'^test/', views.test),
 ]

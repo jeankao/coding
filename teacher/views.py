@@ -44,6 +44,7 @@ from datetime import datetime
 from helper import VideoLogHelper
 import re
 reload(sys)
+from django.db.models.functions import Length
 
 sys.setdefaultencoding('utf-8')
 
@@ -2315,3 +2316,7 @@ def exam_detail(request, classroom_id, student_id, exam_id):
         exams = Exam.objects.filter(student_id=student_id, exam_id=exam_id)
         enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=student_id)  
         return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})
+
+def test(request):
+    works = Work.objects.annotate(text_len=Length('memo')).filter(text_len__gt=1000)
+    return render(request, 'teacher/test.html', {'works': works})	
