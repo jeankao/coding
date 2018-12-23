@@ -2319,7 +2319,7 @@ def exam_detail(request, classroom_id, student_id, exam_id):
 
 def test(request):
     works = Work.objects.annotate(text_len=Length('memo')).filter(text_len__gt=500)
-	for work in works:
-	    work.memo = work.memo[0:500]
-		work.save()
+    for work in works:
+       work.memo = work.memo[0:500]
+       work.save()
     return render(request, 'teacher/test.html', {'works': works})	
