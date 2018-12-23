@@ -2318,5 +2318,8 @@ def exam_detail(request, classroom_id, student_id, exam_id):
         return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})
 
 def test(request):
-    works = Work.objects.annotate(text_len=Length('memo')).filter(text_len__gt=1000)
+    works = Work.objects.annotate(text_len=Length('memo')).filter(text_len__gt=500)
+	for work in works:
+	    work.memo = work.memo[0:500]
+		work.save()
     return render(request, 'teacher/test.html', {'works': works})	
