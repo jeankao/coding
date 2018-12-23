@@ -476,7 +476,7 @@ def submit(request, typing, lesson, index):
                         profile.save()
             else:
                 if form.is_valid():
-                    works.update(memo=form.cleaned_data['memo'],publication_date=timezone.localtime(timezone.now()))
+                    works.update(memo=form.cleaned_data['memo'][0:500],publication_date=timezone.localtime(timezone.now()))
                     workfile = WorkFile(work_id=works[0].id, filename=filename)
                     workfile.save()
                 else :
@@ -507,7 +507,7 @@ def submit(request, typing, lesson, index):
                     pass
                 work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
                 work.youtube=form.cleaned_data['youtube']
-                work.memo=form.cleaned_data['memo']
+                work.memo=form.cleaned_data['memo'][0:500]
                 work.save()
                 return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
             return redirect('/student/lesson/'+request.POST.get("lesson", ""))
@@ -571,10 +571,10 @@ def submit(request, typing, lesson, index):
                     work.picture=path[3]
                     pass
                 if lesson == "8":
-                    work.memo=form.cleaned_data['memo']
+                    work.memo=form.cleaned_data['memo'][0:500]
                 else :
                     work.code=form.cleaned_data['code']
-                    work.memo=form.cleaned_data['memo']
+                    work.memo=form.cleaned_data['memo'][0:500]
                     work.helps=form.cleaned_data['helps']
                 work.save()
                 return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
