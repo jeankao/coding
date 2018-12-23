@@ -62,7 +62,7 @@
 <form name="myForm" id="form{{index}}" action="/student/work/submit/{{typing}}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}3{% elif 'D' in lesson %}4{% elif 'E' in lesson %}5{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
     <input type="hidden" name="lesson" value={{lesson}}>
     <div class="form-group">
-        <label for="exampleFormControlTextarea1">心得感想：</label>
+        <label for="exampleFormControlTextarea1"><div id="result">心得感想：</div></label>
         <textarea class="form-control" id="id_memo{{index}}" rows="3" name="memo">{{work_dict|hash_memo:index}}</textarea>
     </div>
     <div class="form-group">
@@ -120,3 +120,31 @@
         {% endif %}
     </tr>
 </table>
+{% block footer_script %}
+<script>
+function wordCount( val ){
+    var clean_message = val.replace(/\[m_\d+#\d+:\d+:\d+\]/g, '');
+    var chinese = clean_message.match(/[\u4E00-\u9FA5]/g);
+    var pure_english = clean_message.replace(/[\u4E00-\u9FA5]/g, '')
+    var wom = pure_english.match(/\w+/g);
+    return {
+      words : wom ? wom.length : 0,
+      chars : chinese ? chinese.length : 0,
+		};
+}
+
+$('#id_memo{{index}}').on('input', function(e){
+    var v = wordCount(e.target.value);
+    if (v.words + v.chars > 500) {
+      // Split the string on first 200 words and rejoin on spaces
+      $(this).val($(this).val().substring(0, 500));
+    }
+    else {
+  console.log(e.target.value);
+  $('#result').html("心得感想<BR>(英:" + v.words + " / 中: " + v.chars + ")");
+  $('input#memo_e').val(v.words);
+  $('input#memo_c').val(v.chars);
+    }
+});
+</script>
+{% endblock %}

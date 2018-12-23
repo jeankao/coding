@@ -25,7 +25,7 @@ function checkvalue(a, index) {
         {% endif %}
         {% if not work_dict|hash_score:index > 0 %}      
             <tr><td>作品檔案</td><td><input id="id_file" name="file" type="file" class="form-control"></td></tr>
-            <tr><td valign="top">心得感想</td><td><textarea cols="20" id="id_memo{{index}}" name="memo" rows="5"  class="form-control">{{ work_dict|hash_memo:index }}</textarea></td></tr>              
+            <tr><td valign="top"><div id="result">心得感想</div></td><td><textarea cols="20" id="id_memo{{index}}" name="memo" rows="5"  class="form-control">{{ work_dict|hash_memo:index }}</textarea></td></tr>              
             <tr><td></td><td><input type="submit" value="送出"  class="form-control btn-info"/></td></tr>
         {% endif %}         
               </table>
@@ -38,3 +38,31 @@ function checkvalue(a, index) {
               <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
         {% endfor %}
         {% endwith %}
+{% block footer_script %}
+<script>
+function wordCount( val ){
+    var clean_message = val.replace(/\[m_\d+#\d+:\d+:\d+\]/g, '');
+    var chinese = clean_message.match(/[\u4E00-\u9FA5]/g);
+    var pure_english = clean_message.replace(/[\u4E00-\u9FA5]/g, '')
+    var wom = pure_english.match(/\w+/g);
+    return {
+      words : wom ? wom.length : 0,
+      chars : chinese ? chinese.length : 0,
+		};
+}
+
+$('#id_memo{{index}}').on('input', function(e){
+    var v = wordCount(e.target.value);
+    if (v.words + v.chars > 500) {
+      // Split the string on first 200 words and rejoin on spaces
+      $(this).val($(this).val().substring(0, 500));
+    }
+    else {
+  console.log(e.target.value);
+  $('#result').html("心得感想<BR>(英:" + v.words + " / 中: " + v.chars + ")");
+  $('input#memo_e').val(v.words);
+  $('input#memo_c').val(v.chars);
+    }
+});
+</script>
+{% endblock %}
