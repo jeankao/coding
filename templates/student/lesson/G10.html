@@ -1,0 +1,201 @@
+    <div id="doc" class="markdown-body container-fluid comment-enabled" style="position: relative;"><h1 id="實戰：記帳" style=""><a class="anchor hidden-xs" href="#實戰：記帳" title="實戰：記帳"><span class="octicon octicon-link"></span></a>實戰：記帳</h1><p>接續上一個assistant專案與web應用程式。</p><h2 id="資料庫" style=""><a class="anchor hidden-xs" href="#資料庫" title="資料庫"><span class="octicon octicon-link"></span></a>資料庫</h2><p>開啟 assistant/web/models.py，新增以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span></div><div class="code"><span class="hljs-comment"># 帳目</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Money</span><span class="hljs-params">(models.Model)</span>:</span>
+    CHOICES = (
+      (<span class="hljs-number">1</span>, <span class="hljs-string">"飲食"</span>),
+      (<span class="hljs-number">2</span>, <span class="hljs-string">"衣服"</span>),
+      (<span class="hljs-number">3</span>, <span class="hljs-string">"交通"</span>),
+      (<span class="hljs-number">4</span>, <span class="hljs-string">"教育"</span>),
+      (<span class="hljs-number">5</span>, <span class="hljs-string">"娛樂"</span>),
+      (<span class="hljs-number">6</span>, <span class="hljs-string">"其它"</span>),
+    )    
+    item = models.CharField(max_length=<span class="hljs-number">30</span>, verbose_name=<span class="hljs-string">'項目'</span>)
+    kind = models.IntegerField(default=<span class="hljs-number">0</span>, choices=CHOICES, verbose_name=<span class="hljs-string">'類別'</span>)
+    price = models.IntegerField(default=<span class="hljs-number">0</span>, verbose_name=<span class="hljs-string">'金額'</span>)
+    time = models.DateTimeField(auto_now_add=<span class="hljs-keyword">True</span>)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.item
+</div></div></code></pre><p>在終端機中按下Ctrl+C中斷程式執行，回到命令提示模式。在終端機執行以下指令建立資料庫</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span></div><div class="code">python manage.py makemigrations
+python manage.py migrate
+</div></div></code></pre><p>開啟網站服務</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">python manage.py runserver 0:80
+</div></div></code></pre><h2 id="視圖、網址、範本、表單" style=""><a class="anchor hidden-xs" href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單"><span class="octicon octicon-link"></span></a>視圖、網址、範本、表單</h2><p>我們要建立相對應的網頁，開啟assistant/web/urls.py，新增以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span></div><div class="code">    path(<span class="hljs-string">'money'</span>, views.MoneyList.as_view()),
+    path(<span class="hljs-string">'money/create/'</span>, views.MoneyCreate.as_view()),
+    path(<span class="hljs-string">'money/&lt;int:pk&gt;/update/'</span>, views.MoneyUpdate.as_view()),
+    path(<span class="hljs-string">'money/&lt;int:pk&gt;/delete/'</span>, views.MoneyDelete.as_view()),  
+</div></div></code></pre><p>開啟 assistant/web/views.py，新增以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span>
+<span data-linenumber="23"></span>
+<span data-linenumber="24"></span>
+<span data-linenumber="25"></span></div><div class="code"><span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> Money
+      
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyList</span><span class="hljs-params">(LoginRequiredMixin,  ListView)</span>:</span>
+    model = Money
+    ordering = [<span class="hljs-string">'-id'</span>]
+    paginate_by = <span class="hljs-number">3</span>  
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyCreate</span><span class="hljs-params">(LoginRequiredMixin,  CreateView)</span>:</span>
+    model = Money
+    fields = <span class="hljs-string">'__all__'</span>
+    success_url = <span class="hljs-string">"/web/money"</span>
+    template_name = <span class="hljs-string">'form.html'</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyUpdate</span><span class="hljs-params">(LoginRequiredMixin,  UpdateView)</span>:</span>
+    model = Money
+    fields = <span class="hljs-string">'__all__'</span>
+    success_url = <span class="hljs-string">"/web/money"</span>    
+    template_name = <span class="hljs-string">'form.html'</span>      
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyDelete</span><span class="hljs-params">(LoginRequiredMixin,  DeleteView)</span>:</span>
+    model = Money
+    success_url = <span class="hljs-string">"/web/money"</span>   
+    template_name = <span class="hljs-string">'confirm_delete.html'</span>  
+</div></div></code></pre><p>開啟檔案 assistant/web/templates/base.html，修改為以下程式碼： <ins>第10-11行</ins></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span></div><div class="code"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>數位助理<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    {% if user.is_authenticated %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/"</span>&gt;</span>日記<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/web/diary/create"</span>&gt;</span>寫日誌<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>  
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/web/money"</span>&gt;</span>帳本<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/web/money/create"</span>&gt;</span>記帳<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>    
+    {{ user.username }} <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/accounts/logout"</span>&gt;</span>登出<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    {% else %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/accounts/login"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    {% endif %}  
+  {% block content %}
+  {% endblock %}        
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></div></code></pre><p>新增檔案 assistant/web/templates/web/money_list.html</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<span data-linenumber="2"></span>
+<span data-linenumber="3"></span>
+<span data-linenumber="4"></span>
+<span data-linenumber="5"></span>
+<span data-linenumber="6"></span>
+<span data-linenumber="7"></span>
+<span data-linenumber="8"></span>
+<span data-linenumber="9"></span>
+<span data-linenumber="10"></span>
+<span data-linenumber="11"></span>
+<span data-linenumber="12"></span>
+<span data-linenumber="13"></span>
+<span data-linenumber="14"></span>
+<span data-linenumber="15"></span>
+<span data-linenumber="16"></span>
+<span data-linenumber="17"></span>
+<span data-linenumber="18"></span>
+<span data-linenumber="19"></span>
+<span data-linenumber="20"></span>
+<span data-linenumber="21"></span>
+<span data-linenumber="22"></span></div><div class="code">{% extends "base.html" %}
+
+{% block content %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>我的帳本：<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>時間<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>項目<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>類別<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>金額<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>功能<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+    {% for money in money_list %}          
+    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>({{money.time| date:"l"}}){{money.time}}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"money/{{money.id}}/update/"</span>&gt;</span>{{money.item}}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>{{money.get_kind_display}}<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>{{money.price}}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    　<span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"money/{{money.id}}/delete/"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+    {% endfor %}           
+  <span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+ {% endblock %}
+</div></div></code></pre></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav">
+<li class=""><a href="#實戰：記帳" title="實戰：記帳">實戰：記帳</a><ul class="nav">
+<li><a href="#資料庫" title="資料庫">資料庫</a></li>
+<li><a href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單">視圖、網址、範本、表單</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;"  >
+        <div class="toc"><ul class="nav">
+<li class=""><a href="#實戰：記帳" title="實戰：記帳">實戰：記帳</a><ul class="nav">
+<li><a href="#資料庫" title="資料庫">資料庫</a></li>
+<li><a href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單">視圖、網址、範本、表單</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>

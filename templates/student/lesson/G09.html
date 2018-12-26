@@ -1,4 +1,4 @@
-    <div id="doc" class="markdown-body container-fluid comment-enabled" style="position: relative;"><h1 id="實戰：日誌"><a class="anchor hidden-xs" href="#實戰：日誌" title="實戰：日誌"><span class="octicon octicon-link"></span></a>實戰：日誌</h1><p>接下來我們要建立個人數位助理的網站專案，在這個專案中有 2 個獨立的功能：日誌以及記帳。</p><h2 id="建立專案與應用程式"><a class="anchor hidden-xs" href="#建立專案與應用程式" title="建立專案與應用程式"><span class="octicon octicon-link"></span></a>建立專案與應用程式</h2><h3 id="建立新專案"><a class="anchor hidden-xs" href="#建立新專案" title="建立新專案"><span class="octicon octicon-link"></span></a>建立新專案</h3><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">django-admin.py startproject assistant
+    <div id="doc" class="markdown-body container-fluid comment-enabled" style="position: relative;"><h1 id="實戰：日誌" style=""><a class="anchor hidden-xs" href="#實戰：日誌" title="實戰：日誌"><span class="octicon octicon-link"></span></a>實戰：日誌</h1><p>接下來我們要建立個人數位助理的網站專案，在這個專案中有 2 個獨立的功能：日誌以及記帳。</p><h2 id="建立專案與應用程式" style=""><a class="anchor hidden-xs" href="#建立專案與應用程式" title="建立專案與應用程式"><span class="octicon octicon-link"></span></a>建立專案與應用程式</h2><h3 id="建立新專案" style=""><a class="anchor hidden-xs" href="#建立新專案" title="建立新專案"><span class="octicon octicon-link"></span></a>建立新專案</h3><p>(1)在終端機中下達指令建立一個新的專案</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">django-admin.py startproject assistant
 </div></div></code></pre><p>打完指令後，會產生一個 <code>assistant</code> 的資料夾</p><pre><code class="bash hljs">assistant/
     manage.py
     assistant/
@@ -6,7 +6,7 @@
         settings.py
         urls.py
         wsgi.py
-</code></pre><h3 id="在專案下建立應用程式"><a class="anchor hidden-xs" href="#在專案下建立應用程式" title="在專案下建立應用程式"><span class="octicon octicon-link"></span></a>在專案下建立應用程式</h3><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</code></pre><h3 id="在專案下建立應用程式" style=""><a class="anchor hidden-xs" href="#在專案下建立應用程式" title="在專案下建立應用程式"><span class="octicon octicon-link"></span></a>在專案下建立應用程式</h3><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span></div><div class="code"><span class="hljs-built_in">cd</span> assistant
 python manage.py startapp web
 </div></div></code></pre><p>修改 <code>assistant/assistant/settings.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="28"></span>
@@ -76,7 +76,7 @@ INSTALLED_APPS = [
 LANGUAGE_CODE = <span class="hljs-string">'zh-hant'</span>
 
 TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
-</div></div></code></pre><h2 id="資料庫"><a class="anchor hidden-xs" href="#資料庫" title="資料庫"><span class="octicon octicon-link"></span></a>資料庫</h2><p>修改 <code>assistant/web/models.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><h2 id="資料庫" style=""><a class="anchor hidden-xs" href="#資料庫" title="資料庫"><span class="octicon octicon-link"></span></a>資料庫</h2><p>修改 <code>assistant/web/models.py</code>：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>
@@ -95,30 +95,26 @@ TIME_ZONE = <span class="hljs-string">'Asia/Taipei'</span>
 
     <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
         <span class="hljs-keyword">return</span> self.content
-</div></div></code></pre><ul>
-<li>新增<ins>第 4 - 10 行</ins>，定義日誌資料表</li>
-</ul><p>執行以下指令建立資料庫：</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><p>執行以下指令建立資料庫：</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span></div><div class="code">python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
 </div></div></code></pre><p>開啟網站服務</p><pre><code class="bash hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span></div><div class="code">python manage.py runserver 0:80
-</div></div></code></pre><h2 id="網址、視圖、範本、表單"><a class="anchor hidden-xs" href="#網址、視圖、範本、表單" title="網址、視圖、範本、表單"><span class="octicon octicon-link"></span></a>網址、視圖、範本、表單</h2><h3 id="網址"><a class="anchor hidden-xs" href="#網址" title="網址"><span class="octicon octicon-link"></span></a>網址</h3><p>我們要建立相對應的網頁，開啟 <code>assistant/assistant/urls.py</code>，修改為以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="16"></span>
+</div></div></code></pre><h2 id="網址、視圖、範本、表單" style=""><a class="anchor hidden-xs" href="#網址、視圖、範本、表單" title="網址、視圖、範本、表單"><span class="octicon octicon-link"></span></a>網址、視圖、範本、表單</h2><h3 id="網址" style=""><a class="anchor hidden-xs" href="#網址" title="網址"><span class="octicon octicon-link"></span></a>網址</h3><p>我們要建立相對應的網頁，開啟 <code>assistant/assistant/urls.py</code>，修改為以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="16"></span>
 <span data-linenumber="17"></span>
 <span data-linenumber="18"></span>
 <span data-linenumber="19"></span>
 <span data-linenumber="20"></span>
 <span data-linenumber="21"></span>
 <span data-linenumber="22"></span>
-<span data-linenumber="23"></span>
-<span data-linenumber="24"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span data-linenumber="23"></span></div><div class="code"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
 <span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path, include
 <span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
 
 urlpatterns = [
     path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
-    path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'journal/'</span>)), 
-    path(<span class="hljs-string">'journal/'</span>, include(<span class="hljs-string">'journal.urls'</span>)),
+    path(<span class="hljs-string">''</span>, include(<span class="hljs-string">'web.urls'</span>)),
 ]
 </div></div></code></pre><p>新增檔案 <code>assistant/web/urls.py</code></p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
@@ -141,7 +137,7 @@ urlpatterns = [
     path(<span class="hljs-string">'journal/&lt;int:pk&gt;/update/'</span>, JournalUpdate.as_view()), 
     path(<span class="hljs-string">'journal/&lt;int:pk&gt;/delete/'</span>, JournalDelete.as_view()),
 ]
-</div></div></code></pre><h3 id="視圖"><a class="anchor hidden-xs" href="#視圖" title="視圖"><span class="octicon octicon-link"></span></a>視圖</h3><p>開啟 <code>assistant/web/views.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><h3 id="視圖" style=""><a class="anchor hidden-xs" href="#視圖" title="視圖"><span class="octicon octicon-link"></span></a>視圖</h3><p>開啟 <code>assistant/web/views.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>
@@ -198,7 +194,7 @@ urlpatterns = [
     model = Journal
     success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
     template_name = <span class="hljs-string">'confirm_delete.html'</span>
-</div></div></code></pre><h3 id="範本"><a class="anchor hidden-xs" href="#範本" title="範本"><span class="octicon octicon-link"></span></a>範本</h3><p>為了將所有的頁面範本集中管理，前面在專案設定檔中已經指定了頁面範本的搜尋路徑，接下來我們就將所有的頁面範本都放在這個資料夾下。</p><h4 id="建立頁面範本資料夾"><a class="anchor hidden-xs" href="#建立頁面範本資料夾" title="建立頁面範本資料夾"><span class="octicon octicon-link"></span></a>建立頁面範本資料夾</h4><p>新增頁面範本資料夾 <code>assistant/templates</code></p><p>建立 <code>web</code> 應用程式的頁面範本資料夾 <code>assistant/templates/web</code></p><h4 id="新增頁面範本"><a class="anchor hidden-xs" href="#新增頁面範本" title="新增頁面範本"><span class="octicon octicon-link"></span></a>新增頁面範本</h4><p>新增網站基底頁面範本 <code>assistant/templates/base.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><h3 id="範本" style=""><a class="anchor hidden-xs" href="#範本" title="範本"><span class="octicon octicon-link"></span></a>範本</h3><p>為了將所有的頁面範本集中管理，前面在專案設定檔中已經指定了頁面範本的搜尋路徑，接下來我們就將所有的頁面範本都放在這個資料夾下。</p><h4 id="建立頁面範本資料夾"><a class="anchor hidden-xs" href="#建立頁面範本資料夾" title="建立頁面範本資料夾"><span class="octicon octicon-link"></span></a>建立頁面範本資料夾</h4><p>新增頁面範本資料夾 <code>assistant/templates</code></p><p>建立 <code>web</code> 應用程式的頁面範本資料夾 <code>assistant/templates/web</code></p><h4 id="新增頁面範本"><a class="anchor hidden-xs" href="#新增頁面範本" title="新增頁面範本"><span class="octicon octicon-link"></span></a>新增頁面範本</h4><p>新增網站基底頁面範本 <code>assistant/templates/base.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>
@@ -312,7 +308,7 @@ urlpatterns = [
   <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"是的，我要刪除"</span> /&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
 &#123;% endblock %}
-</div></div></code></pre><p><kbd><img src="https://i.imgur.com/n3ndKMz.png" alt=""></kbd></p><h2 id="使用者登入與登出"><a class="anchor hidden-xs" href="#使用者登入與登出" title="使用者登入與登出"><span class="octicon octicon-link"></span></a>使用者登入與登出</h2><h3 id="新增登入登出路徑規則"><a class="anchor hidden-xs" href="#新增登入登出路徑規則" title="新增登入登出路徑規則"><span class="octicon octicon-link"></span></a>新增登入登出路徑規則</h3><p>開啟 <code>assistant/assistant/urls.py</code>，新增以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="20"></span>
+</div></div></code></pre><p><kbd><img src="https://i.imgur.com/n3ndKMz.png" alt=""></kbd></p><h2 id="使用者登入與登出" style=""><a class="anchor hidden-xs" href="#使用者登入與登出" title="使用者登入與登出"><span class="octicon octicon-link"></span></a>使用者登入與登出</h2><h3 id="新增登入登出路徑規則" style=""><a class="anchor hidden-xs" href="#新增登入登出路徑規則" title="新增登入登出路徑規則"><span class="octicon octicon-link"></span></a>新增登入登出路徑規則</h3><p>開啟 <code>assistant/assistant/urls.py</code>，新增以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="20"></span>
 <span data-linenumber="21"></span>
 <span data-linenumber="22"></span>
 <span data-linenumber="23"></span>
@@ -326,7 +322,7 @@ urlpatterns = [
 </div></div></code></pre><p>開啟專案設定檔 <code>assistant/assistant/settings.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="123"></span>
 <span data-linenumber="124"></span></div><div class="code"><span class="hljs-comment"># Redirect to home URL after login (Default redirects to /accounts/profile/)</span>
 LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>    <span class="hljs-comment"># 設定登人後導向的頁面</span>
-</div></div></code></pre><h3 id="登入登出頁面範本"><a class="anchor hidden-xs" href="#登入登出頁面範本" title="登入登出頁面範本"><span class="octicon octicon-link"></span></a>登入登出頁面範本</h3><p>新增資料夾 <code>assistant/templates/registration</code></p><p>新增<strong>登入</strong>頁面範本 <code>assistant/templates/registration/login.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><h3 id="登入登出頁面範本" style=""><a class="anchor hidden-xs" href="#登入登出頁面範本" title="登入登出頁面範本"><span class="octicon octicon-link"></span></a>登入登出頁面範本</h3><p>新增資料夾 <code>assistant/templates/registration</code></p><p>新增<strong>登入</strong>頁面範本 <code>assistant/templates/registration/login.html</code></p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>
@@ -426,7 +422,7 @@ LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>    <span class="hljs-c
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </div></div></code></pre><p><kbd><img src="https://i.imgur.com/LBzpmYM.png" alt=""></kbd><br>
-<kbd><img src="https://i.imgur.com/jCgto7m.png" alt=""></kbd></p><h2 id="限制登入後才能執行日記功能"><a class="anchor hidden-xs" href="#限制登入後才能執行日記功能" title="限制登入後才能執行日記功能"><span class="octicon octicon-link"></span></a>限制登入後才能執行日記功能</h2><p>到目前為止，雖然提供了使用者登人與登出的功能，但實際上使用者登入與否並不影響他在這個網站上所能進行的操作，即使在沒登入的狀態也能寫日誌、修改日誌、甚至刪除日誌。</p><p>你可能會想到在可以頁面範本中檢查使用者的登入狀況，再決定是否要顯示相關的連結。但是，看不到連結，不代表不能手動在網址列打上這些功能的存取路徑，一旦使用者「猜」到他想執行的操作所對應到的路徑，他可以自己打在網址列上，再讓瀏覽器送出存取請求來執行他想進行的動作。</p><p>為了做好網站的權限管控，不能只把不讓使用者操作的連結藏起來就好，而是應該在處理使用者請求執行某項功能的時候，要同時檢核他的權限。</p><p>這個範例的需求比較簡單，因為它是個人用的數位助理，所以只要檢查使用者是否已登人就好，不需要更複雜的權限管理。</p><p>開啟 <code>assistant/web/views.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+<kbd><img src="https://i.imgur.com/jCgto7m.png" alt=""></kbd></p><h2 id="限制登入後才能執行日記功能" style=""><a class="anchor hidden-xs" href="#限制登入後才能執行日記功能" title="限制登入後才能執行日記功能"><span class="octicon octicon-link"></span></a>限制登入後才能執行日記功能</h2><p>到目前為止，雖然提供了使用者登人與登出的功能，但實際上使用者登入與否並不影響他在這個網站上所能進行的操作，即使在沒登入的狀態也能寫日誌、修改日誌、甚至刪除日誌。</p><p>你可能會想到在可以頁面範本中檢查使用者的登入狀況，再決定是否要顯示相關的連結。但是，看不到連結，不代表不能手動在網址列打上這些功能的存取路徑，一旦使用者「猜」到他想執行的操作所對應到的路徑，他可以自己打在網址列上，再讓瀏覽器送出存取請求來執行他想進行的動作。</p><p>為了做好網站的權限管控，不能只把不讓使用者操作的連結藏起來就好，而是應該在處理使用者請求執行某項功能的時候，要同時檢核他的權限。</p><p>這個範例的需求比較簡單，因為它是個人用的數位助理，所以只要檢查使用者是否已登人就好，不需要更複雜的權限管理。</p><p>開啟 <code>assistant/web/views.py</code>，修改為以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>
@@ -474,7 +470,7 @@ LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>    <span class="hljs-c
     template_name = <span class="hljs-string">'form.html'</span>
 
 <span class="hljs-comment"># 修改日誌</span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalUpdate</span><span class="hljs-params">(LoginRequiredMixin, pdateView)</span>:</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JournalUpdate</span><span class="hljs-params">(LoginRequiredMixin, UpdateView)</span>:</span>
     model = Journal
     fields = [<span class="hljs-string">'content'</span>]            <span class="hljs-comment"># 自動產生表單時僅顯示 content 欄位</span>
     success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
@@ -485,7 +481,7 @@ LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>    <span class="hljs-c
     model = Journal
     success_url = <span class="hljs-string">'/journal/'</span>       <span class="hljs-comment"># 操作成功後重新導向日誌列表頁面</span>
     template_name = <span class="hljs-string">'confirm_delete.html'</span>
-</div></div></code></pre><h2 id="分頁顯示"><a class="anchor hidden-xs" href="#分頁顯示" title="分頁顯示"><span class="octicon octicon-link"></span></a>分頁顯示</h2><p>在日誌列表的頁面上，會將所有的日誌記錄全部列出來，但當日誌經過一段時間的累積之後，在同一個頁面上要顯示所有的日誌，有可能會因為數量太大，而導致頁面產生的速度過慢。因此一般的網站在處理清單式的頁面的時候，通常都會採用分頁的手法，將所有紀錄拆分成多頁顯示，每一項最多僅顯示固定筆數的紀錄。</p><h3 id="修改視圖，加入分頁設定"><a class="anchor hidden-xs" href="#修改視圖，加入分頁設定" title="修改視圖，加入分頁設定"><span class="octicon octicon-link"></span></a>修改視圖，加入分頁設定</h3><p>開啟 <code>assistant/web/views.py</code>，修改 <code>JournalList</code> 類別：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="8"></span>
+</div></div></code></pre><h2 id="分頁顯示" style=""><a class="anchor hidden-xs" href="#分頁顯示" title="分頁顯示"><span class="octicon octicon-link"></span></a>分頁顯示</h2><p>在日誌列表的頁面上，會將所有的日誌記錄全部列出來，但當日誌經過一段時間的累積之後，在同一個頁面上要顯示所有的日誌，有可能會因為數量太大，而導致頁面產生的速度過慢。因此一般的網站在處理清單式的頁面的時候，通常都會採用分頁的手法，將所有紀錄拆分成多頁顯示，每一項最多僅顯示固定筆數的紀錄。</p><h3 id="修改視圖，加入分頁設定" style=""><a class="anchor hidden-xs" href="#修改視圖，加入分頁設定" title="修改視圖，加入分頁設定"><span class="octicon octicon-link"></span></a>修改視圖，加入分頁設定</h3><p>開啟 <code>assistant/web/views.py</code>，修改 <code>JournalList</code> 類別：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="8"></span>
 <span data-linenumber="9"></span>
 <span data-linenumber="10"></span>
 <span data-linenumber="11"></span>
@@ -494,7 +490,7 @@ LOGIN_REDIRECT_URL = <span class="hljs-string">'/'</span>    <span class="hljs-c
     model = Journal
     ordering = [<span class="hljs-string">'-id'</span>]      <span class="hljs-comment"># 依 id 欄位反向排序(新的在前面)</span>
     paginate_by = <span class="hljs-number">3</span>         <span class="hljs-comment"># 設定每頁最多顯示的資料筆數</span>
-</div></div></code></pre><h3 id="處理頁面範本，加入分頁連結"><a class="anchor hidden-xs" href="#處理頁面範本，加入分頁連結" title="處理頁面範本，加入分頁連結"><span class="octicon octicon-link"></span></a>處理頁面範本，加入分頁連結</h3><p>在視圖中指定 <code>paginate_by</code> 屬性值，<code>ListView</code> 會自動依據這個設定取出目前面頁的資料量。因此頁面範本中只能取得最多 <code>paginated_by</code> 筆數的紀錄，但在頁面上顯示這些紀錄後，我們目前的頁面範本並不會自動顯示上一頁、下一頁、或其他分頁頁碼的連結。這部份不是 <code>ListView</code> 的工作，頁面如何呈現，該呈現什麼，這是頁面範本的任務。因此需要修改頁面範本，來規範這些分頁的連結該出現在何處，以及如何呈現這些分頁連結。</p><h4 id="建立分頁連結範本"><a class="anchor hidden-xs" href="#建立分頁連結範本" title="建立分頁連結範本"><span class="octicon octicon-link"></span></a>建立分頁連結範本</h4><p>首先新增分頁連結的範本 <code>assistant/templates/pagination.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
+</div></div></code></pre><h3 id="處理頁面範本，加入分頁連結" style=""><a class="anchor hidden-xs" href="#處理頁面範本，加入分頁連結" title="處理頁面範本，加入分頁連結"><span class="octicon octicon-link"></span></a>處理頁面範本，加入分頁連結</h3><p>在視圖中指定 <code>paginate_by</code> 屬性值，<code>ListView</code> 會自動依據這個設定取出目前面頁的資料量。因此頁面範本中只能取得最多 <code>paginated_by</code> 筆數的紀錄，但在頁面上顯示這些紀錄後，我們目前的頁面範本並不會自動顯示上一頁、下一頁、或其他分頁頁碼的連結。這部份不是 <code>ListView</code> 的工作，頁面如何呈現，該呈現什麼，這是頁面範本的任務。因此需要修改頁面範本，來規範這些分頁的連結該出現在何處，以及如何呈現這些分頁連結。</p><h4 id="建立分頁連結範本"><a class="anchor hidden-xs" href="#建立分頁連結範本" title="建立分頁連結範本"><span class="octicon octicon-link"></span></a>建立分頁連結範本</h4><p>首先新增分頁連結的範本 <code>assistant/templates/pagination.html</code>：</p><pre><code class="html hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
 <span data-linenumber="4"></span>

@@ -141,7 +141,7 @@ $('#id_memo{{index}}').on('input', function(e){
     }
     else {
   console.log(e.target.value);
-  $('#result').html("心得感想<BR>(英:" + v.words + " / 中: " + v.chars + ")");
+  $('#result').html("心得感想：(英:" + v.words + " / 中: " + v.chars + ")");
   $('input#memo_e').val(v.words);
   $('input#memo_c').val(v.chars);
     }
