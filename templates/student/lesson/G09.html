@@ -316,7 +316,7 @@ urlpatterns = [
 <span data-linenumber="25"></span></div><div class="code">urlpatterns = [
     path(<span class="hljs-string">'admin/'</span>, admin.site.urls),
     path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'journal/'</span>)), 
-    path(<span class="hljs-string">'journal/'</span>, include(<span class="hljs-string">'journal.urls'</span>)),
+    path(<span class="hljs-string">'journal/'</span>, include(<span class="hljs-string">'web.urls'</span>)),
     path(<span class="hljs-string">'accounts/'</span>, include(<span class="hljs-string">'django.contrib.auth.urls'</span>)),
 ]
 </div></div></code></pre><p>開啟專案設定檔 <code>assistant/assistant/settings.py</code>，增加以下程式碼：</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="123"></span>
