@@ -38,10 +38,10 @@ python manage.py migrate
 </div></div></code></pre><h2 id="視圖、網址、範本、表單" style=""><a class="anchor hidden-xs" href="#視圖、網址、範本、表單" title="視圖、網址、範本、表單"><span class="octicon octicon-link"></span></a>視圖、網址、範本、表單</h2><p>我們要建立相對應的網頁，開啟assistant/web/urls.py，新增以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
-<span data-linenumber="4"></span></div><div class="code">    path(<span class="hljs-string">'money'</span>, views.MoneyList.as_view()),
-    path(<span class="hljs-string">'money/create/'</span>, views.MoneyCreate.as_view()),
-    path(<span class="hljs-string">'money/&lt;int:pk&gt;/update/'</span>, views.MoneyUpdate.as_view()),
-    path(<span class="hljs-string">'money/&lt;int:pk&gt;/delete/'</span>, views.MoneyDelete.as_view()),  
+<span data-linenumber="4"></span></div><div class="code">    path(<span class="hljs-string">'money'</span>, MoneyList.as_view()),
+    path(<span class="hljs-string">'money/create/'</span>, MoneyCreate.as_view()),
+    path(<span class="hljs-string">'money/&lt;int:pk&gt;/update/'</span>, MoneyUpdate.as_view()),
+    path(<span class="hljs-string">'money/&lt;int:pk&gt;/delete/'</span>, MoneyDelete.as_view()),  
 </div></div></code></pre><p>開啟 assistant/web/views.py，新增以下程式碼。</p><pre><code class="python hljs"><div class="wrapper"><div class="gutter linenumber"><span data-linenumber="1"></span>
 <span data-linenumber="2"></span>
 <span data-linenumber="3"></span>
