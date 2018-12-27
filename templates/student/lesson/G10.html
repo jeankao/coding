@@ -116,10 +116,10 @@ python manage.py migrate
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>數位助理<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
     &#123;% if user.is_authenticated %}
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/"</span>&gt;</span>日記<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/web/diary/create"</span>&gt;</span>寫日誌<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>  
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/web/money"</span>&gt;</span>帳本<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/web/money/create"</span>&gt;</span>記帳<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>    
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/journal"</span>&gt;</span>日記<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/journal/create"</span>&gt;</span>寫日誌<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>  
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/money"</span>&gt;</span>帳本<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/money/create"</span>&gt;</span>記帳<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>    
     &#123;{ user.username }} <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/accounts/logout"</span>&gt;</span>登出<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
     &#123;% else %}
     <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/accounts/login"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
