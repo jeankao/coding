@@ -128,7 +128,7 @@ urlpatterns = [
 <span data-linenumber="10"></span>
 <span data-linenumber="11"></span></div><div class="code"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
 <span class="hljs-keyword">from</span> django.views.generic <span class="hljs-keyword">import</span> RedirectView
-<span class="hljs-keyword">from</span> .views <span class="hljs-keyword">import</span> JournalList, JournalCreate, JournalUpdate, JournalDelete
+<span class="hljs-keyword">from</span> .views <span class="hljs-keyword">import</span> *
 
 urlpatterns = [
     path(<span class="hljs-string">''</span>, RedirectView.as_view(url=<span class="hljs-string">'journal/'</span>)),
