@@ -94,20 +94,26 @@ class SubmitF2Form(forms.Form):
 
 class SubmitF3Form(forms.Form):
     code = forms.CharField(widget=forms.Textarea)
+    helps = forms.IntegerField()   
     screenshot = forms.CharField(widget=forms.HiddenInput())
 
 # 新增一個作業
-class SubmitF4Form(forms.ModelForm):
+class SubmitF4Form(forms.Form):
+    index = forms.IntegerField(widget=forms.HiddenInput())   
+    memo = forms.CharField()
+
+# 新增一個作業
+class SubmitF4BugForm(forms.ModelForm):
     class Meta:
-        model = Science4Content
-        fields = ['work_id', 'types', 'text', 'pic']
+        model = Science4Debug
+        fields = ['work3_id', 'bug_types', 'bug', 'improve']
 
     def __init__(self, *args, **kwargs):
-        super(SubmitF4Form, self).__init__(*args, **kwargs)
-        self.fields['work_id'].required = False
-        self.fields['types'].required = False
-        self.fields['text'].required = False
-        self.fields['pic'].required = False
+        super(SubmitF4BugForm, self).__init__(*args, **kwargs)
+        self.fields['work3_id'].required = False
+        self.fields['bug_types'].required = False
+        self.fields['bug'].required = False
+        self.fields['improve'].required = False    
 
 class ForumSubmitForm(forms.Form):
     memo =  forms.CharField(required=False)

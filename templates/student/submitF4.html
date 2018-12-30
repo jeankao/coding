@@ -2,55 +2,86 @@
 <section class="wrapper">
   <ul class="nav nav-pills" id="myTab" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#tab41" role="tab" aria-selected="true">上傳文字</a>
+      <a class="nav-link active" data-toggle="tab" href="#tab40" role="tab" aria-selected="true">上傳心得</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#tab42" role="tab" aria-selected="true">上傳圖片</a>
+        <a class="nav-link" id="nav-link-all" data-toggle="tab" href="#tab4a" role="tab" aria-selected="true">錯誤記錄</a>
+      </li>    
+    {% for work in works3 %}
+    <li class="nav-item">
+      <a class="nav-link" id="nav-link-{{work.id}}" data-toggle="tab" href="#tab4{{forloop.counter}}" role="tab" aria-selected="true">{{forloop.counter}}</a>
     </li>
+    {% endfor %}
   </ul>
   <br/>
   <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="tab41" role="tabpanel" aria-labelledby="tab41-tab">
+    <div class="tab-pane fade show active" id="tab40" role="tabpanel" aria-labelledby="tab41-tab">
       <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type=hidden name="types" value="41">
         <input type=hidden name="index" value="{{index}}">        
         <div class="form-group">
-          <label for="text-memo">文字</label>
-          <textarea name="text" id="text-memo" rows="10" class="form-control"></textarea>
+          <label for="text-memo">心得</label>
+          <textarea name="memo" id="text-memo" rows="10" class="form-control">123{{work4.memo}}</textarea>
         </div>
         <input type="submit" value="送出" class="btn btn-info" />
       </form>
     </div>
-    <div class="tab-pane fade" id="tab42" role="tabpanel" aria-labelledby="tab42-tab">
-	      <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type=hidden name="types" value="42">
-        <input type=hidden name="index" value="{{index}}"> 
-        <div class="form-group">
-          <label for="content_file">檔案</label>
-          <input id="content_file" name="pic" type="file" />
+    <div class="tab-pane fade all" id="tab4a" role="tabpanel" aria-labelledby="tab4a-tab">
+        {% for debug in contents4 %}
+        <div class="card card-default"> 
+        <div class="card-header"><button type="button" class="btn btn-default">{{forloop.revcounter}}</button>
+          {{debug.publication_date}}-- {{debug.get_choice}}
         </div>
-        <input type="submit" value="送出" class="btn btn-info" />
-      </form>
+        <div class="card-body">
+         <a href="#" onClick="showcode({{debug.work3_id}});">[{{work3_ids|get_at_index:debug.work3_id}}]程式碼</a> 
+         <BR>
+         錯誤描述：{{debug.bug}}
+         <BR>
+         改進方法：{{debug.improve}}
+        </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% for work in works3 %}
+    <div class="tab-pane fade code{{work.id}}" id="tab4{{forloop.counter}}" role="tabpanel" aria-labelledby="tab3{{forloop.counter}}-tab">    
+            <font color=black>程式碼：</font><BR>
+                <div class="position-relative">
+                {{work.code|code_highlight|safe}}</pre>          
+                </div>    
+                <BR>
+                <form name="myForm" id="form{{forloop.counter}}" action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+                    <input type=hidden name="types" value="42">
+                    <input type=hidden name="work3_id" value="{{work.id}}"> 
+                            <label for="exampleFormControlSelect2">錯誤類型：</label>
+                            <select class="form-control" name="bug_types">
+                                <option value=0>程式語法錯誤</option>
+                                <option value=1>程式邏輯錯誤</option>
+                                <option value=2>其它</option>
+                            </select>                           
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">錯誤描述：</label>
+                    <textarea class="form-control" id="id_bug{{forloop.counter}}" rows="5" name="bug"></textarea>
+                    <label for="exampleFormControlTextarea1">改進方法：</label>
+                    <textarea class="form-control" id="id_imporve{{forloop.counter}}" rows="5" name="improve"></textarea>
+                        <input id="submit" type="submit" class="btn-info" value="送出" />
+                </div>
+            </form>
+            
     </div>
+    {% endfor %}
+
   </div>
 </section>
-<BR>
-{% for work in contents4 %}
- <div class="card card-default"> 
-              {% if work.types == 42 %}
-  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
-    <A href="/student/work/content/delete/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
-    <a href="/student/work/content/edit/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a>
-  </div>
-  <div class="card-body"><img src="/static/upload/{{ work.picname }}" style="max-width:900px"></div>                      
-              {% elif work.types == 41 %}
-  <div class="card-header"><button type="button" class="btn btn-default">{{forloop.counter}}</button>
-    <A href="/student/work/content/delete/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}" onclick="return confirm('確定要刪除嗎?')"><img src="/static/images/delete.gif"> 刪除</a>
-    <a href="/student/work/content/edit/{{work.types}}/{{typing}}/{{lesson}}/{{index}}/{{work.id}}"><img src="/static/images/edit.gif"> 編輯</a> 
-  </div>  
-  <div class="card-body">{{ work.text|memo|safe }}</div>
-            {% endif %}
-</div>
-{% endfor %}
+
+{% block footer_scripter %}
+<script>
+function showcode(workid)
+{
+   $(".code"+workid).addClass("active show")
+   $(".all").removeClass("active show")
+   $("#nav-link-all").removeClass("active")   
+   $("#nav-link-"+workid).addClass("active")
+}
+</script>
+{% endblock %}

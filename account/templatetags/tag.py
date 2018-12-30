@@ -377,3 +377,7 @@ def scratch(site):
     url = site.split("projects/")
     open = url[0] + "projects/embed/" + url[1]
     return open
+
+@register.filter
+def get_at_index(list, index):
+    return list.index(index)+1

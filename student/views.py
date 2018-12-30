@@ -630,6 +630,7 @@ def submit(request, typing, lesson, index):
                     form = SubmitF3Form(request.POST, request.FILES)
                     if form.is_valid():
                         work = Science3Work(index=index, student_id=request.user.id)
+                        work.save()                        
 
                         dataURI = form.cleaned_data['screenshot']
                         try:
@@ -653,12 +654,12 @@ def submit(request, typing, lesson, index):
                              work.picture=path[3]
 
                         work.code=form.cleaned_data['code']
+                        work.helps=form.cleaned_data['helps']
                         work.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab3")
-                if types == "41" or types == "42":
-                    form = SubmitF4Form(request.POST, request.FILES)
+                elif types == "41":
+                    form = SubmitF4Form(request.POST)
                     if form.is_valid():
-                        obj = form.save(commit=False)
                         try:
                             work = Science4Work.objects.get(student_id=request.user.id, index=index)
                         except ObjectDoesNotExist:
@@ -666,18 +667,15 @@ def submit(request, typing, lesson, index):
                         except MultipleObjectsReturned:
                             works = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
                             work = work[0]
-                        work.publication_date = timezone.now()
+                        work.memo = form.cleaned_data['memo']
                         work.save()
-                        obj.work_id=work.id
-                        if types == "42":
-                            myfile = request.FILES['pic']
-                            fs = FileSystemStorage(settings.BASE_DIR+"/static/upload/"+str(request.user.id)+"/")
-                            filename = uuid4().hex
-                            obj.picname = str(request.user.id)+"/"+filename
-                            fs.save(filename, myfile)
-                        obj.pic = ""
-                        obj.save()
                         return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
+                elif types == "42":
+                    form = SubmitF4BugForm(request.POST)
+                    if form.is_valid():
+                        obj = form.save(commit=False)
+
+                        return redirect("/")
         else:
             contents1 = [[]]
             works_pool = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
@@ -692,6 +690,12 @@ def submit(request, typing, lesson, index):
 				        contents1.append([[]])
                 else:
 				    contents1.append([[]])
+            works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("id")  
+            work3_ids = [work.id for work in works3]            
+            if works3.exists():
+                work3 = works3[0]
+            else :
+                work3 = Science3Work(student_id=request.user.id, index=index)
             try:
                 work4 = Science4Work.objects.get(student_id=request.user.id, index=index)
             except ObjectDoesNotExist:
@@ -699,12 +703,7 @@ def submit(request, typing, lesson, index):
             except MultipleObjectsReturned:
                 works4 = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
                 work4 = works[0]
-            contents4 = Science4Content.objects.filter(work_id=work4.id).order_by("id")
-            works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
-            if works3.exists():
-                work3 = works3[0]
-            else :
-                work3 = Science3Work(student_id=request.user.id, index=index)
+            contents4 = Science4Debug.objects.filter(work3_id__in=work3_ids).order_by("-id")                
             try:
                 expr = Science2Json.objects.get(student_id=request.user.id, index=index, model_type=0)
             except ObjectDoesNotExist:
@@ -714,7 +713,7 @@ def submit(request, typing, lesson, index):
             except ObjectDoesNotExist:
                 flow = Science2Json(student_id=request.user.id, index=index, model_type=1, json='[]')
             questions = Science1Question.objects.filter(work_id=index)
-            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'expr': expr, 'flow': flow})
+            return render(request, 'student/submit.html', {'form':form, 'questions':questions, 'typing':typing, 'lesson': lesson, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3, 'works3':works3, 'work3_ids':work3_ids, 'work4': work4, 'expr': expr, 'flow': flow})
 
     return render(request, 'student/submit.html', {'form':form, 'typing':typing, 'lesson': lesson, 'lesson_id':lesson, 'index':index, 'work_dict':work_dict})
 

@@ -52,33 +52,69 @@
 	}
 </script>
 {% endblock %}
-  <br>
-<form name="myForm" id="form{{index}}" action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
-        <input type=hidden name="types" value="3">
-        <input type=hidden name="index" value="{{index}}"> 
-    <div class="form-group">
-        <label for="exampleFormControlTextarea1">程式碼：</label>
-        <textarea class="form-control" id="id_code{{index}}" rows="5" name="code">{{work3.code}}</textarea>
-    </div>
-    <div class="form-group">
-        <label for="exampleFormControlTextarea1">執行結果：</label>
-        {% if True %}
-        <div id="edit-box{{index}}" class="form-control target" contenteditable="true" style="height:auto">
-            {% if work3.picture %} 如果變更擷圖，請刪除原圖後重貼...
-            <img width=880 src="/{{work3.picture}}" /> 
-            {% else %}
-            請在此貼上螢幕擷圖... 
-            {% endif %}
-        </div>
-        <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" />
-        <div class="form-group">
-            <input id="submit" type="submit" class="btn-info" value="送出" />
-        </div>
-        {% else %}
-        <div>
-            <div id="edit-box{{index}}"></div>
-            <img width=880 src="/">
-        </div>
-        {% endif %}
-    </div>
-</form>
+
+<section class="wrapper">
+    <ul class="nav nav-pills" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#tab30" role="tab" aria-selected="true">上傳</a>
+      </li>
+      {% for work in works3 %}
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#tab3{{forloop.counter}}" role="tab" aria-selected="true">{{forloop.counter}}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="tab-content" id="myTabContentQ">   
+            <div class="tab-pane fade show active" id="tab30" role="tabpanel" aria-labelledby="home-tab">	
+                        <form name="myForm" id="form{{index}}" action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">{% csrf_token %}
+                            <input type=hidden name="types" value="3">
+                            <input type=hidden name="index" value="{{index}}"> 
+                                    <label for="exampleFormControlSelect2">創作過程：</label>
+                                    <select class="form-control" name="helps">
+                                        <option value=0>全部靠自己想</option>
+                                        <option value=1>同學幫一點忙</option>
+                                        <option value=2>同學幫很多忙</option>
+                                        <option value=3>老師幫一點忙</option>
+                                        <option value=4>老師幫很多忙</option>
+                                    </select>                           
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">程式碼：</label>
+                            <textarea class="form-control" id="id_code{{index}}" rows="5" name="code"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">執行結果：</label>
+                            {% if True %}
+                            <div id="edit-box{{index}}" class="form-control target" contenteditable="true" style="height:auto">
+                                請在此貼上螢幕擷圖... 
+                            </div>
+                            <input id="screenshot{{index}}" name="screenshot" type="hidden" value="" />
+                            <div class="form-group">
+                                <input id="submit" type="submit" class="btn-info" value="送出" />
+                            </div>
+                            {% else %}
+                            <div>
+                                <div id="edit-box{{index}}"></div>
+                                <img width=880 src="/">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            
+                {% for work in works3 %}
+                <div class="tab-pane fade " id="tab3{{forloop.counter}}" role="tabpanel" aria-labelledby="tab3{{forloop.counter}}-tab">
+                        <label>創作過程：</label>
+                        {{work.get_choice}}          
+                        <BR>                
+                        <font color=black>程式碼：</font><BR>
+                            <div class="position-relative">
+                            {{work.code|code_highlight|safe}}</pre>
+                          <button class="btn btn-sm btn-primary my-1 position-absolute p-1 mr-1 border border-light" id="copy" style="right: 0; top: 0">copy</button>          
+                            </div>
+                            <font color=black>執行結果：</font><BR>
+                            <img width=880 src="/{{work.picture}}">                
+                </div>
+                {% endfor %}
+            </div>
+            
+</section>
