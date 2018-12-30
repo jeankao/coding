@@ -583,7 +583,6 @@ def submit(request, typing, lesson, index):
         if request.method == 'POST':
             if typing == "1":
                 types = request.POST.get('types')
-                index = request.POST.get('index')
                 q_index = request.POST.get('q_index')
                 question_id = request.POST.get('question_id')
                 if types == "11" or types == "12":
@@ -673,9 +672,8 @@ def submit(request, typing, lesson, index):
                 elif types == "42":
                     form = SubmitF4BugForm(request.POST)
                     if form.is_valid():
-                        obj = form.save(commit=False)
-
-                        return redirect("/")
+                        form.save()
+                        return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
         else:
             contents1 = [[]]
             works_pool = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
