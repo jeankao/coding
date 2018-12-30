@@ -333,6 +333,8 @@ class WorkListView(ListView):
             queryset = lesson_list4
         elif self.kwargs['lesson'] == "5":
             queryset = lesson_list2
+        elif self.kwargs['lesson'] == "6":
+            queryset = lesson_list6       
         elif self.kwargs['lesson'] == "8":
             queryset = lesson_list5  
         elif self.kwargs['lesson'] == "9":
@@ -736,7 +738,7 @@ def grade(request, typing, lesson, unit, classroom_id):
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
-    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2][int(lesson)-1]
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
       enroll_grade = []
@@ -820,7 +822,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
-    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2][int(lesson)-1]
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
       total = 0

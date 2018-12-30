@@ -4,6 +4,7 @@ lesson_list2 = []
 lesson_list3 = []
 lesson_list4 = []
 lesson_list5 = []
+lesson_list6 = []
 
 def reset():
     lesson_list1.append(["1",u"第1堂課：Scratch基本介紹",u"範例：綜合應用"])
@@ -117,5 +118,22 @@ def reset():
     lesson_list5.append(["15",u"案例：留言板"])  
     lesson_list5.append(["16",u"案例：數位助理"])  
     lesson_list5.append(["17",u"GitHub分享"])  
-    lesson_list5.append(["18",u"Heroku發佈"])      
+    lesson_list5.append(["18",u"Heroku發佈"])    
+
+    lesson_list6.append(["1",u"閃爍的愛心"])   
+    lesson_list6.append(["2",u"顯示數字"])      
+    lesson_list6.append(["3",u"顯示文字"])      
+    lesson_list6.append(["4",u"按鈕數字"])      
+    lesson_list6.append(["5",u"無線電廣播"])         
+    lesson_list6.append(["6",u"閃燈"])      
+    lesson_list6.append(["7",u"小夜燈"])      
+    lesson_list6.append(["8",u"紅綠燈"])      
+    lesson_list6.append(["9",u"直流馬達"])         
+    lesson_list6.append(["10",u"超音波測距"])      
+    lesson_list6.append(["11",u"超音波馬達"])      
+    lesson_list6.append(["12",u"角度伺服馬達"])      
+    lesson_list6.append(["13",u"按鈕小車前進"])         
+    lesson_list6.append(["14",u"廣播遙控小車"])      
+    lesson_list6.append(["15",u"搖桿遙控小車"])      
+    lesson_list6.append(["16",u"智慧避障車"])                      
 reset()
