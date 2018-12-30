@@ -33,7 +33,7 @@
                     {% if work.score > 0 %}
             <td style="padding:0px"><button type="button" class="btn btn-info btn-circle">{{work.score}}</button><BR><font size=-2>{{work.publication_date|date:"m/d"}}<BR>{{work.scorer|realname}}</td>
                     {% else %}
-            <td style="padding:0px"><button type="button" class="btn btn-success btn-circle"></button><BR><font size=-2>{{work.publication_date|date:"m/d"}}</font></td>                   
+            <td style="padding:0px">{% if request.user.id|is_teacher:classroom.id%}<A href="/teacher/scoring/{{typing}}/{{lesson}}/{{classroom.id}}/{{enroll.student.id}}/{{work.index}}">{% endif %}<button type="button" class="btn btn-success btn-circle"></button>{% if request.user.id|is_teacher:classroom.id%}</A>{% endif %}<BR><font size=-2>{{work.publication_date|date:"m/d"}}</font></td>                   
                     {% endif %}
                 {% else %}              
            <td style="padding:0px"><button type="button" class="btn btn-default btn-circle">{% if typing == "0" %}{{assignment.0}}{% else %}{{assign.title}}{% endif %}</button></td>            

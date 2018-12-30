@@ -423,7 +423,7 @@ def work_group(request, typing, lesson, classroom_id, index):
   
   
 # (小)教師評分
-def scoring(request, lesson, classroom_id, user_id, index, typing):
+def scoring(request, typing, lesson, classroom_id, user_id, index):
     user = User.objects.get(id=request.user.id)
     teacher = is_teacher(user, classroom_id) or is_assistant(user, classroom_id)
     if not teacher:
