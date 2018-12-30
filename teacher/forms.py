@@ -109,6 +109,13 @@ class CheckForm(forms.ModelForm):
         class Meta:
            model = Enroll
            fields = ['score_memo']
+
+class CheckFormCustom(forms.ModelForm):
+        score_memo_custom = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo_custom']
     
 class CheckForm1(forms.ModelForm):
 
@@ -166,6 +173,22 @@ class CheckForm_euler(forms.ModelForm):
         class Meta:
            model = Enroll
            fields = ['score_memo_euler']                
+
+class CheckForm_microbit(forms.ModelForm):
+        score_memo_microbit = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo_microbit'] 
+
+class CheckForm_pandas(forms.ModelForm):
+        score_memo_pandas = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo_pandas']              
 
 # 新增一個作業
 class WorkForm(forms.ModelForm):

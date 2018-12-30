@@ -673,6 +673,12 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             form = CheckForm_vphysics(request.POST)
         elif lesson == "5":
             form = CheckForm_vphysics(request.POST)
+        elif lesson == "6":
+            form = CheckForm_microbit(request.POST)
+        elif lesson == "7":
+            form = CheckForm_pandas(request.POST)     
+      elif typing == "1":
+          form = CheckFormCustom(request.POST)                               
       else:
           form = CheckForm(request.POST)
 
@@ -686,7 +692,7 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
               elif unit == "3":
                   enroll.score_memo3=form.cleaned_data['score_memo3']
               elif unit == "4":
-                  enroll.score_memo4=form.cleaned_data['score_memo4']
+                  enroll.score_memo4=form.cleaned_data['score_memo4']    
           elif lesson == "2" :
               enroll.score_memo_vphysics=form.cleaned_data['score_memo_vphysics']
           elif lesson == "3":
@@ -695,11 +701,19 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
               enroll.score_memo_vphysics2=form.cleaned_data['score_memo_vphysics']
           elif lesson == "5" :
               enroll.score_memo_vphysics3=form.cleaned_data['score_memo_vphysics']
+          elif lesson == "6" :
+              enroll.score_memo_microbit=form.cleaned_data['score_memo_microbit']
+          elif lesson == "7" :
+              enroll.score_memo_pandas=form.cleaned_data['score_memo_pandas']                            
           enroll.save()
           if form.cleaned_data['certificate']:
               return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
           else:
               return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
+        elif typing == "1":
+          enroll.score_memo_custom = form.cleaned_data['score_memo_custom']
+          enroll.save()    
+          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)                 
         else :
           enroll.score_memo = form.cleaned_data['score_memo']
           enroll.save()
@@ -721,7 +735,9 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             form = CheckForm_euler(instance=enroll)
         else :
             form =  CheckForm1(instance=enroll)
-      else :
+      elif typing == "1":
+        form = CheckFormCustom(instance=enroll)
+      else:
         form =  CheckForm(instance=enroll)
 
     return render(request, 'teacher/check.html', {'typing':typing, 'works':works, 'lesson': lesson, 'unit':unit, 'form':form, 'works':works, 'lesson_list':sorted(lesson_dict.items()), 'enroll': enroll, 'classroom_id':classroom_id})
