@@ -736,7 +736,7 @@ def grade(request, typing, lesson, unit, classroom_id):
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
-    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-1]
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
       enroll_grade = []
@@ -771,6 +771,7 @@ def grade(request, typing, lesson, unit, classroom_id):
                 works = list(filter(lambda w: w.index == work_index, stu_works))
             else :
                 works = list(filter(lambda w: w.index == assignment.id, stu_works))
+                work_index = index + 1
             works_count = len(works)
             if works_count == 0:
                 enroll_score.append(["X", work_index])
@@ -819,7 +820,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
-    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2][int(lesson)-1]
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list2, lesson_list2][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
       total = 0
@@ -838,6 +839,8 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
         lesson_list = TWork.objects.filter(classroom_id=classroom_id)
       else :
         lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+      memo = ""
+      grade = 0
       for index, assignment in enumerate(lesson_list):
             if typing == "0": 
                 works = filter(lambda w: w.index == index+1, stu_works)
@@ -869,8 +872,10 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
                 memo = enroll.score_memo_vphysics2
             elif lesson == "5":
                 memo = enroll.score_memo_vphysics3
-            elif lesson == "5":
-                memo = enroll.score_memo_microbit                
+            elif lesson == "6":
+                memo = enroll.score_memo_microbit 
+            elif lesson == "7":
+                memo = enroll.score_memo_pandas                         
             if typing == "2":
                 grade = total
             else :
