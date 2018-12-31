@@ -53,12 +53,12 @@ class Profile(models.Model):
   lock2 = models.IntegerField(default=1)
   # Euler進度
   lock3 = models.IntegerField(default=1)
-  # ck進度
+  # Microbit進度
   lock4 = models.IntegerField(default=1)  
   # VPhysics(P3)進度
   lock5 = models.IntegerField(default=1)    
   # Django(P3)進度
-  lock6 = models.IntegerField(default=1)      
+  lock6 = models.IntegerField(default=1)    
   
  
   def __unicode__(self):

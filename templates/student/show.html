@@ -2,6 +2,9 @@
 {% load tag %}
 
 {% block content %}
+{% if work %}
+{{work.user_id|realname}}
+{% endif %}
 {% if lesson == "1" %}
   {% if work %}
 <script type="text/javascript" src="/static/sb2/swfobject.js"></script>

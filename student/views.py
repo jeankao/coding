@@ -469,10 +469,13 @@ def submit(request, typing, lesson, index):
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message=u'2分--繳交作業<'+lesson_name+'>', url=request.get_full_path().replace("submit", "submitall"))
                     history.save()
-                    if typing == "0":
+                    if typing == "0":                        
                         # lock
                         profile = Profile.objects.get(user=request.user)
-                        profile.lock1 += 1
+                        if lesson == "1":
+                            profile.lock1 += 1
+                        elif lesson == "6":
+                            profile.lock4 += 1
                         profile.save()
             else:
                 if form.is_valid():
@@ -890,7 +893,9 @@ def progress(request, typing, lesson, unit, classroom_id):
           elif lesson == "6":
               lesson_list = lesson_list6
           elif lesson == "7":
-              lesson_list = lesson_list2              
+              lesson_list = lesson_list2
+          elif lesson == "8":
+              lesson_list = lesson_list5                                          
           else:
               lesson_list = lesson_list3
           for assignment in lesson_list:
