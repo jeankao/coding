@@ -424,6 +424,7 @@ def work_group(request, typing, lesson, classroom_id, index):
   
 # (小)教師評分
 def scoring(request, typing, lesson, classroom_id, user_id, index):
+    work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=user_id)))
     user = User.objects.get(id=request.user.id)
     teacher = is_teacher(user, classroom_id) or is_assistant(user, classroom_id)
     if not teacher:
@@ -440,6 +441,8 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
             lesson_name = lesson_list4[int(index)-1][1]
         elif lesson == "5":
             lesson_name = lesson_list2[int(index)-1][1]
+        elif lesson == "6":
+            lesson_name = lesson_list6[int(index)-1][1]            
         elif lesson == "8":
             lesson_name = lesson_list5[int(index)-1][1]            
         else:
@@ -466,7 +469,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
         work3 = works[0]
         pic = work3.id
         if int(lesson) > 1 :
-            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics2', '', 'static/work/pandas', 'static/work/django'][int(lesson) - 2]
+            prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics', 'static/work/microbit', 'static/work/pandas', 'static/work/django'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=user_id, index=index)
             for work in works:
                 image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
@@ -553,7 +556,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
             else :
                 form = ScoreForm(instance=works[0], user=request.user)
             workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")
-    return render(request, 'teacher/scoring.html', {'typing':typing, 'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index})
+    return render(request, 'teacher/scoring.html', {'typing':typing, 'form': form,'work':work3, 'pic':pic, 'workfiles':workfiles, 'teacher':teacher, 'student':user, 'classroom_id':classroom_id, 'lesson':lesson, 'index':index, 'work_dict':work_dict})
 
 # 小老師評分名單
 def score_peer(request, typing, lesson, index, classroom_id, group):
@@ -567,7 +570,9 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
         elif lesson == "4":
             queryset = lesson_list4
         elif lesson == "5":
-            queryset = lesson_list2          
+            queryset = lesson_list2 
+        elif lesson == "6":
+            queryset = lesson_list6                     
         else:
             queryset = lesson_list1
     elif typing == "1":
