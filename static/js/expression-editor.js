@@ -2,22 +2,57 @@ $(function () {
   //
   // flow editor
   //
-  $('#flow-container').sortable({
+  const CS_INPUT = 0, 
+        CS_OUTPUT = 1, 
+        CS_LOOP = 2, 
+        CS_IF = 3;
+  
+  const FLOW_TYPE_LABEL = ["輸入", "輸出", "迴圈", "判斷"];
+  const FLOW_TYPE_CLASS = ["input", "output", "loop", "if"];
+
+  $('.flow-container').sortable({
     placeholder: 'ui-state-highlight',
   });
 
-  function _new_flow_item(content) {
-    var flow = $('<div class="flow-item"><div class="flow-content"><textarea class="form-control" placeholder="請輸入流程說明文字...">'+content+'</textarea><div class="flow-op"><button class="btn btn-sm btn-danger flow-delete">刪除</button></div></div></div>');
-    $('.flow-content', flow).prepend($('<span class="ui-icon ui-icon-arrow-4"></span>'));
-    flow.appendTo('#flow-container');
-    $('textarea', flow).focus();
+  function _new_flow_item(type, content, container) {
+    var label = FLOW_TYPE_LABEL[type];
+    var flow_type_class = FLOW_TYPE_CLASS[type];
+    var flow_components;
+    if (type < CS_LOOP) {
+      flow_components = '<textarea class="form-control" placeholder="請輸入流程說明文字...">'+content+'</textarea>';
+    } else {
+      flow_components = '<div class="flow-group"><input type="text" class="form-control" placeholder="請輸入'+label+'條件..."></input><div class="new-flow-op"><button class="btn btn-sm btn-dark disabled">新增流程 &gt; </button><div class="new-flow-type"><button class="btn btn-sm btn-outline-dark new-flow-input">輸入</button><button class="btn btn-sm btn-outline-dark new-flow-output">輸出</button><button class="btn btn-sm btn-outline-dark new-flow-loop">迴圈</button><button class="btn btn-sm btn-outline-dark new-flow-if">判斷</button></div></div><div class="flow-container"></div></div>';
+    }
+    var flow = $('<div class="flow-item '+ flow_type_class +'"><div class="flow-content"><div class="label-op"><span class="badge badge-dark">'+label+'</span><span class="badge badge-danger flow-delete">刪除</span></div>'+ flow_components +'</div></div>');
+    $(".flow-content", flow).prepend($('<span class="ui-icon ui-icon-arrow-4"></span>'));
+    $('.flow-container', flow).sortable({
+      placeholder: 'ui-state-highlight',
+    });
+      //flow.appendTo('#flow-container');
+    if (type >= CS_LOOP)
+      $('.new-flow-op', flow).click(_new_flow_item_handler);
+    flow.appendTo(container);
+    $($('textarea', flow)[0]).focus();
     $('.flow-delete').click(function(event) {
       $(this).parent().parent().parent().detach();
     });
   }
-  $('#new-flow').click(function(event) {
-    _new_flow_item('');
-  });
+
+  function _new_flow_item_handler(event) {
+    var container = $(this.nextElementSibling);
+    var button = $(event.target);
+    console.log(button);
+    if (button.hasClass('new-flow-input'))
+      _new_flow_item(CS_INPUT, '', container);
+    else if (button.hasClass('new-flow-output'))
+      _new_flow_item(CS_OUTPUT, '', container);
+    else if (button.hasClass('new-flow-loop'))
+      _new_flow_item(CS_LOOP, '', container);
+    else if (button.hasClass('new-flow-if'))
+      _new_flow_item(CS_IF, '', container);
+  }
+
+  $('.new-flow-op').click(_new_flow_item_handler);
 
   $('#flow-submit').click(function(event) {
     var flow_text = $('#flow-container textarea');
@@ -41,7 +76,7 @@ $(function () {
     }
   }
 
-  initFlowElements();
+  // initFlowElements();
 
   //
   // expression editor

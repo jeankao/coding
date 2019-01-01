@@ -195,10 +195,17 @@ ul.expr-item-list a:hover {text-decoration: none}
 #modal-new-array th, #modal-new-array th {text-align: center; vertical-align: middle}
 
 /* flow editor */
-#flow-container .flow-content {display: flex; align-content: space-between; align-items: center}
-#flow-container .flow-item {text-align: center}
-#flow-container .flow-item::after {content: url(/static/images/down.png); text-align: center}
-#flow-container .flow-item:last-child::after {content: none}
-#flow-container .flow-op {display: flex; float: right}
+.flow-container .flow-content {display: flex; align-content: space-between; padding: 5px 3px; box-shadow: 1px 1px 3px; margin-bottom: 5pt}
+.flow-content .badge {margin-right: 5pt;}
+.flow-container .flow-item::after {content: url(/static/images/down.png); display: block; text-align: center}
+.flow-container .flow-item:last-child::after {content: none}
+.flow-container .flow-group {width: 100%; text-align: left}
+.new-flow-op {text-align: left; margin: 5px 0; background-color: white; display: inline-block}
+.new-flow-op>.new-flow-type {display: inline-block}
+.flow-item .flow-delete {cursor: pointer}
+.flow-item .label-op {display: inline-block; width: 40px}
+.flow-item.input > .flow-content, .flow-item.output > .flow-content {background-color: silver}
+.flow-item.loop > .flow-content {background-color: steelblue}
+.flow-item.if > .flow-content {background-color: lemonchiffon}
 
 body {padding-right: 0 !important}

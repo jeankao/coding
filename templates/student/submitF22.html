@@ -1,8 +1,20 @@
 <div class="card card-default flow-editor">
   <div class="card-header">
-    <button id="new-flow" class="btn btn-sm btn-outline-dark">新增流程</button>
   </div>
-  <div id="flow-container" class="card-body">
+  <div class="card-body">
+    <div class="flow-group">
+      <div class="new-flow-op">
+        <button class="btn btn-sm btn-dark disabled">新增流程 &gt; </button>
+        <div class="new-flow-type">
+          <button class="btn btn-sm btn-outline-dark new-flow-input">輸入</button>
+          <button class="btn btn-sm btn-outline-dark new-flow-output">輸出</button>
+          <button class="btn btn-sm btn-outline-dark new-flow-loop">迴圈</button>
+          <button class="btn btn-sm btn-outline-dark new-flow-if">判斷</button>  
+        </div>
+      </div>
+      <div class="flow-container">
+      </div>
+    </div>
   </div>
   <div class="card-footer pt-1">
     <form id="flow-form" action="" method="POST">
