@@ -915,7 +915,8 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     worksheet.write(row, 1, u'座號')
     worksheet.write(row, 2, u'姓名')
     worksheet.write(row, 3, u'成績')        
-    index = 4
+    worksheet.write(row, 4, u'心得')         
+    index = 5
     for assignment in lesson_list:
         if typing == "0":
 	          worksheet.write(row, index, assignment[1])
@@ -923,7 +924,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
 	          worksheet.write(row, index, assignment.title)              
         index += 1
 
-    index = 4
+    index = 5
     if not typing == "0":
         row += 1
         for assignment in lesson_list:            
@@ -934,8 +935,9 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
       row += 1
       worksheet.write(row, 1, enroll.seat)
       worksheet.write(row, 2, enroll.student.first_name)
-      worksheet.write(row, 3, grade)     
-      index = 4
+      worksheet.write(row, 3, grade)         
+      worksheet.write(row, 4, memo)     
+      index = 5
       for score, index2 in enroll_score:
           if score == -2 :
               worksheet.write(row, index, "V")
