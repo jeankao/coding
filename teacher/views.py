@@ -885,20 +885,23 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
                 else:
                     total += work.score
 
-            if lesson == "1":
-                memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
-            elif lesson == "2":
-                memo = enroll.score_memo_vphysics
-            elif lesson == "3":
-                memo = enroll.score_memo_euler
-            elif lesson == "4":
-                memo = enroll.score_memo_vphysics2
-            elif lesson == "5":
-                memo = enroll.score_memo_vphysics3
-            elif lesson == "6":
-                memo = enroll.score_memo_microbit 
-            elif lesson == "7":
-                memo = enroll.score_memo_pandas                         
+            if typing == "0":
+                if lesson == "1":
+                    memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
+                elif lesson == "2":
+                    memo = enroll.score_memo_vphysics
+                elif lesson == "3":
+                    memo = enroll.score_memo_euler
+                elif lesson == "4":
+                    memo = enroll.score_memo_vphysics2
+                elif lesson == "5":
+                    memo = enroll.score_memo_vphysics3
+                elif lesson == "6":
+                    memo = enroll.score_memo_microbit 
+                elif lesson == "7":
+                    memo = enroll.score_memo_pandas                         
+            elif typing == "1":
+                memo = enroll.score_memo_custom
             if typing == "2":
                 grade = total
             else :
