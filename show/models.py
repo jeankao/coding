@@ -27,6 +27,9 @@ class ShowGroup(models.Model):
     done = models.BooleanField(default=False)
     gallery =  models.BooleanField(default=False)
 
+    def __str__(self):
+        return str(self.id) + ":" + str(self.name)    
+
 class ShowFile(models.Model):
     show_id = models.IntegerField(default=0) 
     filename = models.TextField()

@@ -1,3 +1,5 @@
 from django.contrib import admin
+from show.models import *
 
-# Register your models here.
+admin.site.register(Round)
+admin.site.register(ShowGroup)
