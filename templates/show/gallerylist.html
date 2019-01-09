@@ -4,7 +4,13 @@
 {% load tz %}
 {% load tag %}
 {% block content %}
-<table>
+<script src="/static/libs/vendor.js"></script>
+<script src="/static/libs/scratch-vm.min.js"></script>
+<script src="/static/libs/scratch-storage.min.js"></script>
+<script src="/static/libs/scratch-svg-renderer.js"></script>
+<!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
+<script src="/static/libs/scratch-render.min.js"></script>
+<table>  
 {% for show in lists %}
 <tr><td>
     <h2>
@@ -14,46 +20,40 @@
     </h2>
 {% if category == "1" %}  
 <style>
-  #test {width: 640px; height: 480px}
+  #test{{forloop.counter}} {width: 640px; height: 480px}
 </style>
-<script src="/static/libs/vendor.js"></script>
-<script src="/static/libs/scratch-vm.min.js"></script>
-<script src="/static/libs/scratch-storage.min.js"></script>
-<script src="/static/libs/scratch-svg-renderer.js"></script>
-<!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
-<script src="/static/libs/scratch-render.min.js"></script>
 
-<img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm.greenFlag();" />
-<canvas id="test"></canvas>
+<img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm{{forloop.counter}}.greenFlag();" />
+<canvas id="test{{forloop.counter}}"></canvas>
 
 <script>
   // These variables are going to be available in the "window global" intentionally.
   // Allows you easy access to debug with `vm.greenFlag()` etc.
   window.devicePixelRatio = 1;
 
-  var canvas = document.getElementById('test');
-  var render = new ScratchRender(canvas);
-  var vm = new VirtualMachine();
-  var storage = new ScratchStorage();
-  const audioEngine = new window.AudioEngine();
-  vm.attachAudioEngine(audioEngine);
-  vm.attachStorage(storage);
-  vm.attachRenderer(render);
-  vm.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
-  vm.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
+  var canvas{{forloop.counter}} = document.getElementById('test{{forloop.counter}}');
+  var render{{forloop.counter}} = new ScratchRender(canvas{{forloop.counter}});
+  var vm{{forloop.counter}} = new VirtualMachine();
+  var storage{{forloop.counter}} = new ScratchStorage();
+  const audioEngine{{forloop.counter}} = new window.AudioEngine();
+  vm{{forloop.counter}}.attachAudioEngine(audioEngine{{forloop.counter}});
+  vm{{forloop.counter}}.attachStorage(storage{{forloop.counter}});
+  vm{{forloop.counter}}.attachRenderer(render{{forloop.counter}});
+  vm{{forloop.counter}}.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
+  vm{{forloop.counter}}.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
 
   document.addEventListener('mousemove', e => {
-    const rect = canvas.getBoundingClientRect();
+    const rect = canvas{{forloop.counter}}.getBoundingClientRect();
     const coordinates = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
       canvasWidth: rect.width,
       canvasHeight: rect.height
     };
-    vm.postIOData('mouse', coordinates);
+    vm{{forloop.counter}}.postIOData('mouse', coordinates);
   });
-  canvas.addEventListener('mousedown', e => {
-    const rect = canvas.getBoundingClientRect();
+  canvas{{forloop.counter}}.addEventListener('mousedown', e => {
+    const rect = canvas{{forloop.counter}}.getBoundingClientRect();
     const data = {
       isDown: true,
       x: e.clientX - rect.left,
@@ -61,11 +61,11 @@
       canvasWidth: rect.width,
       canvasHeight: rect.height
     };
-    vm.postIOData('mouse', data);
+    vm{{forloop.counter}}.postIOData('mouse', data);
     e.preventDefault();
   });
-  canvas.addEventListener('mouseup', e => {
-    const rect = canvas.getBoundingClientRect();
+  canvas{{forloop.counter}}.addEventListener('mouseup', e => {
+    const rect = canvas{{forloop.counter}}.getBoundingClientRect();
     const data = {
       isDown: false,
       x: e.clientX - rect.left,
@@ -73,7 +73,7 @@
       canvasWidth: rect.width,
       canvasHeight: rect.height
     };
-    vm.postIOData('mouse', data);
+    vm{{forloop.counter}}.postIOData('mouse', data);
     e.preventDefault();
   });
 
@@ -83,7 +83,7 @@
     if (e.target !== document && e.target !== document.body) {
       return;
     }
-    vm.postIOData('keyboard', {
+    vm{{forloop.counter}}.postIOData('keyboard', {
       keyCode: e.keyCode,
       isDown: true
     });
@@ -92,7 +92,7 @@
   document.addEventListener('keyup', e => {
     // Always capture up events,
     // even those that have switched to other targets.
-    vm.postIOData('keyboard', {
+    vm{{forloop.counter}}.postIOData('keyboard', {
       keyCode: e.keyCode,
       isDown: false
     });
@@ -103,30 +103,30 @@
   });
 
   function loadProject(project) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      vm.start();
-      vm.loadProject(reader.result)
+    const reader{{forloop.counter}} = new FileReader();
+    reader{{forloop.counter}}.onload = () => {
+      vm{{forloop.counter}}.start();
+      vm{{forloop.counter}}.loadProject(reader{{forloop.counter}}.result)
         .then(() => {
           // we add a `#loaded` div to our document, the integration suite
           // waits for that element to show up to assume the vm is ready
           // to play!
-          const div = document.createElement('div');
-          div.id = 'loaded';
-          document.body.appendChild(div);
+          const div{{forloop.counter}} = document.createElement('div');
+          div{{forloop.counter}}.id = 'loaded';
+          document.body.appendChild(div{{forloop.counter}});
           //vm.greenFlag();
         });
     };
     if (!(project instanceof File)) {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', project);
-      xhr.responseType = 'blob';
-      xhr.onload = function (e) {
-        reader.readAsArrayBuffer(e.target.response);
+      const xhr{{forloop.counter}} = new XMLHttpRequest();
+      xhr{{forloop.counter}}.open('GET', project);
+      xhr{{forloop.counter}}.responseType = 'blob';
+      xhr{{forloop.counter}}.onload = function (e) {
+        reader{{forloop.counter}}.readAsArrayBuffer(e.target.response);
       }
-      xhr.send();
+      xhr{{forloop.counter}}.send();
     } else {
-      reader.readAsArrayBuffer(project);
+      reader{{forloop.counter}}.readAsArrayBuffer(project);
     }
   }
 
