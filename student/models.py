@@ -129,9 +129,9 @@ class Work(models.Model):
     publication_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=-2)
     scorer = models.IntegerField(default=0)
-		# scratch, microbit
+	# scratch, microbit
     file = models.FileField()
-		#python
+    #　python
     picture = models.ImageField(upload_to = upload_path_handler, default = '/static/python/null.jpg')
     code = models.TextField(default='')
     helps = models.IntegerField(default=0, choices=HELP_CHOICES)

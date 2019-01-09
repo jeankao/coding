@@ -838,7 +838,7 @@ def work_download(request, typing, lesson, index, user_id, workfile_id):
         lesson_name = TWork.objects.get(id=index).title
 
     if lesson == "1":
-        filename = username + "_" + lesson_name.decode("utf-8")  + ".sb2"
+        filename = username + "_" + lesson_name.decode("utf-8")  + ".sb3"
         download =  settings.BASE_DIR + "/static/work/scratch/" + str(user_id) + "/" + workfile.filename
     elif lesson == "6":
         filename = username + "_" + lesson_name.decode("utf-8")  + ".hex"

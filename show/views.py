@@ -444,7 +444,7 @@ def show_download(request, show_id, showfile_id):
     username = ""
     for member in members:
         username = username + member.student.first_name + "_"
-    filename = show_id + "_" + username + "_" + show.title + ".sb2"
+    filename = show_id + "_" + username + "_" + show.title + ".sb3"
     download =  settings.BASE_DIR + "/" + showfile.filename
     wrapper = FileWrapper(file( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')

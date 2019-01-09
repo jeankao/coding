@@ -12,11 +12,11 @@ function checkvalue(a, index) {
 $(function () {
     $('input[type=file][name="file"]').change(function () {
         var val = $(this).val().toLowerCase(),
-            regex = new RegExp("(.*?)\.(sb2)$");
-
-        if (!(regex.test(val))) {
+            regex2 = new RegExp("(.*?)\.(sb2)$");
+            regex3 = new RegExp("(.*?)\.(sb3)$");
+        if (!(regex2.test(val)) or !(regex3.test(val))) {
             $(this).val('');
-            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2)');
+            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2或.sb3)');
         }
     });
 });  
