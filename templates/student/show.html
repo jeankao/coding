@@ -7,31 +7,135 @@
 {% endif %}
 {% if lesson == "1" %}
   {% if work %}
-<script type="text/javascript" src="/static/sb2/swfobject.js"></script>
- 
-<script type="text/javascript">   
-var flashvars = {
-project: "/static/work/scratch/{{request.user.id}}/{{work_dict|hash_file:index}}" ,
-autostart: "false"
-};
-var params = {
-bgcolor: "#FFFFFF",
-allowScriptAccess: "always",
-allowFullScreen: "true",
-wmode: "window",
-menu:"‘false"
-};
-var attributes = {};
-swfobject.embedSWF("/static/sb2/Scratch.swf", "flashContent", "482", "387", "10.2.0","expressInstall.swf", flashvars, params, attributes);
-</script>
     <div>評分者：{{ work.scorer|realname}}</div>
     {% if work.score > 0 %}<div>分數：{{ work.score}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	
     <div>心得感想：</div>
     <div>{{ work.memo }}</div>
     <div>程式：</div>
-    <div id="flashContent" >
-    </div>  
+    <style>
+      #test {width: 640px; height: 480px}
+    </style>
+    <script src="/static/libs/vendor.js"></script>
+    <script src="/static/libs/scratch-vm.min.js"></script>
+    <script src="/static/libs/scratch-storage.min.js"></script>
+    <script src="/static/libs/scratch-svg-renderer.js"></script>
+    <!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
+    <script src="/static/libs/scratch-render.min.js"></script>
+  
+    <img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm.greenFlag();" />
+    <canvas id="test"></canvas>
+  
+    <script>
+      // These variables are going to be available in the "window global" intentionally.
+      // Allows you easy access to debug with `vm.greenFlag()` etc.
+      window.devicePixelRatio = 1;
+  
+      var canvas = document.getElementById('test');
+      var render = new ScratchRender(canvas);
+      var vm = new VirtualMachine();
+      var storage = new ScratchStorage();
+      const audioEngine = new window.AudioEngine();
+      vm.attachAudioEngine(audioEngine);
+      vm.attachStorage(storage);
+      vm.attachRenderer(render);
+      vm.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
+      vm.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
+  
+      document.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        const coordinates = {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: rect.width,
+          canvasHeight: rect.height
+        };
+        vm.postIOData('mouse', coordinates);
+      });
+      canvas.addEventListener('mousedown', e => {
+        const rect = canvas.getBoundingClientRect();
+        const data = {
+          isDown: true,
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: rect.width,
+          canvasHeight: rect.height
+        };
+        vm.postIOData('mouse', data);
+        e.preventDefault();
+      });
+      canvas.addEventListener('mouseup', e => {
+        const rect = canvas.getBoundingClientRect();
+        const data = {
+          isDown: false,
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: rect.width,
+          canvasHeight: rect.height
+        };
+        vm.postIOData('mouse', data);
+        e.preventDefault();
+      });
+  
+      // Feed keyboard events as VM I/O events.
+      document.addEventListener('keydown', e => {
+        // Don't capture keys intended for Blockly inputs.
+        if (e.target !== document && e.target !== document.body) {
+          return;
+        }
+        vm.postIOData('keyboard', {
+          keyCode: e.keyCode,
+          isDown: true
+        });
+        e.preventDefault();
+      });
+      document.addEventListener('keyup', e => {
+        // Always capture up events,
+        // even those that have switched to other targets.
+        vm.postIOData('keyboard', {
+          keyCode: e.keyCode,
+          isDown: false
+        });
+        // E.g., prevent scroll.
+        if (e.target !== document && e.target !== document.body) {
+          e.preventDefault();
+        }
+      });
+  
+      function loadProject(project) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          vm.start();
+          vm.loadProject(reader.result)
+            .then(() => {
+              // we add a `#loaded` div to our document, the integration suite
+              // waits for that element to show up to assume the vm is ready
+              // to play!
+              const div = document.createElement('div');
+              div.id = 'loaded';
+              document.body.appendChild(div);
+              //vm.greenFlag();
+            });
+        };
+        if (!(project instanceof File)) {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', project);
+          xhr.responseType = 'blob';
+          xhr.onload = function (e) {
+            reader.readAsArrayBuffer(e.target.response);
+          }
+          xhr.send();
+        } else {
+          reader.readAsArrayBuffer(project);
+        }
+      }
+  
+      window.onload = function (e) {
+        loadProject('/static/work/scratch/{{request.user.id}}/{{work_dict|hash_file:index}}');
+      }
+  
+    </script>
+    
   {% else %}
     尚未繳交
   {% endif %}
