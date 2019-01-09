@@ -4,17 +4,18 @@
 {% load tz %}
 {% load tag %}
 {% block content %}
-<script src="/static/libs/vendor.js"></script>
-<script src="/static/libs/scratch-vm.min.js"></script>
-<script src="/static/libs/scratch-storage.min.js"></script>
-<script src="/static/libs/scratch-svg-renderer.js"></script>
-<!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
-<script src="/static/libs/scratch-render.min.js"></script>
-<script>
-  window.devicePixelRatio = 1;  
-  const audioEngine = new window.AudioEngine();
-</script>
-<table>  
+<table>
+
+      <script src="/static/libs/vendor.js"></script>
+      <script src="/static/libs/scratch-vm{{forloop.counter}}.min.js"></script>
+      <script src="/static/libs/scratch-storage.min.js"></script>
+      <script src="/static/libs/scratch-svg-renderer.js"></script>
+      <!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
+      <script src="/static/libs/scratch-render.min.js"></script>
+  <script>  
+      const audioEngine = new window.AudioEngine();
+      window.devicePixelRatio = 1;          
+  </script>
 {% for show in lists %}
 <tr><td>
     <h2>
@@ -23,120 +24,121 @@
       </a>
     </h2>
 {% if category == "1" %}  
+
 <style>
-  #test{{forloop.counter}} {width: 640px; height: 480px}
-</style>
+    #test{{forloop.counter}} {width: 640px; height: 480px}
+  </style>
+    <img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm{{forloop.counter}}.greenFlag();" />
+    <canvas id="test{{forloop.counter}}"></canvas>
+  
+    <script>
+      // These variables are going to be available in the "window global" intentionally.
+      // Allows you easy access to debug with `vm.greenFlag()` etc.
 
-<img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm{{forloop.counter}}.greenFlag();" />
-<canvas id="test{{forloop.counter}}"></canvas>
-
-<script>
-  // These variables are going to be available in the "window global" intentionally.
-  // Allows you easy access to debug with `vm.greenFlag()` etc.
-
-  var canvas{{forloop.counter}} = document.getElementById('test{{forloop.counter}}');
-  var render{{forloop.counter}} = new ScratchRender(canvas{{forloop.counter}});
-  var vm{{forloop.counter}} = new VirtualMachine();
-  var storage{{forloop.counter}} = new ScratchStorage();
-  vm{{forloop.counter}}.attachAudioEngine(audioEngine);
-  vm{{forloop.counter}}.attachStorage(storage{{forloop.counter}});
-  vm{{forloop.counter}}.attachRenderer(render{{forloop.counter}});
-  vm{{forloop.counter}}.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
-  vm{{forloop.counter}}.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
-
-  document.addEventListener('mousemove', e => {
-    const rect{{forloop.counter}} = canvas{{forloop.counter}}.getBoundingClientRect();
-    const coordinates{{forloop.counter}} = {
-      x: e.clientX - rect{{forloop.counter}}.left,
-      y: e.clientY - rect{{forloop.counter}}.top,
-      canvasWidth: rect{{forloop.counter}}.width,
-      canvasHeight: rect{{forloop.counter}}.height
-    };
-    vm{{forloop.counter}}.postIOData('mouse', coordinates{{forloop.counter}});
-  });
-  canvas{{forloop.counter}}.addEventListener('mousedown', e => {
-    const rect{{forloop.counter}} = canvas{{forloop.counter}}.getBoundingClientRect();
-    const data{{forloop.counter}} = {
-      isDown: true,
-      x: e.clientX - rect{{forloop.counter}}.left,
-      y: e.clientY - rect{{forloop.counter}}.top,
-      canvasWidth: rect{{forloop.counter}}.width,
-      canvasHeight: rect{{forloop.counter}}.height
-    };
-    vm{{forloop.counter}}.postIOData('mouse', data{{forloop.counter}});
-    e.preventDefault();
-  });
-  canvas{{forloop.counter}}.addEventListener('mouseup', e => {
-    const rect{{forloop.counter}} = canvas{{forloop.counter}}.getBoundingClientRect();
-    const data{{forloop.counter}} = {
-      isDown: false,
-      x: e.clientX - rect{{forloop.counter}}.left,
-      y: e.clientY - rect{{forloop.counter}}.top,
-      canvasWidth: rect{{forloop.counter}}.width,
-      canvasHeight: rect{{forloop.counter}}.height
-    };
-    vm{{forloop.counter}}.postIOData('mouse', data{{forloop.counter}});
-    e.preventDefault();
-  });
-
-  // Feed keyboard events as VM I/O events.
-  document.addEventListener('keydown', e => {
-    // Don't capture keys intended for Blockly inputs.
-    if (e.target !== document && e.target !== document.body) {
-      return;
-    }
-    vm{{forloop.counter}}.postIOData('keyboard', {
-      keyCode: e.keyCode,
-      isDown: true
-    });
-    e.preventDefault();
-  });
-  document.addEventListener('keyup', e => {
-    // Always capture up events,
-    // even those that have switched to other targets.
-    vm{{forloop.counter}}.postIOData('keyboard', {
-      keyCode: e.keyCode,
-      isDown: false
-    });
-    // E.g., prevent scroll.
-    if (e.target !== document && e.target !== document.body) {
-      e.preventDefault();
-    }
-  });
-
-  function loadProject{{forloop.counter}}(project) {
-    const reader{{forloop.counter}} = new FileReader();
-    reader{{forloop.counter}}.onload = () => {
-      vm{{forloop.counter}}.start();
-      vm{{forloop.counter}}.loadProject(reader{{forloop.counter}}.result)
-        .then(() => {
-          // we add a `#loaded` div to our document, the integration suite
-          // waits for that element to show up to assume the vm is ready
-          // to play!
-          const div{{forloop.counter}} = document.createElement('div{{forloop.counter}}');
-          div{{forloop.counter}}.id = 'loaded';
-          document.body.appendChild(div{{forloop.counter}});
-          //vm.greenFlag();
+  
+      var canvas{{forloop.counter}} = document.getElementById('test{{forloop.counter}}');
+      var render{{forloop.counter}} = new ScratchRender(canvas{{forloop.counter}});
+      var vm{{forloop.counter}} = new VirtualMachine();
+      var storage{{forloop.counter}} = new ScratchStorage();
+      vm{{forloop.counter}}.attachAudioEngine(audioEngine);
+      vm{{forloop.counter}}.attachStorage(storage{{forloop.counter}});
+      vm{{forloop.counter}}.attachRenderer(render{{forloop.counter}});
+      vm{{forloop.counter}}.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
+      vm{{forloop.counter}}.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
+  
+      document.addEventListener('mousemove', e => {
+        const rect = canvas{{forloop.counter}}.getBoundingClientRect();
+        const coordinates = {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: rect.width,
+          canvasHeight: rect.height
+        };
+        vm{{forloop.counter}}.postIOData('mouse', coordinates);
+      });
+      canvas{{forloop.counter}}.addEventListener('mousedown', e => {
+        const rect = canvas{{forloop.counter}}.getBoundingClientRect();
+        const data = {
+          isDown: true,
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: rect.width,
+          canvasHeight: rect.height
+        };
+        vm{{forloop.counter}}.postIOData('mouse', data);
+        e.preventDefault();
+      });
+      canvas{{forloop.counter}}.addEventListener('mouseup', e => {
+        const rect = canvas{{forloop.counter}}.getBoundingClientRect();
+        const data = {
+          isDown: false,
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: rect.width,
+          canvasHeight: rect.height
+        };
+        vm{{forloop.counter}}.postIOData('mouse', data);
+        e.preventDefault();
+      });
+  
+      // Feed keyboard events as vm{{forloop.counter}} I/O events.
+      document.addEventListener('keydown', e => {
+        // Don't capture keys intended for Blockly inputs.
+        if (e.target !== document && e.target !== document.body) {
+          return;
+        }
+        vm{{forloop.counter}}.postIOData('keyboard', {
+          keyCode: e.keyCode,
+          isDown: true
         });
-    };
-    if (!(project instanceof File)) {
-      const xhr{{forloop.counter}} = new XMLHttpRequest();
-      xhr{{forloop.counter}}.open('GET', project);
-      xhr{{forloop.counter}}.responseType = 'blob';
-      xhr{{forloop.counter}}.onload = function (e) {
-        reader{{forloop.counter}}.readAsArrayBuffer(e.target.response);
+        e.preventDefault();
+      });
+      document.addEventListener('keyup', e => {
+        // Always capture up events,
+        // even those that have switched to other targets.
+        vm{{forloop.counter}}.postIOData('keyboard', {
+          keyCode: e.keyCode,
+          isDown: false
+        });
+        // E.g., prevent scroll.
+        if (e.target !== document && e.target !== document.body) {
+          e.preventDefault();
+        }
+      });
+  
+      function loadProject{{forloop.counter}}(project) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          vm{{forloop.counter}}.start();
+          vm{{forloop.counter}}.loadProject(reader.result)
+            .then(() => {
+              // we add a `#loaded` div to our document, the integration suite
+              // waits for that element to show up to assume the vm{{forloop.counter}} is ready
+              // to play!
+              const div{{forloop.counter}} = document.createElement('div{{forloop.counter}}');
+              div{{forloop.counter}}.id = 'loaded';
+              document.body.appendChild(div{{forloop.counter}});
+              //vm{{forloop.counter}}.greenFlag();
+            });
+        };
+        if (!(project instanceof File)) {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', project);
+          xhr.responseType = 'blob';
+          xhr.onload = function (e) {
+            reader.readAsArrayBuffer(e.target.response);
+          }
+          xhr.send();
+        } else {
+          reader.readAsArrayBuffer(project);
+        }
       }
-      xhr{{forloop.counter}}.send();
-    } else {
-      reader{{forloop.counter}}.readAsArrayBuffer(project);
-    }
-  }
-
-  window.onload = function (e) {
-    loadProject{{forloop.counter}}('/static/show/{{show.id}}/{{show.file}}');
-  }
-
-</script>
+  
+      window.onload = function (e) {
+        loadProject{{forloop.counter}}('/static/show/{{show.id}}/{{show.file}}');
+      }
+  
+    </script>
 {% else %}
 	{% if show.youtube %}
 	<iframe width="420" height="280" src="https://www.youtube.com/embed/{{show.youtube}}" frameborder="0" allowfullscreen></iframe>
@@ -145,8 +147,9 @@
 <BR></BR>    <p class="date">
       Published {{ show.publish}} by {{ show.id|show_member }}<BR>
       本作品由{{show.id|show_teacher}}推薦
-    </p>
-</td><td>
+</p>
+  </td><td>
+
   {% empty %}
   目前藝廊尚無作品
   {% endfor %}
