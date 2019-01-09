@@ -10,6 +10,10 @@
 <script src="/static/libs/scratch-svg-renderer.js"></script>
 <!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
 <script src="/static/libs/scratch-render.min.js"></script>
+<script>
+  window.devicePixelRatio = 1;  
+  const audioEngine = new window.AudioEngine();
+</script>
 <table>  
 {% for show in lists %}
 <tr><td>
@@ -29,51 +33,49 @@
 <script>
   // These variables are going to be available in the "window global" intentionally.
   // Allows you easy access to debug with `vm.greenFlag()` etc.
-  window.devicePixelRatio = 1;
 
   var canvas{{forloop.counter}} = document.getElementById('test{{forloop.counter}}');
   var render{{forloop.counter}} = new ScratchRender(canvas{{forloop.counter}});
   var vm{{forloop.counter}} = new VirtualMachine();
   var storage{{forloop.counter}} = new ScratchStorage();
-  const audioEngine{{forloop.counter}} = new window.AudioEngine();
-  vm{{forloop.counter}}.attachAudioEngine(audioEngine{{forloop.counter}});
+  vm{{forloop.counter}}.attachAudioEngine(audioEngine);
   vm{{forloop.counter}}.attachStorage(storage{{forloop.counter}});
   vm{{forloop.counter}}.attachRenderer(render{{forloop.counter}});
   vm{{forloop.counter}}.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
   vm{{forloop.counter}}.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
 
   document.addEventListener('mousemove', e => {
-    const rect = canvas{{forloop.counter}}.getBoundingClientRect();
-    const coordinates = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      canvasWidth: rect.width,
-      canvasHeight: rect.height
+    const rect{{forloop.counter}} = canvas{{forloop.counter}}.getBoundingClientRect();
+    const coordinates{{forloop.counter}} = {
+      x: e.clientX - rect{{forloop.counter}}.left,
+      y: e.clientY - rect{{forloop.counter}}.top,
+      canvasWidth: rect{{forloop.counter}}.width,
+      canvasHeight: rect{{forloop.counter}}.height
     };
-    vm{{forloop.counter}}.postIOData('mouse', coordinates);
+    vm{{forloop.counter}}.postIOData('mouse', coordinates{{forloop.counter}});
   });
   canvas{{forloop.counter}}.addEventListener('mousedown', e => {
-    const rect = canvas{{forloop.counter}}.getBoundingClientRect();
-    const data = {
+    const rect{{forloop.counter}} = canvas{{forloop.counter}}.getBoundingClientRect();
+    const data{{forloop.counter}} = {
       isDown: true,
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      canvasWidth: rect.width,
-      canvasHeight: rect.height
+      x: e.clientX - rect{{forloop.counter}}.left,
+      y: e.clientY - rect{{forloop.counter}}.top,
+      canvasWidth: rect{{forloop.counter}}.width,
+      canvasHeight: rect{{forloop.counter}}.height
     };
-    vm{{forloop.counter}}.postIOData('mouse', data);
+    vm{{forloop.counter}}.postIOData('mouse', data{{forloop.counter}});
     e.preventDefault();
   });
   canvas{{forloop.counter}}.addEventListener('mouseup', e => {
-    const rect = canvas{{forloop.counter}}.getBoundingClientRect();
-    const data = {
+    const rect{{forloop.counter}} = canvas{{forloop.counter}}.getBoundingClientRect();
+    const data{{forloop.counter}} = {
       isDown: false,
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      canvasWidth: rect.width,
-      canvasHeight: rect.height
+      x: e.clientX - rect{{forloop.counter}}.left,
+      y: e.clientY - rect{{forloop.counter}}.top,
+      canvasWidth: rect{{forloop.counter}}.width,
+      canvasHeight: rect{{forloop.counter}}.height
     };
-    vm{{forloop.counter}}.postIOData('mouse', data);
+    vm{{forloop.counter}}.postIOData('mouse', data{{forloop.counter}});
     e.preventDefault();
   });
 
@@ -102,7 +104,7 @@
     }
   });
 
-  function loadProject(project) {
+  function loadProject{{forloop.counter}}(project) {
     const reader{{forloop.counter}} = new FileReader();
     reader{{forloop.counter}}.onload = () => {
       vm{{forloop.counter}}.start();
@@ -111,7 +113,7 @@
           // we add a `#loaded` div to our document, the integration suite
           // waits for that element to show up to assume the vm is ready
           // to play!
-          const div{{forloop.counter}} = document.createElement('div');
+          const div{{forloop.counter}} = document.createElement('div{{forloop.counter}}');
           div{{forloop.counter}}.id = 'loaded';
           document.body.appendChild(div{{forloop.counter}});
           //vm.greenFlag();
@@ -131,7 +133,7 @@
   }
 
   window.onload = function (e) {
-    loadProject('/static/show/{{show.id}}/{{show.file}}');
+    loadProject{{forloop.counter}}('/static/show/{{show.id}}/{{show.file}}');
   }
 
 </script>
