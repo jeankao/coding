@@ -862,7 +862,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
     data = []
-    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2][int(lesson)-1]
+    lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5][int(lesson)-1]
     for enroll in enrolls:
       enroll_score = []
       total = 0
