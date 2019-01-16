@@ -835,6 +835,12 @@ def grade(request, typing, lesson, unit, classroom_id):
                     memo = enroll.score_memo_vphysics2
                 elif lesson == "5":
                     memo = enroll.score_memo_vphysics3
+                elif lesson == "6":
+                    memo = enroll.score_memo_microbit
+                elif lesson == "7":
+                    memo = enroll.score_memo_pandas
+                elif lesson == "8":
+                    memo = enroll.score_memo_django                                                            
                 grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)					
             elif typing == "1":
                 memo = enroll.score_memo_custom
