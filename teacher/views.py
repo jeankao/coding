@@ -684,7 +684,9 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
         elif lesson == "6":
             form = CheckForm_microbit(request.POST)
         elif lesson == "7":
-            form = CheckForm_pandas(request.POST)     
+            form = CheckForm_pandas(request.POST)   
+        elif lesson == "8":
+            form = CheckForm_django(request.POST)                 
       elif typing == "1":
           form = CheckFormCustom(request.POST)                               
       else:
@@ -713,11 +715,13 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
               enroll.score_memo_microbit=form.cleaned_data['score_memo_microbit']
           elif lesson == "7" :
               enroll.score_memo_pandas=form.cleaned_data['score_memo_pandas']                            
+          elif lesson == "8" :
+              enroll.score_memo_django=form.cleaned_data['score_memo_django']                
           enroll.save()
-          if form.cleaned_data['certificate']:
-              return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
-          else:
-              return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
+          #if form.cleaned_data['certificate']:
+          #    return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
+          #else:
+          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
         elif typing == "1":
           enroll.score_memo_custom = form.cleaned_data['score_memo_custom']
           enroll.save()    
@@ -741,6 +745,12 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             form = CheckForm_vphysics(instance=enroll)
         elif lesson == "3":
             form = CheckForm_euler(instance=enroll)
+        elif lesson == "6":
+            form = CheckForm_microbit(instance=enroll)
+        elif lesson == "7":
+            form = CheckForm_pandas(instance=enroll)                        
+        elif lesson == "8":
+            form = CheckForm_django(instance=enroll)            
         else :
             form =  CheckForm1(instance=enroll)
       elif typing == "1":

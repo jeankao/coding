@@ -190,6 +190,14 @@ class CheckForm_pandas(forms.ModelForm):
            model = Enroll
            fields = ['score_memo_pandas']              
 
+class CheckForm_django(forms.ModelForm):
+        score_memo_django = forms.ChoiceField(choices = Check_CHOICES, required=True, label="分數")
+        #if user.groups.all()[0].name == 'teacher': 
+    
+        class Meta:
+           model = Enroll
+           fields = ['score_memo_django']  
+
 # 新增一個作業
 class WorkForm(forms.ModelForm):
         class Meta:

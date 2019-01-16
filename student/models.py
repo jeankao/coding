@@ -65,6 +65,8 @@ class Enroll(models.Model):
     score_memo_microbit =  models.IntegerField(default=0)
      # Pandas
     score_memo_pandas =  models.IntegerField(default=0)   
+     # Django
+    score_memo_django =  models.IntegerField(default=0)       
     # 自訂作業
     score_memo_custom =  models.IntegerField(default=0)
     # 檢核作業
