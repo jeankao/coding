@@ -640,6 +640,9 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
         elif lesson == "5" :
             for index,assignment in enumerate(lesson_list2):
                 lesson_dict[index] = [assignment]
+        elif lesson == "8" :
+            for index,assignment in enumerate(lesson_list5):
+                lesson_dict[index] = [assignment]                
     else :
         assignments = TWork.objects.filter(classroom_id=classroom_id)
         for assignment in assignments:
