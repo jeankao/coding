@@ -126,7 +126,24 @@
            <td><a href="/teacher/check/1/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">自訂作業{% if enroll.score_memo_custom > 0 %}({{enroll.score_memo_custom}}){% endif%}</a></td>
            </tr>
        {% endfor %}
-       </table>             
+       </table>   
+       {% elif lesson == "8" %}
+       <table>
+      <tr>   
+          <td>姓名</td>
+          <td>批閱心得</td>
+          <td>姓名</td>
+          <td>批閱心得</td>	
+          </tr>
+      {% for enroll in enrolls %}
+          <tr>
+          <td>{{enroll.seat}})<a href="/student/memo_user/{{enroll.student_id}}">{{enroll.student.first_name}}</a></td>	
+          <td><a href="/teacher/check/0/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">Django網站開發{% if enroll.score_memo_django > 0 %}({{enroll.score_memo_django}}){% endif%}</a></td>
+          <td>{{enroll.seat}}){{enroll.student.first_name}}</td>
+          <td><a href="/teacher/check/1/{{lesson}}/1/{{enroll.student_id}}/{{enroll.classroom_id}}">自訂作業{% if enroll.score_memo_custom > 0 %}({{enroll.score_memo_custom}}){% endif%}</a></td>
+          </tr>
+      {% endfor %}
+      </table>                    
         {% else %}
           1234
         {% endif %}
