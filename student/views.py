@@ -786,8 +786,12 @@ class WorkListView(ListView):
             if len(work)>0 :
                 queryset.append([day, len(work)])
         context['total_works'] = queryset
-        start = datetime(2018,4,1)
-        end = datetime.today()
+        if len(work_pool)>0:
+            start = work_pool[0].publication_date
+            end = work_pool[len(work_pool)-1].publication_date
+        else:
+            start = datetime.today()
+            end = datetime.today()
         context['height'] = 200+ (end.year-start.year)*200
         context['lesson'] = self.kwargs['lesson']
         return context
