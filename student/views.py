@@ -760,7 +760,10 @@ class WorkListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        classrooms = Classroom.objects.filter(lesson=self.kwargs['lesson']).order_by('-id')
+        if self.kwargs['lesson'] == "2":
+            classrooms = Classroom.objects.filter(lesson__in=[2,4,5]).order_by('-id')
+        else:
+            classrooms = Classroom.objects.filter(lesson=self.kwargs['lesson']).order_by('-id')
         classroom_teachers = []
         for classroom in classrooms:
             enrolls = Enroll.objects.filter(classroom_id=classroom.id, seat__gt=0)
