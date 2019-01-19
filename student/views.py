@@ -776,6 +776,12 @@ class WorkListView(ListView):
             work_pool = Work.objects.filter(lesson_id__in=[2,4,5])
         else:
             work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+        if len(work_pool)>0:
+            end = work_pool[0].publication_date
+            start = work_pool[len(work_pool)-1].publication_date
+        else:
+            start = datetime.today()
+            end = datetime.today()            
         queryset = []
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
@@ -783,12 +789,6 @@ class WorkListView(ListView):
             if len(work)>0 :
                 queryset.append([day, len(work)])
         context['total_works'] = queryset
-        if len(work_pool)>0:
-            end = work_pool[0].publication_date
-            start = work_pool[len(work_pool)-1].publication_date
-        else:
-            start = datetime.today()
-            end = datetime.today()
         context['height'] = 200+ (end.year-start.year)*200
         context['lesson'] = self.kwargs['lesson']
         return context
