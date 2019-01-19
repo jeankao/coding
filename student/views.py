@@ -773,13 +773,10 @@ class WorkListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(WorkListView, self).get_context_data(**kwargs)
         if self.kwargs['lesson'] == "2":
-            work_pool = Work.objects.filter(lesson_id__in=[2,4])
+            work_pool = Work.objects.filter(lesson_id__in=[2,4,5])
         else:
             work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         queryset = []
-        timezone = pytz.timezone("Asia/Taipei")
-        start = timezone.localize(datetime(2018,4,1))
-        end = timezone.localize(datetime.now())
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
             work = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
