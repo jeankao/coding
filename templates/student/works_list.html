@@ -40,4 +40,20 @@
 {% endblock %}
 {% block content %}
     <div id="calendar_basic" style="width: 1000px;"></div>    
+    <table class="table" style="width:100%">
+        <tr>
+            <td>班級名稱</td>
+            <td>教師</td>
+            <td>學生人數</td>                
+        </tr>
+    {% for classroom, teacher_name, students in classroom_teachers %}
+        <tr>
+        <td>{{classroom.name}}</td>
+        <td>{{teacher_name}}</td>
+        <td>{{students}}</td>
+        </tr>
+    {% endfor %}
+    </table>    
+    {% load pagination %}
+    {% get_pagination %}
 {% endblock %}

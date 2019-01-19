@@ -754,11 +754,21 @@ def rank(request, typing, lesson, index):
 
 # 列出所有日期作品
 class WorkListView(ListView):
-    model = Work
-    context_object_name = 'total_works'
+    model = Classroom
+    context_object_name = 'classroom_teachers'
     template_name = 'student/works_list.html'
+    paginate_by = 20
 
     def get_queryset(self):
+        classrooms = Classroom.objects.filter(lesson=self.kwargs['lesson']).order_by('-id')
+        classroom_teachers = []
+        for classroom in classrooms:
+            enrolls = Enroll.objects.filter(student_id=self.request.user.id, classroom_id=classroom.id, seat__gt=0)
+            classroom_teachers.append([classroom,classroom.teacher.first_name,len(enrolls)])
+        return classroom_teachers          
+ 
+    def get_context_data(self, **kwargs):
+        context = super(WorkListView, self).get_context_data(**kwargs)
         if self.kwargs['lesson'] == "2":
             work_pool = Work.objects.filter(lesson_id__in=[2,4])
         else:
@@ -772,10 +782,7 @@ class WorkListView(ListView):
             work = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
             if len(work)>0 :
                 queryset.append([day, len(work)])
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(WorkListView, self).get_context_data(**kwargs)
+        context['total_works'] = queryset
         start = datetime(2018,4,1)
         end = datetime.today()
         context['height'] = 200+ (end.year-start.year)*200
@@ -800,7 +807,7 @@ class WorkDayListView(ListView):
         return works
 
     def get_context_data(self, **kwargs):
-        context = super(WorkDayListView, self).get_context_data(**kwargs)
+        context = super(WorkDayListView, self).get_context_data(**kwargs)       
         context['lesson'] = self.kwargs['lesson']
         context['date'] = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
         return context
