@@ -763,7 +763,7 @@ class WorkListView(ListView):
         classrooms = Classroom.objects.filter(lesson=self.kwargs['lesson']).order_by('-id')
         classroom_teachers = []
         for classroom in classrooms:
-            enrolls = Enroll.objects.filter(student_id=self.request.user.id, classroom_id=classroom.id, seat__gt=0)
+            enrolls = Enroll.objects.filter(classroom_id=classroom.id, seat__gt=0)
             classroom_teachers.append([classroom,classroom.teacher.first_name,len(enrolls)])
         return classroom_teachers          
  
