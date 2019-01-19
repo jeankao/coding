@@ -25,7 +25,7 @@ urlpatterns = [
     # 教材研發
     url(r'^people/$', views.people),	
     # 數據統計 
-    url(r'^statics/lesson/$', views.statics_lesson),      
+    url(r'^statics/lesson/$', views.LessonCountView.as_view()),      
     #訪客
     url(r'^statics/login/$', views.VisitorListView.as_view()),    
     url(r'^statics/login/log/(?P<visitor_id>\d+)/$', login_required(views.VisitorLogListView.as_view())),   

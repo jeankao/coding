@@ -125,14 +125,14 @@ def contact(request):
 
 def people(request):   
     return render(request, 'account/people.html')	
-    
-def statics_zone(request):
-    cities = County.objects.all()
-    return render(request, 'account/statics_zone.html', {'cities':cities})	  	
 
-def statics_lesson(request):
-    counters = LessonCounter.objects.all().order_by("-hit")		
-    return render(request, 'account/statics_lesson.html', {'counters':counters})
+# 列出所有課程
+class LessonCountView(ListView):
+    model = LessonCounter
+    context_object_name = 'counters'
+    paginate_by = 50
+    ordering = "-hit"
+    template_name = 'account/statics_lesson.html'
     
 # 管理介面 
 def admin(request):
