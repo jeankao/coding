@@ -781,10 +781,7 @@ class WorkListView(ListView):
             end = work_pool[len(work_pool)-1].publication_date
         else:
             start = datetime.today()
-            end = datetime.today()   
-        timezone = pytz.timezone("Asia/Taipei")
-        start = timezone.localize(start)
-        end = timezone.localize(end)                     
+            end = datetime.today()                       
         queryset = []
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
