@@ -792,7 +792,6 @@ class WorkListView(ListView):
             if len(work)>0 :
                 queryset.append([day, len(work)])
         context['total_works'] = queryset
-        context['work_end'] = work_end
         context['height'] = 200+ (end.year-start.year)*200
         context['lesson'] = self.kwargs['lesson']
         return context
