@@ -174,83 +174,61 @@
         {{student}} 個學生在這兒撰寫了 {{works.0}} 個程式，看了 X本書。
         <div id="summary">
           <img src="/static/images/work.png">
-          <div style="left:27px">
+          <div style="left:27px; line-height:18px;">
             {% if user.is_superuser %}            
-            <a href="/student/work/list/1" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.1.0}} 班次共 {{works.1.1}} 個作業</a>
+            <a href="/student/work/list/1" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.1.0}} 班次{{works.1.1}}位學生<BR>共 {{works.1.2}} 個作業</a>
             {% else %}
-            {{works.1.0}} 班次共 {{works.1.1}} 個作業
+            {{works.1.0}} 班次{{works.1.1}} 位學生<BR>共{{works.1.2}} 個作品
             {% endif %}            
           </div>
-          <div style="left:333px">
-            {% if user.is_superuser %}
-            <a href="/student/work/list/2" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.2.0}} 班次共 {{works.2.1}} 個作業</a>
+          <div style="left:333px; line-height:18px;">
+            {% if user.is_superuser %}            
+            <a href="/student/work/list/2" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.2.0}} 班次{{works.2.1}}位學生<BR>共 {{works.2.2}} 個作業</a>
             {% else %}
-            {{works.2.0}} 班次共 {{works.2.1}} 個作業
-            {% endif %}
+            {{works.2.0}} 班次{{works.2.1}} 位學生<BR>共{{works.2.2}} 個作品
+            {% endif %}  
           </div>  
-          <div style="left:646px">
-            {% if user.is_superuser %}                   
-             <a href="/student/work/list/3" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.3.0}} 班次共 {{works.3.1}} 個作業</a>
-            {% else %}            
-            {{works.3.0}} 班次共 {{works.3.1}} 個作業
-            {% endif %}            
+          <div style="left:646px; line-height:18px;">
+            {% if user.is_superuser %}            
+            <a href="/student/work/list/3" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.3.0}} 班次{{works.3.1}}位學生<BR>共 {{works.3.2}} 個作業</a>
+            {% else %}
+            {{works.3.0}} 班次{{works.3.1}} 位學生<BR>共{{works.3.2}} 個作品
+            {% endif %}              
           </div>
         </div>
          <div id="summary2">         
           <img src="/static/images/work2.png">
-          <div style="left:27px">
-            {% if user.is_superuser %}                   
-             <a href="/student/work/list/8" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.4.0}} 班次共 {{works.4.1}} 個作業</a>
-            {% else %}            
-            {{works.3.0}} 班次共 {{works.3.1}} 個作業
+          <div style="left:27px; line-height:18px;">
+            {% if user.is_superuser %}            
+            <a href="/student/work/list/8" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.4.0}} 班次{{works.4.1}}位學生<BR>共 {{works.4.2}} 個作業</a>
+            {% else %}
+            {{works.4.0}} 班次{{works.4.1}} 位學生<BR>共{{works.4.2}} 個作品
             {% endif %}  
           </div>
-          <div style="left:333px">
-            <a href="/student/work/list/5" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
+          <div style="left:333px; line-height:18px;">
+            <a href="/student/work/list/5" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次 x位學生<BR>共計 x 個作業</a>
           </div>
-          <div style="left:646px">
-            {% if user.is_superuser %}                   
-             <a href="/student/work/list/7" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.5.0}} 班次共 {{works.5.1}} 個作業</a>
-            {% else %}            
-            {{works.3.0}} 班次共 {{works.3.1}} 個作業
-            {% endif %}  
+          <div style="left:646px; line-height:18px;">
+            {% if user.is_superuser %}            
+            <a href="/student/work/list/7" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.5.0}} 班次{{works.5.1}}位學生<BR>共 {{works.5.2}} 個作業</a>
+            {% else %}
+            {{works.5.0}} 班次{{works.5.1}} 位學生<BR>共{{works.5.2}} 個作品
+            {% endif %}    
           </div>
         </div>
         <div id="summary3">
           <img src="/static/images/work3.png">
-          <div style="left:27px">
-            <a href="/student/work/list/7" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
+          <div style="left:27px; line-height:18px;">
+            {% if user.is_superuser %}            
+            <a href="/student/work/list/6" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.6.0}} 班次{{works.6.1}}位學生<BR>共 {{works.6.2}} 個作業</a>
+            {% else %}
+            {{works.6.0}} 班次{{works.6.1}} 位學生<BR>共{{works.6.2}} 個作品
+            {% endif %}             </div>
+          <div style="left:333px; line-height:18px;">
+            <a href="/student/work/list/8" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次 x位學生<BR>共計 x 個作業</a>
           </div>
-          <div style="left:333px">
-            <a href="/student/work/list/8" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
-          </div>
-          <div style="left:646px">
-            <a href="/student/work/list/9" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
-          </div>
-        </div>
-      </div>
-      <div class="clear"></div>
-    </div>
-  </div>
-</div>
-    
-<!--//---------------------------------------//-->
-<div class="wrapper">
-  <div class="container">
-    <div class="whitebox">
-      <div class="content">
-        <h1>在 Joy of Code 上學習</h1>
-        {{student}} 個學生在這兒領取了 {{certificates.0}} 張證書。
-        <div id="summary">
-          <img src="/static/images/work.png">
-          <div style="left:27px">
-            {{certificates.1.0}} 個學生共 {{certificates.1.1}} 張證書
-          </div>
-          <div style="left:333px">
-            {{certificates.2.0}} 個學生共 {{certificates.2.1}} 張證書
-          </div>
-          <div style="left:646px">
-            {{certificates.3.0}} 個學生共 {{certificates.3.1}} 張證書
+          <div style="left:646px; line-height:18px;">
+            <a href="/student/work/list/9" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次 x位學生<BR>共計 x 個作業</a>
           </div>
         </div>
       </div>
