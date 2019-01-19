@@ -68,7 +68,7 @@ def not_in_teacher_group(user):
 class ClassroomListView(ListView):
     model = Classroom
     context_object_name = 'classrooms'
-    paginate_by = 20
+    paginate_by = 30
     def dispatch(self, *args, **kwargs):
         if not not_in_teacher_group(self.request.user):
             raise PermissionDenied
