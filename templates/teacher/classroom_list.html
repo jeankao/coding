@@ -46,6 +46,8 @@
             </tr>
         {% endfor %}
         </table>
+        {% load pagination %}
+        {% get_pagination %}         
 {% endblock %}
   {% block footer_script %}
   <script>

@@ -199,13 +199,21 @@
          <div id="summary2">         
           <img src="/static/images/work2.png">
           <div style="left:27px">
-            <a href="/student/work/list/4" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
+            {% if user.is_superuser %}                   
+             <a href="/student/work/list/8" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.4.0}} 班次共 {{works.4.1}} 個作業</a>
+            {% else %}            
+            {{works.3.0}} 班次共 {{works.3.1}} 個作業
+            {% endif %}  
           </div>
           <div style="left:333px">
             <a href="/student/work/list/5" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
           </div>
           <div style="left:646px">
-            <a href="/student/work/list/6" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次共 x 個作業</a>
+            {% if user.is_superuser %}                   
+             <a href="/student/work/list/7" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.5.0}} 班次共 {{works.5.1}} 個作業</a>
+            {% else %}            
+            {{works.3.0}} 班次共 {{works.3.1}} 個作業
+            {% endif %}  
           </div>
         </div>
         <div id="summary3">

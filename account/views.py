@@ -66,11 +66,19 @@ def homepage(request):
     class_vphysics = len(class_vphysics_pool)    
     class_euler_pool = [classroom for classroom in filter(lambda w: w.lesson == 3, classrooms)]    
     class_euler_ids = map(lambda a: a.id, class_euler_pool)    
-    class_euler = len(class_euler_pool)      
+    class_euler = len(class_euler_pool) 
+    class_django_pool = [classroom for classroom in filter(lambda w: w.lesson == 8, classrooms)]    
+    class_django_ids = map(lambda a: a.id, class_euler_pool)    
+    class_django = len(class_euler_pool)    
+    class_pandas_pool = [classroom for classroom in filter(lambda w: w.lesson == 7, classrooms)]    
+    class_pandas_ids = map(lambda a: a.id, class_euler_pool)    
+    class_pandas = len(class_euler_pool)              
     work_scratch = len(filter(lambda w: w.lesson_id == 1, workss))
     work_vphysics = len(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4), workss))
     work_euler = len(filter(lambda w: w.lesson_id == 3, workss))
-    works = [len(workss), [class_scratch, work_scratch], [class_vphysics, work_vphysics], [class_euler, work_euler]]
+    work_django = len(filter(lambda w: w.lesson_id == 8, workss))    
+    work_pandas = len(filter(lambda w: w.lesson_id == 7, workss))        
+    works = [len(workss), [class_scratch, work_scratch], [class_vphysics, work_vphysics], [class_euler, work_euler], [class_django, work_django], [class_pandas, work_pandas]]
     enrolls = Enroll.objects.filter(seat__gt=0)
     certificate_scratch1 = len(filter(lambda w: w.certificate1 == True, enrolls))
     certificate_scratch2 = len(filter(lambda w: w.certificate2 == True, enrolls))
@@ -85,6 +93,10 @@ def homepage(request):
     enroll_vphysics =  len(filter(lambda w: w.classroom_id, classroom_vphysics))    
     classroom_euler = [enroll for enroll in enrolls if enroll.classroom_id in class_euler_ids]
     enroll_euler =  len(filter(lambda w: w.classroom_id, classroom_euler))
+    classroom_django = [enroll for enroll in enrolls if enroll.classroom_id in class_django_ids]
+    enroll_django =  len(filter(lambda w: w.classroom_id, classroom_django))    
+    classroom_pandas = [enroll for enroll in enrolls if enroll.classroom_id in class_pandas_ids]
+    enroll_pandas =  len(filter(lambda w: w.classroom_id, classroom_pandas))        
     certificate = certificate_scratch+certificate_vphysics+certificate_euler
     certificates = [certificate, [enroll_scratch, certificate_scratch], [enroll_vphysics, certificate_vphysics], [enroll_euler, certificate_euler]]
     return render(request, 'homepage.html', {'certificates':certificates, 'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile})
