@@ -107,6 +107,16 @@ def work_name(index, lesson, typing):
         return lesson_list3[index-1][1]
     elif lesson == 4:
         return lesson_list4[index-1][1]
+    elif lesson == 5:
+        return lesson_list2[index-1][1]
+    elif lesson == 6:
+        return lesson_list6[index-1][1]
+    elif lesson == 7:
+        return lesson_list2[index-1][1]
+    elif lesson == 8:
+        return lesson_list5[index-1][1]          
+    elif lesson == 10:
+        return lesson_list7[index-1][1]       
     else :
         return lesson_list1[index-1][2]
      

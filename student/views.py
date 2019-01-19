@@ -921,7 +921,13 @@ def progress(request, typing, lesson, unit, classroom_id):
             works = filter(lambda u: u.index == index, student_works)
             index = index + 1
             if len(works) > 0:
-              bar.append([assignment, works[0]])
+              if lesson == "10":
+                if works[0].publish:
+                    bar.append([assignment, works[0]])
+                else:
+                    bar.append([assignment, False])
+              else :
+                bar.append([assignment, works[0]])
             else:
               bar.append([assignment, False])
           bars.append([enroll, bar])

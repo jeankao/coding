@@ -206,8 +206,11 @@
             {% endif %}  
           </div>
           <div style="left:333px; line-height:18px;">
-            <a href="/student/work/list/5" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">x 班次 x位學生<BR>共計 x 個作業</a>
-          </div>
+            {% if user.is_superuser %}            
+            <a href="/student/work/list/10" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.7.0}} 班次 {{works.7.1}}位學生<BR>共 {{works.7.2}} 個作業</a>
+            {% else %}
+            {{works.7.0}} 班次 {{works.7.1}} 位學生<BR>共 {{works.7.2}} 個作品
+            {% endif %}            </div>
           <div style="left:646px; line-height:18px;">
             {% if user.is_superuser %}            
             <a href="/student/work/list/7" style="color: #000000; background: rgba(0, 0, 0, 0);text-decoration: none">{{works.5.0}} 班次 {{works.5.1}} 位學生<BR>共 {{works.5.2}} 個作業</a>
