@@ -777,8 +777,14 @@ class WorkListView(ListView):
         else:
             work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
         timezone = pytz.timezone("Asia/Taipei")
-        start = timezone.localize(datetime(2018,4,1))
-        end = timezone.localize(datetime.now())                      
+        if len(work_pool)>0:
+            work_start = work_pool[0].publication_date
+            work_end = work_pool[len(work_pool)-1].publication_date
+        else:
+            work_start = timezone.localize(datetime.now())
+            work_end = timezone.localize(datetime.now())
+        start = timezone.localize(datetime(work_start.year, work_start.month,work_start.day))
+        end = timezone.localize(datetime(work_end.year, work_end.month,work_end.day))               
         queryset = []
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
