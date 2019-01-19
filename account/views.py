@@ -56,7 +56,7 @@ def homepage(request):
         
     teacher = User.objects.filter(groups__name='teacher').count()
     student = Enroll.objects.values('student_id').distinct().count()
-    workss = Work.objects.all()
+    workss = Work.objects.filter(~Q(lesson_id=10))
     classrooms = Classroom.objects.all()
     class_scratch_pool = [classroom for classroom in filter(lambda w: w.lesson == 1, classrooms)]    
     class_scratch_ids = map(lambda a: a.id, class_scratch_pool)    
@@ -80,7 +80,7 @@ def homepage(request):
     class_book_ids = map(lambda a: a.id, class_book_pool)    
     class_book = len(class_book_pool)                     
     work_scratch = len(filter(lambda w: w.lesson_id == 1, workss))
-    work_vphysics = len(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4), workss))
+    work_vphysics = len(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4 or w.lesson_id == 5), workss))
     work_euler = len(filter(lambda w: w.lesson_id == 3, workss))
     work_django = len(filter(lambda w: w.lesson_id == 8, workss))    
     work_pandas = len(filter(lambda w: w.lesson_id == 7, workss))        
