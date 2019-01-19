@@ -113,7 +113,18 @@ class SubmitF4BugForm(forms.ModelForm):
         self.fields['work3_id'].required = False
         self.fields['bug_types'].required = False
         self.fields['bug'].required = False
-        self.fields['improve'].required = False    
+        self.fields['improve'].required = False  
+
+class SubmitGForm(forms.Form):
+    memo =  forms.CharField(required=False)
+    memo_e =  forms.IntegerField(required=False)
+    memo_c =  forms.IntegerField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(SubmitGForm, self).__init__(*args, **kwargs)
+        self.fields['memo'].label = "心得感想"
+        self.fields['memo_e'].label = "英文"
+        self.fields['memo_c'].label = "中文"  
 
 class ForumSubmitForm(forms.Form):
     memo =  forms.CharField(required=False)

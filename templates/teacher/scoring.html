@@ -187,6 +187,27 @@
     {% else %}
         尚未繳交
     {% endif %}
+{% elif lesson == "10" %}
+    <br>
+    {% if work.memo %}
+        <font color=black>心得感想：</font><BR>
+        {{work.memo|linebreaks}}
+        <form action="" enctype="multipart/form-data"  method="post">
+          <table class="table" style="width:300px">
+              <tr><th><label for="id_score">分數:</label></th><td>{{form.score}}</td></tr>        
+              {% if teacher %}
+			  <tr><td colspan=2><span>
+ <textarea  name="comment" id="id_comment" class="form-control animated comment" cols="50" placeholder="請寫下評語(可留白)" rows="5">{% if work.comment %}{{work.comment}}{% endif %}</textarea>
+</span></td></tr> 	
+              {% endif %}
+              <tr><td colspan=2><input type="submit" value="Submit"></td></tr>
+            </table>
+           {% csrf_token %}
+           </form>
+    {% else %}
+        尚未繳交
+    {% endif %}
+
   {% elif lesson == "8" %}
        <br>
     {% if work.memo %}

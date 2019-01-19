@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block header %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["calendar"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+   function drawChart() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'date', id: 'Date' });
+       dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
+       dataTable.addRows([
+        {% for work in total_works %}
+          [ new Date({{work.0}}, {{work.1|add:"-1"}}, {{work.2}}), {{work.3}} ],
+        {% endfor %}
+        ]);
+
+       var chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
+
+       var options = {
+         title: "讀書心得統計",
+         height: {{height}},
+         noDataPattern: {
+           color: '#ffc147'
+         }
+       };
+
+       chart.draw(dataTable, options);
+   }
+   
+   
+    </script>
+{% endblock %}
+{% block content %}
+    <div id="calendar_basic" style="width: 1000px;"></div>
+<table class="table" style="width:100%">
+            <tr>
+                <td>月份</td>
+                <td>讀書心得</td>                
+            </tr>
+        {% for work in works %}        
+            <tr>
+            <td><a href="/student/work/book/month/{{classroom_id}}/{{work.0}}{{work.1}}">{{work.0}}{{work.1}}</a></td>
+            <td>{{work.2}}</td>
+            </tr>
+        {% endfor %}
+        </table>    
+        {% load pagination %}
+        {% get_pagination %}
+{% endblock %}

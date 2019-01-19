@@ -1,0 +1,59 @@
+{% load tag %}
+  {% if work_dict|hash_scorer:index > 0 %}
+  <button class="btn">
+    分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index|realname}}
+</button>
+<BR><BR>
+  {% endif %}
+<form name="myForm" id="form{{index}}" action="/student/work/submit/{{typing}}/{% if 'B' in lesson %}2{% elif 'C' in lesson %}3{% elif 'D' in lesson %}4{% elif 'E' in lesson %}5{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <input type="hidden" name="lesson" value={{lesson}}>
+    <input type="hidden" id="memo_e" name="memo_e" value=0>
+    <input type="hidden" id="memo_c" name="memo_c" value=0>        
+  <div class="form-group">
+        <label for="exampleFormControlTextarea1"><div id="result">心得感想：</div></label>
+        <textarea class="form-control" id="id_memo{{index}}" rows="20" name="memo">{{work_dict|hash_memo:index}}</textarea>
+    </div>
+        <div class="form-group">
+            <input id="submit" type="submit" class="btn-info" value="送出" />
+        </div>
+    </div>
+</form>
+<br>
+<table class="table">
+    <tr>
+        {% if work_dict|hash_date:index %}
+        <td>
+            <a href="/student/work/show/{{typing}}/{{lesson_id}}/{{index}}/{{user.id}}">觀看({{work_dict|hash_date:index}})</a>
+        </td>
+        {% endif %}
+    </tr>
+</table>
+
+{% block footer_script %}
+<script>
+function wordCount( val ){
+    var clean_message = val.replace(/\[m_\d+#\d+:\d+:\d+\]/g, '');
+    var chinese = clean_message.match(/[\u4E00-\u9FA5]/g);
+    var pure_english = clean_message.replace(/[\u4E00-\u9FA5]/g, '')
+    var wom = pure_english.match(/\w+/g);
+    return {
+      words : wom ? wom.length : 0,
+      chars : chinese ? chinese.length : 0,
+		};
+}
+
+$('#id_memo{{index}}').on('input', function(e){
+    var v = wordCount(e.target.value);
+    if (v.words + v.chars > 500) {
+      // Split the string on first 200 words and rejoin on spaces
+      $(this).val($(this).val().substring(0, 500));
+    }
+    else {
+  console.log(e.target.value);
+  $('#result').html("心得感想：(英:" + v.words + " / 中: " + v.chars + ")");
+  $('input#memo_e').val(v.words);
+  $('input#memo_c').val(v.chars);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block title %}Create a question{% endblock %}
+{% block content %}
+<a href="/student/work/publish/{{typing}}/{{lesson}}/{{index}}/0" class="btn btn-default" role="btn">暫時不發表</a>   
+<a href="/student/work/publish/{{typing}}/{{lesson}}/{{index}}/1" class="btn btn-primary" role="btn">發表心得</a>           
+{% endblock %}

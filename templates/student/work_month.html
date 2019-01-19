@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load tz %}
+{% load tag %}
+{% block content %}
+<table class="table">
+    <tr>
+        <td>日期</td>
+        <td>發表人</td>        
+        <td>書名</td>
+        <td>字數</td>
+    </tr>
+    {% for work in works %}
+    <tr>
+        <td>{{work.0}}</td>
+        <td>{{work.1|realname}}</td>
+        <td><a href="/student/work/show/{{work.5}}/10/{{work.6}}/{{user.id}}">{{work.2.0}}){{work.2.1}}</a></td>
+        <td>中文：{{work.3}}/英文：{{work.4}}</td>
+    </tr>
+    {% endfor %}    
+</table>
+{% endblock %}

@@ -12,8 +12,12 @@
     </td>
     <td><a href="/student/work/class/{{typing}}/{{classroom.lesson}}/{{classroom.id}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">班級</a></td>
     <td></td>
+    {% else %}    
+    {% if classroom.lesson == 10 %}
+    <td>{% if not work.publish %}<a href="/student/work/submit/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">繳交</a>{% endif %}</td>
     {% else %}
     <td>{% if not work.score or work.score < 0  %}<a href="/student/work/submit/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}">繳交</a>{% endif %}</td>
+    {% endif %}
     <td><a href="/student/work/show/{{typing}}/{{classroom.lesson}}/{% if typing == "0" %}{{forloop.counter}}{% else %}{{lesson.id}}{% endif %}/{{user.id}}">觀看({{work.publication_date}}){% if work.score > -1 %}--{{work.score}}{% endif %}</a></td>
     <!--
 								<td><a href="/student/work/rank/{{typing}}/{{classroom.lesson}}/{{forloop.counter}}">排行榜</a></td>  

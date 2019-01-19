@@ -5,6 +5,7 @@ lesson_list3 = []
 lesson_list4 = []
 lesson_list5 = []
 lesson_list6 = []
+lesson_list7 = []
 
 def reset():
     lesson_list1.append(["1",u"第1堂課：Scratch基本介紹",u"範例：綜合應用"])
@@ -136,4 +137,10 @@ def reset():
     lesson_list6.append(["14",u"廣播遙控小車"])      
     lesson_list6.append(["15",u"搖桿遙控小車"])      
     lesson_list6.append(["16",u"智慧避障車"])                      
+
+    lesson_list7.append(["1",u"可汗學院的教育奇蹟"])      
+    lesson_list7.append(["2",u"創新是一種態度"])       
+    lesson_list7.append(["3",u"大腦喜歡這樣學"])
+    lesson_list7.append(["4",u"刻意練習"])
+    lesson_list7.append(["5",u"學習就像終身幼兒園"])            
 reset()

@@ -30,7 +30,8 @@ import copy
 import jieba
 from django.db.models import Q
 import json
-
+from django.db.models.functions import TruncMonth, TruncDay
+from django.db.models import Count
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
     return user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
@@ -172,6 +173,12 @@ def lesson(request, lesson):
         #            return redirect("/")
 
         return render(request, 'student/lessonG.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
+    elif lesson[0] == "F":
+        lesson_id = 10
+        work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
+
+        return render(request, 'student/lessonF.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
+
     else:
         lesson_id = 1
         profile_lock = profile.lock1
@@ -403,8 +410,8 @@ def work_list(request, typing, lesson, classroom_id):
     lessons = []
 
     if typing == "0":
-        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9"]:
-            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5, lesson_list2][int(lesson)-2]
+        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9", "10"]:
+            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5, lesson_list2, lesson_list7][int(lesson)-2]
         else:
             assignments = lesson_list1
     elif typing == "1":
@@ -435,8 +442,8 @@ def submit(request, typing, lesson, index):
     form = None
     work_dict = dict(((int(work.index), [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=request.user.id)))
     if typing == "0":
-        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9"]:
-            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5, lesson_list2][int(lesson)-2][int(index)-1][1]
+        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9", "10"]:
+            lesson_name = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5, lesson_list2, lesson_list7][int(lesson)-2][int(index)-1][1]
         else:
             lesson_name = lesson_list1[int(index)-1][2]
     elif typing == "1":
@@ -485,6 +492,16 @@ def submit(request, typing, lesson, index):
                 else :
                     works.update(memo=form.cleaned_data['memo'])
             return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
+    elif lesson == "10":
+        if request.method == 'POST':
+            form = SubmitGForm(request.POST)
+            if form.is_valid():
+                work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
+                work.memo=form.cleaned_data['memo']
+                work.memo_e=form.cleaned_data['memo_e']
+                work.memo_c=form.cleaned_data['memo_c']                                
+                work.save()
+                return redirect("/student/work/publish/"+typing+"/"+lesson+"/"+index+"/2")            
     elif lesson == "4":
         if request.method == 'POST':
             form = SubmitCForm(request.POST)
@@ -727,7 +744,7 @@ def show(request, typing, lesson, index, user_id):
             work = None
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=typing, lesson_id=lesson, index=index, user_id=user_id).last()
-        return render(request, 'student/show.html', {'work':work, 'lesson':lesson, 'work_dict':work_dict, 'index':index})
+        return render(request, 'student/show.html', {'work':work, 'lesson':lesson, 'work_dict':work_dict, 'index':index, 'typing':typing})
     else :
         return redirect("/")
 
@@ -798,9 +815,9 @@ def memo(request, typing, lesson, classroom_id, index):
     for enroll in enroll_pool:
         works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
         if works :
-            datas.append([enroll, works[0].memo])
+            datas.append([enroll, works])
         else:
-            datas.append([enroll, ""])
+            datas.append([enroll, []])
 
     return render(request, 'student/memo.html', {'lesson':lesson, 'classroom_id':classroom_id, 'datas': datas})
 
@@ -896,6 +913,8 @@ def progress(request, typing, lesson, unit, classroom_id):
               lesson_list = lesson_list2
           elif lesson == "8":
               lesson_list = lesson_list5                                          
+          elif lesson == "10":
+              lesson_list = lesson_list7
           else:
               lesson_list = lesson_list3
           for assignment in lesson_list:
@@ -927,6 +946,27 @@ def progress(request, typing, lesson, unit, classroom_id):
               bar.append([assignment, False])
           bars.append([enroll, bar])
     return render(request, 'student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list})
+
+# 發表心得
+def work_publish(request, typing, lesson, index, action):
+    if action == "1":
+        try:
+            works = Work.objects.filter(index=index, user_id=request.user.id).order_by("-id")
+            work = works[0]
+            work.publish = True
+            work.save()
+            update_avatar(request.user.id, 3, 2)
+            # History
+            history = PointHistory(user_id=request.user.id, kind=1, message=u'3分--繳交讀書心得<'+lesson_list7[int(index)-1][1]+'>', url="/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
+            history.save()
+        except ObjectDoesNotExist:
+            pass
+        return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
+    elif action == "0":
+        return redirect("/student/work/show/"+typing+"/"+lesson+"/"+index+"/"+str(request.user.id))
+    else :
+        return render(request, 'student/work_publish.html', {'typing': typing, 'lesson':lesson, 'index': index})
+
 
 # 查詢某作業分組小老師
 def work_group(request, typing, lesson, classroom_id):
@@ -1628,3 +1668,60 @@ def content_edit(request, types, typing, lesson, index, content_id):
             elif types == "41" or types== "42":
                 return redirect("/student/work/submit/"+typing+"/"+lesson+"/"+index+"/#tab4")
     return render(request,'student/work_content_edit.html',{'content': instance, 'content_id':content_id, 'types':types, 'typing':typing, 'lesson':lesson, 'index':index})
+
+# 讀書心得月報表
+class WorkReportView(ListView):
+    model = Work
+    context_object_name = 'works'
+    template_name = 'student/work_report.html'    
+    paginate_by = 20
+    
+    def get_queryset(self):
+        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
+        student_ids = map(lambda a: a.student_id, enroll_pool)      
+        works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).annotate(month=TruncMonth('publication_date')).values('month', 'index').annotate(c=Count('id'))
+        dates = works.values_list('month').distinct().order_by()
+        queryset = []
+        for date in dates:
+            queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), len(filter(lambda w: w['month'] == date[0], works))])
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(WorkReportView, self).get_context_data(**kwargs)
+        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
+        student_ids = map(lambda a: a.student_id, enroll_pool)      
+        works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).order_by('-id')        
+        first_element = works[0]
+        end_year = int(str(first_element.publication_date)[0:4])
+        last_element = works[len(works)-1]
+        start_year = int(str(last_element.publication_date)[0:4])
+        context['height'] = 200+ (end_year-start_year)*200
+        works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).annotate(day=TruncDay('publication_date')).values('day', 'index').annotate(c=Count('id'))
+        dates = works.values_list('day').distinct().order_by()
+        queryset = []
+        for date in dates:
+            queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), date[0].strftime('%d'), len(filter(lambda w: w['day'] == date[0], works))])
+        context['total_works'] = queryset
+        context['classroom_id']=self.kwargs['classroom_id']      
+        return context	    
+
+
+# 列出某月份所有讀書心得
+class WorkMonthView(ListView):
+    model = Work
+    context_object_name = 'works'
+    template_name = 'student/work_month.html'    
+    paginate_by = 20
+    
+    def get_queryset(self):
+        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
+        student_ids = map(lambda a: a.student_id, enroll_pool)      
+        year = int(self.kwargs['month'][0:4])
+        month = int(self.kwargs['month'][4:6])
+        works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True, publication_date__year=year, publication_date__month=month).order_by("-id")
+        datas = works.values_list('index').distinct().order_by()
+        queryset = []
+        for data in datas:
+            work = filter(lambda w: w.index == data[0], works)[0]
+            queryset.append([work.publication_date, work.user_id, lesson_list7[work.index-1], work.memo_c, work.memo_e, work.typing, work.index])
+        return queryset

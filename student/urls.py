@@ -35,10 +35,13 @@ urlpatterns = [
     url(r'^work/download/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<user_id>\d+)/(?P<workfile_id>[^/]+)/$', views.work_download),
     url(r'^work/list/(?P<lesson>\d+)/$', views.WorkListView.as_view()),
     url(r'^work/day/(?P<lesson>\d+)/(?P<year>\d+)/(?P<month>\d+)/(?P<date>\d+)/$', views.WorkDayListView.as_view()),
+    url(r'^work/book/report/(?P<classroom_id>\d+)/$', views.WorkReportView.as_view()),    
+    url(r'^work/book/month/(?P<classroom_id>\d+)/(?P<month>\d+)/$', views.WorkMonthView.as_view()),        
     #查詢所有作業分組小老師
     url(r'^work/group/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work_group),
     url(r'^work/answer/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer),
     url(r'^work/answer_watch/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer_watch),
+    url(r'^work/publish/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<action>\d+)/$', login_required(views.work_publish)),    
     #url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),
     # 作業進度查詢
     url(r'^progress/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<unit>\d+)/(?P<classroom_id>\d+)/$', views.progress),

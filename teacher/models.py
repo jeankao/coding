@@ -16,6 +16,7 @@ class Classroom(models.Model):
         (7, 'Pandas數據分析：使用Python3'),   
         (8, 'Django網站開發：使用Python3'),   
         (9, 'Science科學運算：使用Python3'),         
+        (10, '網路讀書會：好書共讀'),               
 		]	
 		
     LessonShort_CHOICES = [	
@@ -28,6 +29,7 @@ class Classroom(models.Model):
         (7, 'Pandas'),    
         (8, 'Django'),          
         (9, 'Science'),                
+        (10, 'Book'),        
 		]		
     # 班級名稱
     name = models.CharField(max_length=30)

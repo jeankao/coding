@@ -29,14 +29,19 @@
 {% endif %} 
 	        <a href="/student/work/1/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">自訂作業</a>
 {% if not enroll.classroom.lesson == 1 %}
-     	<a href="/student/progress/1/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度</a>
+			 <a href="/student/progress/1/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度</a>			 
 {% endif %}
+{% if not enroll.classroom.lesson == 10 %}
 	        <a href="/student/work/2/{{enroll.classroom.lesson}}/{{enroll.classroom_id}}" role="button" class="btn btn-success">檢核作業</a>  
 {% if not enroll.classroom.lesson == 1 %}
      	<a href="/student/progress/2/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">進度</a>
 {% endif %}
-{% if not enroll.classroom.lesson == 1 %}
+{% endif %}
+{% if not enroll.classroom.lesson == 1 and not enroll.classroom.lesson == 10 %}
 			<a href="/certificate/cert/classroom/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-success">證書</a>         
+{% endif %}
+{% if enroll.classroom.lesson == 10 %}
+      <a href="/student/work/book/report/{{enroll.classroom.id}}/" role="button" class="btn btn-success">月報表</a>   
 {% endif %}
     </p>
 {% if enroll.classroom.lesson == 1 %}

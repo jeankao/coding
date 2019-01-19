@@ -339,6 +339,8 @@ class WorkListView(ListView):
             queryset = lesson_list5  
         elif self.kwargs['lesson'] == "9":
             queryset = lesson_list2   			
+        elif self.kwargs['lesson'] == "10":
+            queryset = lesson_list7        
         else:
             queryset = lesson_list1
         return queryset
@@ -445,6 +447,8 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
             lesson_name = lesson_list6[int(index)-1][1]            
         elif lesson == "8":
             lesson_name = lesson_list5[int(index)-1][1]            
+        elif lesson == "10":
+            lesson_name = lesson_list7[int(index)-1][1]                 
         else:
             lesson_name = lesson_list1[int(index)-1][1]
     elif typing == "1":
@@ -468,7 +472,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
         works = Work.objects.filter(typing=typing, user_id=user_id, index=index, lesson_id=lesson).order_by("-id")
         work3 = works[0]
         pic = work3.id
-        if int(lesson) > 1 :
+        if int(lesson) > 1 and int(lesson) != 10 :
             prefix = ['static/work/vphysics', 'static/work/euler', 'static/work/ck', 'static/work/vphysics', 'static/work/microbit', 'static/work/pandas', 'static/work/django'][int(lesson) - 2]
             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=user_id, index=index)
             for work in works:

@@ -1,6 +1,34 @@
 {% extends "base.html" %}
 {% load tz %}
+{% load tag %}
 {% block content %}
+{% if lesson == "10" %}
+{% for data in datas %}
+<a id="{{datas.0.id}}" name="{{datas.0.student_id}}"></a>
+<div class="card">
+  <div class="card-header">
+    {{data.0.seat}}){{data.0.student.first_name}} {{data.1.publication_date}}　{% if data.1.publish %}<font color=red>尚未發表</font>{% endif %} (英:{{data.1.0.memo_e}}/中:{{data.1.0.memo_c}})
+    <span style="float:right">
+      {% if data.1.publish or request.user.id|is_teacher:data.0.classroom_id %}
+        {% if data.1|length > 0 %}<A href="/student/work/history/{{enroll.student_id}}/{{index}}/{{classroom_id}}">{% endif %}<img src="/static/images/edit.gif"> 歷史({{data.1|length}}){% if data.1|length > 0 %}</A>{% endif %}
+      {% else %}
+        <img src="/static/images/edit.gif"> 歷史({{data.1|length}})
+      {% endif %}
+      {% if data.1.0.publish and request.user.id|is_teacher:data.0.classroom_id  %}
+        <img src="/static/images/edit.gif"> <a onclick="return confirm('確定要退回嗎?')" href="/teacher/work/publish/reject/{{classroom_id}}/{{index}}/{{enroll.student_id}}">重交</a>
+      {% endif %}		  
+    </span>
+  </div>
+  {% if data.1.0.publish %}
+  <div class="card-body">
+    <div class="memo-content" data-userid="{{data.0.student_id}}">
+      {{data.1.0.memo|memo|safe}}
+    </div>
+  </div>
+  {% endif %}
+  </div>
+{% endfor %}
+{% else %}
         <table class="table">
         <tr>
             <td>座號</td>        
@@ -11,9 +39,9 @@
             <tr>
             <td>{{data.0.seat}}</td>
             <td nowrap><a href="/student/memo_user/{{lesson}}/{{classroom_id}}/{{data.0.student_id}}">{{data.0.student.first_name}}</a></td>
-            <td>{{data.1}}</td>            
+            <td>{{data.1.0.memo}}</td>            
             </tr>
         {% endfor %}
         </table>
-
+{% endif %}
 {% endblock %}
