@@ -787,8 +787,8 @@ class WorkListView(ListView):
                 queryset.append([day, len(work)])
         context['total_works'] = queryset
         if len(work_pool)>0:
-            start = work_pool[0].publication_date
-            end = work_pool[len(work_pool)-1].publication_date
+            end = work_pool[0].publication_date
+            start = work_pool[len(work_pool)-1].publication_date
         else:
             start = datetime.today()
             end = datetime.today()
