@@ -773,9 +773,9 @@ class WorkListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(WorkListView, self).get_context_data(**kwargs)
         if self.kwargs['lesson'] == "2":
-            work_pool = Work.objects.filter(lesson_id__in=[2,4,5])
+            work_pool = Work.objects.filter(lesson_id__in=[2,4,5]).order_by("id")
         else:
-            work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson'])
+            work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson']).order_by("id")
         timezone = pytz.timezone("Asia/Taipei")
         if len(work_pool)>0:
             work_start = work_pool[0].publication_date
