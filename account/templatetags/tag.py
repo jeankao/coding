@@ -381,3 +381,7 @@ def scratch(site):
 @register.filter
 def get_at_index(list, index):
     return list.index(index)+1
+
+@register.filter(name='multiply')			
+def multiply(value, arg):
+    return value*arg    
