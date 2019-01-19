@@ -61,7 +61,7 @@ def homepage(request):
     class_scratch_pool = [classroom for classroom in filter(lambda w: w.lesson == 1, classrooms)]    
     class_scratch_ids = map(lambda a: a.id, class_scratch_pool)    
     class_scratch = len(class_scratch_pool)    
-    class_vphysics_pool = [classroom for classroom in filter(lambda w: w.lesson == 2 or w.lesson == 4, classrooms)]    
+    class_vphysics_pool = [classroom for classroom in filter(lambda w: w.lesson == 2 or w.lesson == 4 or w.lesson == 5, classrooms)]    
     class_vphysics_ids = map(lambda a: a.id, class_vphysics_pool)    
     class_vphysics = len(class_vphysics_pool)    
     class_euler_pool = [classroom for classroom in filter(lambda w: w.lesson == 3, classrooms)]    
