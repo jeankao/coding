@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block title %} Teachers {% endblock %}
+{% block content %}
+<form action="/teacher/student/enroll/{{classroom_id}}/"  method="post">      
+ 搜尋帳號：<input type="text" name = "account" style="display:inline-block;width:200px"><input type="submit" value="送出" style="display:inline-block;width:100px"/>
+        <tr>
+        <table class="table">
+		    <td><input type="checkbox" name="select-all" id="select-all" /></td>
+            <td>帳號</td>
+			<td>座號</td>
+            <td>暱稱</td>
+        </tr>
+        {% for user in users %}
+            <tr>
+			    <td><input type=checkbox name="student" value="{{user.id}}:{{user.username|nametoseat}}"></td>
+                <td>{{user.username|student_username}}</td>
+                <td>{{user.username|nametoseat}}</td>
+                <td>{{user.first_name}}</td>
+                <Td>
+              </Td>
+            </tr>
+        {% endfor %}
+        </table>
+            {% csrf_token %}   
+		<input type="submit" value="加選">
+		</form>
+        {% load pagination %}
+        {% get_pagination %}  
+{% endblock %}
+{% block domready %}
+// Listen for click on toggle checkbox
+$('#select-all').click(function(event) {   
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;                        
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;                       
+        });
+    }
+});
+{% endblock %}

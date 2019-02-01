@@ -16,12 +16,15 @@ urlpatterns = [
     url(r'^classmate/(?P<classroom_id>\d+)/$', views.classmate),
     url(r'^loginlog/(?P<user_id>\d+)/$', views.LoginLogListView.as_view()),
     # 分組
-    url(r'^group/enroll/(?P<classroom_id>[^/]+)/(?P<group_id>[^/]+)/$', views.group_enroll),
-    url(r'^group/add/(?P<classroom_id>[^/]+)/$', views.group_add),
-    url(r'^group/(?P<classroom_id>[^/]+)/$', views.group),
-    url(r'^group/size/(?P<classroom_id>[^/]+)/$', views.group_size),
-    url(r'^group/open/(?P<classroom_id>[^/]+)/(?P<action>[^/]+)/$', views.group_open),
-    url(r'^group/delete/(?P<group_id>[^/]+)/(?P<classroom_id>[^/]+)/$', views.group_delete),
+    #組別
+    url(r'^group/panel/(?P<classroom_id>[^/]+)/', views.GroupPanel.as_view()),
+    url(r'^group/join/(?P<classroom_id>[^/]+)/(?P<number>[^/]+)/(?P<enroll_id>[^/]+)/', views.group_join),    
+    #url(r'^group/enroll/(?P<classroom_id>[^/]+)/(?P<group_id>[^/]+)/$', views.group_enroll),
+    #url(r'^group/add/(?P<classroom_id>[^/]+)/$', views.group_add),
+    #url(r'^group/(?P<classroom_id>[^/]+)/$', views.group),
+    #url(r'^group/size/(?P<classroom_id>[^/]+)/$', views.group_size),
+    #url(r'^group/open/(?P<classroom_id>[^/]+)/(?P<action>[^/]+)/$', views.group_open),
+    #url(r'^group/delete/(?P<group_id>[^/]+)/(?P<classroom_id>[^/]+)/$', views.group_delete),
     #公告
     url(r'^announce/(?P<classroom_id>\d+)/$', login_required(views.AnnounceListView.as_view())),
     #作業

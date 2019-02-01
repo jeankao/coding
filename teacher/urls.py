@@ -13,6 +13,14 @@ urlpatterns = [
     url(r'^classroom/assistant/add/(?P<classroom_id>\d+)/$', login_required(views.AssistantListView.as_view())),
     #列出所有學生帳號
     url(r'^student/list/$', views.StudentListView.as_view()),
+    #加選學生
+    url(r'^student/join/(?P<classroom_id>\d+)/', views.StudentJoinView.as_view()),	
+    url(r'^student/enroll/(?P<classroom_id>\d+)/', views.StudentEnrollView.as_view()),    
+    # 分組
+    url(r'^group/number/(?P<pk>\d+)', views.GroupUpdate.as_view()),    
+    url(r'^group/size/(?P<pk>\d+)', views.GroupUpdate2.as_view()),  	
+    url(r'^group/make/(?P<classroom_id>\d+)/(?P<action>\d+)/', views.make), 
+	url(r'^group/assign/(?P<classroom_id>\d+)/', views.group_assign),    
 	  #大量匯入帳號
     url(r'^import/upload$', login_required(views.import_sheet), name='import_upload'),
     url(r'^import/student$', login_required(views.import_student), name='import_user'),
@@ -34,6 +42,7 @@ urlpatterns = [
     url(r'^work/class/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.work_class),
     url(r'^work/group/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/(?P<index>\d+)/$', views.work_group),  
     url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),
+    url(r'^work/ckexcel/(?P<classroom_id>\d+)/', views.work_ckexcel),
     #設定小教師
     url(r'^work/assistant/make/$', login_required(views.make)),
 	  #評分
@@ -96,5 +105,4 @@ urlpatterns = [
     #測驗卷
     url(r'^exam/(?P<classroom_id>\d+)/$', views.exam_list),
     url(r'^exam_detail/(?P<classroom_id>\d+)/(?P<student_id>\d+)/(?P<exam_id>\d+)/$', views.exam_detail), 
-	url(r'^test/', views.test),
 ]

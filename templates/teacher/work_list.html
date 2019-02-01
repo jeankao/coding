@@ -13,7 +13,10 @@
             </tr>
 		{% endfor %}
         </table>
-		{% else %}
+        {% else %}
+        {% if classroom.lesson == 4 %}
+        <a href="/teacher/work/ckexcel/{{classroom.id}}" target="_blank" role="btn" class="btn btn-success">匯出Excel</a>
+        {% endif %}
         <table class="table">
             <tr>
                 <td>名稱</td>                
