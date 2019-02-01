@@ -16,6 +16,8 @@ class Enroll(models.Model):
     # 座號
     seat = models.IntegerField(default=0)
     # 組別
+    group = models.IntegerField(default=-1)
+    # 組別
     group2 = models.IntegerField(default=-1)
     # 創意秀組別
     #groupshow = models.CommaSeparatedIntegerField(max_length=200)
