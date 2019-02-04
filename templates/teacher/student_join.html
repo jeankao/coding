@@ -2,10 +2,9 @@
 {% load tag %}
 {% block title %} Teachers {% endblock %}
 {% block content %}
-    搜尋帳號：
     <form action="."  method="get">
-      <input type="text" name = "account"><input type="submit" value="送出"/>
-    </form>
+        <label class="form-group form-inline">搜尋帳號：<input type="text" name = "account"><input type="submit" value="送出"/></label>    
+           </form>
       <form action="/teacher/student/enroll/{{classroom_id}}/"  method="post">      
         <table class="table">
 		    <td><input type="checkbox" name="select-all" id="select-all" /></td>
