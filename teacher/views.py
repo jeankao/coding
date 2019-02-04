@@ -2441,7 +2441,7 @@ def make(request, classroom_id, action):
 # 教師可以查看所有帳號
 class StudentJoinView(ListView):
     context_object_name = 'users'
-    paginate_by = 60
+    paginate_by = 40
     template_name = 'teacher/student_join.html'
 
     def get_queryset(self):
