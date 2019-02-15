@@ -166,7 +166,7 @@ $(function () {
             }
         
             window.onload = function (e) {
-              loadProject('/static/work/scratch/{{student.id}}/{{workfiles.0.filename}}');
+              loadProject('/static/work/scratch/{{request.user.id}}/{{workfiles.0.filename}}');
             }
         
           </script>      
