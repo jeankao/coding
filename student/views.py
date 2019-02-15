@@ -337,7 +337,7 @@ def classroom_enroll(request, classroom_id):
                     return render(request, 'message.html', {'message':"選課密碼錯誤"})
             except Classroom.DoesNotExist:
                 pass
-            return redirect("/student/group/" + str(classroom.id))
+            return redirect("/student/classroom")
     else:
         form = EnrollForm()
     return render(request, 'form.html', {'form':form})
