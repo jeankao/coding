@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+<button class="btn btn-warning">{{classroom.name}}</button>
+			   {% if request.user.id|is_teacher:classroom.id %}
+               {% if classroom.group_open %}<a class="btn btn-info" href="/teacher/group/make/{{classroom.id}}/0" data-groupid="{{ classroom.id }}" data-action="close" class="open btn btn-info" role="button">進行分組中</a>{% else %}<a href="/teacher/group/make/{{classroom.id}}/1" data-groupid="{{ classroom.id }}" data-action="open" class="open btn btn-danger" role="button">分組已結束</a>{% endif %}
+               <a class="btn btn-info" href="/teacher/group/number/{{classroom_id}}">設定組數</a>
+               <a class="btn btn-info" href="/teacher/group/size/{{classroom_id}}">小組人數</a>		
+               <a class="btn btn-info" href="/teacher/group/assign/{{classroom_id}}">指派分組</a>					   
+			   {% endif %}
+<table class="table">
+<tr>
+<TD>組別</td>
+<td>組員</td>
+  {% if classroom.group_open %}
+<td>功能</td>
+  {% endif %}
+</tr>            
+         {% for number, members in groups %}
+<tr>
+<td>第{{number|add:1}}組</td>   
+<td>{% for member in members%}<img src="/static/avatar/s{{ member.student.profile.avatar}}.png">({{member.seat}}){{member.student.first_name}}{% endfor %}</td>
+  {% if classroom.group_open %}
+  {% if classroom.group_size > members|length %}
+  {% if enroll.group == number %}
+  <td><button class="btn btn-outline-success">已加入</button></td>  
+  {% else %} 
+  <td><a class="btn btn-success" href="/student/group/join/{{classroom.id}}/{{number}}/{{enroll.id}}">加入此組</a></td>
+  {% endif %}
+  {% else %}
+  <td>已額滿</td>
+  {% endif %}
+  {% endif %}
+</tr>
+{% endfor %}
+</table>  
+尚未分組：          
+{% for enroll in no_group %}
+({{enroll.seat}}){{enroll.student.first_name}}         
+{% endfor %}
+{% endblock %}

@@ -59,7 +59,9 @@ class Profile(models.Model):
   lock5 = models.IntegerField(default=1)    
   # Django(P3)進度
   lock6 = models.IntegerField(default=1)    
-  
+  # 選課班級
+  classroom = models.TextField()  
+
  
   def __unicode__(self):
     return str(self.user.username)

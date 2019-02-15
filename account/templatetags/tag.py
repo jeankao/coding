@@ -395,3 +395,13 @@ def get_at_index(list, index):
 @register.filter(name='multiply')			
 def multiply(value, arg):
     return value*arg    
+
+	  
+@register.filter
+def nametoseat(name):
+    number = name[-2:]
+    if number.isdigit():
+        number = int(number)
+    else :
+        number = 99
+    return number

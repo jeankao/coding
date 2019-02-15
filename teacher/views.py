@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, RedirectView
@@ -45,6 +45,7 @@ from helper import VideoLogHelper
 import re
 reload(sys)
 from django.db.models.functions import Length
+from django.forms import modelformset_factory
 
 sys.setdefaultencoding('utf-8')
 
@@ -2373,11 +2374,267 @@ def exam_detail(request, classroom_id, student_id, exam_id):
             return redirect("homepage")
         exams = Exam.objects.filter(student_id=student_id, exam_id=exam_id)
         enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=student_id)  
-        return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})
+        return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})	
 
-def test(request):
-    works = Work.objects.annotate(text_len=Length('memo')).filter(text_len__gt=500)
-    for work in works:
-       work.memo = work.memo[0:500]
-       work.save()
-    return render(request, 'teacher/test.html', {'works': works})	
+class GroupUpdate(UpdateView):
+    model = Classroom
+    form_class = GroupForm	
+    template_name = 'form.html'
+			
+    def get_success_url(self):
+        succ_url =  '/student/group/'+str(self.kwargs['pk'])
+        return succ_url
+			
+    def form_valid(self, form):
+        classroom = Classroom.objects.get(id=self.kwargs['pk'])
+        if is_teacher(self.request.user, classroom.id) or is_assistant(self.request.user, classroom.id):
+            form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+@user_passes_test(not_in_teacher_group, login_url='/')
+def group_assign(request, classroom_id):
+    if not is_teacher(request.user, classroom_id):
+        return redirect("/")
+    classroom = Classroom.objects.get(id=classroom_id)
+    GroupModelFormset = modelformset_factory(Enroll, fields=['seat','student_id', 'group'],extra=0)	
+    if request.method == 'POST':
+        formset = GroupModelFormset(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                form.save()
+            return redirect('/student/group/panel/'+str(classroom_id))
+        else:
+            return redirect("/")
+    else:
+        formset = GroupModelFormset(queryset=Enroll.objects.filter(classroom_id=classroom_id).order_by("seat"))		
+    return render(request, 'teacher/group_assign.html', {'formset': formset, 'group_numbers':range(classroom.group_number)})		
+		
+class GroupUpdate2(UpdateView):
+    model = Classroom
+    form_class = GroupForm2	
+    template_name = 'form.html'
+			
+    def get_success_url(self):
+        succ_url =  '/student/group/'+str(self.kwargs['pk'])
+        return succ_url
+			
+    def form_valid(self, form):
+        classroom = Classroom.objects.get(id=self.kwargs['pk'])
+        if is_teacher(self.request.user, classroom.id) or is_assistant(self.request.user, classroom.id):
+            form.save()
+        return HttpResponseRedirect(self.get_success_url())
+			
+# 分組
+@user_passes_test(not_in_teacher_group, login_url='/')
+def make(request, classroom_id, action):
+    if not is_teacher(request.user, classroom_id):
+        return redirect("/")
+    classroom = Classroom.objects.get(id=classroom_id)
+    if action == "1":            
+        classroom.group_open = True   
+    else : 
+        classroom.group_open = False
+    classroom.save()      
+    return redirect("/student/group/panel/"+str(classroom.id))
+
+	
+# 教師可以查看所有帳號
+class StudentJoinView(ListView):
+    context_object_name = 'users'
+    paginate_by = 40
+    template_name = 'teacher/student_join.html'
+
+    def get_queryset(self):
+        enrolls = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'])	
+        user_ids = [enroll.student_id for enroll in enrolls]
+        username = username__icontains=self.request.user.username+"_"
+        if self.request.GET.get('account') != None:
+            keyword = self.request.GET.get('account')
+            queryset = User.objects.filter((~Q(id__in=user_ids)) & (Q(username__icontains=username+keyword) | (Q(first_name__icontains=keyword)) & Q(username__icontains=username))).order_by('-id')
+        else :
+            queryset = User.objects.filter(~Q(id__in=user_ids) & Q(username__icontains=username)).order_by('-id')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentJoinView, self).get_context_data(**kwargs)
+        account = self.request.GET.get('account')
+        context.update({'account': account})
+        context['classroom_id']=self.kwargs['classroom_id']
+        return context
+
+
+#加選學生
+class StudentEnrollView(RedirectView):
+
+    def get(self, request, *args, **kwargs):
+        classroom_id = self.kwargs['classroom_id'] 
+        classroom = Classroom.objects.get(id=classroom_id)
+        students = self.request.POST.getlist('student')
+        jsonDec = json.decoder.JSONDecoder()	
+        classroom_list = []		
+        for student in students:
+            student_id = student.split(":")[0]
+            student_seat = student.split(":")[1] 
+            enroll = Enroll(student_id=student_id, classroom_id=classroom_id, seat=student_seat)
+            enroll.save()
+            user = User.objects.get(id=student_id)
+            profile = Profile.objects.get(user=user)
+            if len(profile.classroom) > 0 :		
+                classroom_list = jsonDec.decode(profile.classroom)
+            classroom_list.append(str(self.kwargs['classroom_id']))
+            profile.classroom = json.dumps(classroom_list)
+            profile.save()			
+            messages = Message.objects.filter(author_id=classroom.teacher_id, classroom_id=classroom_id, type=1)
+            for message in messages:
+                try:
+                    messagepoll = MessagePoll.objects.get(message_type=1, message_id=message.id, reader_id=student_id, classroom_id=classroom_id)
+                except ObjectDoesNotExist:
+                    messagepoll = MessagePoll(message_type=1, message_id=message.id, reader_id=student_id, classroom_id=classroom_id)
+                    messagepoll.save()	
+                except MultipleObjectsReturned:
+                    pass				
+        return super(StudentEnrollView, self).get(self, request, *args, **kwargs)        
+        
+    def get_redirect_url(self, *args, **kwargs):
+        #TaxRate.objects.get(id=int(kwargs['pk'])).delete()   
+        return '/student/classmate/'+ str(self.kwargs['classroom_id'])
+	
+@login_required
+@user_passes_test(not_in_teacher_group, login_url='/')
+def work_ckexcel(request, classroom_id):
+    typing = "0"
+    lesson = "4"
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
+        return redirect("/")
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
+    user_ids = [enroll.student_id for enroll in enrolls]
+    work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
+    data = []
+    for enroll in enrolls:
+      enroll_score = []
+      total = 0
+      stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+      if typing == "0":
+        lesson_list = lesson_list4
+      elif typing == "1":
+        lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+      else :
+        lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+      memo = ""
+      grade = 0
+      for index, assignment in enumerate(lesson_list4):
+            if typing == "0": 
+                works = list(filter(lambda w: w.index == int(index)+1, stu_works))
+            else :
+                works = filter(lambda w: w.index == assignment.id, stu_works)
+            works_count = len(works)
+            if works_count == 0:
+                enroll_score.append(["X", index, Work()])
+                if typing == "0" or typing == "1":
+                    if not lesson == "4":
+                        total += 60
+            else:
+                work = works[-1]
+                enroll_score.append([work.score, index, work])
+                if work.score == -2:
+                    if typing == "0" or typing == "1":
+                          if not lesson == "4":
+                              total += 80
+                else:
+                    total += work.score
+
+            if typing == "0":
+                if lesson == "1":
+                    memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
+                elif lesson == "2":
+                    memo = enroll.score_memo_vphysics
+                elif lesson == "3":
+                    memo = enroll.score_memo_euler
+                elif lesson == "4":
+                    memo = enroll.score_memo_vphysics2
+                elif lesson == "5":
+                    memo = enroll.score_memo_vphysics3
+                elif lesson == "6":
+                    memo = enroll.score_memo_microbit 
+                elif lesson == "7":
+                    memo = enroll.score_memo_pandas                         
+                elif lesson == "8":
+                    memo = enroll.score_memo_django
+            elif typing == "1":
+                memo = enroll.score_memo_custom
+            if typing == "2":
+                grade = total
+            else :
+                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
+      data.append([enroll, enroll_score, memo, grade])
+                
+    classroom = Classroom.objects.get(id=classroom_id)       
+    output = StringIO.StringIO()
+    workbook = xlsxwriter.Workbook(output)    
+    worksheet = workbook.add_worksheet(classroom.name)
+    date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
+
+    row = 1
+    worksheet.write(row, 1, u'座號')
+    worksheet.write(row, 2, u'姓名')
+    worksheet.write(row, 3, u'成績')        
+    worksheet.write(row, 4, u'心得')         
+    index = 5
+    for assignment in lesson_list:
+        if typing == "0":
+	          worksheet.write(row, index, assignment[1])
+        else :
+	          worksheet.write(row, index, assignment.title)              
+        index += 1
+
+    index = 5
+    if not typing == "0":
+        row += 1
+        for assignment in lesson_list:            
+            worksheet.write(row, index, datetime.strptime(str(assignment.time)[:19],'%Y-%m-%d %H:%M:%S'), date_format)
+            index += 1			
+
+    for enroll, enroll_score, memo, grade in data:
+      row += 1
+      worksheet.write(row, 1, enroll.seat)
+      worksheet.write(row, 2, enroll.student.first_name)
+      worksheet.write(row, 3, grade)         
+      worksheet.write(row, 4, memo)     
+      index = 5
+      for score, index2, work in enroll_score:
+          if score == -2 :
+              worksheet.write(row, index, "V")
+          else :
+              worksheet.write(row, index, score)
+          index +=1 
+
+    for index3, assignment in lesson_list4:
+        worksheet = workbook.add_worksheet(index3+"_"+assignment)
+        row = 1
+        for enroll, enroll_score, memo, grade in data:
+                worksheet.write(row, 1, enroll.seat)
+                worksheet.write(row, 2, enroll.student.first_name)
+                if enroll_score[int(index3)-1][0] != "X":
+                    work = enroll_score[int(index3)-1][2]
+                    worksheet.write(row, 3, work.youtube)
+                    worksheet.write(row, 4, enroll_score[int(index3)-1][0])
+                    worksheet.write(row, 5, work.memo)
+                else :
+                    worksheet.write(row, 3, "未繳交")
+                row +=1
+
+    workbook.close()
+    # xlsx_data contains the Excel file
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    if typing == "0":
+        type_name = "指定作業"
+    elif typing == "1":
+        type_name = "自訂作業"
+    else:
+        type_name = "檢核作業"        
+    filename = classroom.name + '-' + type_name + "-" + str(localtime(timezone.now()).date()) + '.xlsx'
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
+    xlsx_data = output.getvalue()
+    response.write(xlsx_data)
+    return response

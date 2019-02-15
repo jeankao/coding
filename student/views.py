@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 #from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from student.lesson import *
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, RedirectView
 from student.models import *
 from teacher.models import *
 from show.models import Round
@@ -192,10 +192,7 @@ def classmate(request, classroom_id):
     classroom=Classroom.objects.get(id=classroom_id)
     for enroll in enrolls:
         login_times = len(VisitorLog.objects.filter(user_id=enroll.student_id))
-        if enroll.group > 0 :
-            enroll_group.append([enroll, EnrollGroup.objects.get(id=enroll.group).name, login_times])
-        else :
-            enroll_group.append([enroll, "沒有組別", login_times])
+        enroll_group.append([enroll,  login_times])
 
     return render(request, 'student/classmate.html', {'classroom':classroom, 'enrolls':enroll_group})
 
@@ -1745,3 +1742,52 @@ class WorkMonthView(ListView):
             work = filter(lambda w: w.index == data[0], works)[0]
             queryset.append([work.publication_date, work.user_id, lesson_list7[work.index-1], work.memo_c, work.memo_e, work.typing, work.index])
         return queryset
+
+	
+# 選組所有組別
+class GroupPanel(ListView):
+    context_object_name = 'groups'
+    template_name = 'student/group_panel.html'
+    
+    def get_queryset(self):  
+        classroom_id = self.kwargs['classroom_id']
+        groups = []
+        student_groups = {}
+        enroll_list = []
+        group_list = {}
+        group_ids = []
+        numbers = Classroom.objects.get(id=classroom_id).group_number
+        enroll_pool = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")		
+        enroll_ids = map(lambda a: a.id, enroll_pool)	
+        for enroll in enroll_pool:
+            if enroll.group in student_groups:
+                student_groups[enroll.group].append(enroll)
+            else:
+                student_groups[enroll.group]=[enroll]	            
+        for i in range(numbers):
+            if i in student_groups:
+                groups.append([i, student_groups[i]])
+            else:
+                groups.append([i, []])					
+        return groups
+
+
+    def get_context_data(self, **kwargs):
+        context = super(GroupPanel, self).get_context_data(**kwargs)        
+        classroom_id = self.kwargs['classroom_id']
+        classroom = Classroom.objects.get(id=classroom_id)
+        context['classroom'] = classroom
+        context['enroll'] = Enroll.objects.get(classroom_id=classroom.id, student_id=self.request.user.id)
+        #找出尚未分組的學生
+        no_group = Enroll.objects.filter(Q(classroom_id=classroom_id) & (Q(group=-1) | Q(group__gte=classroom.group_number)))		
+             
+        context['no_group'] = no_group 
+        context['classroom_id'] = classroom_id
+        return context
+
+def group_join(request, classroom_id, number, enroll_id):
+        enroll = Enroll.objects.get(id=enroll_id)
+        if Classroom.objects.get(id=classroom_id).group_open:
+            enroll.group = number
+            enroll.save()			
+        return redirect('/student/group/panel/'+classroom_id)

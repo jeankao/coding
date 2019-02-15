@@ -41,6 +41,8 @@ class Classroom(models.Model):
     teacher_id = models.IntegerField(default=0)
     # 是否開放分組
     group_open = models.BooleanField(default=True)
+    # 組別數目
+    group_number = models.IntegerField(default=8)	
     # 組別人數
     group_size = models.IntegerField(default=4)
     # 是否開放創意秀分組

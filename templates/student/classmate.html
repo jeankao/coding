@@ -3,6 +3,10 @@
 {% load tag %}
 {% block content %}
         班級名稱：{{ classroom.name }}({{classroom.lesson_choice}})<BR>
+          {% if request.user.id|is_teacher:classroom.id %}
+          <a href="/teacher/student/join/{{classroom.id}}" role="btn" class="btn btn-info">加選學生</a>
+          <a href="/teacher/group/assign/{{classroom.id}}" role="btn" class="btn btn-info">指派組別</a>
+              {% endif %}          
         <table class="table" style="width:100%">
         <tr>
 			{% if request.user.id == classroom.teacher_id %}					
@@ -14,7 +18,7 @@
             <td>最新登入</td>
             <td>登入次數</td>
         </tr>
-        {% for enroll, group, login_times in enrolls %}
+        {% for enroll, login_times in enrolls %}
             <tr>
 			{% if request.user.id == classroom.teacher_id %}
 			<td>
@@ -27,7 +31,11 @@
 
             <td>{{enroll.seat}}</td>           
               <td><a href="/account/profile/{{enroll.student_id}}"><img src="/static/avatar/s{{ enroll.student.profile.avatar }}.png">{{enroll.student.first_name}}</a></td>
-						<td>{{group}}</td>
+            {% if enroll.group == -1 %}
+              <td>沒有組別</td>
+            {% else %}
+              <td>第{{enroll.group|add:1}}組</td>
+            {% endif %}
             <td>{{enroll.student.last_login}}</td>
 						<td>{% if login_times > 0 %}<a href="/student/loginlog/{{enroll.student_id}}">{{login_times}}</a>{% else %} 0 {% endif %}</td>
 					</tr>
