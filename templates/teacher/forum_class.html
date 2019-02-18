@@ -26,6 +26,7 @@
           </div>
         {% endfor %}
 </div>
+{% include "pagination.html" with page=page_obj %}   
 {% endblock %}
 {% block domready %}
 {% for classroom, open, deadline, deadline_date in classrooms %}
