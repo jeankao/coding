@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, redirect
 from django.shortcuts import render
 from django.template import RequestContext
 from forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm, TeacherApplyForm
+from teacher.forms import AnnounceForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView
@@ -680,6 +681,50 @@ class LineCreateView(CreateView):
                 messages.append([message, messagepoll.read])
         context['messages'] = messages
         return context	 
+
+#新增一個私訊
+class LineTeacherCreateView(CreateView):
+    model = Message
+    form_class = AnnounceForm
+    template_name = 'teacher/announce_form.html'
+
+    def dispatch(self, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            raise PermissionDenied
+        else :
+            return super(LineTeacherCreateView, self).dispatch(*args, **kwargs)
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.title = u"[系統公告]" + self.object.title
+        self.object.author_id = self.request.user.id
+        self.object.classroom_id = 0
+        self.object.type = 1
+        self.object.save()
+        self.object.url = "/account/line/detail/0/" + str(self.object.id)
+        self.object.save()
+
+        #附件
+        files = []
+        if self.request.FILES.getlist('files'):
+             for file in self.request.FILES.getlist('files'):
+                fs = FileSystemStorage()
+                filename = uuid4().hex
+                fs.save("static/attach/"+str(self.request.user.id)+"/"+filename, file)
+                files.append([filename, file.name])
+        if files:
+            for file, name in files:
+                content = MessageContent()
+                content.title = name
+                content.message_id = self.object.id
+                content.filename = str(self.request.user.id)+"/"+file
+                content.save()
+        # 班級學生訊息
+        teachers = User.objects.filter(groups__name='teacher')
+        for teacher in teachers:
+            messagepoll = MessagePoll(message_id=self.object.id, reader_id=teacher.id, message_type=1)
+            messagepoll.save()
+        return redirect("/") 
+
         
 #回覆一個私訊
 class LineReplyView(CreateView):
