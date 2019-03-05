@@ -1037,7 +1037,7 @@ def work1(request, lesson, classroom_id):
     return render(request, 'teacher/work1.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
 
 # Ajax 設為小教師、取消小教師
-def make(request):
+def make_work_assistant(request):
     classroom_id = request.POST.get('classroomid')
     user_id = request.POST.get('userid')
     action = request.POST.get('action')

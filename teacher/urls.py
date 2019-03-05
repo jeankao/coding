@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),
     url(r'^work/ckexcel/(?P<classroom_id>\d+)/', views.work_ckexcel),
     #設定小教師
-    url(r'^work/assistant/make/$', login_required(views.make)),
+    url(r'^work/assistant/make/$', login_required(views.make_work_assistant)),
 	  #評分
     url(r'^score_peer/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<index>\d+)/(?P<classroom_id>\d+)/(?P<group>\d+)/$', views.score_peer),
     url(r'^scoring/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/(?P<user_id>\d+)/(?P<index>\d+)/$', views.scoring),
