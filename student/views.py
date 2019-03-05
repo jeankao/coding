@@ -227,7 +227,7 @@ def group_add(request, classroom_id):
             group = EnrollGroup(name=form.cleaned_data['name'],classroom_id=int(classroom_id))
             group.save()
 
-            return redirect('/student/group/'+classroom_id)
+            return redirect('/student/group/panel/'+classroom_id)
     else:
         form = GroupForm()
     return render(request, 'form.html', {'form':form})
@@ -241,7 +241,7 @@ def group_size(request, classroom_id):
             classroom.group_size = form.cleaned_data['group_size']
             classroom.save()
 
-            return redirect('/student/group/'+classroom_id)
+            return redirect('/student/group/panel/'+classroom_id)
     else:
         classroom = Classroom.objects.get(id=classroom_id)
         form = GroupSizeForm(instance=classroom)
@@ -256,7 +256,7 @@ def group_enroll(request, classroom_id,  group_id):
         enroll = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
         enroll.update(group=group_id)
 
-    return redirect('/student/group/'+classroom_id)
+    return redirect('/student/group/panel/'+classroom_id)
 
 # 刪除組別
 def group_delete(request, group_id, classroom_id):
@@ -264,7 +264,7 @@ def group_delete(request, group_id, classroom_id):
     group.delete()
     classroom_name = Classroom.objects.get(id=classroom_id).name
 
-    return redirect('/student/group/'+classroom_id)
+    return redirect('/student/group/panel/'+classroom_id)
 
 # 是否開放選組
 def group_open(request, classroom_id, action):
@@ -276,7 +276,7 @@ def group_open(request, classroom_id, action):
         classroom.group_open=False
         classroom.save()
 
-    return redirect('/student/group/'+classroom_id)
+    return redirect('/student/group/panel/'+classroom_id)
 
 # 列出選修的班級
 class ClassroomList(ListView):

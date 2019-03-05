@@ -2220,7 +2220,7 @@ def assistant_group(request, typing, classroom_id):
                 lesson_name = lesson_list1
         elif typing == "1":
             lesson_name = TWork.objects.get(classroom_id=classroom_id).title        
-        groups = [group for group in EnrollGroup.objects.filter(classroom_id=classroom_id)]				
+        groups = range(classroom.group_number)				
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
         student_ids = map(lambda a: a.student_id, enroll_pool)
         work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
@@ -2231,7 +2231,7 @@ def assistant_group(request, typing, classroom_id):
         for assignment in lesson_name:
                 student_groups = []													
                 for group in groups:
-                    members = filter(lambda u: u.group == group.id, enroll_pool)
+                    members = filter(lambda u: u.group == group, enroll_pool)
                     group_assistants = []
                     works = []
                     scorer_name = ""
@@ -2247,8 +2247,7 @@ def assistant_group(request, typing, classroom_id):
                         assistant = filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool)
                         if assistant:
                             group_assistants.append(member)
-                    group_name = EnrollGroup.objects.get(id=group.id).name
-                    student_groups.append([group, works, group_assistants, group_name])                    
+                    student_groups.append([group, works, group_assistants])                    
                 lessons.append([assignment, student_groups])
                 index = index + 1
         return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
@@ -2382,7 +2381,7 @@ class GroupUpdate(UpdateView):
     template_name = 'form.html'
 			
     def get_success_url(self):
-        succ_url =  '/student/group/'+str(self.kwargs['pk'])
+        succ_url =  '/student/group/panel/'+str(self.kwargs['pk'])
         return succ_url
 			
     def form_valid(self, form):
@@ -2415,7 +2414,7 @@ class GroupUpdate2(UpdateView):
     template_name = 'form.html'
 			
     def get_success_url(self):
-        succ_url =  '/student/group/'+str(self.kwargs['pk'])
+        succ_url =  '/student/group/panel/'+str(self.kwargs['pk'])
         return succ_url
 			
     def form_valid(self, form):
