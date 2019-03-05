@@ -252,7 +252,6 @@ def group_enroll(request, classroom_id,  group_id):
     classroom = Classroom.objects.get(id=classroom_id)
     members = Enroll.objects.filter(group=group_id)
     if len(members) < classroom.group_size:
-        group_name = EnrollGroup.objects.get(id=group_id).name
         enroll = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
         enroll.update(group=group_id)
 
@@ -986,7 +985,7 @@ def work_publish(request, typing, lesson, index, action):
 
 
 # 查詢某作業分組小老師
-def work_group(request, typing, lesson, classroom_id):
+def work_group(request, typing, lesson, index, classroom_id):
     if lesson == "1":
         lesson_list = lesson_list1
     elif lesson == "2":
@@ -1000,9 +999,10 @@ def work_group(request, typing, lesson, classroom_id):
     else :
         lesson_list = lesson_list1
     lessons = []
-    index = 0
+    index2 = 1
     for assignment in lesson_list:
         student_groups = []
+        group = Enroll.objects.get(classroom_id=classroom_id, student_id=request.user.id).group
         enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
         group_assistants = []
         assistants = []
@@ -1010,25 +1010,27 @@ def work_group(request, typing, lesson, classroom_id):
         scorer_name = ""
         for enroll in enrolls:
             try:
-                work = Work.objects.get(user_id=enroll.student_id, index=lesson+1)
+                work = Work.objects.get(user_id=enroll.student_id, index=index2)
                 if work.scorer > 0 :
                     scorer = User.objects.get(id=work.scorer)
                     scorer_name = scorer.first_name
                 else :
                     scorer_name = "X"
             except ObjectDoesNotExist:
-                work = Work(index=lesson, user_id=1)
+                work = Work(index=index2, user_id=1)
+            except MultipleObjectsReturned:
+                work = Work.objects.filter(user_id=enroll.student_id, index=index2).order_by("-id")[0]
             works.append([enroll, work.score, scorer_name, work.memo])
             try :
-                assistant = Assistant.objects.get(student_id=enroll.student.id, classroom_id=classroom_id, lesson=lesson+1)
+                assistant = WorkAssistant.objects.get(student_id=enroll.student.id, classroom_id=classroom_id, lesson_id=index2)
                 group_assistants.append(enroll)
                 assistants.append(enroll.student_id)
             except ObjectDoesNotExist:
                 pass
         student_groups.append([group, works, group_assistants, assistants])
-        lessons.append([lesson_list[index], student_groups])
-        index = index + 1
-    return render(request, 'student/work_group.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
+        lessons.append([lesson_list[index2-1], student_groups])
+        index2 = index2 + 1
+    return render(request, 'student/work_group.html', {'index':index, 'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
 
 # 解答
 def answer(request, lesson, index):

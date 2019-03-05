@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^group/number/(?P<pk>\d+)', views.GroupUpdate.as_view()),    
     url(r'^group/size/(?P<pk>\d+)', views.GroupUpdate2.as_view()),  	
     url(r'^group/make/(?P<classroom_id>\d+)/(?P<action>\d+)/', views.make), 
-	url(r'^group/assign/(?P<classroom_id>\d+)/', views.group_assign),    
+	  url(r'^group/assign/(?P<classroom_id>\d+)/', views.group_assign),    
 	  #大量匯入帳號
     url(r'^import/upload$', login_required(views.import_sheet), name='import_upload'),
     url(r'^import/student$', login_required(views.import_student), name='import_user'),

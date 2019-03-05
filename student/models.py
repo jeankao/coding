@@ -98,6 +98,7 @@ class Enroll(models.Model):
 class EnrollGroup(models.Model):
     name = models.CharField(max_length=30)
     classroom_id = models.IntegerField(default=0)
+   
 
 # 小老師
 class WorkAssistant(models.Model):

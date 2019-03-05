@@ -535,7 +535,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
                     message.save()
 
                     group = Enroll.objects.get(classroom_id=classroom_id, student_id=assistant.student_id).group
-                    if group > 0 :
+                    if group >= 0 :
                         enrolls = Enroll.objects.filter(group = group)
                         for enroll in enrolls:
                             # message for group member
@@ -586,9 +586,9 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
         assistant = WorkAssistant.objects.get(typing=typing, lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id)
     except ObjectDoesNotExist:
         if typing == "0":
-            return redirect("/student/group/work/"+lesson+"/"+index+"/"+classroom_id)
+            return redirect("/student/work/group/0/"+lesson+"/"+index+"/"+classroom_id+"/#"+index)
         elif typing == "1":
-            return redirect("/student/group/work2/"+lesson+"/"+index+"/"+classroom_id)
+            return redirect("/student/work/group/1/"+lesson+"/"+index+"/"+classroom_id+"/#"+index)
     enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
     lessons = ""
     classmate_work = []
