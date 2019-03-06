@@ -419,7 +419,7 @@ def work_group(request, typing, lesson, classroom_id, index):
         else :
             classmate_work.append([enroll,work,0, scorer_name, group_name])
     def getKey(custom):
-        return custom[4], custom[1].publication_date
+        return custom[0].group, custom[1].publication_date
       
     classmate_work = sorted(classmate_work, key=getKey)    
     return render(request, 'teacher/work_group.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson})
