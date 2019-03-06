@@ -12,15 +12,6 @@ class EnrollForm(forms.Form):
         self.fields['password'].label = "選課密碼"
         self.fields['seat'].label = "座號"
 
-class GroupForm(forms.ModelForm):
-    class Meta:
-        model = EnrollGroup
-        fields = ['name']
-
-    def __init__(self, *args, **kwargs):
-        super(GroupForm, self).__init__(*args, **kwargs)
-        self.fields['name'].label = "組別名稱"
-
 # 組別人數
 class GroupSizeForm(forms.ModelForm):
     class Meta:
