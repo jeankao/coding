@@ -409,9 +409,9 @@ def work_group(request, typing, lesson, classroom_id, index):
             work = Work(typing=0, index=index, user_id=0, lesson_id=lesson)
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson).last()
-        try:
-            group_name = EnrollGroup.objects.get(id=enroll.group).name
-        except ObjectDoesNotExist:
+        if enroll.group >=0:
+            group_name = "第"+str(enroll.group+1)+"組"
+        else:
             group_name = "沒有組別"
         assistant = WorkAssistant.objects.filter(typing=0, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=index)
         if assistant.exists():
