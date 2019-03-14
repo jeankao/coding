@@ -503,11 +503,7 @@ def profile(request, user_id):
     # 計算積分    
     credit = profile.work + profile.assistant + profile.forum + profile.creative
       
-    # 學校
-    try:
-        school_name = School.objects.get(id=int(user.last_name)).name
-    except ObjectDoesNotExist:
-        school_name = ""
+    school_name = ""
     #檢查是否為教師或同班同學
     user_enrolls = Enroll.objects.filter(student_id=request.user.id)
     for enroll in user_enrolls:
