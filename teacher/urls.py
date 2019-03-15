@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^group/number/(?P<pk>\d+)', views.GroupUpdate.as_view()),    
     url(r'^group/size/(?P<pk>\d+)', views.GroupUpdate2.as_view()),  	
     url(r'^group/make/(?P<classroom_id>\d+)/(?P<action>\d+)/', views.make), 
-	url(r'^group/assign/(?P<classroom_id>\d+)/', views.group_assign),    
+	  url(r'^group/assign/(?P<classroom_id>\d+)/', views.group_assign),    
 	  #大量匯入帳號
     url(r'^import/upload$', login_required(views.import_sheet), name='import_upload'),
     url(r'^import/student$', login_required(views.import_student), name='import_user'),
@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^work1/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work1),
     url(r'^work/ckexcel/(?P<classroom_id>\d+)/', views.work_ckexcel),
     #設定小教師
-    url(r'^work/assistant/make/$', login_required(views.make)),
+    url(r'^work/assistant/make/$', login_required(views.make_work_assistant)),
 	  #評分
     url(r'^score_peer/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<index>\d+)/(?P<classroom_id>\d+)/(?P<group>\d+)/$', views.score_peer),
     url(r'^scoring/(?P<typing>[^/]+)/(?P<lesson>[^/]+)/(?P<classroom_id>[^/]+)/(?P<user_id>\d+)/(?P<index>\d+)/$', views.scoring),

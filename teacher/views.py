@@ -373,9 +373,9 @@ def work_class(request, typing, lesson, classroom_id, index):
             work = Work(typing=0, index=index, user_id=0, lesson_id=lesson)
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson).last()
-        try:
-            group_name = EnrollGroup.objects.get(id=enroll.group).name
-        except ObjectDoesNotExist:
+        if enroll.group >=0:
+            group_name = "第"+str(enroll.group+1)+"組"
+        else:
             group_name = "沒有組別"
         assistant = WorkAssistant.objects.filter(typing=0, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=index)
         if assistant.exists():
@@ -409,9 +409,9 @@ def work_group(request, typing, lesson, classroom_id, index):
             work = Work(typing=0, index=index, user_id=0, lesson_id=lesson)
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson).last()
-        try:
-            group_name = EnrollGroup.objects.get(id=enroll.group).name
-        except ObjectDoesNotExist:
+        if enroll.group >=0:
+            group_name = "第"+str(enroll.group+1)+"組"
+        else:
             group_name = "沒有組別"
         assistant = WorkAssistant.objects.filter(typing=0, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=index)
         if assistant.exists():
@@ -419,7 +419,7 @@ def work_group(request, typing, lesson, classroom_id, index):
         else :
             classmate_work.append([enroll,work,0, scorer_name, group_name])
     def getKey(custom):
-        return custom[4], custom[1].publication_date
+        return custom[0].group, custom[1].publication_date
       
     classmate_work = sorted(classmate_work, key=getKey)    
     return render(request, 'teacher/work_group.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson})
@@ -535,7 +535,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
                     message.save()
 
                     group = Enroll.objects.get(classroom_id=classroom_id, student_id=assistant.student_id).group
-                    if group > 0 :
+                    if group >= 0 :
                         enrolls = Enroll.objects.filter(group = group)
                         for enroll in enrolls:
                             # message for group member
@@ -586,9 +586,9 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
         assistant = WorkAssistant.objects.get(typing=typing, lesson_id=lesson, index=index, classroom_id=classroom_id, student_id=request.user.id)
     except ObjectDoesNotExist:
         if typing == "0":
-            return redirect("/student/group/work/"+lesson+"/"+index+"/"+classroom_id)
+            return redirect("/student/work/group/0/"+lesson+"/"+index+"/"+classroom_id+"/#"+index)
         elif typing == "1":
-            return redirect("/student/group/work2/"+lesson+"/"+index+"/"+classroom_id)
+            return redirect("/student/work/group/1/"+lesson+"/"+index+"/"+classroom_id+"/#"+index)
     enrolls = Enroll.objects.filter(classroom_id=classroom_id, group=group)
     lessons = ""
     classmate_work = []
@@ -1037,7 +1037,7 @@ def work1(request, lesson, classroom_id):
     return render(request, 'teacher/work1.html', {'lesson':lesson, 'lessons':lessons, 'classroom_id':classroom_id})
 
 # Ajax 設為小教師、取消小教師
-def make(request):
+def make_work_assistant(request):
     classroom_id = request.POST.get('classroomid')
     user_id = request.POST.get('userid')
     action = request.POST.get('action')
@@ -1298,12 +1298,11 @@ def work_class2(request, lesson, classroom_id, work_id):
             work = Work(typing=1, index=work_id, user_id=0, lesson_id=lesson)
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=1, user_id=enroll.student_id, index=work_id, lesson_id=lesson).last()
-        enrollgroup_dict = dict(((enrollgroup.id, enrollgroup) for enrollgroup in EnrollGroup.objects.filter(classroom_id=classroom_id)))
         assistant = WorkAssistant.objects.filter(typing=1, classroom_id=classroom_id, student_id=enroll.student_id, lesson_id=lesson, index=work_id)
-        if enroll.group == 0 :
+        if enroll.group >=0:
+            group_name = "第"+str(enroll.group+1)+"組"
+        else:
             group_name = "沒有組別"
-        else : 
-            group_name = enrollgroup_dict[enroll.group].name
         if assistant.exists():
             classmate_work.append([enroll,work,1, scorer_name, group_name])
         else :
@@ -1421,13 +1420,9 @@ def work_class3(request, lesson, classroom_id, work_id):
             work = Work(typing=2, user_id=enroll.student_id, index=work_id, lesson_id=lesson, score=0)
         except MultipleObjectsReturned:
             work = Work.objects.filter(typing=2, user_id=enroll.student_id, index=work_id, lesson_id=lesson).last()
-        try:
-            group_name = EnrollGroup.objects.get(id=enroll.group).name
-            if not group_name in groups:
-                groups[group_name] = [enroll.student_id]
-            else:
-                groups[group_name].append(enroll.student_id)
-        except ObjectDoesNotExist:
+        if enroll.group >=0:
+            group_name = "第"+str(enroll.group+1)+"組"
+        else:
             group_name = "沒有組別"
         classmate_work.append([enroll,work, group_name])
     return render(request, 'teacher/work3_class.html',{'typing':2, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id, 'groups': groups})
@@ -2220,7 +2215,7 @@ def assistant_group(request, typing, classroom_id):
                 lesson_name = lesson_list1
         elif typing == "1":
             lesson_name = TWork.objects.get(classroom_id=classroom_id).title        
-        groups = [group for group in EnrollGroup.objects.filter(classroom_id=classroom_id)]				
+        groups = range(classroom.group_number)				
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
         student_ids = map(lambda a: a.student_id, enroll_pool)
         work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
@@ -2231,7 +2226,7 @@ def assistant_group(request, typing, classroom_id):
         for assignment in lesson_name:
                 student_groups = []													
                 for group in groups:
-                    members = filter(lambda u: u.group == group.id, enroll_pool)
+                    members = filter(lambda u: u.group == group, enroll_pool)
                     group_assistants = []
                     works = []
                     scorer_name = ""
@@ -2247,8 +2242,7 @@ def assistant_group(request, typing, classroom_id):
                         assistant = filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool)
                         if assistant:
                             group_assistants.append(member)
-                    group_name = EnrollGroup.objects.get(id=group.id).name
-                    student_groups.append([group, works, group_assistants, group_name])                    
+                    student_groups.append([group, works, group_assistants])                    
                 lessons.append([assignment, student_groups])
                 index = index + 1
         return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
@@ -2382,7 +2376,7 @@ class GroupUpdate(UpdateView):
     template_name = 'form.html'
 			
     def get_success_url(self):
-        succ_url =  '/student/group/'+str(self.kwargs['pk'])
+        succ_url =  '/student/group/panel/'+str(self.kwargs['pk'])
         return succ_url
 			
     def form_valid(self, form):
@@ -2415,7 +2409,7 @@ class GroupUpdate2(UpdateView):
     template_name = 'form.html'
 			
     def get_success_url(self):
-        succ_url =  '/student/group/'+str(self.kwargs['pk'])
+        succ_url =  '/student/group/panel/'+str(self.kwargs['pk'])
         return succ_url
 			
     def form_valid(self, form):

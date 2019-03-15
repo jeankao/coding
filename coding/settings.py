@@ -152,6 +152,8 @@ STATICFILES_DIRS = [
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
 
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 

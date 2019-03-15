@@ -94,11 +94,6 @@ class Enroll(models.Model):
     def get_groupshow(self):
         return json.loads(self.groupshow)
 
-# 學生組別
-class EnrollGroup(models.Model):
-    name = models.CharField(max_length=30)
-    classroom_id = models.IntegerField(default=0)
-
 # 小老師
 class WorkAssistant(models.Model):
     student_id = models.IntegerField(default=0)

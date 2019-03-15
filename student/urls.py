@@ -17,8 +17,8 @@ urlpatterns = [
     url(r'^loginlog/(?P<user_id>\d+)/$', views.LoginLogListView.as_view()),
     # 分組
     #組別
-    url(r'^group/panel/(?P<classroom_id>[^/]+)/', views.GroupPanel.as_view()),
-    url(r'^group/join/(?P<classroom_id>[^/]+)/(?P<number>[^/]+)/(?P<enroll_id>[^/]+)/', views.group_join),    
+    url(r'^group/panel/(?P<classroom_id>[^/]+)/$', views.GroupPanel.as_view()),
+    url(r'^group/join/(?P<classroom_id>[^/]+)/(?P<number>[^/]+)/(?P<enroll_id>[^/]+)/$', views.group_join),     
     #url(r'^group/enroll/(?P<classroom_id>[^/]+)/(?P<group_id>[^/]+)/$', views.group_enroll),
     #url(r'^group/add/(?P<classroom_id>[^/]+)/$', views.group_add),
     #url(r'^group/(?P<classroom_id>[^/]+)/$', views.group),
@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^work/book/report/(?P<classroom_id>\d+)/$', views.WorkReportView.as_view()),    
     url(r'^work/book/month/(?P<classroom_id>\d+)/(?P<month>\d+)/$', views.WorkMonthView.as_view()),        
     #查詢所有作業分組小老師
-    url(r'^work/group/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<classroom_id>\d+)/$', views.work_group),
+    url(r'^work/group/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<classroom_id>\d+)/$', views.work_group),
     url(r'^work/answer/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer),
     url(r'^work/answer_watch/(?P<lesson>\d+)/(?P<index>\d+)/$', views.answer_watch),
     url(r'^work/publish/(?P<typing>\d+)/(?P<lesson>\d+)/(?P<index>\d+)/(?P<action>\d+)/$', login_required(views.work_publish)),    
