@@ -1793,3 +1793,29 @@ def group_join(request, classroom_id, number, enroll_id):
             enroll.group = number
             enroll.save()			
         return redirect('/student/group/panel/'+classroom_id)
+
+def plant_submit(request):
+    if request.method == 'POST':
+        form = PlantSubmitForm(request.POST, request.FILES)
+        if request.FILES:
+            content = Plant(student_id=request.user.id)
+            myfile =  request.FILES.get("file", "")
+            fs = FileSystemStorage()
+            filename = uuid4().hex
+            content.memo = request.POST.get("memo")
+            content.filename = str(request.user.id)+"/"+filename
+            fs.save("static/plant/"+str(request.user.id)+"/"+filename, myfile)
+            content.save()
+            return redirect('/student/plant/show')
+    else:
+        form = PlantSubmitForm()
+    return render(request, 'student/plant_form.html', {'form':form})
+
+# 列出所有記錄
+class PlantListView(ListView):
+    model = Plant
+    context_object_name = 'plants'
+    template_name = 'student/plant_show.html'
+    paginate_by = 20
+
+

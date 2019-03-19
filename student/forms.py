@@ -134,3 +134,11 @@ class DataForm(forms.Form):
     name =  forms.CharField(required=False)
     index =  forms.IntegerField(widget=forms.HiddenInput())
     types =  forms.IntegerField(widget=forms.HiddenInput())
+
+class PlantSubmitForm(forms.Form):
+    memo =  forms.CharField(required=False)
+    picture = forms.FileField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(PlantSubmitForm, self).__init__(*args, **kwargs)
+        self.fields['memo'].label = "說明"

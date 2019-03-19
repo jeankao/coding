@@ -299,3 +299,13 @@ class Science2Json(models.Model):
     student_id = models.IntegerField(default=0)
     model_type = models.IntegerField(default=0) # 0: 資料建模, 1: 流程建模
     json = models.TextField(default='')
+
+def upload_path_handler_plant(instance, filename):
+    return "static/plant/{filename}".format(filename=instance.id+".jpg")
+
+class Plant(models.Model):
+    student_id = models.IntegerField(default=0)
+    memo = models.TextField(default='')
+    filename = models.CharField(max_length=50,null=True,blank=True)
+    picture = models.ImageField(upload_to = upload_path_handler_plant, default = '/static/python/null.jpg')    
+    publication_date = models.DateTimeField(default=timezone.now)

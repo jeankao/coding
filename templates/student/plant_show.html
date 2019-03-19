@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+        {% for plant in plants %}
+        {{plant.publication_date}} -- {{plant.memo}} <BR>
+        <img width=900 src="/static/plant/{{plant.filename}}">
+        {% endfor %}
+ {% include "pagination.html" with page=page_obj %}          
+{% endblock %}
