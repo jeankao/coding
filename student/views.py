@@ -1817,5 +1817,6 @@ class PlantListView(ListView):
     context_object_name = 'plants'
     template_name = 'student/plant_show.html'
     paginate_by = 20
+    ordering = ['-id']
 
 
