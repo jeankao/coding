@@ -14,7 +14,7 @@
         <h4 class="nospace heading">{{unit.0}}({{unit.1|length}}) <i class="fa fa-hand-o-left" aria-hidden="true"></i> </h4>
         <ul class="nospace">
           {% for assignment in unit.1 %}
-					<li><a href="/student/lesson2/1/{{forloop.parentloop.counter}}/{{assignment.2}}">{{assignment.0}}{% if assignment|last %}<img src="/static/images/done.png">{% endif %}</a></li>
+					<li><a href="/student/lesson2/1/{{forloop.parentloop.counter}}/{{assignment.2}}">{{assignment.0}}</a></li>
           {% endfor %}
         </ul>
         <p></p>
