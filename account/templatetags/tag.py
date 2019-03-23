@@ -405,3 +405,56 @@ def nametoseat(name):
     else :
         number = 99
     return number
+
+@register.filter
+def unit_name(unit, lesson):
+    return lesson_list[int(lesson)-1][1][int(unit)-1][0]
+
+@register.filter
+def lesson_name(lesson, index):
+        lesson_dict = {}
+        for unit1 in lesson_list[int(lesson)-1][1]:
+            for assignment in unit1[1]:
+                lesson_dict[assignment[2]] = assignment[0]
+        return lesson_dict[int(index)]
+
+@register.filter
+def lesson_download(lesson, index):
+        lesson_dict = {}
+        for unit1 in lesson_list[int(lesson)-1][1]:
+            for assignment in unit1[1]:
+                lesson_dict[assignment[2]] = assignment[1]
+        return lesson_dict[int(index)]
+
+@register.filter
+def lesson_resource1(lesson, index):
+        lesson_dict = {}
+        for unit1 in lesson_list[int(lesson)-1][1]:
+            for assignment in unit1[1]:
+                lesson_dict[assignment[2]] = assignment[4]
+        if lesson_dict[int(index)] :
+            return lesson_dict[int(index)][0]
+        else :
+            return False
+			
+@register.filter
+def lesson_resource2(lesson, index):
+        lesson_dict = {}
+        for unit1 in lesson_list[int(lesson)-1][1]:
+            for assignment in unit1[1]:
+                lesson_dict[assignment[2]] = assignment[4]
+        if lesson_dict[int(index)] :
+            return lesson_dict[int(index)][1]
+        else :
+            return False
+			
+@register.filter
+def lesson_youtube(lesson, index):
+        lesson_dict = {}
+        for unit1 in lesson_list[int(lesson)-1][1]:
+            for assignment in unit1[1]:
+                lesson_dict[assignment[2]] = assignment[5]
+        if lesson_dict[index] :
+            return lesson_dict[index]
+        else :
+            return False

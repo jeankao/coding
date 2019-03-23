@@ -32,6 +32,8 @@ from django.db.models import Q
 import json
 from django.db.models.functions import TruncMonth, TruncDay
 from django.db.models import Count
+from collections import OrderedDict
+
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
     return user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()
@@ -1820,3 +1822,46 @@ class PlantListView(ListView):
     ordering = ['-id']
 
 
+# 分類課程    
+def lessons2(request, subject_id): 
+        del lesson_list[:]
+        reset()
+        works = Work.objects.filter(typing=0, user_id=request.user.id, lesson_id=subject_id).order_by("-id")	
+        for unit, unit1 in enumerate(lesson_list[int(subject_id)-1][1]):
+            for index, assignment in enumerate(unit1[1]):
+                if len(works) > 0 :
+                    sworks = list(filter(lambda w: w.index==assignment[2], works))
+                    if len(sworks)>0 :
+                        lesson_list[int(subject_id)-1][1][unit][1][index].append(sworks[0])
+                    else :
+                        lesson_list[int(subject_id)-1][1][unit][1][index].append(False)
+                else :
+                    lesson_list[int(subject_id)-1][1][unit][1][index].append(False)
+        return render(request, 'student/lessons2.html', {'subject_id': subject_id, 'lesson_list':lesson_list})
+
+# 課程內容
+def lesson2(request, lesson, unit, index):
+        lesson_dict = OrderedDict()
+        works = Work.objects.filter(user_id=request.user.id, lesson_id=lesson, index=index).order_by("-id")
+        for unit1 in lesson_list[int(lesson)-1][1]:
+            for assignment in unit1[1]:
+                sworks = list(filter(lambda w: w.index==assignment[2], works))
+                if len(sworks)>0 :
+                    lesson_dict[assignment[2]] = [assignment, sworks[0]]
+                else :
+                    lesson_dict[assignment[2]] = [assignment, None]
+        assignment = lesson_dict[int(index)]
+        scores = []
+        workfiles = []
+        #work_index = lesson_list[int(lesson)-1][1][int(unit)-1][1][int(index)-1][2]	
+        works = Work.objects.filter(typing=0, index=index, lesson_id=lesson, user_id=request.user.id)
+
+        if not works.exists():
+            form = SubmitAForm()
+        else:
+            workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")							
+            form = SubmitAForm(instance=works[0])
+            if len(workfiles)>0 and works[0].scorer>0: 
+                score_name = User.objects.get(id=works[0].scorer).first_name
+                scores = [works[0].score, score_name]	
+        return render(request, 'student/lesson2.html', {'assignment':assignment, 'index':index, 'form': form, 'unit':unit, 'lesson':lesson, 'scores':scores, 'workfiles': workfiles})

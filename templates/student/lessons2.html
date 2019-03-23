@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load tag %}
+{% block content %}
+{% if subject_id == "1" %}
+    <div class="sectiontitle">
+      <h1 class="heading"> <i class="fa fa-universal-access" aria-hidden="true"></i> {{lesson_list.0.0}}</h6>
+    </div>
+    <hr>
+    <a href="https://studio.code.org/hoc/1" target="_blank">1小時學程式設計(Hour of Code)：經典迷宮</a>
+    <BR><BR>
+    <div class="row">
+      {% for unit in lesson_list.0.1 %}
+      <div class="col-md-3">
+        <h4 class="nospace heading">{{unit.0}}({{unit.1|length}}) <i class="fa fa-hand-o-left" aria-hidden="true"></i> </h4>
+        <ul class="nospace">
+          {% for assignment in unit.1 %}
+					<li><a href="/student/lesson2/1/{{forloop.parentloop.counter}}/{{assignment.2}}">{{assignment.0}}{% if assignment|last %}<img src="/static/images/done.png">{% endif %}</a></li>
+          {% endfor %}
+        </ul>
+        <p></p>
+      </div>
+      {% endfor %}    
+    </div>
+    <hr>
+    <div class="row">
+    <div class="col-md-6"><!--本課程請搭配翰林版資訊科技課本使用--></div>
+    <div class="col-md-6" align=right><a href="https://scratch.mit.edu/projects/editor/" target="_blank"><img src="/static/images/online.png"></a></div></p>
+    </div>
+{% endif %}
+{% endblock %}
