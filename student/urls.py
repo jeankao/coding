@@ -5,8 +5,8 @@ from . import views
 from student.views import ForumListView
 
 urlpatterns = [
-    url(r'^lessons/(?P<subject_id>\d+)/$', views.lessons),
-    url(r'^lesson/(?P<lesson>\d+)/$', views.lesson),
+    url(r'^lessons/(?P<subject_id>[^/]+)/$', views.lessons),
+    url(r'^lesson/(?P<lesson>[^/]+)/$', views.lesson),
     url(r'^lessons2/(?P<subject_id>\d+)/$', views.lessons2),    
     url(r'^lesson2/(?P<lesson>\d+)/(?P<unit>\d+)/(?P<index>\d+)', views.lesson2),      
     # 選課
