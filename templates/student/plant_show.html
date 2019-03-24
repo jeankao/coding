@@ -7,7 +7,7 @@
 -->
 </h3>        
 {% for plant in plants %}
-        {{plant.publication_date}} -- {{plant.memo}} <BR>
+        <button class="btn btn-info"> {{forloop.revcounter}}){{plant.publication_date|date:"l Y-M-d H:i"}}</button>{{plant.memo}} <BR>
         <img width=900 src="/static/plant/{{plant.filename}}">
         {% endfor %}
  {% include "pagination.html" with page=page_obj %}          
