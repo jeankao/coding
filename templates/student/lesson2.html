@@ -27,53 +27,7 @@
     <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3">
     <img src="/static/resource/{{lesson|lesson_resource2:index}}">
     </div>   		
-    <!--------------------------------------------------------->
-	<div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4">
-<script>
-function checkvalue() { 
-    var mystring = document.getElementById('id_memo').value; 
-    if(!mystring.match(/\S/)) {
-        alert ('請填寫心得~~');
-        return false;
-    } else {
-        return true;
-    }
-}
-$(function () {
-    $('input[type=file][name="file"]').change(function () {
-        var val = $(this).val().toLowerCase(),
-            regex = new RegExp("(.*?)\.(sb3)$");
-        if (!(regex.test(val))) {
-            $(this).val('');
-            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb3)');
-        }
-    });
-});  
-</script>
-    {{lesson_name}}<BR>
-        {% if workfiles %}
-            {% if scores.0 > 0 %}
-            分數：{{ scores.0 }} / 
-            評分者：{{ scores.1 }}	
-            {% else %}
-            尚未評分        
-            {% endif %}
-        {% else %}
-            狀態：未繳交
-        {% endif %}
-        <form action="/student/work/submit/0/{{lesson}}/{{index}}/" method="post" enctype="multipart/form-data">{% csrf_token %}
-          作品檔案：{{ form.file }}<BR>
-          <label id="result">心得感想：</label>{{form.memo}}<BR>
-          <input type="submit" value="送出" />
-        </form>        
-        <br>
-{% if workfiles %}
-{% include "student/embedsb2.html" %}  
-{% endif %}
-        {% for workfile in workfiles %}
-              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/0/{{lesson}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
-        {% endfor %}
-    </div>       
+    <!--------------------------------------------------------->    
   </div>  
 </section>
 <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
