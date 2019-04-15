@@ -309,3 +309,8 @@ class Plant(models.Model):
     filename = models.CharField(max_length=50,null=True,blank=True)
     picture = models.ImageField(upload_to = upload_path_handler_plant, default = '/static/python/null.jpg')    
     publication_date = models.DateTimeField(default=timezone.now)
+
+class PlantLight(models.Model):
+    student_id = models.IntegerField(default=0)
+    light = models.FloatField(default=0)   
+    publication_date = models.DateTimeField(default=timezone.now)    

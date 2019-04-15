@@ -82,5 +82,7 @@ urlpatterns = [
     url(r'^forum/publish/(?P<classroom_id>\d+)/(?P<index>\d+)/(?P<action>\d+)/$', login_required(views.forum_publish), name='forum-publish'),
 
     url(r'^plant/submit/$', views.plant_submit),            
-    url(r'^plant/show/$', views.PlantListView.as_view()),    
+    url(r'^plant/show/$', views.PlantListView.as_view()), 
+    url(r'^plant/light/$', views.plant_light),
+    url(r'^plant/light/show/$', views.PlantLightListView.as_view()),    
 ]

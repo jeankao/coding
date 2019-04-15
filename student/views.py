@@ -1813,6 +1813,17 @@ def plant_submit(request):
         form = PlantSubmitForm()
     return render(request, 'student/plant_form.html', {'form':form})
 
+def plant_light(request):
+    if request.method == 'POST':
+        form = PlantLightForm(request.POST)
+        if form.is_valid() and request.POST.get("password")=="5543":  
+            light = PlantLight(student_id=1, light=request.POST.get("light"))
+            light.save()
+        return redirect('/student/plant/light/show')
+    else:
+        form = PlantLightForm()
+    return render(request, 'form.html', {'form':form})
+
 # 列出所有記錄
 class PlantListView(ListView):
     model = Plant
@@ -1821,6 +1832,13 @@ class PlantListView(ListView):
     paginate_by = 20
     ordering = ['-id']
 
+# 列出所有記錄
+class PlantLightListView(ListView):
+    model = PlantLight
+    context_object_name = 'lights'
+    template_name = 'student/plant_light.html'
+    paginate_by = 20
+    ordering = ['-id']
 
 # 分類課程    
 def lessons2(request, subject_id): 

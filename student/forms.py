@@ -142,3 +142,11 @@ class PlantSubmitForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(PlantSubmitForm, self).__init__(*args, **kwargs)
         self.fields['memo'].label = "說明"
+
+class PlantLightForm(forms.Form):
+    light = forms.FloatField(required=False)
+    password = forms.IntegerField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(PlantLightForm, self).__init__(*args, **kwargs)
+      
