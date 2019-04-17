@@ -150,3 +150,8 @@ class PlantLightForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(PlantLightForm, self).__init__(*args, **kwargs)
       
+
+class PlantPhotoForm(forms.ModelForm):
+    class Meta:
+        model = PlantPhoto
+        fields = ['uploads']

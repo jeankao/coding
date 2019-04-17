@@ -314,3 +314,12 @@ class PlantLight(models.Model):
     student_id = models.IntegerField(default=0)
     light = models.FloatField(default=0)   
     publication_date = models.DateTimeField(default=timezone.now)    
+
+def upload_path_handler_plantphoto(instance, filename):
+    return "static/plant/photo/{filename}".format(filename=instance.id+".jpg")
+
+class PlantPhoto(models.Model):
+    student_id = models.IntegerField(default=0)
+    filename = models.CharField(max_length=50,null=True,blank=True)
+    uploads = models.ImageField(upload_to = upload_path_handler_plantphoto, default = '/static/python/null.jpg')    
+    publication_date = models.DateTimeField(default=timezone.now)        

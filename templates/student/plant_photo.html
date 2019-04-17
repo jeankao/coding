@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+{% for photo in photos %}
+        <button class="btn btn-info"> {{forloop.revcounter}}){{photo.publication_date|date:"l Y-M-d H:i"}}</button><BR>
+        <img width=900 src="/static/plant/photo/{{photo.filename}}">
+        {% endfor %}
+ {% include "pagination.html" with page=page_obj %}          
+{% endblock %}

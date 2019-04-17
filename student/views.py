@@ -1840,6 +1840,31 @@ class PlantLightListView(ListView):
     paginate_by = 20
     ordering = ['-id']
 
+def plant_photo(request):
+    if request.method == 'POST':    
+        form = PlantPhotoForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            if request.FILES:
+                content = PlantPhoto(student_id=1)
+                myfile =  request.FILES.get("file", "")
+                fs = FileSystemStorage()
+                filename = uuid4().hex        
+                content.filename = "1/"+filename
+                fs.save("static/plant/photo/1/"+filename, myfile)
+                content.save()
+                return redirect('student/plant/photo/show')
+    else:
+        form = PlantPhotoForm()
+        return render(request, 'student/plant_photo_form.html', {'form':form})
+
+# 列出所有記錄
+class PlantPhotoListView(ListView):
+    model = PlantPhoto
+    context_object_name = 'photos'
+    template_name = 'student/plant_photo.html'
+    paginate_by = 20
+    ordering = ['-id']
+
 # 分類課程    
 def lessons2(request, subject_id): 
         del lesson_list[:]
@@ -1883,3 +1908,4 @@ def lesson2(request, lesson, unit, index):
                 score_name = User.objects.get(id=works[0].scorer).first_name
                 scores = [works[0].score, score_name]	
         return render(request, 'student/lesson2.html', {'assignment':assignment, 'index':index, 'form': form, 'unit':unit, 'lesson':lesson, 'scores':scores, 'workfiles': workfiles})
+
