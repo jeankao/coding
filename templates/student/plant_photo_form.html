@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="" enctype="multipart/form-data" method="post">
+檔案:<input id="file" name="file" type="file"/>
+<input type="submit" value="送出">
+ {% csrf_token %}  
+</form>
+{% endblock %}
