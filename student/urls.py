@@ -87,4 +87,5 @@ urlpatterns = [
     url(r'^plant/light/show/$', views.PlantLightListView.as_view()),  
     url(r'^plant/photo/$', views.plant_photo),            
     url(r'^plant/photo/show/$', views.PlantPhotoListView.as_view()),       
+    url(r'^plant/photo/12/$', views.PlantPhoto12View.as_view()),    
 ]

@@ -1865,6 +1865,20 @@ class PlantPhotoListView(ListView):
     paginate_by = 20
     ordering = ['-id']
 
+   
+
+# 列出所有記錄
+class PlantPhoto12View(ListView):
+    model = PlantPhoto
+    context_object_name = 'photos'
+    template_name = 'student/plant_photo.html'
+    paginate_by = 20
+    ordering = ['-id']
+
+    def get_queryset(self):  
+        photos = PlantPhoto.objects.filter(publication_date__hour=11)				
+        return photos
+
 # 分類課程    
 def lessons2(request, subject_id): 
         del lesson_list[:]
