@@ -1873,10 +1873,9 @@ class PlantPhoto12View(ListView):
     context_object_name = 'photos'
     template_name = 'student/plant_photo.html'
     paginate_by = 20
-    ordering = ['-id']
 
     def get_queryset(self):  
-        photos = PlantPhoto.objects.filter(publication_date__hour=11)				
+        photos = PlantPhoto.objects.filter(publication_date__hour=11).order_by("-id")
         return photos
 
 # 分類課程    
