@@ -1913,7 +1913,7 @@ def forum_export(request, classroom_id, forum_id):
 						vid = filter(lambda material: material.id == int(m.group(1)), contents)[0]
 						add_hyperlink(document, p, vid.youtube+"&t="+m.group(2)+"h"+m.group(3)+"m"+m.group(4)+"s", "["+m.group(2)+":"+m.group(3)+":"+m.group(4)+"]")
 					else: # 以一般文字插入
-						p.add_run(repr(token.decode('unicode-escape')))
+						p.add_run(str(token))
 			if len(replys)>0:
 				for reply in replys:
 					user = User.objects.get(id=reply.user_id)
