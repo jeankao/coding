@@ -46,7 +46,7 @@ import re
 reload(sys)
 from django.db.models.functions import Length
 from django.forms import modelformset_factory
-import Image
+import wx.py.images as images
 
 sys.setdefaultencoding('utf-8')
 
