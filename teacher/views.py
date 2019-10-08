@@ -46,6 +46,7 @@ import re
 reload(sys)
 from django.db.models.functions import Length
 from django.forms import modelformset_factory
+import Image
 
 sys.setdefaultencoding('utf-8')
 
@@ -1930,8 +1931,9 @@ def forum_export(request, classroom_id, forum_id):
 						elif file.title[-3:].upper() == "JPG":
  						    filename = 'static/upload/'+file.filename
 						    if os.path.exists(filename):
-						        copyfile(filename, "static/upload/file.jpg")					
-						        document.add_picture('static/upload/file.jpg',width=Inches(6.0))                           
+						        im = Image.open(filename)
+						        im.save('static/upload/file.png')				
+						        document.add_picture('static/upload/file.png',width=Inches(6.0))                           
 
 						else:
 							p = document.add_paragraph()
