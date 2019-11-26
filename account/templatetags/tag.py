@@ -384,7 +384,7 @@ def list_item(list, index):
 	
 @register.filter()
 def scratch(site):
-    if len(site)>0:
+    if site:
         url = site.split("projects/")
     else :
         url = None
