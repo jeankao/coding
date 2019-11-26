@@ -575,7 +575,7 @@ def GalleryDetail(request, show_id):
             members.append(member)
 
     classroom_id = Round.objects.get(id=show.round_id).classroom_id
-    showfiles = ShowFile.objects.filter(show_id=show.id)
+    showfiles = ShowFile.objects.filter(show_id=show_id)
     
     return render(request, 'show/gallerydetail.html', {'show': show, 'showfiles':showfiles, 'members':members, 'scores':scores, 'reviews':reviews, 'teacher':is_teacher(request.user, classroom_id)})
 
