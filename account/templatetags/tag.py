@@ -388,10 +388,10 @@ def scratch(site):
         url = site.split("projects/")
     else :
         url = []
-        if len(url)>1 :
-            open = url[0] + "projects/embed/" + url[1]
-        else:
-            open = False
+    if len(url)>1 :
+        open = url[0] + "projects/embed/" + url[1]
+    else:
+        open = False
     return open
 
 @register.filter
