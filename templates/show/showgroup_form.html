@@ -72,9 +72,10 @@ function checkvalue() {
         var val = $(this).val().toLowerCase(),
             regex2 = new RegExp("(.*?)\.(sb2)$");
             regex3 = new RegExp("(.*?)\.(sb3)$");            
-        if (!(regex2.test(val)) &&  !(regex3.test(val))) {
+            regex4 = new RegExp("(.*?)\.(sbx)$");  
+        if (!(regex2.test(val)) &&  !(regex3.test(val)) &&  !(regex4.test(val))) {
             $(this).val('');
-            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2或.sb3)');
+            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2或.sb3或.sbx)');
         }
     });
 </script>
