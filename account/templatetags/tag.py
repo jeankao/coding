@@ -385,7 +385,10 @@ def list_item(list, index):
 @register.filter()
 def scratch(site):
     url = site.split("projects/")
-    open = url[0] + "projects/embed/" + url[1]
+    if len(url)>1 :
+        open = url[0] + "projects/embed/" + url[1]
+    else:
+        open = None
     return open
 
 @register.filter

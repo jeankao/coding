@@ -34,7 +34,7 @@ $("#id_score").rating({min:1, max:5, step:1, size:'lg'});
   <h1>名稱：{{ show.title }}</h1>
   <h1>說明：{{ show.body }}</h1>
   <h1>作品：</h1>  
-  {% if show.site %}
+  {% if show.sit|scratch %}
       <iframe allowtransparency="true" width="485" height="402" src="{{ show.site|scratch }}" frameborder=“0” allowfullscreen></iframe>
 {% else %}
 {% if show.file %}
