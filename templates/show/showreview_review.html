@@ -160,7 +160,7 @@ $("#id_score").rating({min:1, max:5, step:1, size:'lg'});
   }
 
 </script>
------{{show.file}}---
+        <a href="/static/show/{{show.id}}/{{show.file}}">file</a>
         {% for showfile in showfiles %}
               <BR>第{{showfiles|length|subtract:forloop.counter|add:1}}版：<A href="/show/download/{{show.id}}/{{showfile.id}}">{{showfile.upload_date}}</A>
         {% endfor %}
