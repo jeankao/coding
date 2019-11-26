@@ -388,7 +388,7 @@ def scratch(site):
     if len(url)>1 :
         open = url[0] + "projects/embed/" + url[1]
     else:
-        open = None
+        open = False
     return open
 
 @register.filter
