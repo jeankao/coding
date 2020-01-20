@@ -1,14 +1,14 @@
 # -*- coding: UTF-8 -*-
-lesson_list1 = []
-lesson_list2 = []
-lesson_list3 = []
-lesson_list4 = []
-lesson_list5 = []
-lesson_list6 = []
-lesson_list7 = []
-lesson_list = []
-
 def reset():
+
+    lesson_list1 = []
+    lesson_list2 = []
+    lesson_list3 = []
+    lesson_list4 = []
+    lesson_list5 = []
+    lesson_list6 = []
+    lesson_list7 = []
+    lesson_list = []
 
     lesson_list.append(['基礎程式設計：使用Scratch 3.X', []])
     lesson_list[0][1].append(['基礎篇', []])
