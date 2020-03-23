@@ -1946,7 +1946,7 @@ def forum_export(request, classroom_id, forum_id):
 				for file in files:
 					if file.visible:
 						if file.title[-3:].upper() == "PNG" or file.title[-3:].upper() == "JPG":                     
-						    filename = 'static/upload/'+file.filename
+						    filename = 'static/upload/'+file.filename+'.'+ file.title[-3:]
 						    if os.path.exists(filename):
 						        im = Image.open(filename)
 						        im.save('static/upload/file.'+ file.title[-3:])				
