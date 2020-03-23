@@ -51,6 +51,24 @@ from PIL import Image
 
 sys.setdefaultencoding('utf-8')
 
+def filename_browser(request, filename):
+	browser = request.META['HTTP_USER_AGENT'].lower()
+	if 'edge' in browser:
+		response['Content-Disposition'] = 'attachment; filename='+urlquote(filename)+'; filename*=UTF-8\'\'' + urlquote(filename)
+		return response			
+	elif 'webkit' in browser:
+		# Safari 3.0 and Chrome 2.0 accepts UTF-8 encoded string directly.
+		filename_header = 'filename=%s' % filename.encode('utf-8').decode('ISO-8859-1')
+	elif 'trident' in browser or 'msie' in browser:
+		# IE does not support internationalized filename at all.
+		# It can only recognize internationalized URL, so we do the trick via routing rules.
+		filename_header = 'filename='+filename.encode("BIG5").decode("ISO-8859-1")					
+	else:
+		# For others like Firefox, we follow RFC2231 (encoding extension in HTTP headers).
+		filename_header = 'filename*="utf8\'\'' + str(filename.encode('utf-8').decode('ISO-8859-1')) + '"'
+	return filename_header		
+
+
 def is_assistant(user, classroom_id):
     assistants = Assistant.objects.filter(classroom_id=classroom_id, user_id=user.id)
     if len(assistants)>0 :
