@@ -43,6 +43,7 @@ from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from datetime import datetime
 from helper import VideoLogHelper
 import re
+import io
 reload(sys)
 from django.db.models.functions import Length
 from django.forms import modelformset_factory
