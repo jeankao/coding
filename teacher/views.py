@@ -1949,10 +1949,10 @@ def forum_export(request, classroom_id, forum_id):
 							filename = 'static/upload/'+file.filename
 							if os.path.exists(filename) and os.stat(filename).st_size>0:	
 								copyfile(filename, 'static/upload/file.'+file.title[-3:])	                                 
-                                try:
+								try:
 								    document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))
-                                except :
-                                    pass
+								except :
+								    pass
 						else:
 							p = document.add_paragraph()
 							full_url = request.build_absolute_uri()
