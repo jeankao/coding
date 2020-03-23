@@ -1946,9 +1946,10 @@ def forum_export(request, classroom_id, forum_id):
 				for file in files:
 					if file.visible:
 						if file.title[-3:].upper() == "PNG" or file.title[-3:].upper() == "JPG":
-							filename = 'static/upload/'+file.filename+"."+file.title[-3:].upper()
-							if os.path.exists(filename):			
-								document.add_picture(filename,width=Inches(6.0))
+							filename = 'static/upload/'+file.filename
+							if os.path.exists(filename):	
+								copyfile(filename, 'static/upload/file.'+file.title[-3:])	                                		
+								document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))
 						else:
 							p = document.add_paragraph()
 							full_url = request.build_absolute_uri()
@@ -1956,7 +1957,7 @@ def forum_export(request, classroom_id, forum_id):
 							url = full_url[:index] + "/student/forum/download/" + str(file.id) 
 							add_hyperlink(document, p, url, file.title)
 		# Prepare document for download        
-		f = StringIO.StringIO()
+		f = io.BytesIO()
 		document.save(f)
 		length = f.tell()
 		f.seek(0)
@@ -1964,7 +1965,9 @@ def forum_export(request, classroom_id, forum_id):
 			f.getvalue(),
 			content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 		)
-		response['Content-Disposition'] = 'attachment; filename={0}'.format(docx_title.encode('utf8')) 
+
+		filename_header = filename_browser(request, docx_title)
+		response['Content-Disposition'] = 'attachment; ' + filename_header
 		response['Content-Length'] = length
 		return response
 
