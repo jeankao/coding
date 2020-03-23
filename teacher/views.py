@@ -1928,14 +1928,14 @@ def forum_export(request, classroom_id, forum_id):
 					if file.visible:
 						if file.title[-3:].upper() == "PNG":
 							filename = 'static/upload/'+file.filename
-							if os.path.exists(filename):
-								copyfile(filename, 'static/upload/file.png')					
-								document.add_picture('static/upload/file.png',width=Inches(6.0))
+							if os.path.exists(user.id+ "/" + filename):
+								copyfile(filename, 'static/upload/'+user.id+ "/" +file.png')					
+								document.add_picture('static/upload/'+user.id+ "/" +file.png',width=Inches(6.0))
 						elif file.title[-3:].upper() == "JPG":
 							filename = 'static/upload/'+file.filename
-							if os.path.exists(filename):
-								copyfile(filename, 'static/upload/file.jpg')					
-								document.add_picture('static/upload/file.jpg',width=Inches(6.0))                            
+							if os.path.exists(user.id+ "/" +filename):
+								copyfile(filename, 'static/upload/'+user.id+ "/" +file.jpg')					
+								document.add_picture('static/upload/'+user.id+ "/" +file.jpg',width=Inches(6.0))                            
 						else:
 							p = document.add_paragraph()
 							full_url = request.build_absolute_uri()
