@@ -1931,7 +1931,7 @@ def forum_export(request, classroom_id, forum_id):
 							if os.path.exists(filename):
 								copyfile(filename, 'static/upload/file.png')					
 								document.add_picture('static/upload/file.png',width=Inches(6.0))
-                        elif file.title[-3:].upper() == "JPG":
+						elif file.title[-3:].upper() == "JPG":
 							filename = 'static/upload/'+file.filename
 							if os.path.exists(filename):
 								copyfile(filename, 'static/upload/file.jpg')					
