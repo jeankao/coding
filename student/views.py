@@ -1880,20 +1880,20 @@ class PlantPhoto12View(ListView):
 
 # 分類課程    
 def lessons2(request, subject_id): 
-        del lesson_list[:]
+        del lesson_list8[:]
         reset()
         works = Work.objects.filter(typing=0, user_id=request.user.id, lesson_id=subject_id).order_by("-id")	
-        for unit, unit1 in enumerate(lesson_list[int(subject_id)-1][1]):
+        for unit, unit1 in enumerate(lesson_list8[int(subject_id)-1][1]):
             for index, assignment in enumerate(unit1[1]):
                 if len(works) > 0 :
                     sworks = list(filter(lambda w: w.index==assignment[2], works))
                     if len(sworks)>0 :
-                        lesson_list[int(subject_id)-1][1][unit][1][index].append(sworks[0])
+                        lesson_list8[int(subject_id)-1][1][unit][1][index].append(sworks[0])
                     else :
-                        lesson_list[int(subject_id)-1][1][unit][1][index].append(False)
+                        lesson_list8[int(subject_id)-1][1][unit][1][index].append(False)
                 else :
-                    lesson_list[int(subject_id)-1][1][unit][1][index].append(False)
-        return render(request, 'student/lessons2.html', {'subject_id': subject_id, 'lesson_list':lesson_list})
+                    lesson_list8[int(subject_id)-1][1][unit][1][index].append(False)
+        return render(request, 'student/lessons2.html', {'subject_id': subject_id, 'lesson_list':lesson_list8})
 
 # 課程內容
 def lesson2(request, lesson, unit, index):
