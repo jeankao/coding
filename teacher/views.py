@@ -1954,7 +1954,7 @@ def forum_export(request, classroom_id, forum_id):
 								except :
 								    pass
 						else:
-							p = document.add_paragraph()
+							p  = document.add_paragraph()
 							full_url = request.build_absolute_uri()
 							index = full_url.find("/",9)
 							url = full_url[:index] + "/student/forum/download/" + str(file.id) 
