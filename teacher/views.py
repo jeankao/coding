@@ -1950,7 +1950,7 @@ def forum_export(request, classroom_id, forum_id):
 						    if os.path.exists(filename):
 						        im = Image.open(filename)
 						        im.save('static/upload/file.'+ file.title[-3:])				
-						        document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))  
+						        document.add_picture(filename,width=Inches(6.0))  
 						else:
 							p = document.add_paragraph()
 							full_url = request.build_absolute_uri()
