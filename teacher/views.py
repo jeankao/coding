@@ -1947,9 +1947,8 @@ def forum_export(request, classroom_id, forum_id):
 					if file.visible:
 						if file.title[-3:].upper() == "PNG" or file.title[-3:].upper() == "JPG":
 							filename = 'static/upload/'+file.filename
-							if os.path.exists(filename):
-								copyfile(filename, 'static/upload/file.'+file.title[-3:])					
-								document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))
+							if os.path.exists(filename):			
+								document.add_picture(filename+'.'+file.title[-3:],width=Inches(6.0))
 						else:
 							p = document.add_paragraph()
 							full_url = request.build_absolute_uri()
