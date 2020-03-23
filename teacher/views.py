@@ -1949,7 +1949,7 @@ def forum_export(request, classroom_id, forum_id):
 						    filename = 'static/upload/'+file.filename
 						    if os.path.exists(filename):
 						        im = Image.open(filename)
-						        im.save('static/upload/file.'+ file.title[-3:]')				
+						        im.save('static/upload/file.'+ file.title[-3:])				
 						        document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))  
 						else:
 							p = document.add_paragraph()
