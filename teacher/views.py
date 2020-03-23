@@ -1926,11 +1926,16 @@ def forum_export(request, classroom_id, forum_id):
 			if len(files)>0:
 				for file in files:
 					if file.visible:
-						if file.title[-3:].upper() == "PNG" or file.title[-3:].upper() == "JPG":
+						if file.title[-3:].upper() == "PNG":
 							filename = 'static/upload/'+file.filename
 							if os.path.exists(filename):
 								copyfile(filename, 'static/upload/file.png')					
 								document.add_picture('static/upload/file.png',width=Inches(6.0))
+                        elif file.title[-3:].upper() == "JPG":
+							filename = 'static/upload/'+file.filename
+							if os.path.exists(filename):
+								copyfile(filename, 'static/upload/file.jpg')					
+								document.add_picture('static/upload/file.jpg',width=Inches(6.0))                            
 						else:
 							p = document.add_paragraph()
 							full_url = request.build_absolute_uri()
