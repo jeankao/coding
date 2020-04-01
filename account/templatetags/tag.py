@@ -419,7 +419,7 @@ def unit_name(unit, lesson):
 @register.filter
 def lesson_name(lesson, index):
         lesson_dict = {}
-        for unit1 in lesson_list[int(lesson)-1][1]:
+        for unit1 in lesson_list8[int(lesson)-1][1]:
             for assignment in unit1[1]:
                 lesson_dict[assignment[2]] = assignment[0]
         return lesson_dict[int(index)]
@@ -427,7 +427,7 @@ def lesson_name(lesson, index):
 @register.filter
 def lesson_download(lesson, index):
         lesson_dict = {}
-        for unit1 in lesson_list[int(lesson)-1][1]:
+        for unit1 in lesson_list8[int(lesson)-1][1]:
             for assignment in unit1[1]:
                 lesson_dict[assignment[2]] = assignment[1]
         return lesson_dict[int(index)]
@@ -435,7 +435,7 @@ def lesson_download(lesson, index):
 @register.filter
 def lesson_resource1(lesson, index):
         lesson_dict = {}
-        for unit1 in lesson_list[int(lesson)-1][1]:
+        for unit1 in lesson_list8[int(lesson)-1][1]:
             for assignment in unit1[1]:
                 lesson_dict[assignment[2]] = assignment[4]
         if lesson_dict[int(index)] :
@@ -446,7 +446,7 @@ def lesson_resource1(lesson, index):
 @register.filter
 def lesson_resource2(lesson, index):
         lesson_dict = {}
-        for unit1 in lesson_list[int(lesson)-1][1]:
+        for unit1 in lesson_list8[int(lesson)-1][1]:
             for assignment in unit1[1]:
                 lesson_dict[assignment[2]] = assignment[4]
         if lesson_dict[int(index)] :
@@ -457,7 +457,7 @@ def lesson_resource2(lesson, index):
 @register.filter
 def lesson_youtube(lesson, index):
         lesson_dict = {}
-        for unit1 in lesson_list[int(lesson)-1][1]:
+        for unit1 in lesson_list8[int(lesson)-1][1]:
             for assignment in unit1[1]:
                 lesson_dict[assignment[2]] = assignment[5]
         if lesson_dict[index] :
