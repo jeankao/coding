@@ -1898,6 +1898,7 @@ def lessons2(request, subject_id):
 # 課程內容
 def lesson2(request, lesson, unit, index):
         lesson_dict = OrderedDict()
+        lesson_list = lesson_list8
         works = Work.objects.filter(user_id=request.user.id, lesson_id=lesson, index=index).order_by("-id")
         for unit1 in lesson_list[int(lesson)-1][1]:
             for assignment in unit1[1]:
