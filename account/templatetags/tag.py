@@ -414,7 +414,7 @@ def nametoseat(name):
 
 @register.filter
 def unit_name(unit, lesson):
-    return lesson_list[int(lesson)-1][1][int(unit)-1][0]
+    return lesson_list8[int(lesson)-1][1][int(unit)-1][0]
 
 @register.filter
 def lesson_name(lesson, index):
