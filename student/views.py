@@ -110,14 +110,14 @@ def lesson(request, lesson):
         profile_lock = profile.lock1
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
-        if not request.user.id > 0:
-            return redirect("/account/login/0")
-        else :
-            lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16}
-        if lesson in lock:
-            if profile_lock < lock[lesson]:
-                if not request.user.groups.filter(name='teacher').exists():
-                    return redirect("/")
+        #if not request.user.id > 0:
+        #    return redirect("/account/login/0")
+        #else :
+        #    lock = {'A002':2, 'A003':3, 'A004':5, 'A005':7, 'A006':9, 'A007':11, 'A008':13, 'A009':14, 'A010':15, 'A011':16}
+        #if lesson in lock:
+        #    if profile_lock < lock[lesson]:
+        #        if not request.user.groups.filter(name='teacher').exists():
+        #            return redirect("/")
         return render(request, 'student/lessonA.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0" })
     elif lesson[0] == "B":
         lesson_id = 2
