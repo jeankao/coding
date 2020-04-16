@@ -43,12 +43,31 @@ from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from datetime import datetime
 from helper import VideoLogHelper
 import re
+import io
 reload(sys)
 from django.db.models.functions import Length
 from django.forms import modelformset_factory
 from PIL import Image
 
 sys.setdefaultencoding('utf-8')
+
+def filename_browser(request, filename):
+	browser = request.META['HTTP_USER_AGENT'].lower()
+	if 'edge' in browser:
+		response['Content-Disposition'] = 'attachment; filename='+urlquote(filename)+'; filename*=UTF-8\'\'' + urlquote(filename)
+		return response			
+	elif 'webkit' in browser:
+		# Safari 3.0 and Chrome 2.0 accepts UTF-8 encoded string directly.
+		filename_header = 'filename=%s' % filename.encode('utf-8').decode('ISO-8859-1')
+	elif 'trident' in browser or 'msie' in browser:
+		# IE does not support internationalized filename at all.
+		# It can only recognize internationalized URL, so we do the trick via routing rules.
+		filename_header = 'filename='+filename.encode("BIG5").decode("ISO-8859-1")					
+	else:
+		# For others like Firefox, we follow RFC2231 (encoding extension in HTTP headers).
+		filename_header = 'filename*="utf8\'\'' + str(filename.encode('utf-8').decode('ISO-8859-1')) + '"'
+	return filename_header		
+
 
 def is_assistant(user, classroom_id):
     assistants = Assistant.objects.filter(classroom_id=classroom_id, user_id=user.id)
@@ -1881,12 +1900,12 @@ def forum_export(request, classroom_id, forum_id):
 		reply_pool = SFReply.objects.filter(index=forum_id).order_by("-id")	
 		file_pool = SFContent.objects.filter(index=forum_id, visible=True).order_by("-id")	
 		for enroll in enrolls:
-			works = filter(lambda w: w.student_id==enroll.student_id, works_pool)
+			works = list(filter(lambda w: w.student_id==enroll.student_id, works_pool))
 			if len(works)>0:
-				replys = filter(lambda w: w.work_id==works[0].id, reply_pool)
+				replys = list(filter(lambda w: w.work_id==works[0].id, reply_pool))
 			else:
 				replys = []
-			files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
+			files = list(filter(lambda w: w.student_id==enroll.student_id, file_pool))
 			if enroll.seat > 0:
 				datas.append([enroll, works, replys, files])
 		def getKey(custom):
@@ -1916,7 +1935,7 @@ def forum_export(request, classroom_id, forum_id):
 						vid = filter(lambda material: material.id == int(m.group(1)), contents)[0]
 						add_hyperlink(document, p, vid.youtube+"&t="+m.group(2)+"h"+m.group(3)+"m"+m.group(4)+"s", "["+m.group(2)+":"+m.group(3)+":"+m.group(4)+"]")
 					else: # 以一般文字插入
-						p.add_run(''.join(c for c in token if ord(c) >= 32))
+						p.add_run(token)
 			if len(replys)>0:
 				for reply in replys:
 					user = User.objects.get(id=reply.user_id)
@@ -1926,26 +1945,22 @@ def forum_export(request, classroom_id, forum_id):
 			if len(files)>0:
 				for file in files:
 					if file.visible:
-						if file.title[-3:].upper() == "PNG":                          
+						if file.title[-3:].upper() == "PNG" or file.title[-3:].upper() == "JPG":
 							filename = 'static/upload/'+file.filename
-							if os.path.exists(filename):
-							    copyfile(filename, 'static/upload/file.png')					
-							    document.add_picture('static/upload/file.png',width=Inches(6.0))
-						elif file.title[-3:].upper() == "JPG":
- 						    filename = 'static/upload/'+file.filename
-						    if os.path.exists(filename):
-						        im = Image.open(filename)
-						        im.save('static/upload/file.png')				
-						        document.add_picture('static/upload/file.png',width=Inches(6.0))                           
-
+							if os.path.exists(filename) and os.stat(filename).st_size>0:	
+								copyfile(filename, 'static/upload/file.'+file.title[-3:])	                                 
+								try:
+								    document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))
+								except :
+								    pass
 						else:
-							p = document.add_paragraph()
+							p  = document.add_paragraph()
 							full_url = request.build_absolute_uri()
 							index = full_url.find("/",9)
 							url = full_url[:index] + "/student/forum/download/" + str(file.id) 
 							add_hyperlink(document, p, url, file.title)
 		# Prepare document for download        
-		f = StringIO.StringIO()
+		f = io.BytesIO()
 		document.save(f)
 		length = f.tell()
 		f.seek(0)
@@ -1953,7 +1968,9 @@ def forum_export(request, classroom_id, forum_id):
 			f.getvalue(),
 			content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 		)
-		response['Content-Disposition'] = 'attachment; filename={0}'.format(docx_title.encode('utf8')) 
+
+		filename_header = filename_browser(request, docx_title)
+		response['Content-Disposition'] = 'attachment; ' + filename_header
 		response['Content-Length'] = length
 		return response
 
