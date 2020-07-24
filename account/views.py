@@ -743,7 +743,7 @@ class LineReplyView(CreateView):
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
                 content = MessageContent()
-                fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.users.id)+"/")
+                fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.user.id)+"/")
                 filename = uuid4().hex
                 content.title = file.name
                 content.message_id = self.object.id
