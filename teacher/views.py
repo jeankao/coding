@@ -746,10 +746,10 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
           elif lesson == "8" :
               enroll.score_memo_django=form.cleaned_data['score_memo_django']                
           enroll.save()
-          #if form.cleaned_data['certificate']:
-          #    return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
-          #else:
-          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
+          if lesson == "1" and form.cleaned_data['certificate']:
+              return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
+          else:
+              return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
         elif typing == "1":
           enroll.score_memo_custom = form.cleaned_data['score_memo_custom']
           enroll.save()    
