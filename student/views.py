@@ -1423,7 +1423,7 @@ def forum_history(request, user_id, index, classroom_id):
     forum = FWork.objects.get(id=index)
     if len(works)> 0 :
         if works[0].publish or user_id==str(request.user.id) or is_teacher(request.user, classroom_id):
-            return render(reuqest, 'student/forum_history.html', {'forum': forum, 'classroom_id':classroom_id, 'works':works, 'contents':contents, 'files':files, 'index':index})
+            return render(request, 'student/forum_history.html', {'forum': forum, 'classroom_id':classroom_id, 'works':works, 'contents':contents, 'files':files, 'index':index})
     return redirect("/")
 
 def forum_like(request):
