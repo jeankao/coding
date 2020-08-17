@@ -49,7 +49,7 @@
 var vidMap = {
   {% for work in contents %}
   {% if work.types == 2 %}
-  'm_{{ work.id }}': '{{ work.youtube|number }}',
+  'm_{{ work.id }}': '{{ work.youtube|video }}',
   {% endif %}
   {% endfor %}  
 };
