@@ -146,7 +146,7 @@ def lesson(request, lesson):
         return render(request, 'student/lessonD.html', {'lesson': lesson, 'lesson_id': lesson_id, 'work_dict': work_dict, 'counter':hit, 'typing':"0"})
     elif lesson[0] == "E":
         lesson_id = 5
-        profile_lock = profile.lock5
+        profile_lock = 100
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
         if not request.user.is_authenticated():
