@@ -10,7 +10,7 @@ django-nocaptcha-recaptcha==0.0.20
 docutils==0.11
 enum34==1.0.4
 et-xmlfile==1.0.1
-html5lib==0.999
+html5lib==0.99999999
 jdcal==1.3
 jieba==0.39
 Jinja2==2.7.2
