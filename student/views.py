@@ -87,8 +87,6 @@ def lessons(request, subject_id):
             lock = profile.lock3
         elif subject_id == "D":
             lock = profile.lock4
-        elif subject_id == "E":
-            lock = profile.lock5
         else:
             lock = profile.lock1
     else :
