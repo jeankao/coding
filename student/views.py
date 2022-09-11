@@ -87,11 +87,13 @@ def lessons(request, subject_id):
             lock = profile.lock3
         elif subject_id == "D":
             lock = profile.lock4
+        elif subject_id == "E":
+            lock = 0
         else:
             lock = profile.lock1
     else :
         user_id = 0
-        lock = 1
+        lock = 0
     return render(request, 'student/lessons.html', {'subject_id': subject_id, 'counter': hit, 'lock':lock})
 
 # 課程內容
