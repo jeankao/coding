@@ -88,12 +88,12 @@ def lessons(request, subject_id):
         elif subject_id == "D":
             lock = profile.lock4
         elif subject_id == "E":
-            lock = 0
+            lock = profile.lock5
         else:
             lock = profile.lock1
     else :
         user_id = 0
-        lock = 0
+        lock = 1
     return render(request, 'student/lessons.html', {'subject_id': subject_id, 'counter': hit, 'lock':lock})
 
 # 課程內容
@@ -154,7 +154,7 @@ def lesson(request, lesson):
         else :
             lock = {'E02':3, 'E03':4, 'E04':5, 'E05':6, 'E06':7, 'E07':8, 'E08':9, 'E09':10, 'E10':11, 'E11':12, 'E12':13, 'E13':14, 'E14':15, 'E15':16, 'E16':17, 'E17':17, 'E18':17}
         if lesson in lock:
-            if profile_lock < lock[lesson]:
+            if profile_lock < 10000:
                 if not request.user.groups.filter(name='teacher').exists():
                     return redirect("/")
 
