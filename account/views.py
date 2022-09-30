@@ -328,7 +328,8 @@ class MessageListView(ListView):
         else :
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
         for messagepoll in messagepolls:
-            query.append([messagepoll, messagepoll.message])
+            if messagepoll:
+                query.append([messagepoll, messagepoll.message])
         return query
         
     def get_context_data(self, **kwargs):
