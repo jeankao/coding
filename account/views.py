@@ -328,7 +328,7 @@ class MessageListView(ListView):
         else :
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
         for messagepoll in messagepolls:
-            if messagepoll.message_id!=26336:
+            if messagepoll.message_id!=26335:
                 query.append([messagepoll, messagepoll.message])
         return query
         
