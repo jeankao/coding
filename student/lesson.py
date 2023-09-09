@@ -84,8 +84,8 @@ def reset():
     lesson_list1.append(["C07",u"實戰高手",u"九宮拼圖"])
     lesson_list1.append(["C08",u"實戰高手",u"見縫插針"])    
     
-    lesson_list2.append(["1-1", "VPhyscis移動"])
-    lesson_list2.append(["1-2", "繞邊邊跑一圈"])
+    lesson_list2.append(["1-1", u"VPhyscis移動"])
+    lesson_list2.append(["1-2", u"繞邊邊跑一圈"])
     lesson_list2.append(["2",u"一維等速運動"])   
     lesson_list2.append(["3",u"自由落體"])  
     lesson_list2.append(["4",u"兩牆間反彈"])  
