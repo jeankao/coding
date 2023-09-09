@@ -891,44 +891,45 @@ def progress(request, typing, lesson, unit, classroom_id):
     student_ids = map(lambda a: a.student_id, enroll_pool)
     work_pool = Work.objects.filter(typing=typing, user_id__in=student_ids, lesson_id=lesson).order_by("-id")
 
+    index = 1
+    lesson_list = []
+    if typing == "0":
+        if lesson == "1":
+            if unit == "1":
+                lesson_list = lesson_list1[0:17]
+            elif unit == "2":
+                lesson_list = lesson_list1[17:25]
+                index = 18
+            elif unit == "3":
+                lesson_list = lesson_list1[25:33]
+                index = 26
+            elif unit == "4":
+                lesson_list = lesson_list1[33:41]
+                index = 34
+            else:
+                lesson_list = lesson_list1[0:17]
+        elif lesson == "2":
+            lesson_list = lesson_list2
+        elif lesson == "3":
+            lesson_list = lesson_list3
+        elif lesson == "4":
+            lesson_list = lesson_list4
+        elif lesson == "5":
+            lesson_list = lesson_list2
+        elif lesson == "6":
+           lesson_list = lesson_list6
+        elif lesson == "7":
+            lesson_list = lesson_list2
+        elif lesson == "8":
+            lesson_list = lesson_list5                                          
+        elif lesson == "10":
+            lesson_list = lesson_list7
+        else:
+            lesson_list = lesson_list3
+
     for enroll in enroll_pool:
       student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
       bar = []
-      index = 1
-      lesson_list = []
-      if typing == "0":
-          if lesson == "1":
-              if unit == "1":
-                  lesson_list = lesson_list1[0:17]
-              elif unit == "2":
-                  lesson_list = lesson_list1[17:25]
-                  index = 18
-              elif unit == "3":
-                  lesson_list = lesson_list1[25:33]
-                  index = 26
-              elif unit == "4":
-                  lesson_list = lesson_list1[33:41]
-                  index = 34
-              else:
-                  lesson_list = lesson_list1[0:17]
-          elif lesson == "2":
-              lesson_list = lesson_list2
-          elif lesson == "3":
-              lesson_list = lesson_list3
-          elif lesson == "4":
-              lesson_list = lesson_list4
-          elif lesson == "5":
-              lesson_list = lesson_list2
-          elif lesson == "6":
-              lesson_list = lesson_list6
-          elif lesson == "7":
-              lesson_list = lesson_list2
-          elif lesson == "8":
-              lesson_list = lesson_list5                                          
-          elif lesson == "10":
-              lesson_list = lesson_list7
-          else:
-              lesson_list = lesson_list3
           for assignment in lesson_list:
             works = filter(lambda u: u.index == index, student_works)
             index = index + 1
