@@ -56,58 +56,58 @@ def homepage(request):
         
     teacher = User.objects.filter(groups__name='teacher').count()
     student = Enroll.objects.values('student_id').distinct().count()
-    workss = Work.objects.filter(~Q(lesson_id=10))
-    classrooms = Classroom.objects.all()
-    class_scratch_pool = [classroom for classroom in filter(lambda w: w.lesson == 1, classrooms)]    
-    class_scratch_ids = map(lambda a: a.id, class_scratch_pool)    
+    workss = list(Work.objects.filter(~Q(lesson_id=10)).values('lesson_id'))
+    classrooms = Classroom.objects.values('id', 'lesson').all()
+    class_scratch_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 1, classrooms)]    
+    class_scratch_ids = map(lambda a: a['id'], class_scratch_pool)    
     class_scratch = len(class_scratch_pool)    
-    class_vphysics_pool = [classroom for classroom in filter(lambda w: w.lesson == 2 or w.lesson == 4 or w.lesson == 5, classrooms)]    
-    class_vphysics_ids = map(lambda a: a.id, class_vphysics_pool)    
+    class_vphysics_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 2 or w['lesson'] == 4 or w['lesson'] == 5, classrooms)]    
+    class_vphysics_ids = map(lambda a: a['id'], class_vphysics_pool)    
     class_vphysics = len(class_vphysics_pool)    
-    class_euler_pool = [classroom for classroom in filter(lambda w: w.lesson == 3, classrooms)]    
-    class_euler_ids = map(lambda a: a.id, class_euler_pool)    
+    class_euler_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 3, classrooms)]    
+    class_euler_ids = map(lambda a: a['id'], class_euler_pool)    
     class_euler = len(class_euler_pool) 
-    class_django_pool = [classroom for classroom in filter(lambda w: w.lesson == 8, classrooms)]    
-    class_django_ids = map(lambda a: a.id, class_django_pool)    
+    class_django_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 8, classrooms)]    
+    class_django_ids = map(lambda a: a['id'], class_django_pool)    
     class_django = len(class_django_pool)    
-    class_pandas_pool = [classroom for classroom in filter(lambda w: w.lesson == 7, classrooms)]    
-    class_pandas_ids = map(lambda a: a.id, class_pandas_pool)    
+    class_pandas_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 7, classrooms)]    
+    class_pandas_ids = map(lambda a: a['id'], class_pandas_pool)    
     class_pandas = len(class_pandas_pool)  
-    class_robot_pool = [classroom for classroom in filter(lambda w: w.lesson == 6, classrooms)]    
-    class_robot_ids = map(lambda a: a.id, class_robot_pool)    
+    class_robot_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 6, classrooms)]    
+    class_robot_ids = map(lambda a: a['id'], class_robot_pool)    
     class_robot = len(class_robot_pool)  
-    class_book_pool = [classroom for classroom in filter(lambda w: w.lesson == 10, classrooms)]    
-    class_book_ids = map(lambda a: a.id, class_book_pool)    
+    class_book_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 10, classrooms)]    
+    class_book_ids = map(lambda a: a['id'], class_book_pool)    
     class_book = len(class_book_pool)                     
-    work_scratch = len(list(filter(lambda w: w.lesson_id == 1, workss)))
-    work_vphysics = len(list(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4 or w.lesson_id == 5), workss)))
-    work_euler = len(list(filter(lambda w: w.lesson_id == 3, workss)))
-    work_django = len(list(filter(lambda w: w.lesson_id == 8, workss)))    
-    work_pandas = len(list(filter(lambda w: w.lesson_id == 7, workss)))        
-    work_robot = len(list(filter(lambda w: w.lesson_id == 6, workss))) 
-    work_book = len(list(filter(lambda w: w.lesson_id == 10 and w.publish==True, workss)))           
-    enrolls = Enroll.objects.filter(seat__gt=0)
-    certificate_scratch1 = len(list(filter(lambda w: w.certificate1 == True, enrolls)))
-    certificate_scratch2 = len(list(filter(lambda w: w.certificate2 == True, enrolls)))
-    certificate_scratch3 = len(list(filter(lambda w: w.certificate3 == True, enrolls)))
-    certificate_scratch4 = len(list(filter(lambda w: w.certificate4 == True, enrolls)))
+    work_scratch = len(list(filter(lambda w: w['lesson_id'] == 1, workss)))
+    work_vphysics = len(list(filter((lambda w: w['lesson_id'] == 2 or w['lesson_id'] == 4 or w['lesson_id'] == 5), workss)))
+    work_euler = len(list(filter(lambda w: w['lesson_id'] == 3, workss)))
+    work_django = len(list(filter(lambda w: w['lesson_id'] == 8, workss)))    
+    work_pandas = len(list(filter(lambda w: w['lesson_id'] == 7, workss)))        
+    work_robot = len(list(filter(lambda w: w['lesson_id'] == 6, workss))) 
+    work_book = len(list(filter(lambda w: w['lesson_id'] == 10 and w.publish==True, workss)))           
+    enrolls = Enroll.objects.filter(seat__gt=0).values('classroom_id', 'certificate1', 'certificate2', 'certificate3', 'certificate4', 'certificate_vphysics', 'certificate_euler')
+    certificate_scratch1 = len(list(filter(lambda w: w['certificate1'] == True, enrolls)))
+    certificate_scratch2 = len(list(filter(lambda w: w['certificate2'] == True, enrolls)))
+    certificate_scratch3 = len(list(filter(lambda w: w['certificate3'] == True, enrolls)))
+    certificate_scratch4 = len(list(filter(lambda w: w['certificate4'] == True, enrolls)))
     certificate_scratch = certificate_scratch1+certificate_scratch2+certificate_scratch3+certificate_scratch4
-    certificate_vphysics =  len(list(filter(lambda w: w.certificate_vphysics == True, enrolls)))
-    certificate_euler =  len(list(filter(lambda w: w.certificate_euler == True, enrolls)))
-    classroom_scratch = [enroll for enroll in enrolls if enroll.classroom_id in class_scratch_ids]
-    enroll_scratch =  len(list(filter(lambda w: w.classroom_id, classroom_scratch)))
-    classroom_vphysics = [enroll for enroll in enrolls if enroll.classroom_id in class_vphysics_ids]
-    enroll_vphysics =  len(list(filter(lambda w: w.classroom_id, classroom_vphysics)))    
-    classroom_euler = [enroll for enroll in enrolls if enroll.classroom_id in class_euler_ids]
-    enroll_euler =  len(list(filter(lambda w: w.classroom_id, classroom_euler)))
-    classroom_django = [enroll for enroll in enrolls if enroll.classroom_id in class_django_ids]
-    enroll_django =  len(list(filter(lambda w: w.classroom_id, classroom_django)))    
-    classroom_pandas = [enroll for enroll in enrolls if enroll.classroom_id in class_pandas_ids]
-    enroll_pandas =  len(list(filter(lambda w: w.classroom_id, classroom_pandas)))  
-    classroom_robot = [enroll for enroll in enrolls if enroll.classroom_id in class_robot_ids]
-    enroll_robot =  len(list(filter(lambda w: w.classroom_id, classroom_robot))) 
-    classroom_book = [enroll for enroll in enrolls if enroll.classroom_id in class_book_ids]
-    enroll_book =  len(list(filter(lambda w: w.classroom_id, classroom_book)))                
+    certificate_vphysics =  len(list(filter(lambda w: w['certificate_vphysics'] == True, enrolls)))
+    certificate_euler =  len(list(filter(lambda w: w['certificate_euler'] == True, enrolls)))
+    classroom_scratch = [enroll for enroll in enrolls if enroll['classroom_id'] in class_scratch_ids]
+    enroll_scratch =  len(list(filter(lambda w: w['classroom_id'], classroom_scratch)))
+    classroom_vphysics = [enroll for enroll in enrolls if enroll['classroom_id'] in class_vphysics_ids]
+    enroll_vphysics =  len(list(filter(lambda w: w['classroom_id'], classroom_vphysics)))    
+    classroom_euler = [enroll for enroll in enrolls if enroll['classroom_id'] in class_euler_ids]
+    enroll_euler =  len(list(filter(lambda w: w['classroom_id'], classroom_euler)))
+    classroom_django = [enroll for enroll in enrolls if enroll['classroom_id'] in class_django_ids]
+    enroll_django =  len(list(filter(lambda w: w['classroom_id'], classroom_django)))    
+    classroom_pandas = [enroll for enroll in enrolls if enroll['classroom_id'] in class_pandas_ids]
+    enroll_pandas =  len(list(filter(lambda w: w['classroom_id'], classroom_pandas)))  
+    classroom_robot = [enroll for enroll in enrolls if enroll['classroom_id'] in class_robot_ids]
+    enroll_robot =  len(list(filter(lambda w: w['classroom_id'], classroom_robot))) 
+    classroom_book = [enroll for enroll in enrolls if enroll['classroom_id'] in class_book_ids]
+    enroll_book =  len(list(filter(lambda w: w['classroom_id'], classroom_book)))                
     works = [len(workss), [class_scratch, enroll_scratch, work_scratch], 
                           [class_vphysics, enroll_vphysics, work_vphysics],
                           [class_euler, enroll_euler, work_euler], 
