@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
-from django.shortcuts import render
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 from survey.models import PreSurvey1, PostSurvey1, PreSurvey2, PostSurvey2, PreSurvey5, PostSurvey5

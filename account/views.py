@@ -1,14 +1,13 @@
 # -*- coding: UTF-8 -*-
-from django.shortcuts import render_to_response, redirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
-from forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm, TeacherApplyForm
+from .forms import LoginForm, RegistrationForm, RegistrationSchoolForm, PasswordForm, RealnameForm, LineForm, SchoolForm, EmailForm, LoginStudentForm, TeacherApplyForm
 from teacher.forms import AnnounceForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
-from zone import *
+from .zone import *
 from account.models import County, Zone, School, Profile, PointHistory, Message, MessageContent, MessagePoll, Visitor, VisitorLog, LessonCounter
 from student.models import Work
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -80,35 +79,35 @@ def homepage(request):
     class_book_pool = [classroom for classroom in filter(lambda w: w.lesson == 10, classrooms)]    
     class_book_ids = map(lambda a: a.id, class_book_pool)    
     class_book = len(class_book_pool)                     
-    work_scratch = len(filter(lambda w: w.lesson_id == 1, workss))
-    work_vphysics = len(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4 or w.lesson_id == 5), workss))
-    work_euler = len(filter(lambda w: w.lesson_id == 3, workss))
-    work_django = len(filter(lambda w: w.lesson_id == 8, workss))    
-    work_pandas = len(filter(lambda w: w.lesson_id == 7, workss))        
-    work_robot = len(filter(lambda w: w.lesson_id == 6, workss)) 
-    work_book = len(filter(lambda w: w.lesson_id == 10 and w.publish==True, workss))           
+    work_scratch = len(list(filter(lambda w: w.lesson_id == 1, workss)))
+    work_vphysics = len(list(filter((lambda w: w.lesson_id == 2 or w.lesson_id == 4 or w.lesson_id == 5), workss)))
+    work_euler = len(list(filter(lambda w: w.lesson_id == 3, workss)))
+    work_django = len(list(filter(lambda w: w.lesson_id == 8, workss)))    
+    work_pandas = len(list(filter(lambda w: w.lesson_id == 7, workss)))        
+    work_robot = len(list(filter(lambda w: w.lesson_id == 6, workss))) 
+    work_book = len(list(filter(lambda w: w.lesson_id == 10 and w.publish==True, workss)))           
     enrolls = Enroll.objects.filter(seat__gt=0)
-    certificate_scratch1 = len(filter(lambda w: w.certificate1 == True, enrolls))
-    certificate_scratch2 = len(filter(lambda w: w.certificate2 == True, enrolls))
-    certificate_scratch3 = len(filter(lambda w: w.certificate3 == True, enrolls))
-    certificate_scratch4 = len(filter(lambda w: w.certificate4 == True, enrolls))
+    certificate_scratch1 = len(list(filter(lambda w: w.certificate1 == True, enrolls)))
+    certificate_scratch2 = len(list(filter(lambda w: w.certificate2 == True, enrolls)))
+    certificate_scratch3 = len(list(filter(lambda w: w.certificate3 == True, enrolls)))
+    certificate_scratch4 = len(list(filter(lambda w: w.certificate4 == True, enrolls)))
     certificate_scratch = certificate_scratch1+certificate_scratch2+certificate_scratch3+certificate_scratch4
-    certificate_vphysics =  len(filter(lambda w: w.certificate_vphysics == True, enrolls))
-    certificate_euler =  len(filter(lambda w: w.certificate_euler == True, enrolls))
+    certificate_vphysics =  len(list(filter(lambda w: w.certificate_vphysics == True, enrolls)))
+    certificate_euler =  len(list(filter(lambda w: w.certificate_euler == True, enrolls)))
     classroom_scratch = [enroll for enroll in enrolls if enroll.classroom_id in class_scratch_ids]
-    enroll_scratch =  len(filter(lambda w: w.classroom_id, classroom_scratch))
+    enroll_scratch =  len(list(filter(lambda w: w.classroom_id, classroom_scratch)))
     classroom_vphysics = [enroll for enroll in enrolls if enroll.classroom_id in class_vphysics_ids]
-    enroll_vphysics =  len(filter(lambda w: w.classroom_id, classroom_vphysics))    
+    enroll_vphysics =  len(list(filter(lambda w: w.classroom_id, classroom_vphysics)))    
     classroom_euler = [enroll for enroll in enrolls if enroll.classroom_id in class_euler_ids]
-    enroll_euler =  len(filter(lambda w: w.classroom_id, classroom_euler))
+    enroll_euler =  len(list(filter(lambda w: w.classroom_id, classroom_euler)))
     classroom_django = [enroll for enroll in enrolls if enroll.classroom_id in class_django_ids]
-    enroll_django =  len(filter(lambda w: w.classroom_id, classroom_django))    
+    enroll_django =  len(list(filter(lambda w: w.classroom_id, classroom_django)))    
     classroom_pandas = [enroll for enroll in enrolls if enroll.classroom_id in class_pandas_ids]
-    enroll_pandas =  len(filter(lambda w: w.classroom_id, classroom_pandas))  
+    enroll_pandas =  len(list(filter(lambda w: w.classroom_id, classroom_pandas)))  
     classroom_robot = [enroll for enroll in enrolls if enroll.classroom_id in class_robot_ids]
-    enroll_robot =  len(filter(lambda w: w.classroom_id, classroom_robot)) 
+    enroll_robot =  len(list(filter(lambda w: w.classroom_id, classroom_robot))) 
     classroom_book = [enroll for enroll in enrolls if enroll.classroom_id in class_book_ids]
-    enroll_book =  len(filter(lambda w: w.classroom_id, classroom_book))                
+    enroll_book =  len(list(filter(lambda w: w.classroom_id, classroom_book)))                
     works = [len(workss), [class_scratch, enroll_scratch, work_scratch], 
                           [class_vphysics, enroll_vphysics, work_vphysics],
                           [class_euler, enroll_euler, work_euler], 
@@ -150,18 +149,19 @@ def admin(request):
 def user_login(request, role):
     message = None
     test = ""
+    print(role)
     if request.method == "POST":
-        if role == "0":
+        if role == 0:
             form = LoginForm(request.POST)
         else:
             form = LoginStudentForm(request.POST)
         if form.is_valid():
-            teacher = request.POST['teacher']					
             username = request.POST['username']
             password = request.POST['password']
-            if role == "0":
+            if role == 0:
                 user = authenticate(username=username, password=password)
             else:
+                teacher = request.POST['teacher']					
                 user = authenticate(username=teacher+"_"+username, password=password)
             if user is not None:
                 if user.is_active:
@@ -215,7 +215,7 @@ def user_login(request, role):
                     except ObjectDoesNotExist:
                         visitor = Visitor(date=date_number)
                     except MultipleObjectsReturned:
-					    visitor = Visitor.objects.filter(date=date_number)[0]
+                        visitor = Visitor.objects.filter(date=date_number)[0]
                     visitor.count = visitor.count + 1
                     visitor.save()
                                         
@@ -229,7 +229,7 @@ def user_login(request, role):
             else:
                 message = "無效的帳號或密碼!"
     else:
-        if role == "0":
+        if role == 0:
             form = LoginForm()
         else:
             form = LoginStudentForm()
@@ -771,7 +771,7 @@ class LineReplyView(CreateView):
                 messages.append([message, messagepoll.read])
         context['messages'] = messages
         return context	 
-			
+            
 # 查看私訊內容
 def line_detail(request, classroom_id, message_id):
     message = Message.objects.get(id=message_id)
@@ -801,7 +801,7 @@ def line_download(request, file_id):
     # It's usually a good idea to set the 'Content-Length' header too.
     # You can also set any other required headers: Cache-Control, etc.
     return response
-	
+    
 # 顯示圖片
 def line_showpic(request, file_id):
         content = MessageContent.objects.get(id=file_id)

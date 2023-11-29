@@ -31,7 +31,7 @@ class School(models.Model):
     
 # 個人檔案資料
 class Profile(models.Model):
-  user = models.OneToOneField(settings.AUTH_USER_MODEL,related_name="profile")
+  user = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE, related_name="profile")
 	# 積分：上傳作業
   work = models.IntegerField(default=0)
 	# 積分：擔任小老師

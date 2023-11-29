@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 from .models import Certificate
-from django.shortcuts import render_to_response, redirect
-from django.shortcuts import render
-from django.template import RequestContext
+from django.shortcuts import render, redirect
+# from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from account.models import Message, MessagePoll, Profile, School
@@ -13,7 +12,7 @@ from PIL import Image,ImageDraw,ImageFont
 from django.conf import settings
 from django.utils.encoding import smart_text
 from django.core.files import File 
-import cStringIO as StringIO
+from io import StringIO
 import os
 from django.utils import timezone
 from django.http import JsonResponse

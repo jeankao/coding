@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
-from django.shortcuts import render
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 #from django.contrib.auth import authenticate, login
@@ -697,15 +696,15 @@ def submit(request, typing, lesson, index):
             works_pool = Science1Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
             questions = Science1Question.objects.filter(work_id=index)
             for question in questions:
-                works = filter(lambda w: w.question_id==question.id, works_pool)
+                works = list(filter(lambda w: w.question_id==question.id, works_pool))
                 if len(works) > 0:
                     contents = Science1Content.objects.filter(work_id=works[0].id).order_by("id")
                     if len(contents)>0:
                         contents1.append([contents])
                     else:
-				        contents1.append([[]])
+                        contents1.append([[]])
                 else:
-				    contents1.append([[]])
+                    contents1.append([[]])
             works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("id")  
             work3_ids = [work.id for work in works3]            
             if works3.exists():
@@ -927,43 +926,43 @@ def progress(request, typing, lesson, unit, classroom_id):
         else:
             lesson_list = lesson_list3
 
-    for enroll in enroll_pool:
-      student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
-      bar = []
-          for assignment in lesson_list:
-            works = filter(lambda u: u.index == index, student_works)
-            index = index + 1
-            if len(works) > 0:
-              if lesson == "10":
-                if works[0].publish:
-                    bar.append([assignment, works[0]])
+        for enroll in enroll_pool:
+            student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
+            bar = []
+            for assignment in lesson_list:
+                works = filter(lambda u: u.index == index, student_works)
+                index = index + 1
+                if len(works) > 0:
+                    if lesson == "10":
+                        if works[0].publish:
+                            bar.append([assignment, works[0]])
+                        else:
+                            bar.append([assignment, False])
+                    else :
+                        bar.append([assignment, works[0]])
                 else:
                     bar.append([assignment, False])
-              else :
+                bars.append([enroll, bar])
+    elif typing == "1":
+        lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+        for assignment in lesson_list:
+            works = filter(lambda u: u.index == assignment.id, student_works)
+            index = index + 1
+            if len(works) > 0:
                 bar.append([assignment, works[0]])
             else:
-              bar.append([assignment, False])
-          bars.append([enroll, bar])
-      elif typing == "1":
-          lesson_list = TWork.objects.filter(classroom_id=classroom_id)
-          for assignment in lesson_list:
+                bar.append([assignment, False])
+        bars.append([enroll, bar])
+    elif typing == "2":
+        lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+        for assignment in lesson_list:
             works = filter(lambda u: u.index == assignment.id, student_works)
             index = index + 1
             if len(works) > 0:
-              bar.append([assignment, works[0]])
+                bar.append([assignment, works[0]])
             else:
-              bar.append([assignment, False])
-          bars.append([enroll, bar])
-      elif typing == "2":
-          lesson_list = CWork.objects.filter(classroom_id=classroom_id)
-          for assignment in lesson_list:
-            works = filter(lambda u: u.index == assignment.id, student_works)
-            index = index + 1
-            if len(works) > 0:
-              bar.append([assignment, works[0]])
-            else:
-              bar.append([assignment, False])
-          bars.append([enroll, bar])
+                bar.append([assignment, False])
+        bars.append([enroll, bar])
     return render(request, 'student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list})
 
 # 發表心得
@@ -1332,7 +1331,7 @@ def forum_submit(request, classroom_id, index):
                 return redirect("/student/forum/publish/"+classroom_id+"/"+index+"/2")
             return redirect("/student/forum/memo/"+classroom_id+"/"+index+"/0")
         else:
-            return render_to_response('student/forum_form.html', {'error':form.errors}, context_instance=RequestContext(request))
+            return render(request, 'student/forum_form.html', {'error':form.errors}, context_instance=RequestContext(request))
     else:
         if not works.exists():
             work = SFWork(index=0, publish=False)
@@ -1369,52 +1368,52 @@ def forum_show(request, index, user_id, classroom_id):
 
  # 查詢某作業所有同學心得
 def forum_memo(request, classroom_id, index, action):
-	if not is_classmate(request.user, classroom_id):
-		return redirect("/")
-	enrolls = Enroll.objects.filter(classroom_id=classroom_id)
-	datas = []
-	contents = FContent.objects.filter(forum_id=index).order_by("-id")
-	fwork = FWork.objects.get(id=index)
-	teacher_id = fwork.teacher_id
-	subject = fwork.title
-	if action == "2":
-		works_pool = SFWork.objects.filter(index=index, score=5).order_by("-id")
-	else:
-	  # 一次取得所有 SFWork
-	  works_pool = SFWork.objects.filter(index=index).order_by("-id", "publish")
-	reply_pool = SFReply.objects.filter(index=index).order_by("-id")
-	file_pool = SFContent.objects.filter(index=index, visible=True).order_by("-id")
-	for enroll in enrolls:
-		works = filter(lambda w: w.student_id==enroll.student_id, works_pool)
-		# 對未作答學生不特別處理，因為 filter 會傳回 []
-		if len(works)>0:
-			replys = filter(lambda w: w.work_id==works[-1].id, reply_pool)
-			files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
-			if action == "2" :
-			  if works[-1].score == 5:
-					datas.append([enroll, works, replys, files])
-			else :
-				datas.append([enroll, works, replys, files])
-		else :
-			replys = []
-			if not action == "2" :
-				files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
-				datas.append([enroll, works, replys, files])
-	def getKey(custom):
-		if custom[1]:
-			if action == "3":
-				return custom[1][-1].like_count
-			elif action == "2":
-				return custom[1][-1].score, custom[1][0].publication_date
-			elif action == "1":
-				return -custom[0].seat
-			else :
-				return custom[1][0].reply_date, -custom[0].seat
-		else:
-			return -custom[0].seat
-	datas = sorted(datas, key=getKey, reverse=True)
+    if not is_classmate(request.user, classroom_id):
+        return redirect("/")
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    datas = []
+    contents = FContent.objects.filter(forum_id=index).order_by("-id")
+    fwork = FWork.objects.get(id=index)
+    teacher_id = fwork.teacher_id
+    subject = fwork.title
+    if action == "2":
+        works_pool = SFWork.objects.filter(index=index, score=5).order_by("-id")
+    else:
+      # 一次取得所有 SFWork
+      works_pool = SFWork.objects.filter(index=index).order_by("-id", "publish")
+    reply_pool = SFReply.objects.filter(index=index).order_by("-id")
+    file_pool = SFContent.objects.filter(index=index, visible=True).order_by("-id")
+    for enroll in enrolls:
+        works = filter(lambda w: w.student_id==enroll.student_id, works_pool)
+        # 對未作答學生不特別處理，因為 filter 會傳回 []
+        if len(works)>0:
+            replys = filter(lambda w: w.work_id==works[-1].id, reply_pool)
+            files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
+            if action == "2" :
+              if works[-1].score == 5:
+                    datas.append([enroll, works, replys, files])
+            else :
+                datas.append([enroll, works, replys, files])
+        else :
+            replys = []
+            if not action == "2" :
+                files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
+                datas.append([enroll, works, replys, files])
+    def getKey(custom):
+        if custom[1]:
+            if action == "3":
+                return custom[1][-1].like_count
+            elif action == "2":
+                return custom[1][-1].score, custom[1][0].publication_date
+            elif action == "1":
+                return -custom[0].seat
+            else :
+                return custom[1][0].reply_date, -custom[0].seat
+        else:
+            return -custom[0].seat
+    datas = sorted(datas, key=getKey, reverse=True)
 
-	return render(request, 'student/forum_memo.html', {'action':action, 'replys':replys, 'datas': datas, 'contents':contents, 'teacher_id':teacher_id, 'subject':subject, 'classroom_id':classroom_id, 'index':index, 'is_teacher':is_teacher(request.user, classroom_id)})
+    return render(request, 'student/forum_memo.html', {'action':action, 'replys':replys, 'datas': datas, 'contents':contents, 'teacher_id':teacher_id, 'subject':subject, 'classroom_id':classroom_id, 'index':index, 'is_teacher':is_teacher(request.user, classroom_id)})
 
 def forum_history(request, user_id, index, classroom_id):
     work = []
@@ -1670,12 +1669,12 @@ def content_edit(request, types, typing, lesson, index, content_id):
                 try:
                     content = Science1Content.objects.get(id=content_id)
                 except ObjectDoesNotExist:
-	                  content = Science1Content(types= request.POST.get("types"))
+                      content = Science1Content(types= request.POST.get("types"))
             elif types == "41" or types== "42":
                 try:
                     content = Science4Content.objects.get(id=content_id)
                 except ObjectDoesNotExist:
-	                  content = Science4Content(types= request.POST.get("types"))
+                      content = Science4Content(types= request.POST.get("types"))
             if content.types == 11 or content.types == 41:
                 content.text = request.POST.get("text")
             elif content.types == 12 or content.types == 42:
@@ -1705,7 +1704,7 @@ class WorkReportView(ListView):
         dates = works.values_list('month').distinct().order_by()
         queryset = []
         for date in dates:
-            queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), len(filter(lambda w: w['month'] == date[0], works))])
+            queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), len(list(filter(lambda w: w['month'] == date[0], works)))])
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -1722,7 +1721,7 @@ class WorkReportView(ListView):
         dates = works.values_list('day').distinct().order_by()
         queryset = []
         for date in dates:
-            queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), date[0].strftime('%d'), len(filter(lambda w: w['day'] == date[0], works))])
+            queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), date[0].strftime('%d'), len(list(filter(lambda w: w['day'] == date[0], works)))])
         context['total_works'] = queryset
         context['classroom_id']=self.kwargs['classroom_id']      
         return context	    
@@ -1748,7 +1747,7 @@ class WorkMonthView(ListView):
             queryset.append([work.publication_date, work.user_id, lesson_list7[work.index-1], work.memo_c, work.memo_e, work.typing, work.index])
         return queryset
 
-	
+    
 # 選組所有組別
 class GroupPanel(ListView):
     context_object_name = 'groups'

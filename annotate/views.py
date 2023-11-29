@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse, HttpResponseRedirectBase, HttpResponseNotFound
 from django.utils import timezone
 from django.contrib.auth.models import User
-from models import Annotation
+from .models import Annotation
 from student.models import Enroll
 import json
 

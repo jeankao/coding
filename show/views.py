@@ -4,12 +4,12 @@ from django.shortcuts import render
 from show.models import ShowGroup, ShowReview, Round, ShowFile
 from django.core.exceptions import ObjectDoesNotExist
 from student.models import Enroll
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
+from django.shortcuts import redirect
+# from django.template import RequestContext
 from show.forms import GroupForm, ShowForm1, ShowForm2, ReviewForm1, ReviewForm2, GroupShowSizeForm
 from teacher.models import Classroom
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.http import HttpResponseRedirect
+# from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.db.models import Sum
 from account.models import Profile, PointHistory
@@ -20,11 +20,11 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from django.http import HttpResponse
 import math
-import cStringIO as StringIO
-from PIL import Image,ImageDraw,ImageFont
+# import cStringIO as StringIO
+from io import StringIO
+# from PIL import Image,ImageDraw,ImageFont
 from binascii import a2b_base64
 import os
-import StringIO
 import zipfile
 import xlsxwriter
 from datetime import datetime
@@ -33,10 +33,10 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from uuid import uuid4
 from wsgiref.util import FileWrapper
-from operator import itemgetter
+# from operator import itemgetter
 from django.views import generic
-import json
-from decimal import Decimal
+# import json
+# from decimal import Decimal
 
 def is_teacher(user, classroom_id):
     return user.groups.filter(name='teacher').exists() and Classroom.objects.filter(teacher_id=user.id, id=classroom_id).exists()

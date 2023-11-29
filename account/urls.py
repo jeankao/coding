@@ -1,67 +1,67 @@
 # -*- coding: UTF-8 -*-
-from django.conf.urls import url
+from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 urlpatterns = [
     # post views
-    url(r'^dashboard/(?P<action>\d+)/$',  views.MessageListView.as_view()),  
+    path('dashboard/<int:action>/',  views.MessageListView.as_view()),  
     #登入
-    url(r'^login/(?P<role>\d+)/$', views.user_login),  
+    path('login/<int:role>/', views.user_login),  
     #註冊帳號
-    url(r'^register/$', views.register),
+    path('register/', views.register),
     #註冊學校
-    url(r'^register_school/$', views.register_school),  
+    path('register_school/', views.register_school),  
     #登出
-    url(r'^logout/$',auth_views.logout),
+    path('logout/',auth_views.LogoutView.as_view()),
     #列出所有帳號
-    url(r'^userlist/(?P<group>\d+)/$', views.UserListView.as_view()),
+    path('userlist/<int:group>/', views.UserListView.as_view()),
     # 作者
-    url(r'^author/$', views.author),
+    path('author/', views.author),
     # 關於我們
-    url(r'^about/$', views.about),  
+    path('about/', views.about),  
     # 連絡我們
-    url(r'^contact/$', views.contact),
+    path('contact/', views.contact),
     # 教材研發
-    url(r'^people/$', views.people),	
+    path('people/', views.people),	
     # 數據統計 
-    url(r'^statics/lesson/$', views.LessonCountView.as_view()),      
+    path('statics/lesson/', views.LessonCountView.as_view()),      
     #訪客
-    url(r'^statics/login/$', views.VisitorListView.as_view()),    
-    url(r'^statics/login/log/(?P<visitor_id>\d+)/$', login_required(views.VisitorLogListView.as_view())),   
+    path('statics/login/', views.VisitorListView.as_view()),    
+    path('statics/login/log/<int:visitor_id>/', login_required(views.VisitorLogListView.as_view())),   
     # 讀取訊息
-    url(r'^message/(?P<messagepoll_id>\d+)/$', views.message),  
+    path('message/<int:messagepoll_id>/', views.message),  
     #個人檔案
-    url(r'^profile/(?P<user_id>\d+)/$', views.profile),    
+    path('profile/<int:user_id>/', views.profile),    
     #修改密碼
-    url(r'^password-change/$', auth_views.password_change, name='password_change'),
-    url(r'^password-change/done/$', auth_views.password_change_done, name='password_change_done'),    
-    url(r'^password/(?P<user_id>\d+)/$', views.password),
+    path('password-change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
+    path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),    
+    path('password/<int:user_id>/', views.password),
     #修改真實姓名
-    url(r'^realname/(?P<user_id>\d+)/$', views.adminrealname),    
-    url(r'^realname/$', views.realname, name='realname'), 
+    path('realname/<int:user_id>/', views.adminrealname),    
+    path('realname/', views.realname, name='realname'), 
     #修改學校
-    url(r'^school/$', views.adminschool),     
+    path('school/', views.adminschool),     
     #修改信箱
-    url(r'^email/$', views.adminemail),    
+    path('email/', views.adminemail),    
     #積分記錄
-    url(r'^log/(?P<kind>\d+)/(?P<user_id>\d+)/$', views.LogListView.as_view()),	     
+    path('log/<int:kind>/<int:user_id>/', views.LogListView.as_view()),	     
     #管理介面 
-    url(r'^admin/$', login_required(views.admin)),     
-    url(r'^admin/schools/$', views.schools),       
-    url(r'^admin/school/(?P<pk>\d+)/$', login_required(views.SchoolUpdateView.as_view())),    
+    path('admin/', login_required(views.admin)),     
+    path('admin/schools/', views.schools),       
+    path('admin/school/<int:pk>/', login_required(views.SchoolUpdateView.as_view())),    
     #設定教師
-    url(r'^teacher/make/$', login_required(views.make)), 
-    url(r'^teacher/apply/$', login_required(views.teacher_apply)),   
+    path('teacher/make/', login_required(views.make)), 
+    path('teacher/apply/', login_required(views.teacher_apply)),   
     # 列所出有圖像
-    url(r'^avatar/$', views.avatar),  
+    path('avatar/', views.avatar),  
     # 私訊
-    url(r'^line/$', login_required(views.LineListView.as_view())),    
-    url(r'^line/class/(?P<classroom_id>\d+)/$', login_required(views.LineClassListView.as_view())),        
-    url(r'^line/add/(?P<classroom_id>\d+)/(?P<user_id>\d+)/$', login_required(views.LineCreateView.as_view())),
-    url(r'^line/reply/(?P<classroom_id>\d+)/(?P<user_id>\d+)/(?P<message_id>\d+)/$', login_required(views.LineReplyView.as_view())),	
-    url(r'^line/detail/(?P<classroom_id>\d+)/(?P<message_id>\d+)/$', login_required(views.line_detail)),
-	url(r'^line/download/(?P<file_id>\d+)/$', views.line_download, name='forum-download'), 
-	url(r'^line/showpic/(?P<file_id>\d+)/$', login_required(views.line_showpic), name='forum-showpic'), 
-    url(r'^line/teacher/$', login_required(views.LineTeacherCreateView.as_view())),	  
+    path('line/', login_required(views.LineListView.as_view())),    
+    path('line/class/<int:classroom_id>/', login_required(views.LineClassListView.as_view())),        
+    path('line/add/<int:classroom_id>/<int:user_id>/', login_required(views.LineCreateView.as_view())),
+    path('line/reply/<int:classroom_id>/<int:user_id>/<int:message_id>/', login_required(views.LineReplyView.as_view())),	
+    path('line/detail/<int:classroom_id>/<int:message_id>/', login_required(views.line_detail)),
+	path('line/download/<int:file_id>/', views.line_download, name='forum-download'), 
+	path('line/showpic/<int:file_id>/', login_required(views.line_showpic), name='forum-showpic'), 
+    path('line/teacher/', login_required(views.LineTeacherCreateView.as_view())),	  
 ]
