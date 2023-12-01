@@ -43,6 +43,7 @@ from datetime import datetime
 from .helper import VideoLogHelper
 import re
 import io
+from urllib.parse import quote as urlquote
 # reload(sys)
 # from django.db.models.functions import Length
 from django.forms import modelformset_factory
@@ -2049,8 +2050,9 @@ def forum_grade(request, classroom_id, action):
     #下載Excel
     if action == "1":
         classroom = Classroom.objects.get(id=classroom_id)       
-        output = StringIO.StringIO()
-        workbook = xlsxwriter.Workbook(output)    
+        # output = StringIO.StringIO()
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})    
         worksheet = workbook.add_worksheet(classroom.name)
         date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
         
@@ -2081,12 +2083,14 @@ def forum_grade(request, classroom_id, action):
                 index +=1 
 
         workbook.close()
+        output.seek(0)
         # xlsx_data contains the Excel file
-        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response = HttpResponse(output.read(), content_type='application/vnd.ms-excel')
         filename = classroom.name + '-' + str(localtime(timezone.now()).date()) + '.xlsx'
-        response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
-        xlsx_data = output.getvalue()
-        response.write(xlsx_data)
+        response['Content-Disposition'] = "attachment;filename*=utf-8''{0}".format(filename.encode('utf-8'))
+        # xlsx_data = output.getvalue()
+        # response.write(xlsx_data)
+        output.close()
         return response
     else :
         return render(request, 'teacher/forum_grade.html',{'results':results, 'forums':forums, 'classroom_id':classroom_id, 'fclasses':fclasses})

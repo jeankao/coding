@@ -286,7 +286,7 @@ class ClassroomList(ListView):
 
     def get_queryset(self):
         classrooms = []
-        enrolls = Enroll.objects.filter(student_id=self.request.user.id).order_by("-id")
+        enrolls = list(Enroll.objects.filter(student_id=self.request.user.id).order_by("-id"))
         round_pool = Round.objects.all().order_by("-id")
         for enroll in enrolls :
             shows = filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool)
@@ -577,9 +577,9 @@ def submit(request, typing, lesson, index):
                     directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                     image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
-                    if not os.path.exists(settings.BASE_DIR + "/" + directory):
-                        os.makedirs(settings.BASE_DIR + "/" + directory)
-                    with open(settings.BASE_DIR + "/" + image_file, 'wb') as fd:
+                    if not os.path.exists(settings.BASE_DIR  / directory):
+                        os.makedirs(settings.BASE_DIR / directory)
+                    with open(settings.BASE_DIR / image_file, 'wb') as fd:
                         fd.write(binary_data)
                         fd.close()
                     work.picture=image_file
@@ -886,7 +886,7 @@ def progress(request, typing, lesson, unit, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     bars = []
 
-    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+    enroll_pool = list(Enroll.objects.filter(classroom_id=classroom_id).order_by('seat'))
     student_ids = map(lambda a: a.student_id, enroll_pool)
     work_pool = Work.objects.filter(typing=typing, user_id__in=student_ids, lesson_id=lesson).order_by("-id")
 
@@ -926,11 +926,12 @@ def progress(request, typing, lesson, unit, classroom_id):
         else:
             lesson_list = lesson_list3
 
-        for enroll in enroll_pool:
-            student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
-            bar = []
+    for enroll in enroll_pool:
+        student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
+        bar = []
+        if typing == "0":
             for assignment in lesson_list:
-                works = filter(lambda u: u.index == index, student_works)
+                works = list(filter(lambda u: u.index == index, student_works))
                 index = index + 1
                 if len(works) > 0:
                     if lesson == "10":
@@ -942,27 +943,27 @@ def progress(request, typing, lesson, unit, classroom_id):
                         bar.append([assignment, works[0]])
                 else:
                     bar.append([assignment, False])
-                bars.append([enroll, bar])
-    elif typing == "1":
-        lesson_list = TWork.objects.filter(classroom_id=classroom_id)
-        for assignment in lesson_list:
-            works = filter(lambda u: u.index == assignment.id, student_works)
-            index = index + 1
-            if len(works) > 0:
-                bar.append([assignment, works[0]])
-            else:
-                bar.append([assignment, False])
-        bars.append([enroll, bar])
-    elif typing == "2":
-        lesson_list = CWork.objects.filter(classroom_id=classroom_id)
-        for assignment in lesson_list:
-            works = filter(lambda u: u.index == assignment.id, student_works)
-            index = index + 1
-            if len(works) > 0:
-                bar.append([assignment, works[0]])
-            else:
-                bar.append([assignment, False])
-        bars.append([enroll, bar])
+            bars.append([enroll, bar])
+        elif typing == "1":
+            lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+            for assignment in lesson_list:
+                works = list(filter(lambda u: u.index == assignment.id, student_works))
+                index = index + 1
+                if len(works) > 0:
+                    bar.append([assignment, works[0]])
+                else:
+                    bar.append([assignment, False])
+            bars.append([enroll, bar])
+        elif typing == "2":
+            lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+            for assignment in lesson_list:
+                works = filter(lambda u: u.index == assignment.id, student_works)
+                index = index + 1
+                if len(works) > 0:
+                    bar.append([assignment, works[0]])
+                else:
+                    bar.append([assignment, False])
+            bars.append([enroll, bar])
     return render(request, 'student/progress.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'bars':bars,'classroom':classroom, 'lesson_list':lesson_list})
 
 # 發表心得

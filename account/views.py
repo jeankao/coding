@@ -648,7 +648,7 @@ class LineCreateView(CreateView):
         self.object.reader_id = self.kwargs['user_id']
         self.object.type = 2
         self.object.save()
-        self.object.url = "/account/line/detail/" + self.kwargs['classroom_id'] + "/" + str(self.object.id)
+        self.object.url = "/account/line/detail/" + str(self.kwargs['classroom_id']) + "/" + str(self.object.id)
         self.object.classroom_id = 0 - int(self.kwargs['classroom_id'])
         self.object.save()
         if self.request.FILES:

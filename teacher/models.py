@@ -63,6 +63,9 @@ class Classroom(models.Model):
         
     def lesson_choice(self):
         return dict(Classroom.LessonShort_CHOICES)[self.lesson]	
+    
+    def __str__(self):
+        return "{}({})".format(self.name, dict(self.LessonShort_CHOICES)[self.lesson])
 			
 #匯入
 class ImportUser(models.Model):
