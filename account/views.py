@@ -801,4 +801,4 @@ def line_download(request, file_id):
 # 顯示圖片
 def line_showpic(request, file_id):
         content = MessageContent.objects.values().get(id=file_id)
-        return render(request, 'account/forum_showpic.html', {'content':content})
+        return render(request, 'account/line_showpic.html', {'content':content})
