@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'student',
     'certificate',
     'survey',
-    'nocaptcha_recaptcha',  
+    'django_recaptcha',
     'show',
     'django.contrib.sitemaps',  
     'photologue',
@@ -157,9 +157,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # 先去 Google 申請 API Key 
 # https://www.google.com/recaptcha/admin
-# 再將 SITE_KEY 與 SECRET_KEY 置換下方內容
-NORECAPTCHA_SITE_KEY = "6LcNEVUUAAAAAFQxZbZzVUCW34nLOAhqwZ1dVfZi"
-NORECAPTCHA_SECRET_KEY = "6LcNEVUUAAAAAH0hzwBAPXlwDztbu9wehdSL0cLr"
+RECAPTCHA_PUBLIC_KEY = "6LcNEVUUAAAAAFQxZbZzVUCW34nLOAhqwZ1dVfZi"
+RECAPTCHA_PRIVATE_KEY = "6LcNEVUUAAAAAH0hzwBAPXlwDztbu9wehdSL0cLr"
 
 # SESSION AGE 5 Minutes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -172,7 +171,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGGING = {
     'version': 1,

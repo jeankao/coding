@@ -18,7 +18,7 @@ from certificate.models import Certificate
 from django.apps import apps
 from teacher.models import Classroom
 from django.contrib.auth.decorators import user_passes_test
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.contrib.auth.models import Group
 from django.core.files.storage import FileSystemStorage
 from uuid import uuid4
@@ -738,13 +738,15 @@ class LineReplyView(CreateView):
         self.object.reader_id = self.kwargs['user_id']
         self.object.type = 2
         self.object.save()
-        self.object.url = "/account/line/detail/" + self.kwargs['classroom_id'] + "/" + str(self.object.id)
+        # self.object.url = "/account/line/detail/" + self.kwargs['classroom_id'] + "/" + str(self.object.id)
+        self.object.url = f"/account/line/detail/{self.kwargs['classroom_id']}/{self.object.id}"
         self.object.classroom_id = 0 - int(self.kwargs['classroom_id'])
         self.object.save()
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
                 content = MessageContent()
-                fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.user.id)+"/")
+                # fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.user.id)+"/")
+                fs = FileSystemStorage(settings.BASE_DIR / "static/attach" / str(self.request.user.id) / "")
                 filename = uuid4().hex
                 content.title = file.name
                 content.message_id = self.object.id
@@ -793,16 +795,10 @@ def line_detail(request, classroom_id, message_id):
 def line_download(request, file_id):
     content = MessageContent.objects.get(id=file_id)
     filename = content.title
-    download =  settings.BASE_DIR + "/static/attach/" + content.filename
-    wrapper = FileWrapper(file( download, "r" ))
-    response = HttpResponse(wrapper, content_type = 'application/force-download')
-    #response = HttpResponse(content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
-    # It's usually a good idea to set the 'Content-Length' header too.
-    # You can also set any other required headers: Cache-Control, etc.
-    return response
+    download =  settings.BASE_DIR / "static/attach" / content.filename
+    return FileResponse(open(download, "rb"), filename = filename, as_attachment = True)
     
 # 顯示圖片
 def line_showpic(request, file_id):
-        content = MessageContent.objects.get(id=file_id)
-        return render(request, 'student/forum_showpic.html', {'content':content})
+        content = MessageContent.objects.values().get(id=file_id)
+        return render(request, 'account/forum_showpic.html', {'content':content})

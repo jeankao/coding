@@ -10,7 +10,7 @@ from teacher.models import Classroom
 from student.models import Enroll
 from PIL import Image,ImageDraw,ImageFont
 from django.conf import settings
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str as smart_text
 from django.core.files import File 
 from io import StringIO
 import os

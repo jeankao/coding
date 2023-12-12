@@ -2,7 +2,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from account.models import School, Message, MessagePoll, TeacherApply
-from nocaptcha_recaptcha.fields import NoReCaptchaField
+# from nocaptcha_recaptcha.fields import NoReCaptchaField
+from django_recaptcha.fields import ReCaptchaField
 
 # 使用者登入表單
 class LoginForm(forms.Form):
@@ -16,7 +17,7 @@ class LoginForm(forms.Form):
 
 # 學校表單
 class RegistrationSchoolForm(forms.ModelForm):
-    captcha = NoReCaptchaField(label='')
+    captcha = ReCaptchaField(label='')
 
     class Meta:
         model = School
@@ -43,7 +44,7 @@ class RegistrationForm(forms.ModelForm):
     )
     password = forms.CharField(label='Password',widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
-    captcha = NoReCaptchaField(label='')
+    captcha = ReCaptchaField(label='')
 
     class Meta:
         model = User

@@ -1,6 +1,6 @@
 asgiref==3.7.2
 chardet==5.2.0
-Django==3.2.23
+Django==4.2.8
 django-excel==0.0.10
 django-nocaptcha-recaptcha==0.0.20
 django-photologue==3.17
