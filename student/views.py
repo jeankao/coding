@@ -30,7 +30,7 @@ import jieba
 from django.db.models import Q
 import json
 from django.db.models.functions import TruncMonth, TruncDay
-from django.db.models import Count
+from django.db.models import Count, Subquery, OuterRef
 from collections import OrderedDict
 
 # 判斷是否為授課教師
@@ -188,14 +188,16 @@ def lesson(request, lesson):
 
 # 查看班級學生
 def classmate(request, classroom_id):
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-    enroll_group = []
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student__profile').annotate(
+        logins = Count('student__visit_log')
+    ).order_by("seat").distinct()
+    # enroll_group = []
     classroom=Classroom.objects.get(id=classroom_id)
-    for enroll in enrolls:
-        login_times = len(VisitorLog.objects.filter(user_id=enroll.student_id))
-        enroll_group.append([enroll,  login_times])
+    # for enroll in enrolls:
+    #     login_times = len(VisitorLog.objects.filter(user_id=enroll.student_id))
+    #     enroll_group.append([enroll,  login_times])
 
-    return render(request, 'student/classmate.html', {'classroom':classroom, 'enrolls':enroll_group})
+    return render(request, 'student/classmate.html', {'classroom':classroom, 'enrolls':enrolls})
 
 # 顯示所有組別
 def group(request, classroom_id):

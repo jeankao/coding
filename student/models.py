@@ -11,10 +11,8 @@ import json
 # 學生選課資料
 class Enroll(models.Model):
     # 學生序號
-    # student_id = models.IntegerField(default=0)
     student = models.ForeignKey(User, models.CASCADE, related_name = 'enroll_list')
     # 班級序號
-    # classroom_id = models.IntegerField(default=0)
     classroom = models.ForeignKey(Classroom, models.CASCADE, related_name = 'enroll_list')
     # 座號
     seat = models.IntegerField(default=0)

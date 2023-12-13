@@ -18,13 +18,13 @@
             <td>最新登入</td>
             <td>登入次數</td>
         </tr>
-        {% for enroll, login_times in enrolls %}
+        {% for enroll in enrolls %}
             <tr>
 			{% if request.user.id == classroom.teacher_id %}
 			<td>
-			<A href="/teacher/unenroll/{{enroll.id}}/{{enroll.classroom_id}}" onclick="return confirm('確定要刪除嗎?')" role="buuton" class="btn btn-success">退選</a>
+			<a href="/teacher/unenroll/{{enroll.id}}/{{enroll.classroom_id}}" onclick="return confirm('確定要刪除嗎?')" role="buuton" class="btn btn-success">退選</a>
 			<a href="/student/classroom/seat/{{enroll.id}}/{{enroll.classroom_id}}" role="buuton" class="btn btn-success">座號</a>
-				<a href="/account/realname/{{enroll.student_id}}" role="buuton" class="btn btn-success">姓名</a>
+			<a href="/account/realname/{{enroll.student_id}}" role="buuton" class="btn btn-success">姓名</a>
 		  <a href="/account/password/{{enroll.student.id}}" role="buuton" class="btn btn-success">密碼</a>
 			</td>
 				{% endif %}
@@ -37,7 +37,7 @@
               <td>第{{enroll.group|add:1}}組</td>
             {% endif %}
             <td>{{enroll.student.last_login}}</td>
-						<td>{% if login_times > 0 %}<a href="/student/loginlog/{{enroll.student_id}}">{{login_times}}</a>{% else %} 0 {% endif %}</td>
+						<td>{{ enroll.logins }}</td>
 					</tr>
         {% endfor %}
         </table>

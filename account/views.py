@@ -679,17 +679,17 @@ class LineCreateView(CreateView):
         context['messages'] = messages
         return context	 
 
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 #新增一個私訊
-class LineTeacherCreateView(CreateView):
+class LineTeacherCreateView(UserPassesTestMixin, CreateView):
     model = Message
     form_class = AnnounceForm
     template_name = 'teacher/announce_form.html'
 
-    def dispatch(self, *args, **kwargs):
-        if not self.request.user.is_superuser:
-            raise PermissionDenied
-        else :
-            return super(LineTeacherCreateView, self).dispatch(*args, **kwargs)
+    def test_func(self):
+        return self.request.user.is_superuser
+        
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.title = u"[系統公告]" + self.object.title
