@@ -296,7 +296,7 @@ class UserListView(ListView):
             keyword = self.request.GET.get('account')
             queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
         else :
-            if self.kwargs['group'] == "1":
+            if self.kwargs['group'] == 1:
                 queryset = User.objects.filter(groups__name='apply').order_by("-id")
             else :
                 queryset = User.objects.all().order_by('-id')
@@ -317,13 +317,13 @@ class MessageListView(ListView):
     def get_queryset(self):             
         query = []
         #公告
-        if self.kwargs['action'] == "1":
+        if self.kwargs['action'] == 1:
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=1).order_by('-message_id')
         #私訊
-        elif self.kwargs['action'] == "2":
+        elif self.kwargs['action'] == 2:
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=2).order_by('-message_id')
         #系統
-        elif self.kwargs['action'] == "3":
+        elif self.kwargs['action'] == 3:
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=3).order_by('-message_id')						
         else :
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
@@ -475,7 +475,7 @@ class LogListView(ListView):
     template_name = 'account/log_list.html'
     
     def get_queryset(self):          
-        if not self.kwargs['kind'] == "0" :
+        if not self.kwargs['kind'] == 0 :
             queryset = PointHistory.objects.filter(user_id=self.kwargs['user_id'],kind=self.kwargs['kind']).order_by('-id')
         else :
             queryset = PointHistory.objects.filter(user_id=self.kwargs['user_id']).order_by('-id')		
@@ -556,7 +556,7 @@ class VisitorLogListView(ListView):
         return queryset
         
     def render(request, self, context):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return redirect('/')
         return super(VisitorLogListView, self).render(request, context)	
 

@@ -6,13 +6,16 @@ from django.contrib.auth.models import User
 from teacher.models import Classroom
 from django.utils import timezone
 from django.core.validators import RegexValidator, validate_comma_separated_integer_list
+import json
 
 # 學生選課資料
 class Enroll(models.Model):
     # 學生序號
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE, related_name = 'enroll_list')
     # 班級序號
-    classroom_id = models.IntegerField(default=0)
+    # classroom_id = models.IntegerField(default=0)
+    classroom = models.ForeignKey(Classroom, models.CASCADE, related_name = 'enroll_list')
     # 座號
     seat = models.IntegerField(default=0)
     # 組別
@@ -74,19 +77,19 @@ class Enroll(models.Model):
     # 檢核作業
     score_memo_check =  models.IntegerField(default=0)
 
-    @property
-    def classroom(self):
-        return Classroom.objects.get(id=self.classroom_id)
+    # @property
+    # def classroom(self):
+    #     return Classroom.objects.get(id=self.classroom_id)
 
-    @property
-    def student(self):
-        return User.objects.get(id=self.student_id)
+    # @property
+    # def student(self):
+    #     return User.objects.get(id=self.student_id)
 
     def __str__(self):
         return str(self.id) + ":" + str(self.classroom_id)
 
     class Meta:
-        unique_together = ('student_id', 'classroom_id',)
+        unique_together = ('student', 'classroom',)
 
     def set_foo(self, x):
         self.groupshow = json.dumps(x)

@@ -538,7 +538,7 @@ class GalleryListView(ListView):
     template_name = 'show/gallerylist.html'
     def get_queryset(self):
         # Scratch創意秀
-        if self.kwargs['category'] == "1":
+        if self.kwargs['category'] :
             classroom_pool = [classroom for classroom in Classroom.objects.filter(lesson=1)]
         # VPhysics創意秀
         else:

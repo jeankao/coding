@@ -74,7 +74,7 @@ def statics_lesson(request, lesson):
 # 各種課程
 def lessons(request, subject_id):
     hit = statics_lesson(request, subject_id)
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         profile = Profile.objects.get(user=user)
@@ -123,7 +123,7 @@ def lesson(request, lesson):
         profile_lock = profile.lock2
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect("/account/login/0")
         else :
             lock = {'B02':3, 'B03':4, 'B04':5, 'B05':6, 'B06':7, 'B07':8, 'B08':9, 'B09':10, 'B10':11, 'B11':12, 'B12':13, 'B13':14, 'B14':15, 'B15':16, 'B16':17, 'B17':17, 'B18':17}
@@ -148,7 +148,7 @@ def lesson(request, lesson):
         profile_lock = 100
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 不限登入者
-        #if not request.user.is_authenticated():
+        #if not request.user.is_authenticated:
         #    return redirect("/account/login/0")
         #else :
         #    lock = {'E02':3, 'E03':4, 'E04':5, 'E05':6, 'E06':7, 'E07':8, 'E08':9, 'E09':10, 'E10':11, 'E11':12, 'E12':13, 'E13':14, 'E14':15, 'E15':16, 'E16':17, 'E17':17, 'E18':17}
@@ -163,7 +163,7 @@ def lesson(request, lesson):
         #profile_lock = profile.lock5
         work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=0, lesson_id=lesson_id, user_id=request.user.id)))
         # 限登入者
-        #if not request.user.is_authenticated():
+        #if not request.user.is_authenticated:
         #    return redirect("/account/login/0")
         #else :
         #    pass
@@ -1059,7 +1059,7 @@ def answer_watch(request, lesson, index):
 # 測驗卷
 def exam(request):
     # 限登入者
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return redirect("/account/login/")
     else :
         return render(request, 'student/exam.html')
