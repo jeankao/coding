@@ -2,8 +2,8 @@ asgiref==3.7.2
 chardet==5.2.0
 Django==4.2.8
 django-excel==0.0.10
-django-nocaptcha-recaptcha==0.0.20
 django-photologue==3.17
+django-recaptcha==4.0.0
 django-sortedm2m==3.1.1
 et-xmlfile==1.1.0
 ExifRead==3.0.0
@@ -12,7 +12,7 @@ lml==0.1.0
 lxml==4.9.3
 openpyxl==3.1.2
 Pillow==10.1.0
-psycopg2-binary==2.9.9
+psycopg==3.1.15
 pyexcel==0.7.0
 pyexcel-io==0.6.6
 pyexcel-webio==0.1.4

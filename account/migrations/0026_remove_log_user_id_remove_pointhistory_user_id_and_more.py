@@ -13,15 +13,24 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL(
+            "DELETE FROM account_log WHERE user_id not in (SELECT id from auth_user)", 
+        ),
         migrations.RenameField(
             model_name='log',
             old_name='user_id',
             new_name='user',
         ),
+        migrations.RunSQL(
+            "DELETE FROM account_pointhistory WHERE user_id not in (SELECT id from auth_user)", 
+        ),
         migrations.RenameField(
             model_name='pointhistory',
             old_name='user_id',
             new_name='user',
+        ),
+        migrations.RunSQL(
+            "DELETE FROM account_visitorlog WHERE user_id not in (SELECT id from auth_user)", 
         ),
         migrations.RenameField(
             model_name='visitorlog',

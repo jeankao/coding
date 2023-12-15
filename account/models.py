@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
+from teacher.models import Classroom
 
 class County(models.Model):
     name = models.CharField(max_length=20)
@@ -84,10 +85,13 @@ class PointHistory(models.Model):
 
 # 大廳訊息
 class Message(models.Model):
-    author_id = models.IntegerField(default=0)
-    reader_id = models.IntegerField(default=0)
+    # author_id = models.IntegerField(default=0, null=True)
+    # reader_id = models.IntegerField(default=0)
+    author = models.ForeignKey(User, models.CASCADE, related_name = 'outbox', null = True)
+    reader = models.ForeignKey(User, models.CASCADE, related_name = 'inbox', null = True)
     type = models.IntegerField(default=0)
-    classroom_id = models.IntegerField(default=0)
+    # classroom_id = models.IntegerField(default=0)
+    classroom = models.ForeignKey(Classroom, models.CASCADE, related_name = 'announcements', null = True)
     title = models.CharField(max_length=250)
     content = models.TextField(default='')
     url = models.CharField(max_length=250)
@@ -104,24 +108,28 @@ class Message(models.Model):
 # 訊息
 class MessagePoll(models.Model):
     message_type = models.IntegerField(default=0)
-    message_id = models.IntegerField(default=0)
-    reader_id = models.IntegerField(default=0)
-    classroom_id = models.IntegerField(default=0)
+    # message_id = models.IntegerField(default=0)
+    # reader_id = models.IntegerField(default=0)
+    # classroom_id = models.IntegerField(default=0)
+    message = models.ForeignKey(Message, models.CASCADE)
+    reader = models.ForeignKey(User, models.CASCADE, related_name = 'msg_read_history')
+    classroom = models.ForeignKey(Classroom, models.CASCADE, null = True)
     read = models.BooleanField(default=False)
 
-    @property
-    def message(self):
-        return Message.objects.get(id=self.message_id)
+    # @property
+    # def message(self):
+    #     return Message.objects.get(id=self.message_id)
 
-class MessageFile(models.Model):
-    message_id = models.IntegerField(default=0)
-    filename = models.TextField()
-    before_name = models.TextField()
-    upload_date = models.DateTimeField(default=timezone.now)
+# class MessageFile(models.Model):
+#     message_id = models.IntegerField(default=0)
+#     filename = models.TextField()
+#     before_name = models.TextField()
+#     upload_date = models.DateTimeField(default=timezone.now)
 
 class MessageContent(models.Model):
-    message_id =  models.IntegerField(default=0)
-    user_id = models.IntegerField(default=0)
+    # message_id =  models.IntegerField(default=0)
+    # user_id = models.IntegerField(default=0)
+    message = models.ForeignKey(Message, models.CASCADE, related_name = 'attachments')
     title =  models.CharField(max_length=250,null=True,blank=True)
     filename = models.CharField(max_length=250,null=True,blank=True)
     publication_date = models.DateTimeField(default=timezone.now)

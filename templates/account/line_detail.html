@@ -31,13 +31,13 @@
 		      {% endfor %}
 
 {% if not request.user.id == message.author_id %}
-<h1><a href="/account/line/reply/{{message.classroom_id|abs_filter}}/{{message.author_id}}/{{message.id}}">回覆訊息</a></h1>
+<h1><a href="/account/line/reply/{{message.classroom_id}}/{{message.author_id}}/{{message.id}}">回覆訊息</a></h1>
 {% endif %}
 {% if lists and message.type == 2 %}
         <h1>歷史私訊</h1>
         <table class="table">
         {% for list in lists %}
-        <tr><td>{{list.time}}<a href="/account/line/detail/{{list.classroom_id|abs_filter}}/{{list.id}}">{{list.title}}</a></td></tr>
+        <tr><td>{{list.time}}<a href="/account/line/detail/{{list.classroom_id}}/{{list.id}}">{{list.title}}</a></td></tr>
         {% empty %}
         <tr><td>無</td></tr>
         {% endfor %}

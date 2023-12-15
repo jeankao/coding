@@ -649,7 +649,7 @@ class LineCreateView(CreateView):
         self.object.type = 2
         self.object.save()
         self.object.url = "/account/line/detail/" + str(self.kwargs['classroom_id']) + "/" + str(self.object.id)
-        self.object.classroom_id = 0 - int(self.kwargs['classroom_id'])
+        self.object.classroom_id = int(self.kwargs['classroom_id'])
         self.object.save()
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
@@ -662,7 +662,7 @@ class LineCreateView(CreateView):
                 fs.save(filename, file)
                 content.save()
         # 訊息
-        messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
+        messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=int(self.kwargs['classroom_id']))
         messagepoll.save()              
         return redirect("/account/line/")      
         
@@ -670,7 +670,7 @@ class LineCreateView(CreateView):
         context = super(LineCreateView, self).get_context_data(**kwargs)
         context['user_id'] = self.kwargs['user_id']
         context['classroom_id'] = self.kwargs['classroom_id']
-        messagepolls = MessagePoll.objects.filter(reader_id=self.kwargs['user_id'],  classroom_id=0 - int(self.kwargs['classroom_id'])).order_by('-id')
+        messagepolls = MessagePoll.objects.filter(reader_id=self.kwargs['user_id'],  classroom_id=int(self.kwargs['classroom_id'])).order_by('-id')
         messages = []
         for messagepoll in messagepolls:
             message = Message.objects.get(id=messagepoll.message_id)
@@ -740,7 +740,7 @@ class LineReplyView(CreateView):
         self.object.save()
         # self.object.url = "/account/line/detail/" + self.kwargs['classroom_id'] + "/" + str(self.object.id)
         self.object.url = f"/account/line/detail/{self.kwargs['classroom_id']}/{self.object.id}"
-        self.object.classroom_id = 0 - int(self.kwargs['classroom_id'])
+        self.object.classroom_id = int(self.kwargs['classroom_id'])
         self.object.save()
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
@@ -754,7 +754,7 @@ class LineReplyView(CreateView):
                 fs.save(filename, file)
                 content.save()
         # 訊息
-        messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=0-int(self.kwargs['classroom_id']))
+        messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=int(self.kwargs['classroom_id']))
         messagepoll.save()              
         return redirect("/account/line/")      
         
@@ -765,7 +765,7 @@ class LineReplyView(CreateView):
         message = Message.objects.get(id=self.kwargs['message_id'])
         title = "RE:" + message.title[message.title.find(":")+1:]
         context['title'] = title
-        messagepolls = MessagePoll.objects.filter(reader_id=self.kwargs['user_id'],  classroom_id=0 - int(self.kwargs['classroom_id'])).order_by('-id')
+        messagepolls = MessagePoll.objects.filter(reader_id=self.kwargs['user_id'],  classroom_id=int(self.kwargs['classroom_id'])).order_by('-id')
         messages = []
         for messagepoll in messagepolls:
             message = Message.objects.get(id=messagepoll.message_id)
