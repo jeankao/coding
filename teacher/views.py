@@ -1305,7 +1305,7 @@ def work_edit(request, classroom_id):
 
 # 列出某作業所有同學名單
 def work_class2(request, lesson, classroom_id, work_id):
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student')
     classroom = Classroom.objects.get(id=classroom_id)
     classmate_work = []
     scorer_name = ""
@@ -2425,7 +2425,7 @@ def group_assign(request, classroom_id):
     if not is_teacher(request.user, classroom_id):
         return redirect("/")
     classroom = Classroom.objects.get(id=classroom_id)
-    GroupModelFormset = modelformset_factory(Enroll, fields=['seat','student_id', 'group'],extra=0)	
+    GroupModelFormset = modelformset_factory(Enroll, fields=['seat','student', 'group'],extra=0)	
     if request.method == 'POST':
         formset = GroupModelFormset(request.POST)
         if formset.is_valid():

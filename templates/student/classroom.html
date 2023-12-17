@@ -69,7 +69,7 @@
 			<a href="/student/announce/{{enroll.classroom_id}}" role="button" class="btn btn-success">公告</a>
 			<a href="/student/forum/{{enroll.classroom_id}}/0" role="button" class="btn btn-success">討論區</a>      
 		    <a href="/account/line" role="button" class="btn btn-success">我的私訊</a>
-   			{% if request.user|has_group:"teacher" %}
+   			{% if is_teacher %}
 		    <a href="/account/line/class/{{enroll.classroom_id}}" role="button" class="btn btn-success">私訊同學</a>
 			{% endif %}
 			<a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.classroom.teacher_id}}" role="button" class="btn btn-success">私訊老師</a>

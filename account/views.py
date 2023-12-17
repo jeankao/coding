@@ -610,7 +610,7 @@ class LineListView(ListView):
     paginate_by = 20
     
     def get_queryset(self):     
-        queryset = Message.objects.filter(author_id=self.request.user.id).order_by("-id")
+        queryset = Message.objects.filter(author_id=self.request.user.id).select_related('reader').order_by("-id")
         return queryset
 
     def get_context_data(self, **kwargs):

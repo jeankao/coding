@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from typing import Any
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
@@ -288,12 +289,17 @@ class ClassroomList(ListView):
 
     def get_queryset(self):
         classrooms = []
-        enrolls = list(Enroll.objects.filter(student_id=self.request.user.id).order_by("-id"))
+        enrolls = list(Enroll.objects.filter(student_id=self.request.user.id).select_related('classroom').order_by("-id"))
         round_pool = Round.objects.all().order_by("-id")
         for enroll in enrolls :
             shows = filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool)
             classrooms.append([enroll, shows])
         return classrooms
+    
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['is_teacher'] = self.request.user.groups.filter(name='teacher').exists()
+        return ctx
 
 # 查看班級
 class ClassroomAdd(ListView):
@@ -1760,13 +1766,10 @@ class GroupPanel(ListView):
         classroom_id = self.kwargs['classroom_id']
         groups = []
         student_groups = {}
-        enroll_list = []
-        group_list = {}
-        group_ids = []
-        numbers = Classroom.objects.get(id=classroom_id).group_number
-        enroll_pool = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")		
-        enroll_ids = map(lambda a: a.id, enroll_pool)	
-        for enroll in enroll_pool:
+        self.classroom = Classroom.objects.get(id = classroom_id)
+        numbers = self.classroom.group_number
+        self.enroll_list = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by("seat")		
+        for enroll in self.enroll_list:
             if enroll.group in student_groups:
                 student_groups[enroll.group].append(enroll)
             else:
@@ -1783,11 +1786,13 @@ class GroupPanel(ListView):
         context = super(GroupPanel, self).get_context_data(**kwargs)        
         classroom_id = self.kwargs['classroom_id']
         classroom = Classroom.objects.get(id=classroom_id)
-        context['classroom'] = classroom
-        context['enroll'] = Enroll.objects.get(classroom_id=classroom.id, student_id=self.request.user.id)
+        # context['classroom'] = classroom
+        context['classroom'] = self.classroom
+        # context['enroll'] = Enroll.objects.get(classroom_id=classroom.id, student_id=self.request.user.id)
+        context['enroll'] = list(filter(lambda e: e.student_id == self.request.user.id, self.enroll_list))[0]
         #找出尚未分組的學生
-        no_group = Enroll.objects.filter(Q(classroom_id=classroom_id) & (Q(group=-1) | Q(group__gte=classroom.group_number)))		
-             
+        # no_group = Enroll.objects.filter(Q(classroom_id=classroom_id) & (Q(group=-1) | Q(group__gte=classroom.group_number))).select_related('student')
+        no_group = list(filter(lambda e: e.group < 0 or e.group >= classroom.group_number, self.enroll_list))
         context['no_group'] = no_group 
         context['classroom_id'] = classroom_id
         return context

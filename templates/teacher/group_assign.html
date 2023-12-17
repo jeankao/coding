@@ -6,11 +6,11 @@
 {{ formset.management_form }}
 <table class="table">
 {% for form in formset %}
-<tr><td>{{form.seat.value}}){{form.student_id.value|realname}}</td>
+<tr><td>{{form.seat.value}}){{form.student.value}}</td>
 <td>
     <input type="hidden" name={{form.id.auto_id|slice:"3:"}} value={{form.id.value}}>
     <input type="hidden" name={{form.seat.auto_id|slice:"3:"}} value={{form.seat.value}}>
-    <input type="hidden" name={{form.student_id.auto_id|slice:"3:"}} value={{form.student_id.value}}>	
+    <input type="hidden" name={{form.student.auto_id|slice:"3:"}} value={{form.student_id.value}}>	
     <select name="{{form.group.auto_id|slice:"3:"}}">
     <option value="-1"{% if form.group.value == -1 %}selected{% endif %}>尚未選組</option>
     {% for number in group_numbers %}

@@ -11,8 +11,8 @@
         {% for message in messages %}
             <tr>
             <td>{{message.time|date:"Y/m/d H:i"}}</td>
-              <td><a href="/account/profile/{{message.reader_id}}">{{message.reader_id|realname}}</a></td>
-            <td><a href="/account/line/detail/{{message.classroom_id|abs_filter}}/{{message.id}}">{{message.title}}</a></td>
+              <td><a href="/account/profile/{{message.reader_id}}">{{message.reader.first_name}}</a></td>
+            <td><a href="/account/line/detail/{{message.classroom_id|default:0}}/{{message.id}}">{{message.title}}</a></td>
             </tr>
         {% endfor %}
         </table>
