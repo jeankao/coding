@@ -47,8 +47,8 @@ def to_int(value):
   
 @register.filter(name='week') 
 def week(date_number):
-    year = date_number / 10000
-    month = (date_number - year * 10000) / 100
+    year = date_number // 10000
+    month = (date_number - year * 10000) // 100
     day = date_number - year * 10000 - month * 100
     now = datetime(year, month, day, 8, 0, 0)
     return now.strftime("%A")  
