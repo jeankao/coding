@@ -25,26 +25,28 @@ from uuid import uuid4
 from django.conf import settings
 from wsgiref.util import FileWrapper
 from django.http import HttpResponse
+from django.db.models import Count
+from functools import reduce
 
 # 判斷是否為任教學生
 def is_student(user_id, request):
     classrooms = Classroom.objects.filter(teacher_id=request.user.id)
     for classroom in classrooms:
-        if Enroll.objects.filter(classroom_id=classroom.id, student_id=user_id).exists(): 
+        if Enroll.objects.filter(classroom_id=classroom.id, student_id=user_id).exists():
             return True
     return False
-    
+
 # 判斷是否為本班同學
 def is_classmate(user_id, classroom_id):
     return Enroll.objects.filter(student_id=user_id, classroom_id=classroom_id).exists()
-      
+
 # 網站首頁
 def homepage(request):
     models = apps.get_models()
     row_count = 0
     for model in models:
         row_count = row_count + model.objects.count()
-    users = User.objects.all()
+    user_count = User.objects.all().count()
     try :
         admin_user = User.objects.get(id=1)
         admin_profile = Profile.objects.get(user=admin_user)
@@ -52,86 +54,120 @@ def homepage(request):
         admin_profile.save()
     except ObjectDoesNotExist:
         admin_profile = ""
-    classroom_count = Classroom.objects.all().count()
-        
+    # classroom_count = Classroom.objects.all().count()
+
     teacher = User.objects.filter(groups__name='teacher').count()
     student = Enroll.objects.values('student_id').distinct().count()
-    workss = list(Work.objects.filter(~Q(lesson_id=10)).values('lesson_id'))
-    classrooms = Classroom.objects.values('id', 'lesson').all()
-    class_scratch_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 1, classrooms)]    
-    class_scratch_ids = map(lambda a: a['id'], class_scratch_pool)    
-    class_scratch = len(class_scratch_pool)    
-    class_vphysics_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 2 or w['lesson'] == 4 or w['lesson'] == 5, classrooms)]    
-    class_vphysics_ids = map(lambda a: a['id'], class_vphysics_pool)    
-    class_vphysics = len(class_vphysics_pool)    
-    class_euler_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 3, classrooms)]    
-    class_euler_ids = map(lambda a: a['id'], class_euler_pool)    
-    class_euler = len(class_euler_pool) 
-    class_django_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 8, classrooms)]    
-    class_django_ids = map(lambda a: a['id'], class_django_pool)    
-    class_django = len(class_django_pool)    
-    class_pandas_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 7, classrooms)]    
-    class_pandas_ids = map(lambda a: a['id'], class_pandas_pool)    
-    class_pandas = len(class_pandas_pool)  
-    class_robot_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 6, classrooms)]    
-    class_robot_ids = map(lambda a: a['id'], class_robot_pool)    
-    class_robot = len(class_robot_pool)  
-    class_book_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 10, classrooms)]    
-    class_book_ids = map(lambda a: a['id'], class_book_pool)    
-    class_book = len(class_book_pool)                     
-    work_scratch = len(list(filter(lambda w: w['lesson_id'] == 1, workss)))
-    work_vphysics = len(list(filter((lambda w: w['lesson_id'] == 2 or w['lesson_id'] == 4 or w['lesson_id'] == 5), workss)))
-    work_euler = len(list(filter(lambda w: w['lesson_id'] == 3, workss)))
-    work_django = len(list(filter(lambda w: w['lesson_id'] == 8, workss)))    
-    work_pandas = len(list(filter(lambda w: w['lesson_id'] == 7, workss)))        
-    work_robot = len(list(filter(lambda w: w['lesson_id'] == 6, workss))) 
-    work_book = len(list(filter(lambda w: w['lesson_id'] == 10 and w.publish==True, workss)))           
-    enrolls = Enroll.objects.filter(seat__gt=0).values('classroom_id', 'certificate1', 'certificate2', 'certificate3', 'certificate4', 'certificate_vphysics', 'certificate_euler')
-    certificate_scratch1 = len(list(filter(lambda w: w['certificate1'] == True, enrolls)))
-    certificate_scratch2 = len(list(filter(lambda w: w['certificate2'] == True, enrolls)))
-    certificate_scratch3 = len(list(filter(lambda w: w['certificate3'] == True, enrolls)))
-    certificate_scratch4 = len(list(filter(lambda w: w['certificate4'] == True, enrolls)))
-    certificate_scratch = certificate_scratch1+certificate_scratch2+certificate_scratch3+certificate_scratch4
-    certificate_vphysics =  len(list(filter(lambda w: w['certificate_vphysics'] == True, enrolls)))
-    certificate_euler =  len(list(filter(lambda w: w['certificate_euler'] == True, enrolls)))
-    classroom_scratch = [enroll for enroll in enrolls if enroll['classroom_id'] in class_scratch_ids]
-    enroll_scratch =  len(list(filter(lambda w: w['classroom_id'], classroom_scratch)))
-    classroom_vphysics = [enroll for enroll in enrolls if enroll['classroom_id'] in class_vphysics_ids]
-    enroll_vphysics =  len(list(filter(lambda w: w['classroom_id'], classroom_vphysics)))    
-    classroom_euler = [enroll for enroll in enrolls if enroll['classroom_id'] in class_euler_ids]
-    enroll_euler =  len(list(filter(lambda w: w['classroom_id'], classroom_euler)))
-    classroom_django = [enroll for enroll in enrolls if enroll['classroom_id'] in class_django_ids]
-    enroll_django =  len(list(filter(lambda w: w['classroom_id'], classroom_django)))    
-    classroom_pandas = [enroll for enroll in enrolls if enroll['classroom_id'] in class_pandas_ids]
-    enroll_pandas =  len(list(filter(lambda w: w['classroom_id'], classroom_pandas)))  
-    classroom_robot = [enroll for enroll in enrolls if enroll['classroom_id'] in class_robot_ids]
-    enroll_robot =  len(list(filter(lambda w: w['classroom_id'], classroom_robot))) 
-    classroom_book = [enroll for enroll in enrolls if enroll['classroom_id'] in class_book_ids]
-    enroll_book =  len(list(filter(lambda w: w['classroom_id'], classroom_book)))                
-    works = [len(workss), [class_scratch, enroll_scratch, work_scratch], 
-                          [class_vphysics, enroll_vphysics, work_vphysics],
-                          [class_euler, enroll_euler, work_euler], 
-                          [class_django, enroll_django, work_django], 
-                          [class_pandas, enroll_pandas, work_pandas], 
-                          [class_robot, enroll_robot, work_robot],
-                          [class_book, enroll_book, work_book]]                          
-    return render(request, 'homepage.html', {'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':len(users), 'admin_profile': admin_profile})
-  
+    # workss = list(Work.objects.values('lesson_id', 'publish'))
+    # classrooms = list(Classroom.objects.values('id', 'lesson').all())
+    # classroom_count = len(classrooms)
+    # class_scratch_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 1, classrooms)]
+    # class_scratch_ids = map(lambda a: a['id'], class_scratch_pool)
+    # class_scratch = len(class_scratch_pool)
+    # class_vphysics_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 2 or w['lesson'] == 4 or w['lesson'] == 5, classrooms)]
+    # class_vphysics_ids = map(lambda a: a['id'], class_vphysics_pool)
+    # class_vphysics = len(class_vphysics_pool)
+    # class_euler_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 3, classrooms)]
+    # class_euler_ids = map(lambda a: a['id'], class_euler_pool)
+    # class_euler = len(class_euler_pool)
+    # class_django_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 8, classrooms)]
+    # class_django_ids = map(lambda a: a['id'], class_django_pool)
+    # class_django = len(class_django_pool)
+    # class_pandas_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 7, classrooms)]
+    # class_pandas_ids = map(lambda a: a['id'], class_pandas_pool)
+    # class_pandas = len(class_pandas_pool)
+    # class_robot_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 6, classrooms)]
+    # class_robot_ids = map(lambda a: a['id'], class_robot_pool)
+    # class_robot = len(class_robot_pool)
+    # class_book_pool = [classroom for classroom in filter(lambda w: w['lesson'] == 10, classrooms)]
+    # class_book_ids = map(lambda a: a['id'], class_book_pool)
+    # class_book = len(class_book_pool)
+
+    # class_scratch_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 1, classrooms)]
+    # class_scratch = len(class_scratch_ids)
+    # class_vphysics_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 2 or w['lesson'] == 4 or w['lesson'] == 5, classrooms)]
+    # class_vphysics = len(class_vphysics_ids)
+    # class_euler_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 3, classrooms)]
+    # class_euler = len(class_euler_ids)
+    # class_django_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 8, classrooms)]
+    # class_django = len(class_django_ids)
+    # class_pandas_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 7, classrooms)]
+    # class_pandas = len(class_pandas_ids)
+    # class_robot_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 6, classrooms)]
+    # class_robot = len(class_robot_ids)
+    # class_book_ids = [classroom['id'] for classroom in filter(lambda w: w['lesson'] == 10, classrooms)]
+    # class_book = len(class_book_ids)
+    # work_scratch = len(list(filter(lambda w: w['lesson_id'] == 1, workss)))
+    # work_vphysics = len(list(filter((lambda w: w['lesson_id'] == 2 or w['lesson_id'] == 4 or w['lesson_id'] == 5), workss)))
+    # work_euler = len(list(filter(lambda w: w['lesson_id'] == 3, workss)))
+    # work_django = len(list(filter(lambda w: w['lesson_id'] == 8, workss)))
+    # work_pandas = len(list(filter(lambda w: w['lesson_id'] == 7, workss)))
+    # work_robot = len(list(filter(lambda w: w['lesson_id'] == 6, workss)))
+    # work_book = len(list(filter(lambda w: w['lesson_id'] == 10 and w['publish']==True, workss)))
+
+    # enrolls = Enroll.objects.filter(seat__gt=0).values('classroom_id', 'certificate1', 'certificate2', 'certificate3', 'certificate4', 'certificate_vphysics', 'certificate_euler')
+
+    # certificate_scratch1 = len(list(filter(lambda w: w['certificate1'] == True, enrolls)))
+    # certificate_scratch2 = len(list(filter(lambda w: w['certificate2'] == True, enrolls)))
+    # certificate_scratch3 = len(list(filter(lambda w: w['certificate3'] == True, enrolls)))
+    # certificate_scratch4 = len(list(filter(lambda w: w['certificate4'] == True, enrolls)))
+    # certificate_scratch = certificate_scratch1+certificate_scratch2+certificate_scratch3+certificate_scratch4
+    # certificate_vphysics =  len(list(filter(lambda w: w['certificate_vphysics'] == True, enrolls)))
+    # certificate_euler =  len(list(filter(lambda w: w['certificate_euler'] == True, enrolls)))
+
+    # classroom_scratch = [enroll for enroll in enrolls if enroll['classroom_id'] in class_scratch_ids]
+    # enroll_scratch =  len(list(filter(lambda w: w['classroom_id'], classroom_scratch)))
+    # classroom_vphysics = [enroll for enroll in enrolls if enroll['classroom_id'] in class_vphysics_ids]
+    # enroll_vphysics =  len(list(filter(lambda w: w['classroom_id'], classroom_vphysics)))
+    # classroom_euler = [enroll for enroll in enrolls if enroll['classroom_id'] in class_euler_ids]
+    # enroll_euler =  len(list(filter(lambda w: w['classroom_id'], classroom_euler)))
+    # classroom_django = [enroll for enroll in enrolls if enroll['classroom_id'] in class_django_ids]
+    # enroll_django =  len(list(filter(lambda w: w['classroom_id'], classroom_django)))
+    # classroom_pandas = [enroll for enroll in enrolls if enroll['classroom_id'] in class_pandas_ids]
+    # enroll_pandas =  len(list(filter(lambda w: w['classroom_id'], classroom_pandas)))
+    # classroom_robot = [enroll for enroll in enrolls if enroll['classroom_id'] in class_robot_ids]
+    # enroll_robot =  len(list(filter(lambda w: w['classroom_id'], classroom_robot)))
+    # classroom_book = [enroll for enroll in enrolls if enroll['classroom_id'] in class_book_ids]
+    # enroll_book =  len(list(filter(lambda w: w['classroom_id'], classroom_book)))
+    # works = [len(workss), [class_scratch, enroll_scratch, work_scratch],
+    #                       [class_vphysics, enroll_vphysics, work_vphysics],
+    #                       [class_euler, enroll_euler, work_euler],
+    #                       [class_django, enroll_django, work_django],
+    #                       [class_pandas, enroll_pandas, work_pandas],
+    #                       [class_robot, enroll_robot, work_robot],
+    #                       [class_book, enroll_book, work_book]]
+    ccnt = {l['lesson']: l['classes'] for l in Classroom.objects.values('lesson').annotate(classes=Count('id')).order_by('lesson')}
+    wcnt = {l['lesson_id']: l['works'] for l in Work.objects.exclude(lesson_id=10, publish=False).values('lesson_id').annotate(works=Count('id')).order_by('lesson_id')}
+    scnt = {l['classroom__lesson']: l['students'] for l in Enroll.objects.exclude(seat=0).values('classroom__lesson').annotate(students=Count('id')).order_by('classroom__lesson')}
+    total_works = reduce(lambda a, b: a+wcnt[b], wcnt, 0)
+    classroom_count = reduce(lambda a, b: a+ccnt[b], ccnt, 0)
+    works = [
+        total_works, 
+        [ccnt[1], scnt[1], wcnt[1]],
+        [ccnt[2]+ccnt[4]+ccnt[5], scnt[2]+scnt[4]+scnt[5], wcnt[2]+wcnt[4]+wcnt[5]], 
+        [ccnt[3], scnt[3], wcnt[3]],
+        [ccnt[8], scnt[8], wcnt[8]],
+        [ccnt[7], scnt[7], wcnt[7]],
+        [ccnt[6], scnt[6], wcnt[6]],
+        [ccnt[10], scnt[10], wcnt[10]],
+    ]
+    return render(request, 'homepage.html', {'works':works, 'teacher':teacher, 'student':student, 'classroom_count':classroom_count, 'row_count':row_count, 'user_count':user_count, 'admin_profile': admin_profile})
+
 # 網站大廳
 def dashboard(request):
     return render(request, 'account/dashboard.html')
-  
-def author(request):   
-    return render(request, 'account/author.html')	
-    
-def about(request):   
-    return render(request, 'account/about.html')	  
 
-def contact(request):   
-    return render(request, 'account/contact.html')	  	
+def author(request):
+    return render(request, 'account/author.html')
 
-def people(request):   
-    return render(request, 'account/people.html')	
+def about(request):
+    return render(request, 'account/about.html')
+
+def contact(request):
+    return render(request, 'account/contact.html')
+
+def people(request):
+    return render(request, 'account/people.html')
 
 # 列出所有課程
 class LessonCountView(ListView):
@@ -140,11 +176,11 @@ class LessonCountView(ListView):
     paginate_by = 50
     ordering = "-hit"
     template_name = 'account/statics_lesson.html'
-    
-# 管理介面 
+
+# 管理介面
 def admin(request):
     return render(request, 'account/admin.html')
-    
+
 # 使用者登入功能
 def user_login(request, role):
     message = None
@@ -161,7 +197,7 @@ def user_login(request, role):
             if role == 0:
                 user = authenticate(username=username, password=password)
             else:
-                teacher = request.POST['teacher']					
+                teacher = request.POST['teacher']
                 user = authenticate(username=teacher+"_"+username, password=password)
             if user is not None:
                 if user.is_active:
@@ -179,23 +215,23 @@ def user_login(request, role):
                             user.last_name = "1"
                             user.save()
                         if user.first_name == "":
-                            user.first_name = "管理員"                            
+                            user.first_name = "管理員"
                             user.save()
                             try :
-                                group = Group.objects.get(name="apply")	
+                                group = Group.objects.get(name="apply")
                             except ObjectDoesNotExist :
                                 group = Group(name="apply")
-                                group.save()                                         
-                            group.user_set.add(user)														
+                                group.save()
+                            group.user_set.add(user)
                             # create Message
                             title = "請修改您的姓名"
                             url = "/account/realname"
                             message = Message(title=title, url=url, time=timezone.now())
-                            message.save()                        
-                    
+                            message.save()
+
                             # message for group member
                             messagepoll = MessagePoll(message_id = message.id,reader_id=1)
-                            messagepoll.save() 														
+                            messagepoll.save()
                     # 記錄訪客資訊
                     admin_user = User.objects.get(id=1)
                     try:
@@ -205,7 +241,7 @@ def user_login(request, role):
                         profile.save()
                     profile.visitor_count = profile.visitor_count + 1
                     profile.save()
-                                    
+
                     year = localtime(timezone.now()).year
                     month =  localtime(timezone.now()).month
                     day =  localtime(timezone.now()).day
@@ -218,12 +254,12 @@ def user_login(request, role):
                         visitor = Visitor.objects.filter(date=date_number)[0]
                     visitor.count = visitor.count + 1
                     visitor.save()
-                                        
+
                     visitorlog = VisitorLog(visitor_id=visitor.id, user_id=user.id, IP=request.META.get('REMOTE_ADDR'))
                     visitorlog.save()
                     # 登入成功，導到大廳
-                    login(request, user)                                  
-                    return redirect('/account/dashboard/0')                                        
+                    login(request, user)
+                    return redirect('/account/dashboard/0')
                 else:
                     message = "帳號未啟用!"
             else:
@@ -247,15 +283,15 @@ def register(request):
             # Save the User object
             new_user.save()
             try :
-                group = Group.objects.get(name="apply")	
+                group = Group.objects.get(name="apply")
             except ObjectDoesNotExist :
                 group = Group(name="apply")
-                group.save()                                         
-            group.user_set.add(new_user)													
-            
+                group.save()
+            group.user_set.add(new_user)
+
             profile = Profile(user=new_user)
-            profile.save()				
-                        
+            profile.save()
+
             return render(request, 'registration/register_done.html',{'new_user': new_user})
     else:
         form = RegistrationForm()
@@ -263,9 +299,9 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form, 'schools': school_pool})
 
 # 註冊學校
-def register_school(request):      
+def register_school(request):
     if request.method == 'POST':
-        form = RegistrationSchoolForm(request.POST)    
+        form = RegistrationSchoolForm(request.POST)
         if form.is_valid():
             school = form.save()
             return redirect("/account/register?school="+str(school.county)+"/"+str(school.zone)+"/"+str(school.id))
@@ -273,11 +309,11 @@ def register_school(request):
         form = RegistrationSchoolForm()
     school_pool = School.objects.filter(online=True)
     return render(request, 'registration/register_school.html', {'form': form, 'schools': school_pool})
-  
+
 # 申請教師
-def teacher_apply(request):      
+def teacher_apply(request):
     if request.method == 'POST':
-        form = TeacherApplyForm(request.POST)    
+        form = TeacherApplyForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("/account/register")
@@ -301,20 +337,20 @@ class UserListView(ListView):
             else :
                 queryset = User.objects.all().order_by('-id')
         return queryset
-                        
+
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
         context['group'] = self.kwargs['group']
         context['account'] = self.request.GET.get('account')
-        return context								
-                            
+        return context
+
 # 訊息
 class MessageListView(ListView):
     context_object_name = 'messages'
     paginate_by = 20
     template_name = 'account/dashboard.html'
 
-    def get_queryset(self):             
+    def get_queryset(self):
         query = []
         #公告
         if self.kwargs['action'] == 1:
@@ -324,14 +360,14 @@ class MessageListView(ListView):
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=2).order_by('-message_id')
         #系統
         elif self.kwargs['action'] == 3:
-            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=3).order_by('-message_id')						
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=3).order_by('-message_id')
         else :
             messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
         for messagepoll in messagepolls:
             if messagepoll.message_id!=26335:
                 query.append([messagepoll, messagepoll.message])
         return query
-        
+
     def get_context_data(self, **kwargs):
         context = super(MessageListView, self).get_context_data(**kwargs)
         context['action'] = self.kwargs['action']
@@ -342,13 +378,13 @@ def message(request, messagepoll_id):
     messagepoll.read = True
     messagepoll.save()
     message = Message.objects.get(id=messagepoll.message_id)
-    return redirect(message.url)			
+    return redirect(message.url)
 
 # 所有註冊學校
 def schools(request):
     schools = School.objects.all()
-    return render(request, 'account/schools.html',{'schools': schools})		
-    
+    return render(request, 'account/schools.html',{'schools': schools})
+
 class SchoolUpdateView(UpdateView):
     model = School
     fields = ['county', 'zone', 'name']
@@ -357,7 +393,7 @@ class SchoolUpdateView(UpdateView):
     def get_success_url(self):
         succ_url =  '/account/admin/schools'
         return succ_url
-    
+
     # 修改密碼
 def password(request, user_id):
     if request.method == 'POST':
@@ -366,7 +402,7 @@ def password(request, user_id):
             user = User.objects.get(id=user_id)
             user.set_password(request.POST['password'])
             user.save()
-               
+
             return redirect('/')
     else:
         form = PasswordForm()
@@ -382,7 +418,7 @@ def adminrealname(request, user_id):
             user = User.objects.get(id=user_id)
             user.first_name =form.cleaned_data['first_name']
             user.save()
-                
+
             return redirect('/')
     else:
         teacher = False
@@ -399,7 +435,7 @@ def adminrealname(request, user_id):
             return redirect("/")
 
     return render(request, 'form.html',{'form': form})
-    
+
 # 修改自己的真實姓名
 def realname(request):
     if request.method == 'POST':
@@ -408,7 +444,7 @@ def realname(request):
             user = User.objects.get(id=request.user.id)
             user.first_name =form.cleaned_data['first_name']
             user.save()
-                
+
             return redirect('/account/profile/'+str(request.user.id))
     else:
         user = User.objects.get(id=request.user.id)
@@ -424,12 +460,12 @@ def adminschool(request):
             user = User.objects.get(id=request.user.id)
             user.last_name =form.cleaned_data['last_name']
             user.save()
-                
+
             return redirect('/account/profile/'+str(request.user.id))
     else:
         user = User.objects.get(id=request.user.id)
         form = SchoolForm(instance=user)
-                
+
         school_pool = School.objects.filter(online=True)
         county_pool = County.objects.all()
         zone_pool = Zone.objects.all()
@@ -439,7 +475,7 @@ def adminschool(request):
             district.append([p, []])
             index2 = 0
             zones = filter(lambda u: u.county == p.id, zone_pool)
-            for q in zones:                
+            for q in zones:
                 district[index][1].append([q, []])
                 schools = filter(lambda u: u.zone == q.id, school_pool)
                 for school in schools :
@@ -451,7 +487,7 @@ def adminschool(request):
         except ObjectDoesNotExist:
             school = School.objects.get(id=1)
     return render(request, 'account/school.html',{'form': form, 'district':district, 'school':school })
-    
+
 # 修改信箱
 def adminemail(request):
     if request.method == 'POST':
@@ -460,37 +496,37 @@ def adminemail(request):
             user = User.objects.get(id=request.user.id)
             user.email =form.cleaned_data['email']
             user.save()
-           
+
             return redirect('/account/profile/'+str(request.user.id))
     else:
         user = User.objects.get(id=request.user.id)
         form = EmailForm(instance=user)
 
-    return render(request, 'form.html',{'form': form})    
+    return render(request, 'form.html',{'form': form})
 
 # 記錄積分項目
 class LogListView(ListView):
     context_object_name = 'logs'
     paginate_by = 20
     template_name = 'account/log_list.html'
-    
-    def get_queryset(self):          
+
+    def get_queryset(self):
         if not self.kwargs['kind'] == 0 :
             queryset = PointHistory.objects.filter(user_id=self.kwargs['user_id'],kind=self.kwargs['kind']).order_by('-id')
         else :
-            queryset = PointHistory.objects.filter(user_id=self.kwargs['user_id']).order_by('-id')		
+            queryset = PointHistory.objects.filter(user_id=self.kwargs['user_id']).order_by('-id')
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(LogListView, self).get_context_data(**kwargs)
         context['user_id'] = self.kwargs['user_id']
-        return context		
-            
+        return context
+
 # 顯示個人檔案
 def profile(request, user_id):
     user = User.objects.get(id=user_id)
     enrolls = Enroll.objects.filter(student_id=user_id)
-    try: 
+    try:
         profile = Profile.objects.get(user=user)
     except ObjectDoesNotExist:
         profile = Profile(user=user)
@@ -501,27 +537,27 @@ def profile(request, user_id):
     except ObjectDoesNotExist:
         hour_of_code = None
 
-    # 計算積分    
+    # 計算積分
     credit = profile.work + profile.assistant + profile.forum + profile.creative
-      
+
     school_name = ""
     #檢查是否為教師或同班同學
     user_enrolls = Enroll.objects.filter(student_id=request.user.id)
     for enroll in user_enrolls:
         if is_classmate(user_id, enroll.classroom_id) or request.user.id == 1:
-          return render(request, 'account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit})	
-    if user_id == str(request.user.id):	
-        return render(request, 'account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit})	
-    return redirect("/")				
-    
+          return render(request, 'account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit})
+    if user_id == str(request.user.id):
+        return render(request, 'account/profile.html',{'hour_of_code':hour_of_code, 'school': school_name, 'enrolls':enrolls, 'profile': profile,'user_id':user_id, 'credit':credit})
+    return redirect("/")
+
 # 列出所有日期訪客
 class VisitorListView(ListView):
     model = Visitor
     context_object_name = 'visitors'
-    template_name = 'account/statics_login.html'    
+    template_name = 'account/statics_login.html'
     paginate_by = 20
-    
-    def get_queryset(self):       
+
+    def get_queryset(self):
         visitors = Visitor.objects.all().order_by('-id')
         queryset = []
         for visitor in visitors:
@@ -540,25 +576,25 @@ class VisitorListView(ListView):
         for visitor in visitors:
             queryset.append([int(str(visitor.date)[0:4]), int(str(visitor.date)[4:6]),int(str(visitor.date)[6:8]),visitor])
         context['total_visitors'] = queryset
-        return context	
-            
+        return context
+
 # 列出單日日期訪客
 class VisitorLogListView(ListView):
     model = VisitorLog
     context_object_name = 'visitorlogs'
-    template_name = 'account/statics_login_log.html'    
+    template_name = 'account/statics_login_log.html'
     paginate_by = 50
-    
+
     def get_queryset(self):
         # 記錄系統事件
-        visitor = Visitor.objects.get(id=self.kwargs['visitor_id'])    
+        visitor = Visitor.objects.get(id=self.kwargs['visitor_id'])
         queryset = VisitorLog.objects.filter(visitor_id=self.kwargs['visitor_id']).order_by('-id')
         return queryset
-        
+
     def render(request, self, context):
         if not self.request.user.is_authenticated:
             return redirect('/')
-        return super(VisitorLogListView, self).render(request, context)	
+        return super(VisitorLogListView, self).render(request, context)
 
 # Ajax 設為教師、取消教師
 @user_passes_test(lambda u: u.is_superuser)
@@ -566,79 +602,79 @@ def make(request):
     user_id = request.POST.get('userid')
     action = request.POST.get('action')
     if user_id and action :
-        user = User.objects.get(id=user_id)           
+        user = User.objects.get(id=user_id)
         try :
-            group = Group.objects.get(name="teacher")	
+            group = Group.objects.get(name="teacher")
         except ObjectDoesNotExist :
             group = Group(name="teacher")
             group.save()
-        if action == 'set':                                  
+        if action == 'set':
             group.user_set.add(user)
             # create Message
             title = "<" + request.user.first_name + u">設您為教師"
             url = "/teacher/classroom"
             message = Message(title=title, url=url, time=timezone.now())
-            message.save()                        
-                    
+            message.save()
+
             # message for group member
             messagepoll = MessagePoll(message_id = message.id,reader_id=user_id)
-            messagepoll.save()    
-        else :   
-            group.user_set.remove(user)  
+            messagepoll.save()
+        else :
+            group.user_set.remove(user)
             # create Message
             title = "<"+ request.user.first_name + u">取消您為教師"
             url = "/"
             message = Message(title=title, url=url, time=timezone.now())
-            message.save()                        
-                    
+            message.save()
+
             # message for group member
             messagepoll = MessagePoll(message_id = message.id,reader_id=user_id)
-            messagepoll.save()               
+            messagepoll.save()
         return JsonResponse({'status':'ok'}, safe=False)
     else:
-        return JsonResponse({'status':'no'}, safe=False)        
+        return JsonResponse({'status':'no'}, safe=False)
 
 def avatar(request):
-    profile = Profile.objects.get(user = request.user)      
+    profile = Profile.objects.get(user = request.user)
     return render(request, 'account/avatar.html', {'avatar':profile.avatar})
-  
+
 # 列出所有私訊
 class LineListView(ListView):
     model = Message
     context_object_name = 'messages'
-    template_name = 'account/line_list.html'    
+    template_name = 'account/line_list.html'
     paginate_by = 20
-    
-    def get_queryset(self):     
+
+    def get_queryset(self):
         queryset = Message.objects.filter(author_id=self.request.user.id).select_related('reader').order_by("-id")
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(LineListView, self).get_context_data(**kwargs)
-        return context	 
-        
+        return context
+
 # 列出同學以私訊
 class LineClassListView(ListView):
     model = Enroll
     context_object_name = 'enrolls'
-    template_name = 'account/line_class.html'   
-    
-    def get_queryset(self):     
+    template_name = 'account/line_class.html'
+
+    def get_queryset(self):
         queryset = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("seat")
         return queryset
-        
+
     # 限本班同學
     def render(request, self, context):
         if not is_classmate(self.request.user.id, self.kwargs['classroom_id']):
             return redirect('/')
-        return super(LineClassListView, self).render(request, context)            
-                
+        return super(LineClassListView, self).render(request, context)
+
 #新增一個私訊
 class LineCreateView(CreateView):
     model = Message
-    context_object_name = 'messages'    
+    context_object_name = 'messages'
     form_class = LineForm
-    template_name = 'account/line_form.html'     
+    template_name = 'account/line_form.html'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -663,9 +699,9 @@ class LineCreateView(CreateView):
                 content.save()
         # 訊息
         messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=int(self.kwargs['classroom_id']))
-        messagepoll.save()              
-        return redirect("/account/line/")      
-        
+        messagepoll.save()
+        return redirect("/account/line/")
+
     def get_context_data(self, **kwargs):
         context = super(LineCreateView, self).get_context_data(**kwargs)
         context['user_id'] = self.kwargs['user_id']
@@ -677,7 +713,7 @@ class LineCreateView(CreateView):
             if message.author_id == self.request.user.id :
                 messages.append([message, messagepoll.read])
         context['messages'] = messages
-        return context	 
+        return context
 
 from django.contrib.auth.mixins import UserPassesTestMixin
 
@@ -689,7 +725,7 @@ class LineTeacherCreateView(UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return self.request.user.is_superuser
-        
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.title = u"[系統公告]" + self.object.title
@@ -720,15 +756,15 @@ class LineTeacherCreateView(UserPassesTestMixin, CreateView):
         for teacher in teachers:
             messagepoll = MessagePoll(message_id=self.object.id, reader_id=teacher.id, message_type=1)
             messagepoll.save()
-        return redirect("/") 
+        return redirect("/")
 
-        
+
 #回覆一個私訊
 class LineReplyView(CreateView):
     model = Message
-    context_object_name = 'messages'    
+    context_object_name = 'messages'
     form_class = LineForm
-    template_name = 'account/line_form_reply.html'     
+    template_name = 'account/line_form_reply.html'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -755,9 +791,9 @@ class LineReplyView(CreateView):
                 content.save()
         # 訊息
         messagepoll = MessagePoll(message_id=self.object.id, reader_id=self.kwargs['user_id'], message_type=2, classroom_id=int(self.kwargs['classroom_id']))
-        messagepoll.save()              
-        return redirect("/account/line/")      
-        
+        messagepoll.save()
+        return redirect("/account/line/")
+
     def get_context_data(self, **kwargs):
         context = super(LineReplyView, self).get_context_data(**kwargs)
         context['user_id'] = self.kwargs['user_id']
@@ -772,8 +808,8 @@ class LineReplyView(CreateView):
             if message.author_id == self.request.user.id :
                 messages.append([message, messagepoll.read])
         context['messages'] = messages
-        return context	 
-            
+        return context
+
 # 查看私訊內容
 def line_detail(request, classroom_id, message_id):
     message = Message.objects.get(id=message_id)
@@ -797,7 +833,7 @@ def line_download(request, file_id):
     filename = content.title
     download =  settings.BASE_DIR / "static/attach" / content.filename
     return FileResponse(open(download, "rb"), filename = filename, as_attachment = True)
-    
+
 # 顯示圖片
 def line_showpic(request, file_id):
         content = MessageContent.objects.values().get(id=file_id)
