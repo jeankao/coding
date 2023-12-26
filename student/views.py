@@ -101,7 +101,7 @@ def lesson(request, lesson):
     work_dict = {}
     hit = statics_lesson(request, lesson)
 
-    if request.user.id > 0 :
+    if request.user.is_authenticated :
         profile = Profile.objects.get(user=request.user)
     else:
         profile = Profile()
@@ -295,7 +295,7 @@ class ClassroomList(ListView):
             shows = filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool)
             classrooms.append([enroll, shows])
         return classrooms
-    
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['is_teacher'] = self.request.user.groups.filter(name='teacher').exists()
@@ -464,9 +464,9 @@ def submit(request, typing, lesson, index):
             if filepath :
                 myfile = request.FILES['file']
                 if lesson == "6":
-                    fs = FileSystemStorage(settings.BASE_DIR+"/static/work/microbit/"+str(request.user.id)+"/")
+                    fs = FileSystemStorage(settings.BASE_DIR / f"/static/work/microbit/{request.user.id}/")
                 else :
-                    fs = FileSystemStorage(settings.BASE_DIR+"/static/work/scratch/"+str(request.user.id)+"/")
+                    fs = FileSystemStorage(settings.BASE_DIR / f"/static/work/scratch/{request.user.id}/")
                 filename = uuid4().hex
                 fs.save(filename, myfile)
             form = SubmitAForm(request.POST, request.FILES)
@@ -481,7 +481,7 @@ def submit(request, typing, lesson, index):
                     # History
                     history = PointHistory(user_id=request.user.id, kind=1, message=u'2分--繳交作業<'+lesson_name+'>', url=request.get_full_path().replace("submit", "submitall"))
                     history.save()
-                    if typing == "0":                        
+                    if typing == "0":
                         # lock
                         profile = Profile.objects.get(user=request.user)
                         if lesson == "1":
@@ -504,9 +504,9 @@ def submit(request, typing, lesson, index):
                 work = Work(typing=typing, lesson_id=lesson, index=index, user_id=request.user.id)
                 work.memo=form.cleaned_data['memo']
                 work.memo_e=form.cleaned_data['memo_e']
-                work.memo_c=form.cleaned_data['memo_c']                                
+                work.memo_c=form.cleaned_data['memo_c']
                 work.save()
-                return redirect("/student/work/publish/"+typing+"/"+lesson+"/"+index+"/2")            
+                return redirect("/student/work/publish/"+typing+"/"+lesson+"/"+index+"/2")
     elif lesson == "4":
         if request.method == 'POST':
             form = SubmitCForm(request.POST)
@@ -626,7 +626,7 @@ def submit(request, typing, lesson, index):
                         obj.work_id=work.id
                         if types == "12":
                             myfile = request.FILES['pic']
-                            fs = FileSystemStorage(settings.BASE_DIR+"/static/upload/"+str(request.user.id)+"/")
+                            fs = FileSystemStorage(settings.BASE_DIR / f"/static/upload/{request.user.id}/")
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
@@ -654,7 +654,7 @@ def submit(request, typing, lesson, index):
                     form = SubmitF3Form(request.POST, request.FILES)
                     if form.is_valid():
                         work = Science3Work(index=index, student_id=request.user.id)
-                        work.save()                        
+                        work.save()
 
                         dataURI = form.cleaned_data['screenshot']
                         try:
@@ -667,9 +667,9 @@ def submit(request, typing, lesson, index):
                             directory = "{prefix}/{uid}/{index}".format(prefix=prefix, uid=request.user.id, index=index)
                             image_file = "{path}/{id}.jpg".format(path=directory, id=work.id)
 
-                            if not os.path.exists(settings.BASE_DIR + "/" + directory):
-                                os.makedirs(settings.BASE_DIR + "/" + directory)
-                            with open(settings.BASE_DIR + "/" + image_file, 'wb') as fd:
+                            if not os.path.exists(settings.BASE_DIR / directory):
+                                os.makedirs(settings.BASE_DIR / directory)
+                            with open(settings.BASE_DIR / image_file, 'wb') as fd:
                                 fd.write(binary_data)
                                 fd.close()
                             work.picture=image_file
@@ -713,8 +713,8 @@ def submit(request, typing, lesson, index):
                         contents1.append([[]])
                 else:
                     contents1.append([[]])
-            works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("id")  
-            work3_ids = [work.id for work in works3]            
+            works3 = Science3Work.objects.filter(student_id=request.user.id, index=index).order_by("id")
+            work3_ids = [work.id for work in works3]
             if works3.exists():
                 work3 = works3[0]
             else :
@@ -726,7 +726,7 @@ def submit(request, typing, lesson, index):
             except MultipleObjectsReturned:
                 works4 = Science4Work.objects.filter(student_id=request.user.id, index=index).order_by("-id")
                 work4 = works[0]
-            contents4 = Science4Debug.objects.filter(work3_id__in=work3_ids).order_by("-id")                
+            contents4 = Science4Debug.objects.filter(work3_id__in=work3_ids).order_by("-id")
             try:
                 expr = Science2Json.objects.get(student_id=request.user.id, index=index, model_type=0)
             except ObjectDoesNotExist:
@@ -773,8 +773,8 @@ class WorkListView(ListView):
         for classroom in classrooms:
             enrolls = Enroll.objects.filter(classroom_id=classroom.id, seat__gt=0)
             classroom_teachers.append([classroom,classroom.teacher.first_name,len(enrolls)])
-        return classroom_teachers          
- 
+        return classroom_teachers
+
     def get_context_data(self, **kwargs):
         context = super(WorkListView, self).get_context_data(**kwargs)
         if self.kwargs['lesson'] == "2":
@@ -789,7 +789,7 @@ class WorkListView(ListView):
             work_start = timezone.localize(datetime.now())
             work_end = timezone.localize(datetime.now())
         start = timezone.localize(datetime(work_start.year, work_start.month,work_start.day))
-        end = timezone.localize(datetime(work_end.year, work_end.month,work_end.day))               
+        end = timezone.localize(datetime(work_end.year, work_end.month,work_end.day))
         queryset = []
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
@@ -819,7 +819,7 @@ class WorkDayListView(ListView):
         return works
 
     def get_context_data(self, **kwargs):
-        context = super(WorkDayListView, self).get_context_data(**kwargs)       
+        context = super(WorkDayListView, self).get_context_data(**kwargs)
         context['lesson'] = self.kwargs['lesson']
         context['date'] = datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date']))
         return context
@@ -875,11 +875,11 @@ def work_download(request, typing, lesson, index, user_id, workfile_id):
 
     if lesson == "1":
         filename = username + "_" + lesson_name.decode("utf-8")  + ".sb3"
-        download =  settings.BASE_DIR + "/static/work/scratch/" + str(user_id) + "/" + workfile.filename
+        download =  settings.BASE_DIR / f"static/work/scratch/{user_id}/{workfile.filename}"
     elif lesson == "6":
         filename = username + "_" + lesson_name.decode("utf-8")  + ".hex"
-        download =  settings.BASE_DIR + "/static/work/microbit/" + str(user_id) + "/" + workfile.filename
-    wrapper = FileWrapper(file( download, "rb" ))
+        download =  settings.BASE_DIR / f"static/work/microbit/{user_id}/{workfile.filename}"
+    wrapper = FileWrapper(open( download, "rb" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
@@ -928,7 +928,7 @@ def progress(request, typing, lesson, unit, classroom_id):
         elif lesson == "7":
             lesson_list = lesson_list2
         elif lesson == "8":
-            lesson_list = lesson_list5                                          
+            lesson_list = lesson_list5
         elif lesson == "10":
             lesson_list = lesson_list7
         else:
@@ -1622,9 +1622,10 @@ def forum_word(request, classroom_id, index, word):
 def forum_download(request, file_id):
     content = SFContent.objects.get(id=file_id)
     filename = content.title
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    download =  BASE_DIR + "/static/upload/" + content.filename
-    wrapper = FileWrapper(file( download, "r" ))
+    # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # download =  BASE_DIR + "/static/upload/" + content.filename
+    download =  settings.BASE_DIR / f"static/upload/{content.filename}"
+    wrapper = FileWrapper(open( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
@@ -1703,12 +1704,12 @@ def content_edit(request, types, typing, lesson, index, content_id):
 class WorkReportView(ListView):
     model = Work
     context_object_name = 'works'
-    template_name = 'student/work_report.html'    
+    template_name = 'student/work_report.html'
     paginate_by = 20
-    
+
     def get_queryset(self):
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)      
+        student_ids = map(lambda a: a.student_id, enroll_pool)
         works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).annotate(month=TruncMonth('publication_date')).values('month', 'index').annotate(c=Count('id'))
         dates = works.values_list('month').distinct().order_by()
         queryset = []
@@ -1719,8 +1720,8 @@ class WorkReportView(ListView):
     def get_context_data(self, **kwargs):
         context = super(WorkReportView, self).get_context_data(**kwargs)
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)      
-        works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).order_by('-id')        
+        student_ids = map(lambda a: a.student_id, enroll_pool)
+        works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).order_by('-id')
         first_element = works[0]
         end_year = int(str(first_element.publication_date)[0:4])
         last_element = works[len(works)-1]
@@ -1732,20 +1733,20 @@ class WorkReportView(ListView):
         for date in dates:
             queryset.append([date[0].strftime('%Y'), date[0].strftime('%m'), date[0].strftime('%d'), len(list(filter(lambda w: w['day'] == date[0], works)))])
         context['total_works'] = queryset
-        context['classroom_id']=self.kwargs['classroom_id']      
-        return context	    
+        context['classroom_id']=self.kwargs['classroom_id']
+        return context
 
 
 # 列出某月份所有讀書心得
 class WorkMonthView(ListView):
     model = Work
     context_object_name = 'works'
-    template_name = 'student/work_month.html'    
+    template_name = 'student/work_month.html'
     paginate_by = 20
-    
+
     def get_queryset(self):
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)      
+        student_ids = map(lambda a: a.student_id, enroll_pool)
         year = int(self.kwargs['month'][0:4])
         month = int(self.kwargs['month'][4:6])
         works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True, publication_date__year=year, publication_date__month=month).order_by("-id")
@@ -1756,34 +1757,34 @@ class WorkMonthView(ListView):
             queryset.append([work.publication_date, work.user_id, lesson_list7[work.index-1], work.memo_c, work.memo_e, work.typing, work.index])
         return queryset
 
-    
+
 # 選組所有組別
 class GroupPanel(ListView):
     context_object_name = 'groups'
     template_name = 'student/group_panel.html'
-    
-    def get_queryset(self):  
+
+    def get_queryset(self):
         classroom_id = self.kwargs['classroom_id']
         groups = []
         student_groups = {}
         self.classroom = Classroom.objects.get(id = classroom_id)
         numbers = self.classroom.group_number
-        self.enroll_list = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by("seat")		
+        self.enroll_list = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by("seat")
         for enroll in self.enroll_list:
             if enroll.group in student_groups:
                 student_groups[enroll.group].append(enroll)
             else:
-                student_groups[enroll.group]=[enroll]	            
+                student_groups[enroll.group]=[enroll]
         for i in range(numbers):
             if i in student_groups:
                 groups.append([i, student_groups[i]])
             else:
-                groups.append([i, []])					
+                groups.append([i, []])
         return groups
 
 
     def get_context_data(self, **kwargs):
-        context = super(GroupPanel, self).get_context_data(**kwargs)        
+        context = super(GroupPanel, self).get_context_data(**kwargs)
         classroom_id = self.kwargs['classroom_id']
         classroom = Classroom.objects.get(id=classroom_id)
         # context['classroom'] = classroom
@@ -1793,7 +1794,7 @@ class GroupPanel(ListView):
         #找出尚未分組的學生
         # no_group = Enroll.objects.filter(Q(classroom_id=classroom_id) & (Q(group=-1) | Q(group__gte=classroom.group_number))).select_related('student')
         no_group = list(filter(lambda e: e.group < 0 or e.group >= classroom.group_number, self.enroll_list))
-        context['no_group'] = no_group 
+        context['no_group'] = no_group
         context['classroom_id'] = classroom_id
         return context
 
@@ -1801,7 +1802,7 @@ def group_join(request, classroom_id, number, enroll_id):
         enroll = Enroll.objects.get(id=enroll_id)
         if Classroom.objects.get(id=classroom_id).group_open:
             enroll.group = number
-            enroll.save()			
+            enroll.save()
         return redirect('/student/group/panel/'+classroom_id)
 
 def plant_submit(request):
@@ -1824,7 +1825,7 @@ def plant_submit(request):
 def plant_light(request):
     if request.method == 'POST':
         form = PlantLightForm(request.POST)
-        if form.is_valid() and request.POST.get("password")=="5543":  
+        if form.is_valid() and request.POST.get("password")=="5543":
             light = PlantLight(student_id=1, light=request.POST.get("light"))
             light.save()
         return redirect('/student/plant/light/show')
@@ -1849,14 +1850,14 @@ class PlantLightListView(ListView):
     ordering = ['-id']
 
 def plant_photo(request):
-    if request.method == 'POST':    
+    if request.method == 'POST':
         form = PlantPhotoForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             if request.FILES:
                 content = PlantPhoto(student_id=1)
                 myfile =  request.FILES.get("file", "")
                 fs = FileSystemStorage()
-                filename = uuid4().hex        
+                filename = uuid4().hex
                 content.filename = "1/"+filename
                 fs.save("static/plant/photo/1/"+filename, myfile)
                 content.save()
@@ -1873,7 +1874,7 @@ class PlantPhotoListView(ListView):
     paginate_by = 20
     ordering = ['-id']
 
-   
+
 
 # 列出所有記錄
 class PlantPhoto12View(ListView):
@@ -1882,15 +1883,15 @@ class PlantPhoto12View(ListView):
     template_name = 'student/plant_photo.html'
     paginate_by = 20
 
-    def get_queryset(self):  
+    def get_queryset(self):
         photos = PlantPhoto.objects.filter(publication_date__hour=11).order_by("-id")
         return photos
 
-# 分類課程    
-def lessons2(request, subject_id): 
+# 分類課程
+def lessons2(request, subject_id):
         del lesson_list8[:]
         reset()
-        works = Work.objects.filter(typing=0, user_id=request.user.id, lesson_id=subject_id).order_by("-id")	
+        works = Work.objects.filter(typing=0, user_id=request.user.id, lesson_id=subject_id).order_by("-id")
         for unit, unit1 in enumerate(lesson_list8[int(subject_id)-1][1]):
             for index, assignment in enumerate(unit1[1]):
                 if len(works) > 0 :
@@ -1918,16 +1919,16 @@ def lesson2(request, lesson, unit, index):
         assignment = lesson_dict[int(index)]
         scores = []
         workfiles = []
-        #work_index = lesson_list[int(lesson)-1][1][int(unit)-1][1][int(index)-1][2]	
+        #work_index = lesson_list[int(lesson)-1][1][int(unit)-1][1][int(index)-1][2]
         works = Work.objects.filter(typing=0, index=index, lesson_id=lesson, user_id=request.user.id)
 
         if not works.exists():
             form = SubmitAForm()
         else:
-            workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")							
+            workfiles = WorkFile.objects.filter(work_id=works[0].id).order_by("-id")
             form = SubmitAForm(instance=works[0])
-            if len(workfiles)>0 and works[0].scorer>0: 
+            if len(workfiles)>0 and works[0].scorer>0:
                 score_name = User.objects.get(id=works[0].scorer).first_name
-                scores = [works[0].score, score_name]	
+                scores = [works[0].score, score_name]
         return render(request, 'student/lesson2.html', {'assignment':assignment, 'index':index, 'form': form, 'unit':unit, 'lesson':lesson, 'scores':scores, 'workfiles': workfiles})
 

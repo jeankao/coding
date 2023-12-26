@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 def update_avatar(user_id, kind, point):
 	user = User.objects.get(id=user_id)
-	profile = Profile.objects.get(user=user)	  
-	if kind == 1 : #作業		
+	profile = Profile.objects.get(user=user)
+	if kind == 1 : #作業
 		profile.work = profile.work + point
 	elif kind == 2 : #小老師
 		profile.assistant = profile.assistant + point
@@ -56,4 +56,4 @@ def update_avatar(user_id, kind, point):
 		avatar = 0
 	profile.avatar = avatar
 	profile.save()
-	
+

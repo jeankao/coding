@@ -42,32 +42,32 @@ class Migration(migrations.Migration):
             field=models.IntegerField(default=0, null=True),
         ),
         migrations.RunSQL(
-            "DELETE FROM account_message WHERE author_id > 0 AND author_id not in (SELECT id from auth_user)", 
+            "DELETE FROM account_message WHERE author_id > 0 AND author_id not in (SELECT id from auth_user)",
         ),
         migrations.RunSQL(
-            "UPDATE account_message SET author_id = NULL WHERE author_id = 0", 
-            "UPDATE account_message SET author_id = 0 WHERE author_id = NULL", 
+            "UPDATE account_message SET author_id = NULL WHERE author_id = 0",
+            "UPDATE account_message SET author_id = 0 WHERE author_id = NULL",
         ),
         migrations.RunSQL(
-            "DELETE FROM account_message WHERE reader_id > 0 AND reader_id not in (SELECT id from auth_user)", 
+            "DELETE FROM account_message WHERE reader_id > 0 AND reader_id not in (SELECT id from auth_user)",
         ),
         migrations.RunSQL(
-            "UPDATE account_message SET reader_id = NULL WHERE reader_id = 0", 
-            "UPDATE account_message SET reader_id = 0 WHERE reader_id = NULL", 
+            "UPDATE account_message SET reader_id = NULL WHERE reader_id = 0",
+            "UPDATE account_message SET reader_id = 0 WHERE reader_id = NULL",
         ),
         migrations.RunSQL(
-            "UPDATE account_message SET classroom_id = -classroom_id WHERE classroom_id < 0", 
+            "UPDATE account_message SET classroom_id = -classroom_id WHERE classroom_id < 0",
         ),
         migrations.RunSQL(
-            "DELETE FROM account_message WHERE classroom_id > 0 AND classroom_id not in (SELECT id from teacher_classroom)", 
+            "DELETE FROM account_message WHERE classroom_id > 0 AND classroom_id not in (SELECT id from teacher_classroom)",
         ),
         migrations.RunSQL(
-            "UPDATE account_message SET classroom_id = NULL WHERE classroom_id = 0", 
-            "UPDATE account_message SET classroom_id = 0 WHERE classroom_id = NULL", 
+            "UPDATE account_message SET classroom_id = NULL WHERE classroom_id = 0",
+            "UPDATE account_message SET classroom_id = 0 WHERE classroom_id = NULL",
         ),
         migrations.RenameField(
-            model_name = 'message', 
-            old_name = 'author_id', 
+            model_name = 'message',
+            old_name = 'author_id',
             new_name = 'author',
         ),
         migrations.AlterField(
@@ -76,8 +76,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='outbox', to=settings.AUTH_USER_MODEL),
         ),
         migrations.RenameField(
-            model_name = 'message', 
-            old_name = 'classroom_id', 
+            model_name = 'message',
+            old_name = 'classroom_id',
             new_name = 'classroom',
         ),
         migrations.AlterField(
@@ -86,8 +86,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='announcements', to='teacher.classroom'),
         ),
         migrations.RenameField(
-            model_name = 'message', 
-            old_name = 'reader_id', 
+            model_name = 'message',
+            old_name = 'reader_id',
             new_name = 'reader',
         ),
         migrations.AlterField(
@@ -97,11 +97,11 @@ class Migration(migrations.Migration):
         ),
         # ---------------------------------------------------------
         migrations.RunSQL(
-            "DELETE FROM account_messagecontent WHERE message_id not in (SELECT id from account_message)", 
+            "DELETE FROM account_messagecontent WHERE message_id not in (SELECT id from account_message)",
         ),
         migrations.RenameField(
-            model_name = 'messagecontent', 
-            old_name = 'message_id', 
+            model_name = 'messagecontent',
+            old_name = 'message_id',
             new_name = 'message',
         ),
         migrations.AlterField(
@@ -110,24 +110,24 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attachments', to='account.message'),
         ),
         migrations.RunSQL(
-            "UPDATE account_messagepoll SET classroom_id = -classroom_id WHERE classroom_id < 0", 
+            "UPDATE account_messagepoll SET classroom_id = -classroom_id WHERE classroom_id < 0",
         ),
         migrations.RunSQL(
-            "DELETE FROM account_messagepoll WHERE classroom_id > 0 AND classroom_id not in (SELECT id from teacher_classroom)", 
+            "DELETE FROM account_messagepoll WHERE classroom_id > 0 AND classroom_id not in (SELECT id from teacher_classroom)",
         ),
         migrations.RunSQL(
-            "UPDATE account_messagepoll SET classroom_id = NULL WHERE classroom_id = 0", 
-            "UPDATE account_messagepoll SET classroom_id = 0 WHERE classroom_id = NULL", 
+            "UPDATE account_messagepoll SET classroom_id = NULL WHERE classroom_id = 0",
+            "UPDATE account_messagepoll SET classroom_id = 0 WHERE classroom_id = NULL",
         ),
         migrations.RunSQL(
-            "DELETE FROM account_messagepoll WHERE message_id not in (SELECT id from account_message)", 
+            "DELETE FROM account_messagepoll WHERE message_id not in (SELECT id from account_message)",
         ),
         migrations.RunSQL(
-            "DELETE FROM account_messagepoll WHERE reader_id not in (SELECT id from auth_user)", 
+            "DELETE FROM account_messagepoll WHERE reader_id not in (SELECT id from auth_user)",
         ),
         migrations.RenameField(
-            model_name = 'messagepoll', 
-            old_name = 'classroom_id', 
+            model_name = 'messagepoll',
+            old_name = 'classroom_id',
             new_name = 'classroom',
         ),
         migrations.AlterField(
@@ -136,8 +136,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='teacher.classroom'),
         ),
         migrations.RenameField(
-            model_name = 'messagepoll', 
-            old_name = 'message_id', 
+            model_name = 'messagepoll',
+            old_name = 'message_id',
             new_name = 'message',
         ),
         migrations.AlterField(
@@ -146,8 +146,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='account.message'),
         ),
         migrations.RenameField(
-            model_name = 'messagepoll', 
-            old_name = 'reader_id', 
+            model_name = 'messagepoll',
+            old_name = 'reader_id',
             new_name = 'reader',
         ),
         migrations.AlterField(

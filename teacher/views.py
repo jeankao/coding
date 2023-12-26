@@ -19,6 +19,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 from wsgiref.util import FileWrapper
 from collections import OrderedDict
 import django_excel as excel
@@ -55,18 +56,18 @@ def filename_browser(request, filename):
     browser = request.META['HTTP_USER_AGENT'].lower()
     if 'edge' in browser:
         response['Content-Disposition'] = 'attachment; filename='+urlquote(filename)+'; filename*=UTF-8\'\'' + urlquote(filename)
-        return response			
+        return response
     elif 'webkit' in browser:
         # Safari 3.0 and Chrome 2.0 accepts UTF-8 encoded string directly.
         filename_header = 'filename=%s' % filename.encode('utf-8').decode('ISO-8859-1')
     elif 'trident' in browser or 'msie' in browser:
         # IE does not support internationalized filename at all.
         # It can only recognize internationalized URL, so we do the trick via routing rules.
-        filename_header = 'filename='+filename.encode("BIG5").decode("ISO-8859-1")					
+        filename_header = 'filename='+filename.encode("BIG5").decode("ISO-8859-1")
     else:
         # For others like Firefox, we follow RFC2231 (encoding extension in HTTP headers).
         filename_header = 'filename*="utf8\'\'' + str(filename.encode('utf-8').decode('ISO-8859-1')) + '"'
-    return filename_header		
+    return filename_header
 
 
 def is_assistant(user, classroom_id):
@@ -355,13 +356,13 @@ class WorkListView(ListView):
         elif self.kwargs['lesson'] == "5":
             queryset = lesson_list2
         elif self.kwargs['lesson'] == "6":
-            queryset = lesson_list6       
+            queryset = lesson_list6
         elif self.kwargs['lesson'] == "8":
-            queryset = lesson_list5  
+            queryset = lesson_list5
         elif self.kwargs['lesson'] == "9":
-            queryset = lesson_list2   			
+            queryset = lesson_list2
         elif self.kwargs['lesson'] == "10":
-            queryset = lesson_list7        
+            queryset = lesson_list7
         else:
             queryset = lesson_list1
         return queryset
@@ -440,11 +441,11 @@ def work_group(request, typing, lesson, classroom_id, index):
             classmate_work.append([enroll,work,0, scorer_name, group_name])
     def getKey(custom):
         return custom[0].group, custom[1].publication_date
-      
-    classmate_work = sorted(classmate_work, key=getKey)    
+
+    classmate_work = sorted(classmate_work, key=getKey)
     return render(request, 'teacher/work_group.html',{'typing':typing, 'classmate_work': classmate_work, 'classroom':classroom, 'index': index, 'lesson':lesson})
-  
-  
+
+
 # (小)教師評分
 def scoring(request, typing, lesson, classroom_id, user_id, index):
     work_dict = dict(((work.index, [work, WorkFile.objects.filter(work_id=work.id).order_by("-id")]) for work in Work.objects.filter(typing=typing, lesson_id=lesson, user_id=user_id)))
@@ -465,11 +466,11 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
         elif lesson == "5":
             lesson_name = lesson_list2[int(index)-1][1]
         elif lesson == "6":
-            lesson_name = lesson_list6[int(index)-1][1]            
+            lesson_name = lesson_list6[int(index)-1][1]
         elif lesson == "8":
-            lesson_name = lesson_list5[int(index)-1][1]            
+            lesson_name = lesson_list5[int(index)-1][1]
         elif lesson == "10":
-            lesson_name = lesson_list7[int(index)-1][1]                 
+            lesson_name = lesson_list7[int(index)-1][1]
         else:
             lesson_name = lesson_list1[int(index)-1][1]
     elif typing == "1":
@@ -528,17 +529,17 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
                 works.update(score=form.cleaned_data['score'])
                 works.update(scorer=request.user.id)
                 works.update(comment=form.cleaned_data['comment'])
-                
+
                 if form.cleaned_data['comment']:
                     # create Message
                     title = u"<" + request.user.first_name+ u">給了評語<" + lesson_name.decode('utf8') + u">"
                     url = "/student/work/show/" + typing + "/" + lesson + "/" + index + "/" + str(enroll.student_id)
                     message = Message(title=title, url=url, time=timezone.now())
-                    message.save()		
+                    message.save()
 
                     # message for group member
                     messagepoll = MessagePoll(message_id = message.id,reader_id=enroll.student_id)
-                    messagepoll.save()					
+                    messagepoll.save()
 
             if is_teacher(request.user, classroom_id) or is_assistant(request.user, classroom_id):
                 if form.cleaned_data['assistant']:
@@ -564,7 +565,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
                 if typing == "0":
                     return redirect('/teacher/work/class/'+typing+ "/" + lesson+"/"+classroom_id+'/'+index)
                 elif typing == "1":
-                    return redirect('/teacher/work2/class/' + lesson+"/"+classroom_id+'/'+index)  
+                    return redirect('/teacher/work2/class/' + lesson+"/"+classroom_id+'/'+index)
             else:
                 return redirect('/teacher/score_peer/'+typing+"/"+lesson+"/"+index+'/'+classroom_id+'/'+str(enroll.group))
 
@@ -595,9 +596,9 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
         elif lesson == "4":
             queryset = lesson_list4
         elif lesson == "5":
-            queryset = lesson_list2 
+            queryset = lesson_list2
         elif lesson == "6":
-            queryset = lesson_list6                     
+            queryset = lesson_list6
         else:
             queryset = lesson_list1
     elif typing == "1":
@@ -667,10 +668,10 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
                 lesson_dict[index] = [assignment]
         elif lesson == "6" :
             for index,assignment in enumerate(lesson_list6):
-                lesson_dict[index] = [assignment]                
+                lesson_dict[index] = [assignment]
         elif lesson == "8" :
             for index,assignment in enumerate(lesson_list5):
-                lesson_dict[index] = [assignment]                
+                lesson_dict[index] = [assignment]
     else :
         assignments = TWork.objects.filter(classroom_id=classroom_id)
         for assignment in assignments:
@@ -712,11 +713,11 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
         elif lesson == "6":
             form = CheckForm_microbit(request.POST)
         elif lesson == "7":
-            form = CheckForm_pandas(request.POST)   
+            form = CheckForm_pandas(request.POST)
         elif lesson == "8":
-            form = CheckForm_django(request.POST)                 
+            form = CheckForm_django(request.POST)
       elif typing == "1":
-          form = CheckFormCustom(request.POST)                               
+          form = CheckFormCustom(request.POST)
       else:
           form = CheckForm(request.POST)
 
@@ -730,7 +731,7 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
               elif unit == "3":
                   enroll.score_memo3=form.cleaned_data['score_memo3']
               elif unit == "4":
-                  enroll.score_memo4=form.cleaned_data['score_memo4']    
+                  enroll.score_memo4=form.cleaned_data['score_memo4']
           elif lesson == "2" :
               enroll.score_memo_vphysics=form.cleaned_data['score_memo_vphysics']
           elif lesson == "3":
@@ -742,9 +743,9 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
           elif lesson == "6" :
               enroll.score_memo_microbit=form.cleaned_data['score_memo_microbit']
           elif lesson == "7" :
-              enroll.score_memo_pandas=form.cleaned_data['score_memo_pandas']                            
+              enroll.score_memo_pandas=form.cleaned_data['score_memo_pandas']
           elif lesson == "8" :
-              enroll.score_memo_django=form.cleaned_data['score_memo_django']                
+              enroll.score_memo_django=form.cleaned_data['score_memo_django']
           enroll.save()
           if lesson == "1" and form.cleaned_data['certificate']:
               return redirect('/certificate/'+lesson+'/'+unit+'/'+str(enroll.id)+'/certificate')
@@ -752,8 +753,8 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
               return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
         elif typing == "1":
           enroll.score_memo_custom = form.cleaned_data['score_memo_custom']
-          enroll.save()    
-          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)                 
+          enroll.save()
+          return redirect('/teacher/memo/'+lesson+"/"+classroom_id)
         else :
           enroll.score_memo = form.cleaned_data['score_memo']
           enroll.save()
@@ -776,9 +777,9 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
         elif lesson == "6":
             form = CheckForm_microbit(instance=enroll)
         elif lesson == "7":
-            form = CheckForm_pandas(instance=enroll)                        
+            form = CheckForm_pandas(instance=enroll)
         elif lesson == "8":
-            form = CheckForm_django(instance=enroll)            
+            form = CheckForm_django(instance=enroll)
         else :
             form =  CheckForm1(instance=enroll)
       elif typing == "1":
@@ -795,7 +796,7 @@ def grade(request, typing, lesson, unit, classroom_id):
     if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
         return redirect("/")
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
-    classroom = Classroom.objects.get(id=classroom_id)     
+    classroom = Classroom.objects.get(id=classroom_id)
     user_ids = [enroll.student_id for enroll in enrolls]
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
     lesson_dict = {}
@@ -805,13 +806,13 @@ def grade(request, typing, lesson, unit, classroom_id):
       enroll_score = []
       enroll_grade = []
       total = 0
-      memo = 0 
+      memo = 0
       grade = 0
       stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
       if typing == "0":
         if lesson == "1":
             if unit == "1":
-                lesson_list = lesson_list[0:17]			
+                lesson_list = lesson_list[0:17]
             elif unit == "2":
                 lesson_list = lesson_list[17:25]
             elif unit == "3":
@@ -823,7 +824,7 @@ def grade(request, typing, lesson, unit, classroom_id):
       else :
         lesson_list = CWork.objects.filter(classroom_id=classroom_id)
       for index, assignment in enumerate(lesson_list):
-            if typing == "0": 			    
+            if typing == "0":
                 if unit == "1":
                     work_index = index + 1
                 elif unit == "2":
@@ -868,8 +869,8 @@ def grade(request, typing, lesson, unit, classroom_id):
                 elif lesson == "7":
                     memo = enroll.score_memo_pandas
                 elif lesson == "8":
-                    memo = enroll.score_memo_django                                                            
-                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)					
+                    memo = enroll.score_memo_django
+                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
             elif typing == "1":
                 memo = enroll.score_memo_custom
                 grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
@@ -912,7 +913,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
       memo = ""
       grade = 0
       for index, assignment in enumerate(lesson_list):
-            if typing == "0": 
+            if typing == "0":
                 works = filter(lambda w: w.index == index+1, stu_works)
             else :
                 works = filter(lambda w: w.index == assignment.id, stu_works)
@@ -944,9 +945,9 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
                 elif lesson == "5":
                     memo = enroll.score_memo_vphysics3
                 elif lesson == "6":
-                    memo = enroll.score_memo_microbit 
+                    memo = enroll.score_memo_microbit
                 elif lesson == "7":
-                    memo = enroll.score_memo_pandas                         
+                    memo = enroll.score_memo_pandas
                 elif lesson == "8":
                     memo = enroll.score_memo_django
             elif typing == "1":
@@ -956,46 +957,46 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
             else :
                 grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
       data.append([enroll, enroll_score, memo, grade])
-                
-    classroom = Classroom.objects.get(id=classroom_id)       
+
+    classroom = Classroom.objects.get(id=classroom_id)
     output = StringIO.StringIO()
-    workbook = xlsxwriter.Workbook(output)    
+    workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet(classroom.name)
     date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
 
     row = 1
     worksheet.write(row, 1, u'座號')
     worksheet.write(row, 2, u'姓名')
-    worksheet.write(row, 3, u'成績')        
-    worksheet.write(row, 4, u'心得')         
+    worksheet.write(row, 3, u'成績')
+    worksheet.write(row, 4, u'心得')
     index = 5
     for assignment in lesson_list:
         if typing == "0":
               worksheet.write(row, index, assignment[1])
         else :
-              worksheet.write(row, index, assignment.title)              
+              worksheet.write(row, index, assignment.title)
         index += 1
 
     index = 5
     if not typing == "0":
         row += 1
-        for assignment in lesson_list:            
+        for assignment in lesson_list:
             worksheet.write(row, index, datetime.strptime(str(assignment.time)[:19],'%Y-%m-%d %H:%M:%S'), date_format)
-            index += 1			
+            index += 1
 
     for enroll, enroll_score, memo, grade in data:
       row += 1
       worksheet.write(row, 1, enroll.seat)
       worksheet.write(row, 2, enroll.student.first_name)
-      worksheet.write(row, 3, grade)         
-      worksheet.write(row, 4, memo)     
+      worksheet.write(row, 3, grade)
+      worksheet.write(row, 4, memo)
       index = 5
       for score, index2 in enroll_score:
           if score == -2 :
               worksheet.write(row, index, "V")
           else :
               worksheet.write(row, index, score)
-          index +=1 
+          index +=1
 
     workbook.close()
     # xlsx_data contains the Excel file
@@ -1005,13 +1006,13 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     elif typing == "1":
         type_name = "自訂作業"
     else:
-        type_name = "檢核作業"        
+        type_name = "檢核作業"
     filename = classroom.name + '-' + type_name + "-" + str(localtime(timezone.now()).date()) + '.xlsx'
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
     xlsx_data = output.getvalue()
     response.write(xlsx_data)
     return response
-  
+
 # 列出分組所有作業
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
@@ -1456,7 +1457,7 @@ def work3_score(request, lesson, classroom_id, work_id):
     assistants = Assistant.objects.filter(classroom_id=classroom_id, user_id=request.user.id)
     if not is_teacher(request.user, classroom_id): # and not assistants:
         return JsonResponse({'status':'fail'}, safe=False)
-    
+
     score = request.POST.get('score')
     sids = json.loads(request.POST.get('stuid'))
 
@@ -1469,7 +1470,7 @@ def work3_score(request, lesson, classroom_id, work_id):
     for sid in sids:
         try:
             work = Work.objects.get(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
-            work.publication_date = timezone.now()            
+            work.publication_date = timezone.now()
         except ObjectDoesNotExist:
             work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
         except MultipleObjectsReturned:
@@ -1485,7 +1486,7 @@ def work_word(request, lesson, classroom_id, index):
     if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
        return redirect("/")
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-    student_ids = map(lambda a: a.student_id, enroll_pool)  
+    student_ids = map(lambda a: a.student_id, enroll_pool)
     works = Work.objects.filter(typing=0, lesson_id=lesson, user_id__in=student_ids).order_by("-id")
     classroom = Classroom.objects.get(id=classroom_id)
     lesson_list = lesson_list4
@@ -1493,8 +1494,8 @@ def work_word(request, lesson, classroom_id, index):
     document = Document()
     docx_title=u"指定作業-" + classroom.name + "-"+ index + "_" + lesson_list[int(index)][1]+ "-" + str(timezone.localtime(timezone.now()).date())+".docx"
     document.add_paragraph(request.user.first_name + u'的指定作業')
-    document.add_paragraph(u'主題：'+ lesson_list[int(index)][1])		
-    document.add_paragraph(u"班級：" + classroom.name)		
+    document.add_paragraph(u'主題：'+ lesson_list[int(index)][1])
+    document.add_paragraph(u"班級：" + classroom.name)
 
     for enroll in enroll_pool:
       enroll_works = filter(lambda w: w.user_id == enroll.student_id, works)
@@ -1507,7 +1508,7 @@ def work_word(request, lesson, classroom_id, index):
         add_hyperlink(document, p, work.youtube, work.youtube)
         document.add_paragraph(work.memo)
 
-    # Prepare document for download        
+    # Prepare document for download
     f = StringIO.StringIO()
     document.save(f)
     length = f.tell()
@@ -1516,7 +1517,7 @@ def work_word(request, lesson, classroom_id, index):
       f.getvalue(),
       content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(docx_title.encode('utf8')) 
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(docx_title.encode('utf8'))
     response['Content-Length'] = length
     return response
 
@@ -1554,28 +1555,28 @@ def add_hyperlink(document, paragraph, url, name):
     r.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
     r.font.underline = True
 
-    return None  
-  
+    return None
+
 # 列出所有討論主題
 class ForumListView(ListView):
     model = FWork
     context_object_name = 'forums'
-    template_name = "teacher/forum_list.html"		
+    template_name = "teacher/forum_list.html"
     paginate_by = 20
-    def get_queryset(self):        
+    def get_queryset(self):
         fclasses = FClass.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-publication_date", "-forum_id")
         forums = []
         for fclass in fclasses:
             forum = FWork.objects.get(id=fclass.forum_id)
             forums.append([forum, fclass])
         return forums
-            
+
     def get_context_data(self, **kwargs):
         context = super(ForumListView, self).get_context_data(**kwargs)
         classroom = Classroom.objects.get(id=self.kwargs['classroom_id'])
         context['classroom'] = classroom
-        return context	
-        
+        return context
+
 #新增一個討論主題
 class ForumCreateView(CreateView):
     model = FWork
@@ -1586,15 +1587,15 @@ class ForumCreateView(CreateView):
         self.object.teacher_id = self.request.user.id
         self.object.classroom_id = self.kwargs['classroom_id']
         self.object.domains = self.request.POST.getlist('domains')
-        self.object.levels = self.request.POST.getlist('levels')	        
-        self.object.save()  
+        self.object.levels = self.request.POST.getlist('levels')
+        self.object.save()
         classrooms = self.request.POST.getlist('classrooms')
         for classroom in classrooms:
           forum_class = FClass(forum_id=self.object.id, classroom_id=classroom)
           forum_class.save()
-        
-        return redirect("/teacher/forum/"+self.kwargs['classroom_id'])           
-        
+
+        return redirect("/teacher/forum/"+self.kwargs['classroom_id'])
+
     def get_context_data(self, **kwargs):
         context = super(ForumCreateView, self).get_context_data(**kwargs)
         classroom_list = []
@@ -1609,41 +1610,41 @@ class ForumCreateView(CreateView):
         context['classrooms'] = classrooms
         context['classroom_id'] = int(self.kwargs['classroom_id'])
         context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
-        return context	
-  
-        return redirect("/teacher/forum/"+self.kwargs['classroom_id'])        
-    
+        return context
+
+        return redirect("/teacher/forum/"+self.kwargs['classroom_id'])
+
 def forum_categroy(request, classroom_id, forum_id):
     forum = FWork.objects.get(id=forum_id)
     domains = Domain.objects.all()
-    levels = Level.objects.all()		
+    levels = Level.objects.all()
     if request.method == 'POST':
         form = ForumCategroyForm(request.POST)
         if form.is_valid():
             forum.domains = request.POST.getlist('domains')
-            forum.levels = request.POST.getlist('levels')	
+            forum.levels = request.POST.getlist('levels')
             forum.save()
             return redirect('/teacher/forum/'+classroom_id+'/#'+str(forum.id))
     else:
         form = CategroyForm(instance=forum)
-        
+
     return render(request, 'teacher/forum_categroy_form.html',{'domains': domains, 'levels':levels, 'classroom_id': classroom_id, 'forum':forum}, context_instance=RequestContext(request))
 
-    
+
 # 列出所有討論主題
 class ForumAllListView(ListView):
     model = FWork
     context_object_name = 'forums'
-    template_name = "teacher/forum_all.html"		
+    template_name = "teacher/forum_all.html"
     paginate_by = 20
-        
+
     def get_queryset(self):
       # 年級
       if self.kwargs['categroy'] == "1":
         queryset = FWork.objects.filter(levels__contains=self.kwargs['categroy_id']).order_by("-id")
       # 學習領域
       elif self.kwargs['categroy'] == "2":
-        queryset = FWork.objects.filter(domains__contains=self.kwargs['categroy_id']).order_by("-id")   
+        queryset = FWork.objects.filter(domains__contains=self.kwargs['categroy_id']).order_by("-id")
       else:
         queryset = FWork.objects.all().order_by("-id")
       if self.request.GET.get('account') != None:
@@ -1654,16 +1655,16 @@ class ForumAllListView(ListView):
             user_list.append(user.id)
         forums = queryset.filter(teacher_id__in=user_list)
         return forums
-      else:				
+      else:
         return queryset
-            
+
     def get_context_data(self, **kwargs):
         context = super(ForumAllListView, self).get_context_data(**kwargs)
-        context['categroy'] = self.kwargs['categroy']							
-        context['categroy_id'] = self.kwargs['categroy_id']							
-        context['levels'] = Level.objects.all()				
+        context['categroy'] = self.kwargs['categroy']
+        context['categroy_id'] = self.kwargs['categroy_id']
+        context['levels'] = Level.objects.all()
         context['domains'] = Domain.objects.all()
-        return context	
+        return context
 
 # 展示討論素材
 def forum_show(request, forum_id):
@@ -1673,36 +1674,36 @@ def forum_show(request, forum_id):
     for domain in domains :
         key = domain.id
         domain_dict[key] = domain
-    levels = Level.objects.all()	
+    levels = Level.objects.all()
     level_dict = {}
     for level in levels :
         key = level.id
         level_dict[key] = level
     contents = FContent.objects.filter(forum_id=forum_id)
-    domains = []		
+    domains = []
     if forum.domains:
         forum_domains = ast.literal_eval(forum.domains)
         for domain in forum_domains:
             key = int(domain)
             domains.append(domain_dict[key])
-    levels = []						
+    levels = []
     if forum.levels:
         forum_levels = ast.literal_eval(forum.levels)
         for level in forum_levels:
-            key = int(level)			
+            key = int(level)
             levels.append(level_dict[key])
     return render(request, 'teacher/forum_show.html',{'domains':domains, 'levels':levels, 'contents':contents, 'forum':forum}, context_instance=RequestContext(request))
 
-        
+
 # 列出某討論主題的班級
 class ForumClassListView(ListView):
     model = FWork
     context_object_name = 'classrooms'
-    template_name = "teacher/forum_class.html"		
+    template_name = "teacher/forum_class.html"
     paginate_by = 20
-    
-    def get_queryset(self):        		
-        fclass_dict = dict(((fclass.classroom_id, fclass) for fclass in FClass.objects.filter(forum_id=self.kwargs['forum_id'])))		
+
+    def get_queryset(self):
+        fclass_dict = dict(((fclass.classroom_id, fclass) for fclass in FClass.objects.filter(forum_id=self.kwargs['forum_id'])))
         classroom_list = []
         classroom_ids = []
         classrooms = Classroom.objects.filter(teacher_id=self.request.user.id).order_by("-id")
@@ -1721,18 +1722,18 @@ class ForumClassListView(ListView):
                 else :
                     classroom_list.append([classroom, False, False, timezone.now()])
         return classroom_list
-            
+
     def get_context_data(self, **kwargs):
-        context = super(ForumClassListView, self).get_context_data(**kwargs)				
+        context = super(ForumClassListView, self).get_context_data(**kwargs)
         fwork = FWork.objects.get(id=self.kwargs['forum_id'])
         context['fwork'] = fwork
         context['forum_id'] = self.kwargs['forum_id']
-        return context	
-    
+        return context
+
 # Ajax 開放班取、關閉班級
 def forum_switch(request):
     forum_id = request.POST.get('forumid')
-    classroom_id = request.POST.get('classroomid')		
+    classroom_id = request.POST.get('classroomid')
     status = request.POST.get('status')
     try:
         fwork = FClass.objects.get(forum_id=forum_id, classroom_id=classroom_id)
@@ -1742,8 +1743,8 @@ def forum_switch(request):
         if status == 'true':
             fwork = FClass(forum_id=forum_id, classroom_id=classroom_id)
             fwork.save()
-    return JsonResponse({'status':status}, safe=False)        
-    
+    return JsonResponse({'status':status}, safe=False)
+
 # 列出某作業所有同學名單
 def forum_class(request, classroom_id, work_id):
     enrolls = Enroll.objects.filter(classroom_id=classroom_id)
@@ -1751,7 +1752,7 @@ def forum_class(request, classroom_id, work_id):
     classmate_work = []
     scorer_name = ""
     for enroll in enrolls:
-        try:    
+        try:
             work = SWork.objects.get(student_id=enroll.student_id, index=work_id)
             if work.scorer > 0 :
                 scorer = User.objects.get(id=work.scorer)
@@ -1768,32 +1769,32 @@ def forum_class(request, classroom_id, work_id):
         if assistant.exists():
             classmate_work.append([enroll,work,1, scorer_name, group_name])
         else :
-            classmate_work.append([enroll,work,0, scorer_name, group_name])   
+            classmate_work.append([enroll,work,0, scorer_name, group_name])
     def getKey(custom):
         return custom[0].seat
-    
+
     classmate_work = sorted(classmate_work, key=getKey)
-   
+
     return render(request, 'teacher/twork_class.html',{'classmate_work': classmate_work, 'classroom_id':classroom_id, 'index': work_id}, context_instance=RequestContext(request))
 
 # 列出所有討論主題素材
 class ForumContentListView(ListView):
     model = FContent
     context_object_name = 'contents'
-    template_name = "teacher/forum_content.html"		
+    template_name = "teacher/forum_content.html"
     def get_queryset(self):
         queryset = FContent.objects.filter(forum_id=self.kwargs['forum_id']).order_by("-id")
         return queryset
-            
+
     def get_context_data(self, **kwargs):
         context = super(ForumContentListView, self).get_context_data(**kwargs)
         fwork = FWork.objects.get(id=self.kwargs['forum_id'])
-        fclasses = FClass.objects.filter(forum_id=self.kwargs['forum_id'])				
+        fclasses = FClass.objects.filter(forum_id=self.kwargs['forum_id'])
         context['fwork']= fwork
         context['forum_id'] = self.kwargs['forum_id']
         context['fclasses'] = fclasses
-        return context	
-            
+        return context
+
 #新增一個課程
 class ForumContentCreateView(CreateView):
     model = FContent
@@ -1807,7 +1808,7 @@ class ForumContentCreateView(CreateView):
             work.title = self.object.title
             work.link = self.object.link
         if self.object.types  == 2:
-            work.types = 2					
+            work.types = 2
             work.youtube = self.object.youtube
         if self.object.types  == 3:
             work.types = 3
@@ -1820,9 +1821,9 @@ class ForumContentCreateView(CreateView):
         if self.object.types  == 4:
             work.types = 4
         work.memo = self.object.memo
-        work.save()         
-  
-        return redirect("/teacher/forum/content/"+self.kwargs['forum_id'])  
+        work.save()
+
+        return redirect("/teacher/forum/content/"+self.kwargs['forum_id'])
 
     def get_context_data(self, **kwargs):
         ctx = super(ForumContentCreateView, self).get_context_data(**kwargs)
@@ -1833,8 +1834,8 @@ def forum_delete(request, forum_id, content_id):
     instance = FContent.objects.get(id=content_id)
     instance.delete()
 
-    return redirect("/teacher/forum/content/"+forum_id)  
-    
+    return redirect("/teacher/forum/content/"+forum_id)
+
 def forum_edit(request, forum_id, content_id):
     try:
         instance = FContent.objects.get(id=content_id)
@@ -1860,15 +1861,16 @@ def forum_edit(request, forum_id, content_id):
                 fs.save("static/upload/"+str(request.user.id)+"/"+filename, myfile)
             content.memo = request.POST.get("memo", "")
             content.save()
-            return redirect('/teacher/forum/content/'+forum_id)   
-    return render(request, 'teacher/forum_edit.html',{'content': instance, 'forum_id':forum_id, 'content_id':content_id}, context_instance=RequestContext(request))		
-    
+            return redirect('/teacher/forum/content/'+forum_id)
+    return render(request, 'teacher/forum_edit.html',{'content': instance, 'forum_id':forum_id, 'content_id':content_id}, context_instance=RequestContext(request))
+
 def forum_download(request, content_id):
     content = FContent.objects.get(id=content_id)
     filename = content.title
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))		
-    download =  BASE_DIR + "/static/upload/" + content.filename
-    wrapper = FileWrapper(file( download, "r" ))
+    # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # download =  BASE_DIR + "/static/upload/" + content.filename
+    download =  settings.BASE_DIR / f"static/upload/{content.filename}"
+    wrapper = FileWrapper(open( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
@@ -1876,7 +1878,7 @@ def forum_download(request, content_id):
     # You can also set any other required headers: Cache-Control, etc.
     return response
     #return render(request, 'student/download.html', {'download':download})
-        
+
 class ForumEditUpdateView(UpdateView):
     model = FWork
     fields = ['title']
@@ -1885,7 +1887,7 @@ class ForumEditUpdateView(UpdateView):
     def get_success_url(self):
         succ_url =  '/teacher/forum/'+self.kwargs['classroom_id']
         return succ_url
-    
+
 def forum_export(request, classroom_id, forum_id):
     if not is_teacher(request.user, classroom_id):
         return redirect("/")
@@ -1897,8 +1899,8 @@ def forum_export(request, classroom_id, forum_id):
         contents = FContent.objects.filter(forum_id=forum_id).order_by("-id")
         fwork = FWork.objects.get(id=forum_id)
         works_pool = SFWork.objects.filter(index=forum_id).order_by("-id")
-        reply_pool = SFReply.objects.filter(index=forum_id).order_by("-id")	
-        file_pool = SFContent.objects.filter(index=forum_id, visible=True).order_by("-id")	
+        reply_pool = SFReply.objects.filter(index=forum_id).order_by("-id")
+        file_pool = SFContent.objects.filter(index=forum_id, visible=True).order_by("-id")
         for enroll in enrolls:
             works = list(filter(lambda w: w.student_id==enroll.student_id, works_pool))
             if len(works)>0:
@@ -1910,14 +1912,14 @@ def forum_export(request, classroom_id, forum_id):
                 datas.append([enroll, works, replys, files])
         def getKey(custom):
             return -custom[0].seat
-        datas = sorted(datas, key=getKey, reverse=True)	
+        datas = sorted(datas, key=getKey, reverse=True)
         #word
         document = Document()
         docx_title=u"討論區-" + classroom.name + "-"+ str(timezone.localtime(timezone.now()).date())+".docx"
         document.add_paragraph(request.user.first_name + u'的討論區作業')
-        document.add_paragraph(u'主題：'+fwork.title)		
-        document.add_paragraph(u"班級：" + classroom.name)		
-        
+        document.add_paragraph(u'主題：'+fwork.title)
+        document.add_paragraph(u"班級：" + classroom.name)
+
         for enroll, works, replys, files in datas:
             user = User.objects.get(id=enroll.student_id)
             run = document.add_paragraph().add_run(str(enroll.seat)+")"+user.first_name)
@@ -1941,14 +1943,14 @@ def forum_export(request, classroom_id, forum_id):
                     user = User.objects.get(id=reply.user_id)
                     run = document.add_paragraph().add_run(user.first_name+u'>'+str(localtime(reply.publication_date))[:19]+u'>留言:\n'+reply.memo)
                     font = run.font
-                    font.color.rgb = RGBColor(0x42, 0x24, 0xE9)		
+                    font.color.rgb = RGBColor(0x42, 0x24, 0xE9)
             if len(files)>0:
                 for file in files:
                     if file.visible:
                         if file.title[-3:].upper() == "PNG" or file.title[-3:].upper() == "JPG":
                             filename = 'static/upload/'+file.filename
-                            if os.path.exists(filename) and os.stat(filename).st_size>0:	
-                                copyfile(filename, 'static/upload/file.'+file.title[-3:])	                                 
+                            if os.path.exists(filename) and os.stat(filename).st_size>0:
+                                copyfile(filename, 'static/upload/file.'+file.title[-3:])
                                 try:
                                     document.add_picture('static/upload/file.'+file.title[-3:],width=Inches(6.0))
                                 except :
@@ -1957,9 +1959,9 @@ def forum_export(request, classroom_id, forum_id):
                             p  = document.add_paragraph()
                             full_url = request.build_absolute_uri()
                             index = full_url.find("/",9)
-                            url = full_url[:index] + "/student/forum/download/" + str(file.id) 
+                            url = full_url[:index] + "/student/forum/download/" + str(file.id)
                             add_hyperlink(document, p, url, file.title)
-        # Prepare document for download        
+        # Prepare document for download
         f = io.BytesIO()
         document.save(f)
         length = f.tell()
@@ -2046,16 +2048,16 @@ def forum_grade(request, classroom_id, action):
     for enroll in enrolls:
         student_name = User.objects.get(id=enroll.student_id).first_name
         results.append([enroll, student_name, datas[enroll.student_id]])
-    
+
     #下載Excel
     if action == "1":
-        classroom = Classroom.objects.get(id=classroom_id)       
+        classroom = Classroom.objects.get(id=classroom_id)
         # output = StringIO.StringIO()
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'in_memory': True})    
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet(classroom.name)
         date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
-        
+
         row = 1
         worksheet.write(row, 1, u'座號')
         worksheet.write(row, 2, u'姓名')
@@ -2063,12 +2065,12 @@ def forum_grade(request, classroom_id, action):
         for forum in forums:
             worksheet.write(row, index, forum)
             index += 1
-        
+
         row += 1
         index = 3
         for fclass in fclasses:
             worksheet.write(row, index, datetime.strptime(str(fclass.publication_date)[:19],'%Y-%m-%d %H:%M:%S'), date_format)
-            index += 1			
+            index += 1
 
         for enroll, student_name, works in results:
             row += 1
@@ -2080,7 +2082,7 @@ def forum_grade(request, classroom_id, action):
                     worksheet.write(row, index, work.score)
                 else:
                     worksheet.write(row, index, '')
-                index +=1 
+                index +=1
 
         workbook.close()
         output.seek(0)
@@ -2102,7 +2104,7 @@ def forum_deadline(request, classroom_id, forum_id):
         form = CategroyForm(request.POST)
         if form.is_valid():
             forum.domains = request.POST.getlist('domains')
-            forum.levels = request.POST.getlist('levels')	
+            forum.levels = request.POST.getlist('levels')
             forum.save()
             return redirect('/teacher/forum/'+classroom_id)
     else:
@@ -2111,11 +2113,11 @@ def forum_deadline(request, classroom_id, forum_id):
         fclasses = FClass.objects.filter(forum_id=forum_id).order_by("-id")
     return render(request, 'teacher/forum_deadline_form.html',{'fclasses':fclasses, 'fclass':fclass, 'forum':forum, 'classroom':classroom})
 
-    
+
 # Ajax 設定期限、取消期限
 def forum_deadline_set(request):
     forum_id = request.POST.get('forumid')
-    classroom_id = request.POST.get('classroomid')		
+    classroom_id = request.POST.get('classroomid')
     status = request.POST.get('status')
     try:
         fclass = FClass.objects.get(forum_id=forum_id, classroom_id=classroom_id)
@@ -2126,12 +2128,12 @@ def forum_deadline_set(request):
     else :
         fclass.deadline = False
     fclass.save()
-    return JsonResponse({'status':status}, safe=False)        
+    return JsonResponse({'status':status}, safe=False)
 
 # Ajax 設定期限日期
 def forum_deadline_date(request):
     forum_id = request.POST.get('forumid')
-    classroom_id = request.POST.get('classroomid')		
+    classroom_id = request.POST.get('classroomid')
     deadline_date = request.POST.get('deadlinedate')
     try:
         fclass = FClass.objects.get(forum_id=forum_id, classroom_id=classroom_id)
@@ -2140,8 +2142,8 @@ def forum_deadline_date(request):
     #fclass.deadline_date = deadline_date.strftime('%d/%m/%Y')
     fclass.deadline_date = datetime.strptime(deadline_date, '%Y %B %d - %H:%M')
     fclass.save()
-    return JsonResponse({'status':deadline_date}, safe=False)     
-    
+    return JsonResponse({'status':deadline_date}, safe=False)
+
 class ForumPublishReject(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
       index = self.kwargs['index']
@@ -2156,29 +2158,29 @@ class ForumPublishReject(RedirectView):
           update_avatar(user_id, 4, -2)
           # History
           history = PointHistory(user_id=user_id, kind=4, message=u'-2分--退回討論區作業<'+fwork.title+'>', url='/student/forum/memo/'+str(classroom_id)+'/'+str(index)+'/0')
-          history.save()								
+          history.save()
       except ObjectDoesNotExist:
             pass
       return "/student/forum/memo/"+str(classroom_id)+"/"+str(index)+"/0"
-    
-    
+
+
 # 影片觀看時間統計
 class EventVideoView(ListView):
     context_object_name = 'events'
     #paginate_by = 50
     template_name = 'teacher/event_video.html'
 
-    def get_queryset(self):    
+    def get_queryset(self):
                 enrolls = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'], seat__gt=0).order_by("seat")
                 events = []
-                for enroll in enrolls: 
+                for enroll in enrolls:
                         videos = VideoLogHelper().getLogByUserid(enroll.student_id,self.kwargs['work_id'])
                         length = 0
-                        for video in videos: 
+                        for video in videos:
                                         length += video['length']
                         events.append([enroll, length/60.0])
                 return events
-            
+
     def get_context_data(self, **kwargs):
         context = super(EventVideoView, self).get_context_data(**kwargs)
         classroom = Classroom.objects.get(id=self.kwargs['classroom_id'])
@@ -2188,7 +2190,7 @@ class EventVideoView(ListView):
         enrolls = Enroll.objects.filter(classroom_id=classroom.id)
         context['height'] = 100 + enrolls.count() * 40
         return context
-            
+
 # 記錄影片長度
 def video_length(request):
     content_id = request.POST.get('content_id')
@@ -2196,39 +2198,39 @@ def video_length(request):
     fcontent = FContent.objects.get(id=content_id)
     fcontent.youtube_length = length
     fcontent.save()
-    return JsonResponse({'status':'ok'}, safe=False)	
-    
+    return JsonResponse({'status':'ok'}, safe=False)
+
 # 影片記錄條
 class VideoListView(ListView):
     context_object_name = 'videos'
     template_name = 'teacher/event_video_user.html'
-    
+
     def get_queryset(self):
-                videos = VideoLogHelper().getLogByUserid(self.kwargs['user_id'],self.kwargs['content_id'])        
+                videos = VideoLogHelper().getLogByUserid(self.kwargs['user_id'],self.kwargs['content_id'])
                 return videos
-        
+
     def get_context_data(self, **kwargs):
         context = super(VideoListView, self).get_context_data(**kwargs)
         content = FContent.objects.get(id=self.kwargs['content_id'])
         context['user_id'] = self.kwargs['user_id']
         context['content'] = content
         context['length'] = content.youtube_length
-        return context  
+        return context
 
-    # 限本班任課教師或助教     
+    # 限本班任課教師或助教
     def render_to_response(self, context):
         if not is_teacher(self.request.user ,self.kwargs['classroom_id']):
             if not is_assistant(self.request.user, self.kwargs['classroom_id'] ):
                   return redirect('/')
-        return super(VideoListView, self).render_to_response(context) 
-      
+        return super(VideoListView, self).render_to_response(context)
+
 # 列出所有作業小老師
 def assistant_group(request, typing, classroom_id):
         # 限本班任課教師
         if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
-            return redirect("/")    
+            return redirect("/")
         classroom = Classroom.objects.get(id=classroom_id)
-        lesson = Classroom.objects.get(id=classroom_id).lesson        
+        lesson = Classroom.objects.get(id=classroom_id).lesson
         if typing == "0":
             if lesson == 1:
                 lesson_name = lesson_list1
@@ -2241,21 +2243,21 @@ def assistant_group(request, typing, classroom_id):
             elif lesson == 5:
                 lesson_name = lesson_list2
             elif lesson == 8:
-                lesson_name = lesson_list5       
+                lesson_name = lesson_list5
             else:
                 lesson_name = lesson_list1
         elif typing == "1":
-            lesson_name = TWork.objects.get(classroom_id=classroom_id).title        
-        groups = range(classroom.group_number)				
+            lesson_name = TWork.objects.get(classroom_id=classroom_id).title
+        groups = range(classroom.group_number)
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
         student_ids = map(lambda a: a.student_id, enroll_pool)
         work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
         user_pool = [user for user in User.objects.filter(id__in=work_pool.values('scorer'))]
-        assistant_pool = [assistant for assistant in WorkAssistant.objects.filter(classroom_id=classroom_id, typing=typing, lesson_id=lesson)]				
-        lessons = []		
+        assistant_pool = [assistant for assistant in WorkAssistant.objects.filter(classroom_id=classroom_id, typing=typing, lesson_id=lesson)]
+        lessons = []
         index = 1
         for assignment in lesson_name:
-                student_groups = []													
+                student_groups = []
                 for group in groups:
                     members = filter(lambda u: u.group == group, enroll_pool)
                     group_assistants = []
@@ -2273,7 +2275,7 @@ def assistant_group(request, typing, classroom_id):
                         assistant = filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool)
                         if assistant:
                             group_assistants.append(member)
-                    student_groups.append([group, works, group_assistants])                    
+                    student_groups.append([group, works, group_assistants])
                 lessons.append([assignment, student_groups])
                 index = index + 1
         return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
@@ -2292,9 +2294,9 @@ class Science1QuestionListView(ListView):
         context = super(Science1QuestionListView, self).get_context_data(**kwargs)
         context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
         context['lesson'] = self.kwargs['lesson']
-        context['work_id'] = self.kwargs['work_id']		
+        context['work_id'] = self.kwargs['work_id']
         return context
-        
+
 # 科學運算現象描述問題
 class Science1QuestionAnswerView(ListView):
     model = Science1Work
@@ -2322,8 +2324,8 @@ class Science1QuestionAnswerView(ListView):
         context['classroom'] = Classroom.objects.get(id=self.kwargs['classroom_id'])
         context['lesson'] = self.kwargs['lesson']
         context['work_id'] = self.kwargs['work_id']
-        context['question'] = Science1Question.objects.get(id=self.kwargs['q_id'])		
-        return context		
+        context['question'] = Science1Question.objects.get(id=self.kwargs['q_id'])
+        return context
 
 #新增一個問題
 class Science1QuestionCreateView(CreateView):
@@ -2339,7 +2341,7 @@ class Science1QuestionCreateView(CreateView):
 def work2_science(request, classroom_id, index, user_id):
     contents1 = [[]]
     works_pool = Science1Work.objects.filter(student_id=user_id, index=index).order_by("-id")
-    questions = Science1Question.objects.filter(work_id=index)			
+    questions = Science1Question.objects.filter(work_id=index)
     for question in questions:
         works = list(filter(lambda w: w.question_id==question.id, works_pool))
         if len(works) > 0:
@@ -2347,18 +2349,18 @@ def work2_science(request, classroom_id, index, user_id):
             if len(contents)>0:
                 contents1.append([contents])
             else:
-                contents1.append([[]])						
+                contents1.append([[]])
         else:
             contents1.append([[]])
     try:
         work4 = Science4Work.objects.get(student_id=user_id, index=index)
     except ObjectDoesNotExist:
-        work4 = Science4Work(student_id=user_id, index=index)                        
+        work4 = Science4Work(student_id=user_id, index=index)
     except MultipleObjectsReturned:
         works4 = Science4Work.objects.filter(student_id=user_id, index=index).order_by("-id")
         work4 = works[0]
     # contents4 = Science4Content.objects.filter(work_id=work4.id).order_by("id")
-    contents4 = []            
+    contents4 = []
     works3 = Science3Work.objects.filter(student_id=user_id, index=index).order_by("-id")
     if works3.exists():
         work3 = works3[0]
@@ -2366,13 +2368,13 @@ def work2_science(request, classroom_id, index, user_id):
         work3 = Science3Work(student_id=user_id, index=index)
     # data1 = Science2Data.objects.filter(index=index, student_id=user_id, types=0).order_by("id")
     # data2 = Science2Data.objects.filter(index=index, student_id=user_id, types=1).order_by("id")
-    # data3 = Science2Data.objects.filter(index=index, student_id=user_id, types=2).order_by("id")				
+    # data3 = Science2Data.objects.filter(index=index, student_id=user_id, types=2).order_by("id")
     data1 = Science2Json.objects.filter(index=index,student_id=user_id, model_type=0).order_by('id')
     data2 = Science2Json.objects.filter(index=index,student_id=user_id, model_type=1).order_by('id')
     data3 = []
-    questions = Science1Question.objects.filter(work_id=index)	
-    return render(request, 'teacher/work2_science.html', {'user_id':user_id, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})                  
-            
+    questions = Science1Question.objects.filter(work_id=index)
+    return render(request, 'teacher/work2_science.html', {'user_id':user_id, 'questions':questions, 'data1':data1, 'data2':data2, 'data3':data3, 'index':index, 'contents1':contents1, 'contents4':contents4, 'work3':work3})
+
 # 查閱全班測驗卷成績
 def exam_list(request, classroom_id):
         # 限本班任課教師
@@ -2380,7 +2382,7 @@ def exam_list(request, classroom_id):
             return redirect("homepage")
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
         classroom_name=""
-        enroll_exam = []		
+        enroll_exam = []
         for enroll in enrolls:
             classroom_name = enroll.classroom.name
             exam_list = []
@@ -2402,18 +2404,18 @@ def exam_detail(request, classroom_id, student_id, exam_id):
         if not is_teacher(request.user, classroom_id):
             return redirect("homepage")
         exams = Exam.objects.filter(student_id=student_id, exam_id=exam_id)
-        enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=student_id)  
-        return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})	
+        enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=student_id)
+        return render(request, 'teacher/exam_detail.html', {'exams': exams, 'enroll':enroll})
 
 class GroupUpdate(UpdateView):
     model = Classroom
-    form_class = GroupForm	
+    form_class = GroupForm
     template_name = 'form.html'
-            
+
     def get_success_url(self):
         succ_url =  '/student/group/panel/'+str(self.kwargs['pk'])
         return succ_url
-            
+
     def form_valid(self, form):
         classroom = Classroom.objects.get(id=self.kwargs['pk'])
         if is_teacher(self.request.user, classroom.id) or is_assistant(self.request.user, classroom.id):
@@ -2425,7 +2427,7 @@ def group_assign(request, classroom_id):
     if not is_teacher(request.user, classroom_id):
         return redirect("/")
     classroom = Classroom.objects.get(id=classroom_id)
-    GroupModelFormset = modelformset_factory(Enroll, fields=['seat','student', 'group'],extra=0)	
+    GroupModelFormset = modelformset_factory(Enroll, fields=['seat','student', 'group'],extra=0)
     if request.method == 'POST':
         formset = GroupModelFormset(request.POST)
         if formset.is_valid():
@@ -2435,38 +2437,38 @@ def group_assign(request, classroom_id):
         else:
             return redirect("/")
     else:
-        formset = GroupModelFormset(queryset=Enroll.objects.filter(classroom_id=classroom_id).order_by("seat"))		
-    return render(request, 'teacher/group_assign.html', {'formset': formset, 'group_numbers':range(classroom.group_number)})		
-        
+        formset = GroupModelFormset(queryset=Enroll.objects.filter(classroom_id=classroom_id).order_by("seat"))
+    return render(request, 'teacher/group_assign.html', {'formset': formset, 'group_numbers':range(classroom.group_number)})
+
 class GroupUpdate2(UpdateView):
     model = Classroom
-    form_class = GroupForm2	
+    form_class = GroupForm2
     template_name = 'form.html'
-            
+
     def get_success_url(self):
         succ_url =  '/student/group/panel/'+str(self.kwargs['pk'])
         return succ_url
-            
+
     def form_valid(self, form):
         classroom = Classroom.objects.get(id=self.kwargs['pk'])
         if is_teacher(self.request.user, classroom.id) or is_assistant(self.request.user, classroom.id):
             form.save()
         return HttpResponseRedirect(self.get_success_url())
-            
+
 # 分組
 @user_passes_test(not_in_teacher_group, login_url='/')
 def make(request, classroom_id, action):
     if not is_teacher(request.user, classroom_id):
         return redirect("/")
     classroom = Classroom.objects.get(id=classroom_id)
-    if action == "1":            
-        classroom.group_open = True   
-    else : 
+    if action == "1":
+        classroom.group_open = True
+    else :
         classroom.group_open = False
-    classroom.save()      
+    classroom.save()
     return redirect("/student/group/panel/"+str(classroom.id))
 
-    
+
 # 教師可以查看所有帳號
 class StudentJoinView(ListView):
     context_object_name = 'users'
@@ -2474,7 +2476,7 @@ class StudentJoinView(ListView):
     template_name = 'teacher/student_join.html'
 
     def get_queryset(self):
-        enrolls = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'])	
+        enrolls = Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'])
         user_ids = [enroll.student_id for enroll in enrolls]
         username = username__icontains=self.request.user.username+"_"
         if self.request.GET.get('account') != None:
@@ -2496,38 +2498,38 @@ class StudentJoinView(ListView):
 class StudentEnrollView(RedirectView):
 
     def get(self, request, *args, **kwargs):
-        classroom_id = self.kwargs['classroom_id'] 
+        classroom_id = self.kwargs['classroom_id']
         classroom = Classroom.objects.get(id=classroom_id)
         students = self.request.POST.getlist('student')
-        jsonDec = json.decoder.JSONDecoder()	
-        classroom_list = []		
+        jsonDec = json.decoder.JSONDecoder()
+        classroom_list = []
         for student in students:
             student_id = student.split(":")[0]
-            student_seat = student.split(":")[1] 
+            student_seat = student.split(":")[1]
             enroll = Enroll(student_id=student_id, classroom_id=classroom_id, seat=student_seat)
             enroll.save()
             user = User.objects.get(id=student_id)
             profile = Profile.objects.get(user=user)
-            if len(profile.classroom) > 0 :		
+            if len(profile.classroom) > 0 :
                 classroom_list = jsonDec.decode(profile.classroom)
             classroom_list.append(str(self.kwargs['classroom_id']))
             profile.classroom = json.dumps(classroom_list)
-            profile.save()			
+            profile.save()
             messages = Message.objects.filter(author_id=classroom.teacher_id, classroom_id=classroom_id, type=1)
             for message in messages:
                 try:
                     messagepoll = MessagePoll.objects.get(message_type=1, message_id=message.id, reader_id=student_id, classroom_id=classroom_id)
                 except ObjectDoesNotExist:
                     messagepoll = MessagePoll(message_type=1, message_id=message.id, reader_id=student_id, classroom_id=classroom_id)
-                    messagepoll.save()	
+                    messagepoll.save()
                 except MultipleObjectsReturned:
-                    pass				
-        return super(StudentEnrollView, self).get(self, request, *args, **kwargs)        
-        
+                    pass
+        return super(StudentEnrollView, self).get(self, request, *args, **kwargs)
+
     def get_redirect_url(self, *args, **kwargs):
-        #TaxRate.objects.get(id=int(kwargs['pk'])).delete()   
+        #TaxRate.objects.get(id=int(kwargs['pk'])).delete()
         return '/student/classmate/'+ str(self.kwargs['classroom_id'])
-    
+
 @login_required
 @user_passes_test(not_in_teacher_group, login_url='/')
 def work_ckexcel(request, classroom_id):
@@ -2553,7 +2555,7 @@ def work_ckexcel(request, classroom_id):
       memo = ""
       grade = 0
       for index, assignment in enumerate(lesson_list4):
-            if typing == "0": 
+            if typing == "0":
                 works = list(filter(lambda w: w.index == int(index)+1, stu_works))
             else :
                 works = filter(lambda w: w.index == assignment.id, stu_works)
@@ -2585,9 +2587,9 @@ def work_ckexcel(request, classroom_id):
                 elif lesson == "5":
                     memo = enroll.score_memo_vphysics3
                 elif lesson == "6":
-                    memo = enroll.score_memo_microbit 
+                    memo = enroll.score_memo_microbit
                 elif lesson == "7":
-                    memo = enroll.score_memo_pandas                         
+                    memo = enroll.score_memo_pandas
                 elif lesson == "8":
                     memo = enroll.score_memo_django
             elif typing == "1":
@@ -2597,46 +2599,46 @@ def work_ckexcel(request, classroom_id):
             else :
                 grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
       data.append([enroll, enroll_score, memo, grade])
-                
-    classroom = Classroom.objects.get(id=classroom_id)       
+
+    classroom = Classroom.objects.get(id=classroom_id)
     output = StringIO.StringIO()
-    workbook = xlsxwriter.Workbook(output)    
+    workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet(classroom.name)
     date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
 
     row = 1
     worksheet.write(row, 1, u'座號')
     worksheet.write(row, 2, u'姓名')
-    worksheet.write(row, 3, u'成績')        
-    worksheet.write(row, 4, u'心得')         
+    worksheet.write(row, 3, u'成績')
+    worksheet.write(row, 4, u'心得')
     index = 5
     for assignment in lesson_list:
         if typing == "0":
               worksheet.write(row, index, assignment[1])
         else :
-              worksheet.write(row, index, assignment.title)              
+              worksheet.write(row, index, assignment.title)
         index += 1
 
     index = 5
     if not typing == "0":
         row += 1
-        for assignment in lesson_list:            
+        for assignment in lesson_list:
             worksheet.write(row, index, datetime.strptime(str(assignment.time)[:19],'%Y-%m-%d %H:%M:%S'), date_format)
-            index += 1			
+            index += 1
 
     for enroll, enroll_score, memo, grade in data:
       row += 1
       worksheet.write(row, 1, enroll.seat)
       worksheet.write(row, 2, enroll.student.first_name)
-      worksheet.write(row, 3, grade)         
-      worksheet.write(row, 4, memo)     
+      worksheet.write(row, 3, grade)
+      worksheet.write(row, 4, memo)
       index = 5
       for score, index2, work in enroll_score:
           if score == -2 :
               worksheet.write(row, index, "V")
           else :
               worksheet.write(row, index, score)
-          index +=1 
+          index +=1
 
     for index3, assignment in lesson_list4:
         worksheet = workbook.add_worksheet(index3+"_"+assignment)
@@ -2661,7 +2663,7 @@ def work_ckexcel(request, classroom_id):
     elif typing == "1":
         type_name = "自訂作業"
     else:
-        type_name = "檢核作業"        
+        type_name = "檢核作業"
     filename = classroom.name + '-' + type_name + "-" + str(localtime(timezone.now()).date()) + '.xlsx'
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
     xlsx_data = output.getvalue()

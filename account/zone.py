@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 county = []
 
-def reset():  
+def reset():
     zone = []
     zone.append('松山區')
     zone.append('信義區')
@@ -14,10 +14,10 @@ def reset():
     zone.append('南港區')
     zone.append('內湖區')
     zone.append('士林區')
-    zone.append('北投區')    
+    zone.append('北投區')
     county.append(['臺北市', zone,470,70])
-    
-    zone = []    
+
+    zone = []
     zone.append('板橋區')
     zone.append('三重區')
     zone.append('中和區')
@@ -48,8 +48,8 @@ def reset():
     zone.append('萬里區')
     zone.append('烏來區')
     county.append(['新北市', zone,470,100])
-    
-    
+
+
     zone = []
     zone.append('桃園區')
     zone.append('中壢區')
@@ -63,9 +63,9 @@ def reset():
     zone.append('平鎮區')
     zone.append('新屋區')
     zone.append('觀音區')
-    zone.append('復興區')    
+    zone.append('復興區')
     county.append(['桃園市', zone,330,85])
-    
+
     zone = []
     zone.append('中　區')
     zone.append('東　區')
@@ -95,9 +95,9 @@ def reset():
     zone.append('霧峰區')
     zone.append('太平區')
     zone.append('大里區')
-    zone.append('和平區')    
+    zone.append('和平區')
     county.append(['臺中市', zone,240,250])
-    
+
     zone = []
     zone.append('新營區')
     zone.append('鹽水區')
@@ -135,9 +135,9 @@ def reset():
     zone.append('北　區')
     zone.append('安南區')
     zone.append('安平區')
-    zone.append('中西區')    
+    zone.append('中西區')
     county.append(['臺南市', zone,140,485])
-		
+
     zone = []
     zone.append('鹽埕區')
     zone.append('鼓山區')
@@ -178,7 +178,7 @@ def reset():
     zone.append('內門區')
     zone.append('茂林區')
     zone.append('桃源區')
-    zone.append('那瑪夏區')    
+    zone.append('那瑪夏區')
     county.append(['高雄市', zone,230,515])
 
     zone = []
@@ -193,10 +193,10 @@ def reset():
     zone.append('五結鄉')
     zone.append('三星鄉')
     zone.append('大同鄉')
-    zone.append('南澳鄉')    
+    zone.append('南澳鄉')
     county.append(['宜蘭縣', zone,450,190])
-	  
-    zone = [] 
+
+    zone = []
     zone.append('竹北市')
     zone.append('關西鎮')
     zone.append('新埔鎮')
@@ -209,7 +209,7 @@ def reset():
     zone.append('北埔鄉')
     zone.append('峨眉鄉')
     zone.append('尖石鄉')
-    zone.append('五峰鄉')    
+    zone.append('五峰鄉')
     county.append(['新竹縣', zone,360,155])
 
     zone = []
@@ -230,9 +230,9 @@ def reset():
     zone.append('造橋鄉')
     zone.append('三灣鄉')
     zone.append('獅潭鄉')
-    zone.append('泰安鄉')   
+    zone.append('泰安鄉')
     county.append(['苗栗縣', zone,290,200])
-    	
+
     zone = []
     zone.append('彰化市')
     zone.append('員林市')
@@ -277,7 +277,7 @@ def reset():
     zone.append('信義鄉')
     zone.append('仁愛鄉')
     county.append(['南投縣', zone,300,330])
-    
+
     zone = []
     zone.append('斗六市')
     zone.append('斗南鎮')
@@ -298,7 +298,7 @@ def reset():
     zone.append('元長鄉')
     zone.append('四湖鄉')
     zone.append('口湖鄉')
-    zone.append('水林鄉')	
+    zone.append('水林鄉')
     county.append(['雲林縣', zone,150,370])
 
     zone = []
@@ -319,7 +319,7 @@ def reset():
     zone.append('梅山鄉')
     zone.append('番路鄉')
     zone.append('大埔鄉')
-    zone.append('阿里山鄉')	
+    zone.append('阿里山鄉')
     county.append(['嘉義縣', zone,250,430])
 
     zone = []
@@ -358,7 +358,7 @@ def reset():
     zone.append('牡丹鄉')
     county.append(['屏東縣', zone,250,600])
 
-    zone = [] 
+    zone = []
     zone.append('臺東市')
     zone.append('成功鎮')
     zone.append('關山鎮')
@@ -374,9 +374,9 @@ def reset():
     zone.append('海端鄉')
     zone.append('達仁鄉')
     zone.append('金峰鄉')
-    zone.append('蘭嶼鄉')		
+    zone.append('蘭嶼鄉')
     county.append(['臺東縣', zone,320,550])
-	
+
     zone = []
     zone.append('花蓮市')
     zone.append('鳳林鎮')
@@ -390,7 +390,7 @@ def reset():
     zone.append('富里鄉')
     zone.append('秀林鄉')
     zone.append('萬榮鄉')
-    zone.append('卓溪鄉')	
+    zone.append('卓溪鄉')
     county.append(['花蓮縣', zone,410,360])
 
     zone = []
@@ -399,9 +399,9 @@ def reset():
     zone.append('白沙鄉')
     zone.append('西嶼鄉')
     zone.append('望安鄉')
-    zone.append('七美鄉')	
+    zone.append('七美鄉')
     county.append(['澎湖縣', zone,20,390])
-		
+
     zone = []
     zone.append('中正區')
     zone.append('七堵區')
@@ -409,34 +409,34 @@ def reset():
     zone.append('仁愛區')
     zone.append('中山區')
     zone.append('安樂區')
-    zone.append('信義區')	
+    zone.append('信義區')
     county.append(['基隆市', zone,480,45])
-	
+
     zone = []
     zone.append('東　區')
     zone.append('北　區')
-    zone.append('香山區')	
+    zone.append('香山區')
     county.append(['新竹市', zone,300,125])
-	
+
     zone = []
     zone.append('東　區')
-    zone.append('西　區')	
+    zone.append('西　區')
     county.append(['嘉義市', zone,200,410])
-	
+
     zone = []
     zone.append('金城鎮')
     zone.append('金湖鎮')
     zone.append('金沙鎮')
     zone.append('金寧鄉')
     zone.append('縣烈嶼鄉')
-    zone.append('縣烏坵鄉')	
+    zone.append('縣烏坵鄉')
     county.append(['金門縣', zone,50,205])
-	
+
     zone = []
     zone.append('南竿鄉')
     zone.append('北竿鄉')
     zone.append('莒光鄉')
-    zone.append('東引鄉')	
-    county.append(['連江縣', zone,50,85])		
+    zone.append('東引鄉')
+    county.append(['連江縣', zone,50,85])
 reset()
 

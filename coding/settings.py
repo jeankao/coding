@@ -38,17 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'account',  
+    'account',
     'teacher',
     'student',
     'certificate',
     'survey',
     'django_recaptcha',
     'show',
-    'django.contrib.sitemaps',  
+    'django.contrib.sitemaps',
     'photologue',
-    'sortedm2m',  
-    'annotate',  
+    'sortedm2m',
+    'annotate',
 ]
 
 MIDDLEWARE = [
@@ -155,7 +155,7 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# 先去 Google 申請 API Key 
+# 先去 Google 申請 API Key
 # https://www.google.com/recaptcha/admin
 RECAPTCHA_PUBLIC_KEY = "6LcNEVUUAAAAAFQxZbZzVUCW34nLOAhqwZ1dVfZi"
 RECAPTCHA_PRIVATE_KEY = "6LcNEVUUAAAAAH0hzwBAPXlwDztbu9wehdSL0cLr"

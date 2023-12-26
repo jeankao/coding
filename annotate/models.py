@@ -24,8 +24,8 @@ class Annotation(models.Model):
   stuid       = models.IntegerField(default=0)
   # atype: 標註類別(教師設定)
   atype       = models.IntegerField(default=0)
-  
+
   def __unicode__(self):
     user = User.objects.filter(id=self.user_id)[0]
-    annotation_obj = json.loads(self.annotation)    
+    annotation_obj = json.loads(self.annotation)
     return user.first_name+" : "+annotation_obj["text"]

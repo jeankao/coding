@@ -21,17 +21,17 @@ class VideoLogHelper:
                 start_log_time = event.publish
                 start_time = time
                 searching = True
-            if searching and (action in ['PAUSE', 'STOP']):                                
+            if searching and (action in ['PAUSE', 'STOP']):
                     tmp = start_time.split(":")
                     tfrom = int(tmp[0]) * 3600 + int(tmp[1]) * 60 + int(tmp[2])
                     length = int(
                         (event.publish - start_log_time).total_seconds())
-                    tto = tfrom + length                     
+                    tto = tfrom + length
                     videos.append({'stamp': str(localtime(start_log_time).strftime(
                         "%Y-%m-%d %H:%M:%S")), 'from': tfrom, 'to': tto, 'length': length, 'duration': 300})
                     searching = False
         return videos
-      
+
     def _collectTime(self, events):
         videos = map(lambda e: {'uid': e.user_id, 'start': int(e.event[-9:-7]) * 3600 + int(e.event[-6:-4]) * 60 + int(e.event[-3:-1]) }, events)
         return videos
@@ -40,14 +40,14 @@ class VideoLogHelper:
         event_list = ['PLAY', 'PAUSE', 'STOP']
         events = Log.objects.filter(user_id=user_id, youtube_id=youtube_id).order_by("id")
         return self._calculate(events)
-      
+
     def getPlayLogByUserids(self, ids, lesson, tabName):
         events = Log.objects.filter(
                 event__contains=u"查看課程內容<"+lesson+"> | "+tabName+" | PLAY",
                 user_id__in=ids
             ).order_by('user_id', 'id')
         return self._collectTime(events)
-    
+
     def getLogByUserid_Lesson_Tab(self, userid, lesson, tab):
         events = self.getLogByUserid(userid)
         try:

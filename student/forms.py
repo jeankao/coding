@@ -85,12 +85,12 @@ class SubmitF2Form(forms.Form):
 
 class SubmitF3Form(forms.Form):
     code = forms.CharField(widget=forms.Textarea)
-    helps = forms.IntegerField()   
+    helps = forms.IntegerField()
     screenshot = forms.CharField(widget=forms.HiddenInput())
 
 # 新增一個作業
 class SubmitF4Form(forms.Form):
-    index = forms.IntegerField(widget=forms.HiddenInput())   
+    index = forms.IntegerField(widget=forms.HiddenInput())
     memo = forms.CharField()
 
 # 新增一個作業
@@ -104,7 +104,7 @@ class SubmitF4BugForm(forms.ModelForm):
         self.fields['work3_id'].required = False
         self.fields['bug_types'].required = False
         self.fields['bug'].required = False
-        self.fields['improve'].required = False  
+        self.fields['improve'].required = False
 
 class SubmitGForm(forms.Form):
     memo =  forms.CharField(required=False)
@@ -115,7 +115,7 @@ class SubmitGForm(forms.Form):
         super(SubmitGForm, self).__init__(*args, **kwargs)
         self.fields['memo'].label = "心得感想"
         self.fields['memo_e'].label = "英文"
-        self.fields['memo_c'].label = "中文"  
+        self.fields['memo_c'].label = "中文"
 
 class ForumSubmitForm(forms.Form):
     memo =  forms.CharField(required=False)
@@ -149,7 +149,7 @@ class PlantLightForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(PlantLightForm, self).__init__(*args, **kwargs)
-      
+
 
 class PlantPhotoForm(forms.ModelForm):
     class Meta:

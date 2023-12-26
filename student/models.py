@@ -67,9 +67,9 @@ class Enroll(models.Model):
     certificate_microbit_date = models.DateTimeField(default=timezone.now)
     score_memo_microbit =  models.IntegerField(default=0)
      # Pandas
-    score_memo_pandas =  models.IntegerField(default=0)   
+    score_memo_pandas =  models.IntegerField(default=0)
      # Django
-    score_memo_django =  models.IntegerField(default=0)       
+    score_memo_django =  models.IntegerField(default=0)
     # 自訂作業
     score_memo_custom =  models.IntegerField(default=0)
     # 檢核作業
@@ -127,8 +127,8 @@ class Work(models.Model):
     index = models.IntegerField()
     memo = models.TextField()
     memo_c = models.IntegerField(default=0)
-    memo_e = models.IntegerField(default=0)    
-    publish = models.BooleanField(default=False)        
+    memo_e = models.IntegerField(default=0)
+    publish = models.BooleanField(default=False)
     publication_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=-2)
     scorer = models.IntegerField(default=0)
@@ -256,7 +256,7 @@ class Science4Debug(models.Model):
             (0, "程式語法錯誤"),
             (1, "程式邏輯錯誤"),
             (2, "其它"),
-		]  
+		]
 
     work3_id =  models.IntegerField(default=0)
     bug_types = models.IntegerField(default=0, choices=BUG_CHOICES)
@@ -265,7 +265,7 @@ class Science4Debug(models.Model):
     publication_date = models.DateTimeField(default=timezone.now)
 
     def get_choice(self):
-        return dict(Science4Debug.BUG_CHOICES)[self.bug_types]        
+        return dict(Science4Debug.BUG_CHOICES)[self.bug_types]
 
 class Science3Work(models.Model):
     HELP_CHOICES = [
@@ -274,19 +274,19 @@ class Science3Work(models.Model):
             (2, "同學幫很多忙"),
             (3, "老師幫一點忙"),
             (4, "老師幫很多忙"),
-		]    
+		]
     student_id = models.IntegerField(default=0)
     lesson = models.IntegerField(default=0)
     typing = models.IntegerField(default=0)
     index = models.IntegerField()
     publication_date = models.DateTimeField(default=timezone.now)
     picture = models.ImageField()
-    helps = models.IntegerField(default=0, choices=HELP_CHOICES)    
+    helps = models.IntegerField(default=0, choices=HELP_CHOICES)
     code = models.TextField(default='')
-    
+
 
     def get_choice(self):
-        return dict(Science3Work.HELP_CHOICES)[self.typing]   
+        return dict(Science3Work.HELP_CHOICES)[self.typing]
 
 
     def __unicode__(self):
@@ -308,13 +308,13 @@ class Plant(models.Model):
     student_id = models.IntegerField(default=0)
     memo = models.TextField(default='')
     filename = models.CharField(max_length=50,null=True,blank=True)
-    picture = models.ImageField(upload_to = upload_path_handler_plant, default = '/static/python/null.jpg')    
+    picture = models.ImageField(upload_to = upload_path_handler_plant, default = '/static/python/null.jpg')
     publication_date = models.DateTimeField(default=timezone.now)
 
 class PlantLight(models.Model):
     student_id = models.IntegerField(default=0)
-    light = models.FloatField(default=0)   
-    publication_date = models.DateTimeField(default=timezone.now)    
+    light = models.FloatField(default=0)
+    publication_date = models.DateTimeField(default=timezone.now)
 
 def upload_path_handler_plantphoto(instance, filename):
     return "static/plant/photo/{filename}".format(filename=instance.id+".jpg")
@@ -322,5 +322,5 @@ def upload_path_handler_plantphoto(instance, filename):
 class PlantPhoto(models.Model):
     student_id = models.IntegerField(default=0)
     filename = models.CharField(max_length=50,null=True,blank=True)
-    uploads = models.ImageField(upload_to = upload_path_handler_plantphoto, default = '/static/python/null.jpg')    
-    publication_date = models.DateTimeField(default=timezone.now)        
+    uploads = models.ImageField(upload_to = upload_path_handler_plantphoto, default = '/static/python/null.jpg')
+    publication_date = models.DateTimeField(default=timezone.now)

@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            "DELETE FROM student_enroll WHERE classroom_id not in (SELECT id from teacher_classroom)", 
-        ),        
+            "DELETE FROM student_enroll WHERE classroom_id not in (SELECT id from teacher_classroom)",
+        ),
         migrations.RenameField(
             model_name='enroll',
             old_name='classroom_id',
@@ -28,8 +28,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='enroll_list', to='teacher.classroom'),
         ),
         migrations.RunSQL(
-            "DELETE FROM student_enroll WHERE student_id not in (SELECT id from auth_user)", 
-        ),        
+            "DELETE FROM student_enroll WHERE student_id not in (SELECT id from auth_user)",
+        ),
         migrations.RenameField(
             model_name='enroll',
             old_name='student_id',

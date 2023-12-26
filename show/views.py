@@ -45,7 +45,7 @@ def is_teacher(user, classroom_id):
 def group(request, round_id):
         round = Round.objects.get(id=round_id)
         classroom_id = round.classroom_id
-        classroom = Classroom.objects.get(id=classroom_id)   
+        classroom = Classroom.objects.get(id=classroom_id)
         student_groups = []
         group_show_open = Classroom.objects.get(id=classroom_id).group_show_open
         shows = ShowGroup.objects.filter(round_id=round_id)
@@ -58,17 +58,17 @@ def group(request, round_id):
                 else :
                     student_group = []
         except ObjectDoesNotExist :
-                student_group = []		
+                student_group = []
         for show in shows:
             enrolls = Enroll.objects.filter(classroom_id=classroom_id, groupshow__icontains=show.id)
             for enroll in enrolls:
                 nogroup.remove(enroll)
             student_groups.append([show, enrolls,  classroom.group_show_size-len(enrolls)])
-            
+
         #找出尚未分組的學生
         def getKey(custom):
-            return custom.seat	
-        nogroup = sorted(nogroup, key=getKey)             
+            return custom.seat
+        nogroup = sorted(nogroup, key=getKey)
         return render(request, 'show/group.html', {'shows':shows, 'round_id':round_id, 'nogroup': nogroup, 'group_show_open':group_show_open, 'teacher':is_teacher(request.user, classroom_id), 'student_groups':student_groups, 'classroom_id':classroom_id, 'student_group':student_group})
 
 # 新增組別
@@ -93,13 +93,13 @@ def group_add(request, round_id):
 # 新增創意秀
 def round_add(request, classroom_id):
         round = Round(classroom_id=classroom_id)
-        round.save()                  
+        round.save()
         return redirect('/show/group/'+str(round.id))
-			
+
 # 設定組別人數
 def group_size(request, round_id):
         show = Round.objects.get(id=round_id)
-        classroom_id = show.classroom_id	
+        classroom_id = show.classroom_id
         if request.method == 'POST':
             form = GroupShowSizeForm(request.POST)
             if form.is_valid():
@@ -111,13 +111,13 @@ def group_size(request, round_id):
         else:
             classroom = Classroom.objects.get(id=classroom_id)
             form = GroupShowSizeForm(instance=classroom)
-        return render(request, 'show/group_size.html', {'form':form})        
+        return render(request, 'show/group_size.html', {'form':form})
 
 # 加入組別
 def group_enroll(request, round_id,  group_id):
         round = Round.objects.get(id=round_id)
-        classroom_id = round.classroom_id	
-        classroom_name = Classroom.objects.get(id=classroom_id).name    
+        classroom_id = round.classroom_id
+        classroom_name = Classroom.objects.get(id=classroom_id).name
         group_name = ShowGroup.objects.get(id=group_id).name
         enrolls = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
         if len(enrolls)>0:
@@ -131,51 +131,51 @@ def group_enroll(request, round_id,  group_id):
               groups.remove(show.id)
           groups.append(int(group_id))
           enrolls.update(groupshow=str(groups).replace("[", "").replace("]", ""))
-                  
+
         return redirect('/show/group/'+round_id)
 
 # 刪除組別
 def group_delete(request, group_id, round_id):
         round = Round.objects.get(id=round_id)
-        classroom_name = Classroom.objects.get(id=round.classroom_id).name    
-        group_name = ShowGroup(id=group_id).name    
+        classroom_name = Classroom.objects.get(id=round.classroom_id).name
+        group_name = ShowGroup(id=group_id).name
         group = ShowGroup.objects.get(id=group_id)
-  
+
         group.delete()
-        return redirect('/show/group/'+round_id)    
+        return redirect('/show/group/'+round_id)
 
 # 開放選組
 def group_open(request, round_id, action):
     show = Round.objects.get(id=round_id)
-    classroom_id = show.classroom_id	
+    classroom_id = show.classroom_id
     classroom = Classroom.objects.get(id=classroom_id)
     if action == "1":
         classroom.group_show_open=True
         classroom.save()
-  
+
     else :
         classroom.group_show_open=False
         classroom.save()
-          
-    return redirect('/show/group/'+round_id)  	
-	
+
+    return redirect('/show/group/'+round_id)
+
 # 創意秀清單
 class ShowListView(generic.ListView):
     model = Round
     template_name = 'show/round_list.html'
-    
+
     def get_queryset(self):
-        shows = Round.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-id")      
+        shows = Round.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by("-id")
         return shows
-      
+
     def get_context_data(self, **kwargs):
         context = super(ShowListView, self).get_context_data(**kwargs)
         context['classroom_id'] = self.kwargs['classroom_id']
-        return context    
-  
+        return context
+
 # 上傳創意秀
 class ShowUpdateView(UpdateView):
-  
+
     def get_form_class(self):
         classroom_id = Round.objects.get(id=self.kwargs['round_id']).classroom_id
         classroom = Classroom.objects.get(id=classroom_id)
@@ -195,7 +195,7 @@ class ShowUpdateView(UpdateView):
     def get_object(self, queryset=None):
         obj = ShowGroup.objects.get(id=self.kwargs['group_show'])
         return obj
-		
+
     def form_valid(self, form):
         classroom_id = Round.objects.get(id=self.kwargs['round_id']).classroom_id
         classroom = Classroom.objects.get(id=classroom_id)
@@ -205,26 +205,26 @@ class ShowUpdateView(UpdateView):
             filepath = self.request.FILES['file']
         except :
             filepath = False
-          
+
         # 限制小組成員才能上傳
         pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['group_show'])
         members = []
         for member in pmembers:
             groups = member.groupshow.split(",")
             if self.kwargs['group_show'] in groups:
-                members.append(member)		
+                members.append(member)
         is_member = True
         for member in members :
             if self.request.user.id == member.student_id:
                 is_member = True
-        
-        if is_member : 
+
+        if is_member :
             if classroom.lesson == 1 and filepath :
                 myfile = self.request.FILES['file']
-                fs = FileSystemStorage(settings.BASE_DIR+"/static/show/"+self.kwargs['group_show']+"/")
+                fs = FileSystemStorage(settings.BASE_DIR / f"static/show/{self.kwargs['group_show']}/")
                 filename = uuid4().hex+".sb2"
                 fs.save(filename, myfile)
-                obj.file = filename	
+                obj.file = filename
             #save object
             start = obj.youtube.find("v=")
             if start > 0:
@@ -232,7 +232,7 @@ class ShowUpdateView(UpdateView):
             obj.publish = timezone.now()
             obj.done = True
             obj.save()
-            
+
             if not classroom.lesson == 1:
                 dataURI = form.cleaned_data['screenshot']
                 try:
@@ -255,11 +255,11 @@ class ShowUpdateView(UpdateView):
                     path = dataURI.split('/')
                     obj.picture=path[0]
                 obj.save()
-            
-							
-								
+
+
+
             if obj.done == False:
-                for member in members:			
+                for member in members:
 			        # credit
                     update_avatar(member.student_id, 4, 3)
                     # History
@@ -274,14 +274,14 @@ class ShowUpdateView(UpdateView):
 class ReviewUpdateView(UpdateView):
     model = ShowReview
     template_name_suffix = '_review'
-    
+
     def get_form_class(self):
         classroom_id = Round.objects.get(id=self.kwargs['round_id']).classroom_id
         classroom = Classroom.objects.get(id=classroom_id)
         if classroom.lesson == 1:
             return ReviewForm1
         else :
-            return ReviewForm2    
+            return ReviewForm2
 
     def get(self, request, **kwargs):
         show = ShowGroup.objects.get(id=self.kwargs['show_id'])
@@ -289,7 +289,7 @@ class ReviewUpdateView(UpdateView):
             self.object = ShowReview.objects.get(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
         except ObjectDoesNotExist:
             self.object = ShowReview(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
-            self.object.save()        
+            self.object.save()
         reviews = ShowReview.objects.filter(show_id=self.kwargs['show_id'], done=True)
         score0 = reviews.aggregate(Sum('score')).values()[0]
         score1 = reviews.aggregate(Sum('score1')).values()[0]
@@ -297,9 +297,9 @@ class ReviewUpdateView(UpdateView):
         score3 = reviews.aggregate(Sum('score3')).values()[0]
         score = [self.object.score1, self.object.score2,self.object.score3]
         if reviews.count() > 0 :
-            score0 = score0 / reviews.count()     
-            score1 = score1 / reviews.count()     
-            score2 = score2 / reviews.count()  
+            score0 = score0 / reviews.count()
+            score1 = score1 / reviews.count()
+            score2 = score2 / reviews.count()
             score3 = score3 / reviews.count()
             def show_category(show_id):
                 show = ShowGroup.objects.get(id=show_id)
@@ -325,7 +325,7 @@ class ReviewUpdateView(UpdateView):
         form = self.get_form(form_class)
         showfiles = ShowFile.objects.filter(show_id=self.kwargs['show_id']).order_by("-id")
         round = Round.objects.get(id=self.kwargs['round_id'])
-        teacher = is_teacher(self.request.user, round.classroom_id)				
+        teacher = is_teacher(self.request.user, round.classroom_id)
         context = self.get_context_data(groups=groups, teacher=teacher, showfiles=showfiles, show=show, form=form, members=members, review=self.object, scores=scores, score=score, reviews=reviews)
         return self.render_to_response(context)
 
@@ -336,9 +336,9 @@ class ReviewUpdateView(UpdateView):
             obj = ShowReview(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
             obj.save()
         return obj
-	
+
     def form_valid(self, form):
-        show = ShowGroup.objects.get(id=self.kwargs['show_id'])        
+        show = ShowGroup.objects.get(id=self.kwargs['show_id'])
         #save object
         obj = form.save(commit=False)
         if obj.done == False:
@@ -348,27 +348,27 @@ class ReviewUpdateView(UpdateView):
             # credit
             update_avatar(member.student_id, 4, 1)
             # History
-            show = ShowGroup.objects.get(id=self.kwargs['show_id'])			
+            show = ShowGroup.objects.get(id=self.kwargs['show_id'])
             history = PointHistory(user_id=member.student_id, kind=4, message=u'1分--評分創意秀<'+show.title+'>', url='/show/detail/'+str(show.id))
             history.save()
         obj.publish = timezone.now()
         obj.done = True
-        obj.save()    
+        obj.save()
         classroom_id = Round.objects.get(id=self.kwargs['round_id']).classroom_id
         classroom = Classroom.objects.get(id=classroom_id)
         if classroom.lesson == 1:
             return redirect('/show/detail/'+self.kwargs['round_id']+'/'+self.kwargs['show_id'])
         else :
-            return redirect('/show/detail/'+self.kwargs['round_id']+'/'+self.kwargs['show_id']) 
+            return redirect('/show/detail/'+self.kwargs['round_id']+'/'+self.kwargs['show_id'])
 
 
-# 所有同學的評分		
+# 所有同學的評分
 class ReviewListView(ListView):
     context_object_name = 'reviews'
     template_name = 'show/reviewlist.html'
     def get_queryset(self):
-        show = ShowGroup.objects.get(id=self.kwargs['show_id'])        
- 
+        show = ShowGroup.objects.get(id=self.kwargs['show_id'])
+
         return ShowReview.objects.filter(show_id=self.kwargs['show_id'], done=True).order_by("-publish")
 
     def get_context_data(self, **kwargs):
@@ -377,8 +377,8 @@ class ReviewListView(ListView):
            review = ShowReview.objects.get(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
         except ObjectDoesNotExist:
             review = ShowReview(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
-            review.save()        
-        show = ShowGroup.objects.get(id=self.kwargs['show_id']) 
+            review.save()
+        show = ShowGroup.objects.get(id=self.kwargs['show_id'])
         pmembers = Enroll.objects.filter(groupshow__icontains=self.kwargs['show_id'])
         members = []
         for member in pmembers:
@@ -391,12 +391,12 @@ class ReviewListView(ListView):
         score3 = reviews.aggregate(Sum('score3')).values()[0]
         score = [review.score1, review.score2, review.score3]
         if reviews.count() > 0 :
-            score1 = score1 / reviews.count()     
-            score2 = score2 / reviews.count()  
-            score3 = score3 / reviews.count()          
+            score1 = score1 / reviews.count()
+            score2 = score2 / reviews.count()
+            score3 = score3 / reviews.count()
             scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  score1+score2+score3, reviews.count()]
         else :
-            scores = [0,0,0,0]        
+            scores = [0,0,0,0]
         ctx['scores'] = scores
         ctx['show'] = show
         ctx['members'] = members
@@ -410,10 +410,10 @@ class RankListView(ListView):
     template_name = 'show/ranklist.html'
     def get_queryset(self):
         def getKey(custom):
-            return custom[2]	
+            return custom[2]
         lists = []
         show = Round.objects.get(id=self.kwargs['round_id'])
-        classroom_id = show.classroom_id				
+        classroom_id = show.classroom_id
         shows = ShowGroup.objects.filter(round_id=self.kwargs['round_id'])
         for show in shows :
             pmembers = Enroll.objects.filter(groupshow__icontains=str(show.id))
@@ -422,8 +422,8 @@ class RankListView(ListView):
                 groups = member.groupshow.split(",")
                 if str(show.id) in groups:
                     students.append(member)
-            reviews = ShowReview.objects.filter(show_id=show.id, done=True)	
-            if reviews.count() > 0 :			
+            reviews = ShowReview.objects.filter(show_id=show.id, done=True)
+            if reviews.count() > 0 :
                 score = reviews.aggregate(Sum('score'+self.kwargs['rank_id'])).values()[0]/reviews.count()
             else :
                 score = 0
@@ -445,8 +445,8 @@ def show_download(request, show_id, showfile_id):
     for member in members:
         username = username + member.student.first_name + "_"
     filename = show_id + "_" + username + "_" + show.title + ".sb3"
-    download =  settings.BASE_DIR + "/" + showfile.filename
-    wrapper = FileWrapper(file( download, "r" ))
+    download =  settings.BASE_DIR / showfile.filename
+    wrapper = FileWrapper(open( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
@@ -454,26 +454,26 @@ def show_download(request, show_id, showfile_id):
     # You can also set any other required headers: Cache-Control, etc.
     return response
     #return render(request, 'student/download.html', {'download':download})
-			
+
 # 教師查看創意秀評分情況
 class TeacherListView(ListView):
     context_object_name = 'lists'
     template_name = 'show/teacherlist.html'
-			
+
     def get_context_data(self, **kwargs):
         context = super(TeacherListView, self).get_context_data(**kwargs)
-        context['round_id'] = self.kwargs['round_id']		
+        context['round_id'] = self.kwargs['round_id']
         return context
 
     def get_queryset(self):
         lists = {}
         round = Round.objects.get(id=self.kwargs['round_id'])
-        classroom_id = round.classroom_id								
+        classroom_id = round.classroom_id
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
         classroom_name = Classroom.objects.get(id=classroom_id).name
         for enroll in enrolls:
             counter = 0
-            lists[enroll.id] = []	            
+            lists[enroll.id] = []
             shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
             if not shows.exists():
                 lists[enroll.id].append([enroll])
@@ -485,16 +485,16 @@ class TeacherListView(ListView):
                         groups = member.groupshow.split(",")
                         if str(show.id) in groups:
                             members.append(member)
-                    try: 
+                    try:
                         review = ShowReview.objects.get(show_id=show.id, student_id=enroll.student_id)
                     except ObjectDoesNotExist:
-                        review = ShowReview(show_id=show.id)                    
+                        review = ShowReview(show_id=show.id)
                     if review.done:
                         counter = counter + 1
                     lists[enroll.id].append([enroll, review, show, members, counter])
         lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][0][0].seat))
         return lists
-        
+
 # 教師查看創意秀評分情況
 class ScoreListView(ListView):
     context_object_name = 'lists'
@@ -503,7 +503,7 @@ class ScoreListView(ListView):
         lists = {}
         counter = 0
         show = Round.objects.get(id=self.kwargs['round_id'])
-        classroom_id = show.classroom_id								
+        classroom_id = show.classroom_id
         enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
         classroom_name = Classroom.objects.get(id=classroom_id).name
         shows = ShowGroup.objects.filter(round_id=show.id)
@@ -519,19 +519,19 @@ class ScoreListView(ListView):
             score2 = reviews.aggregate(Sum('score2')).values()[0]
             score3 = reviews.aggregate(Sum('score3')).values()[0]
             if reviews.count() > 0 :
-                score1 = score1 / reviews.count()     
-                score2 = score2 / reviews.count()  
-                score3 = score3 / reviews.count()          
+                score1 = score1 / reviews.count()
+                score2 = score2 / reviews.count()
+                score3 = score3 / reviews.count()
                 scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  score1+score2+score3, reviews.count()]
             else :
-                scores = [0,0,0,0]        
+                scores = [0,0,0,0]
             lists[showa.id] = [showa, scores, members, self.kwargs['round_id']]
- 
+
         lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][1][3], reverse=True))
         #lists = OrderedDict(sorted(lists.items(), key=itemgetter(1)))
         return lists
 
-# 藝廊                  
+# 藝廊
 class GalleryListView(ListView):
     context_object_name = 'lists'
     paginate_by = 10
@@ -545,14 +545,14 @@ class GalleryListView(ListView):
             classroom_pool = [classroom for classroom in Classroom.objects.filter(lesson__in=[2,4])]
         classroom_ids = map(lambda a: a.id, classroom_pool)
         round_pool = [round for round in Round.objects.filter(classroom_id__in=classroom_ids)]
-        round_ids = map(lambda a: a.id, round_pool)           
+        round_ids = map(lambda a: a.id, round_pool)
         return ShowGroup.objects.filter(gallery=True, round_id__in=round_ids).order_by('-publish')
-      
+
     def get_context_data(self, **kwargs):
         context = super(GalleryListView, self).get_context_data(**kwargs)
         context['category'] = self.kwargs['category']
-        return context         
-		
+        return context
+
 # 查看藝郎某項目
 def GalleryDetail(request, show_id):
     show = ShowGroup.objects.get(id=show_id)
@@ -561,12 +561,12 @@ def GalleryDetail(request, show_id):
     score2 = reviews.aggregate(Sum('score2')).values()[0]
     score3 = reviews.aggregate(Sum('score3')).values()[0]
     if reviews.count() > 0 :
-        score1 = score1 / reviews.count()     
-        score2 = score2 / reviews.count()  
-        score3 = score3 / reviews.count()          
+        score1 = score1 / reviews.count()
+        score2 = score2 / reviews.count()
+        score3 = score3 / reviews.count()
         scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  reviews.count()]
     else :
-        scores = [0,0,0,0]        
+        scores = [0,0,0,0]
     pmembers = Enroll.objects.filter(groupshow__icontains=str(show_id))
     members = []
     for member in pmembers:
@@ -576,7 +576,7 @@ def GalleryDetail(request, show_id):
 
     classroom_id = Round.objects.get(id=show.round_id).classroom_id
     showfiles = ShowFile.objects.filter(show_id=show.id)
-    
+
     return render(request, 'show/gallerydetail.html', {'show': show, 'showfiles':showfiles, 'members':members, 'scores':scores, 'reviews':reviews, 'teacher':is_teacher(request.user, classroom_id)})
 
 # 將創意秀開放到藝廊
@@ -584,27 +584,27 @@ def make(request):
     show_id = request.POST.get('showid')
     action = request.POST.get('action')
     if show_id and action :
-        show = ShowGroup.objects.get(id=show_id)	      
+        show = ShowGroup.objects.get(id=show_id)
         try :
-            show = ShowGroup.objects.get(id=show_id)	
+            show = ShowGroup.objects.get(id=show_id)
             if action == 'open':
-                show.gallery = True             
+                show.gallery = True
             else:
-                show.gallery = False		
-                     
+                show.gallery = False
+
             show.save()
         except ObjectDoesNotExist :
             pass
-        return JsonResponse({'status':'ok'}, safe=False)        
+        return JsonResponse({'status':'ok'}, safe=False)
     else:
-        return JsonResponse({'status':'ko'}, safe=False)       
-        
+        return JsonResponse({'status':'ko'}, safe=False)
+
 def excel(request, round_id):
     output = StringIO.StringIO()
-    workbook = xlsxwriter.Workbook(output)    
-            
+    workbook = xlsxwriter.Workbook(output)
+
     shows = ShowGroup.objects.filter(round_id=round_id)
-    
+
     worksheet = workbook.add_worksheet(u"分組")
     c = 0
     for show in shows:
@@ -615,7 +615,7 @@ def excel(request, round_id):
         members = Enroll.objects.filter(groupshow__icontains=str(show.id)+",")
         for member in members:
             worksheet.write(c, number, "("+str(member.seat)+")"+member.student.first_name)
-            number = number + 1        
+            number = number + 1
         c = c + 1
     for show in shows :
         worksheet = workbook.add_worksheet(show.name)
@@ -625,10 +625,10 @@ def excel(request, round_id):
         for member in members:
             worksheet.write(0, number, "("+str(member.seat)+")"+member.student.first_name)
             number = number + 1
-        worksheet.write(1,0, u"作品名稱") 
+        worksheet.write(1,0, u"作品名稱")
         worksheet.write(1,1, show.title)
-        worksheet.write(2,0, u"上傳時間") 
-        worksheet.write(2,1, str(localtime(show.publish)))        
+        worksheet.write(2,0, u"上傳時間")
+        worksheet.write(2,1, str(localtime(show.publish)))
         #worksheet.write(3,1, "https://scratch.mit.edu/projects/"+str(show.number))
 
         worksheet.write(3,0, u"評分者")
@@ -637,42 +637,42 @@ def excel(request, round_id):
         worksheet.write(3,3, u"創意表現")
         worksheet.write(3,4, u"評語")
         worksheet.write(3,5, u"時間")
-        showreviews = ShowReview.objects.filter(show_id=show.id)        
+        showreviews = ShowReview.objects.filter(show_id=show.id)
         score1 = showreviews.aggregate(Sum('score1')).values()[0]
         score2 = showreviews.aggregate(Sum('score2')).values()[0]
         score3 = showreviews.aggregate(Sum('score3')).values()[0]
         if showreviews.count() > 0 :
-            score1 = score1 / showreviews.count()     
-            score2 = score2 / showreviews.count()  
-            score3 = score3 / showreviews.count()          
+            score1 = score1 / showreviews.count()
+            score2 = score2 / showreviews.count()
+            score3 = score3 / showreviews.count()
             scores = [math.ceil(score1*10)/10, math.ceil(score2*10)/10, math.ceil(score3*10)/10,  showreviews.count()]
         else :
             scores = [0,0,0,0]
-        
+
         worksheet.write(4,0, u"平均("+str(scores[3])+u"人)")
         worksheet.write(4,1, scores[0])
         worksheet.write(4,2, scores[1])
-        worksheet.write(4,3, scores[2])        
+        worksheet.write(4,3, scores[2])
 
         index = 5
-        
+
         reviews = []
         classroom_id = Round.objects.get(id=round_id).classroom_id
         for showreview in showreviews:
             enroll = Enroll.objects.get(classroom_id=classroom_id, student_id=showreview.student_id)
             reviews.append([showreview, enroll])
-        
+
         def getKey(custom):
             return custom[1].seat
-	
-        reviews = sorted(reviews, key=getKey)        
+
+        reviews = sorted(reviews, key=getKey)
         for review in reviews:
             worksheet.write(index,0, "("+str(review[1].seat)+")"+review[1].student.first_name)
             worksheet.write(index,1, review[0].score1)
             worksheet.write(index,2, review[0].score2)
-            worksheet.write(index,3, review[0].score3)            
-            worksheet.write(index,4, review[0].comment)  
-            worksheet.write(index,5, str(localtime(review[0].publish)))             
+            worksheet.write(index,3, review[0].score3)
+            worksheet.write(index,4, review[0].comment)
+            worksheet.write(index,5, str(localtime(review[0].publish)))
             index = index + 1
         worksheet.insert_image(index+1,0, 'static/show/'+str(show.id)+'/Dr-Scratch.png')
     workbook.close()
@@ -735,9 +735,9 @@ def zip(request, round_id):
     excelfile = excel(request, round_id)
     filename = "content.xlsx"
     zip_path = os.path.join(zip_subdir, filename)
-    fdir = settings.BASE_DIR + "/static/show/"
+    fdir = settings.BASE_DIR / "static/show"
     fname = "content.xlsx"
-    fpath = fdir + fname    	
+    fpath = fdir / fname
     zf.write(fpath, zip_path)
 
     shows = ShowGroup.objects.filter(round_id=round_id)
@@ -747,9 +747,9 @@ def zip(request, round_id):
           # Calculate path for file in zip
           #fdir , fname = os.path.split(fpath)
           if showfiles.exists():
-            fdir = settings.BASE_DIR + "/"
+            fdir = settings.BASE_DIR
             fname = showfiles[0].filename
-            fpath = fdir + fname
+            fpath = fdir / fname
             enrolls = Enroll.objects.filter(groupshow__icontains=str(show.id)+",")
             members = ""
             for enroll in enrolls:

@@ -33,7 +33,7 @@ post_questions1 = [
             '8. 使用Scratch程式設計撰寫遊戲，讓我覺得很有成就感',
             '9. 學完此門課後，我能精通程式設計的方法與技能',
             '10. 學完此門課後，我能理解程式設計這門課最困難的部分',
-        ]],	
+        ]],
         ['三、學習經驗', [
             '11. 我能從Scratch程式設計課程中得到很大的收穫',
             '12. 我能了解影片所講解的觀念並順利完成指派的題目',
@@ -54,7 +54,7 @@ post_questions1 = [
             '23. 如果學校有開設遊戲設計的社團，我會想要參加',
             '24. 學完此課程後，我認為學好程式設計在現代社會中是很重要的',
             '25. 學完此課程後，我認為我能夠將程式設計課程所學到的（如問題解決、邏輯思考、自學能力與創造力等），運用到其他科目上',
-        ]],	
+        ]],
 ]
 
 post_questions2 = [
@@ -97,8 +97,8 @@ def pre_result1(request, classroom_id):
             questions[8][5-questionaire.p8]+=1
             questions[9][5-questionaire.p9]+=1
             questions[10][5-questionaire.p10]+=1
-            questionaires.append(questionaire)						
-        except ObjectDoesNotExist : 
+            questionaires.append(questionaire)
+        except ObjectDoesNotExist :
             pass
     return render(request, 'survey/pre_result1.html', {'enrolls':enrolls, 'result':questions, 'questions': pre_questions1, 'classroom':classroom, 'questionaires':questionaires})
 
@@ -109,16 +109,16 @@ def pre_survey1(request):
     except ObjectDoesNotExist :
         questionaire = PreSurvey1(student_id=request.user.id)
     questions = []
-    questions.append([pre_questions1[0], questionaire.p1])		
-    questions.append([pre_questions1[1], questionaire.p2])		
-    questions.append([pre_questions1[2], questionaire.p3])		
+    questions.append([pre_questions1[0], questionaire.p1])
+    questions.append([pre_questions1[1], questionaire.p2])
+    questions.append([pre_questions1[2], questionaire.p3])
     questions.append([pre_questions1[3], questionaire.p4])
-    questions.append([pre_questions1[4], questionaire.p5])		
-    questions.append([pre_questions1[5], questionaire.p6])		
-    questions.append([pre_questions1[6], questionaire.p7])		
-    questions.append([pre_questions1[7], questionaire.p8])		
-    questions.append([pre_questions1[8], questionaire.p9])		
-    questions.append([pre_questions1[9], questionaire.p10])		
+    questions.append([pre_questions1[4], questionaire.p5])
+    questions.append([pre_questions1[5], questionaire.p6])
+    questions.append([pre_questions1[6], questionaire.p7])
+    questions.append([pre_questions1[7], questionaire.p8])
+    questions.append([pre_questions1[8], questionaire.p9])
+    questions.append([pre_questions1[9], questionaire.p10])
     if request.method == 'POST':
             questionaire.p = request.POST['p1']
             if questionaire.p == "2":
@@ -149,7 +149,7 @@ def pre_teacher1(request, classroom_id):
             questionaire = PreSurvey1.objects.get(student_id=enroll.student_id)
         except ObjectDoesNotExist :
             questionaire = PreSurvey1(student_id=enroll.student_id)
-        questionaires.append([enroll, questionaire])						
+        questionaires.append([enroll, questionaire])
     return render(request, 'survey/pre_teacher1.html', {'classroom':classroom,'questionaires':questionaires, 'pre_questions':pre_questions1})
 
 def post_survey1(request):
@@ -158,7 +158,7 @@ def post_survey1(request):
     except ObjectDoesNotExist :
         questionaire = PostSurvey1(student_id=request.user.id)
     questions = []
-    questions.append([post_questions1[0][0], [[post_questions1[0][1][0], questionaire.p1],[post_questions1[0][1][1], questionaire.p2],[post_questions1[0][1][2], questionaire.p3],[post_questions1[0][1][3], questionaire.p4],[post_questions1[0][1][4], questionaire.p5]]])		
+    questions.append([post_questions1[0][0], [[post_questions1[0][1][0], questionaire.p1],[post_questions1[0][1][1], questionaire.p2],[post_questions1[0][1][2], questionaire.p3],[post_questions1[0][1][3], questionaire.p4],[post_questions1[0][1][4], questionaire.p5]]])
     questions.append([post_questions1[1][0], [[post_questions1[1][1][0], questionaire.p6],[post_questions1[1][1][1], questionaire.p7],[post_questions1[1][1][2], questionaire.p8],[post_questions1[1][1][3], questionaire.p9],[post_questions1[1][1][4], questionaire.p10]]])
     questions.append([post_questions1[2][0], [[post_questions1[2][1][0], questionaire.p11],[post_questions1[2][1][1], questionaire.p12],[post_questions1[2][1][2], questionaire.p13],[post_questions1[2][1][3], questionaire.p14],[post_questions1[2][1][4], questionaire.p15]]])
     questions.append([post_questions1[3][0], [[post_questions1[3][1][0], questionaire.p16],[post_questions1[3][1][1], questionaire.p17],[post_questions1[3][1][2], questionaire.p18],[post_questions1[3][1][3], questionaire.p19],[post_questions1[3][1][4], questionaire.p20]]])
@@ -198,7 +198,7 @@ def post_survey1(request):
             questionaire.p2_3 = request.POST['t3']
             questionaire.save()
 
-            return redirect('/student/lesson/A011')	
+            return redirect('/student/lesson/A011')
     return render(request, 'survey/post_survey1.html', {'questionaire':questionaire,'questions': questions, 'questions_t':questions_t})
 
 def post_result1(request, classroom_id):
@@ -237,7 +237,7 @@ def post_result1(request, classroom_id):
             questions[4][1][3][5-questionaire.p24]+=1
             questions[4][1][4][5-questionaire.p25]+=1
             questionaires.append(questionaire)
-        except ObjectDoesNotExist : 
+        except ObjectDoesNotExist :
             pass
     return render(request, 'survey/post_result1.html', {'enrolls':enrolls, 'result':questions, 'questions': post_questions1, 'classroom':classroom, 'questionaires':questionaires})
 
@@ -251,7 +251,7 @@ def post_teacher1(request, classroom_id):
             questionaire = PostSurvey1.objects.get(student_id=enroll.student_id)
         except ObjectDoesNotExist :
             questionaire = PostSurvey1(student_id=enroll.student_id)
-        questionaires.append([enroll, questionaire])						
+        questionaires.append([enroll, questionaire])
     return render(request, 'survey/post_teacher1.html', {'classroom':classroom,'questionaires':questionaires, 'post_questions':post_questions1})
 
 def pre_survey2(request):
@@ -260,16 +260,16 @@ def pre_survey2(request):
     except ObjectDoesNotExist :
         questionaire = PreSurvey2(student_id=request.user.id)
     questions = []
-    questions.append([pre_questions1[0], questionaire.p1])		
-    questions.append([pre_questions1[1], questionaire.p2])		
-    questions.append([pre_questions1[2], questionaire.p3])		
+    questions.append([pre_questions1[0], questionaire.p1])
+    questions.append([pre_questions1[1], questionaire.p2])
+    questions.append([pre_questions1[2], questionaire.p3])
     questions.append([pre_questions1[3], questionaire.p4])
-    questions.append([pre_questions1[4], questionaire.p5])		
-    questions.append([pre_questions1[5], questionaire.p6])		
-    questions.append([pre_questions1[6], questionaire.p7])		
-    questions.append([pre_questions1[7], questionaire.p8])		
-    questions.append([pre_questions1[8], questionaire.p9])		
-    questions.append([pre_questions1[9], questionaire.p10])		
+    questions.append([pre_questions1[4], questionaire.p5])
+    questions.append([pre_questions1[5], questionaire.p6])
+    questions.append([pre_questions1[6], questionaire.p7])
+    questions.append([pre_questions1[7], questionaire.p8])
+    questions.append([pre_questions1[8], questionaire.p9])
+    questions.append([pre_questions1[9], questionaire.p10])
     if request.method == 'POST':
             questionaire.p = request.POST['p1']
             if questionaire.p == "2":
@@ -296,16 +296,16 @@ def post_survey2(request):
     except ObjectDoesNotExist :
         questionaire = PostSurvey2(student_id=request.user.id)
     questions = []
-    questions.append([post_questions2[0], questionaire.p1])		
-    questions.append([post_questions2[1], questionaire.p2])		
-    questions.append([post_questions2[2], questionaire.p3])		
+    questions.append([post_questions2[0], questionaire.p1])
+    questions.append([post_questions2[1], questionaire.p2])
+    questions.append([post_questions2[2], questionaire.p3])
     questions.append([post_questions2[3], questionaire.p4])
-    questions.append([post_questions2[4], questionaire.p5])		
-    questions.append([post_questions2[5], questionaire.p6])		
-    questions.append([post_questions2[6], questionaire.p7])		
-    questions.append([post_questions2[7], questionaire.p8])		
-    questions.append([post_questions2[8], questionaire.p9])		
-    questions.append([post_questions2[9], questionaire.p10])		
+    questions.append([post_questions2[4], questionaire.p5])
+    questions.append([post_questions2[5], questionaire.p6])
+    questions.append([post_questions2[6], questionaire.p7])
+    questions.append([post_questions2[7], questionaire.p8])
+    questions.append([post_questions2[8], questionaire.p9])
+    questions.append([post_questions2[9], questionaire.p10])
     if request.method == 'POST':
             questionaire.p1 = request.POST['p2_1']
             questionaire.p2 = request.POST['p2_2']
@@ -319,7 +319,7 @@ def post_survey2(request):
             questionaire.p10 = request.POST['p2_10']
             questionaire.p2_1 = request.POST['t1']
             questionaire.p2_2 = request.POST['t2']
-            questionaire.p2_3 = request.POST['t3']            
+            questionaire.p2_3 = request.POST['t3']
             questionaire.save()
             return redirect('/student/lesson/B16')
     return render('survey/post_survey2.html', {'questionaire':questionaire,'questions': questions})
@@ -329,7 +329,7 @@ def pre_result2(request, classroom_id):
     enrolls = Enroll.objects.filter(classroom_id=classroom_id)
     questionaires = []
     questions = []
-    questions.append(['我曾經學過程式設計。',0,0,[]])    
+    questions.append(['我曾經學過程式設計。',0,0,[]])
     for index, question in enumerate(pre_questions1):
         questions.append([pre_questions1[index],0,0,0,0])
     for enroll in enrolls:
@@ -347,8 +347,8 @@ def pre_result2(request, classroom_id):
             questions[8][5-questionaire.p8]+=1
             questions[9][5-questionaire.p9]+=1
             questions[10][5-questionaire.p10]+=1
-            questionaires.append(questionaire)						
-        except ObjectDoesNotExist : 
+            questionaires.append(questionaire)
+        except ObjectDoesNotExist :
             pass
     return render(request, 'survey/pre_result1.html', {'enrolls':enrolls, 'result':questions, 'questions': pre_questions1, 'classroom':classroom, 'questionaires':questionaires})
 
@@ -372,8 +372,8 @@ def post_result2(request, classroom_id):
             questions[7][5-questionaire.p8]+=1
             questions[8][5-questionaire.p9]+=1
             questions[9][5-questionaire.p10]+=1
-            questionaires.append(questionaire)						
-        except ObjectDoesNotExist : 
+            questionaires.append(questionaire)
+        except ObjectDoesNotExist :
             pass
     return render(request, 'survey/post_result2.html', {'enrolls':enrolls, 'result':questions, 'questions': post_questions2, 'classroom':classroom, 'questionaires':questionaires})
 
@@ -387,10 +387,10 @@ def pre_teacher2(request, classroom_id):
             questionaire = PreSurvey2.objects.get(student_id=enroll.student_id)
         except ObjectDoesNotExist :
             questionaire = PreSurvey2(student_id=enroll.student_id)
-        questionaires.append([enroll, questionaire])						
+        questionaires.append([enroll, questionaire])
     return render(request,'survey/pre_teacher1.html', {'classroom':classroom,'questionaires':questionaires, 'pre_questions':pre_questions1},context_instance=RequestContext(request))
-  
-  
+
+
 def post_teacher2(request, classroom_id):
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom = Classroom.objects.get(id=classroom_id)
@@ -401,26 +401,26 @@ def post_teacher2(request, classroom_id):
             questionaire = PostSurvey2.objects.get(student_id=enroll.student_id)
         except ObjectDoesNotExist :
             questionaire = PostSurvey2(student_id=enroll.student_id)
-        questionaires.append([enroll, questionaire])						
+        questionaires.append([enroll, questionaire])
     return render(request, 'survey/post_teacher2.html', {'classroom':classroom,'questionaires':questionaires, 'post_questions':post_questions2})
 
-  
+
 def pre_survey5(request):
     try:
         questionaire = PreSurvey5.objects.get(student_id=request.user.id)
     except ObjectDoesNotExist :
         questionaire = PreSurvey5(student_id=request.user.id)
     questions = []
-    questions.append([pre_questions1[0], questionaire.p1])		
-    questions.append([pre_questions1[1], questionaire.p2])		
-    questions.append([pre_questions1[2], questionaire.p3])		
+    questions.append([pre_questions1[0], questionaire.p1])
+    questions.append([pre_questions1[1], questionaire.p2])
+    questions.append([pre_questions1[2], questionaire.p3])
     questions.append([pre_questions1[3], questionaire.p4])
-    questions.append([pre_questions1[4], questionaire.p5])		
-    questions.append([pre_questions1[5], questionaire.p6])		
-    questions.append([pre_questions1[6], questionaire.p7])		
-    questions.append([pre_questions1[7], questionaire.p8])		
-    questions.append([pre_questions1[8], questionaire.p9])		
-    questions.append([pre_questions1[9], questionaire.p10])		
+    questions.append([pre_questions1[4], questionaire.p5])
+    questions.append([pre_questions1[5], questionaire.p6])
+    questions.append([pre_questions1[6], questionaire.p7])
+    questions.append([pre_questions1[7], questionaire.p8])
+    questions.append([pre_questions1[8], questionaire.p9])
+    questions.append([pre_questions1[9], questionaire.p10])
     if request.method == 'POST':
             questionaire.p = request.POST['p1']
             if questionaire.p == "2":
@@ -447,16 +447,16 @@ def post_survey5(request):
     except ObjectDoesNotExist :
         questionaire = PostSurvey5(student_id=request.user.id)
     questions = []
-    questions.append([post_questions2[0], questionaire.p1])		
-    questions.append([post_questions2[1], questionaire.p2])		
-    questions.append([post_questions2[2], questionaire.p3])		
+    questions.append([post_questions2[0], questionaire.p1])
+    questions.append([post_questions2[1], questionaire.p2])
+    questions.append([post_questions2[2], questionaire.p3])
     questions.append([post_questions2[3], questionaire.p4])
-    questions.append([post_questions2[4], questionaire.p5])		
-    questions.append([post_questions2[5], questionaire.p6])		
-    questions.append([post_questions2[6], questionaire.p7])		
-    questions.append([post_questions2[7], questionaire.p8])		
-    questions.append([post_questions2[8], questionaire.p9])		
-    questions.append([post_questions2[9], questionaire.p10])		
+    questions.append([post_questions2[4], questionaire.p5])
+    questions.append([post_questions2[5], questionaire.p6])
+    questions.append([post_questions2[6], questionaire.p7])
+    questions.append([post_questions2[7], questionaire.p8])
+    questions.append([post_questions2[8], questionaire.p9])
+    questions.append([post_questions2[9], questionaire.p10])
     if request.method == 'POST':
             questionaire.p1 = request.POST['p2_1']
             questionaire.p2 = request.POST['p2_2']
@@ -470,7 +470,7 @@ def post_survey5(request):
             questionaire.p10 = request.POST['p2_10']
             questionaire.p2_1 = request.POST['t1']
             questionaire.p2_2 = request.POST['t2']
-            questionaire.p2_3 = request.POST['t3']            
+            questionaire.p2_3 = request.POST['t3']
             questionaire.save()
             return redirect('/student/lesson/E16')
     return render(request, 'survey/post_survey2.html', {'questionaire':questionaire,'questions': questions})
@@ -480,7 +480,7 @@ def pre_result5(request, classroom_id):
     enrolls = Enroll.objects.filter(classroom_id=classroom_id)
     questionaires = []
     questions = []
-    questions.append(['我曾經學過程式設計。',0,0,[]])    
+    questions.append(['我曾經學過程式設計。',0,0,[]])
     for index, question in enumerate(pre_questions1):
         questions.append([pre_questions1[index],0,0,0,0])
     for enroll in enrolls:
@@ -498,8 +498,8 @@ def pre_result5(request, classroom_id):
             questions[8][5-questionaire.p8]+=1
             questions[9][5-questionaire.p9]+=1
             questions[10][5-questionaire.p10]+=1
-            questionaires.append(questionaire)						
-        except ObjectDoesNotExist : 
+            questionaires.append(questionaire)
+        except ObjectDoesNotExist :
             pass
     return render(request, 'survey/pre_result1.html', {'enrolls':enrolls, 'result':questions, 'questions': pre_questions1, 'classroom':classroom, 'questionaires':questionaires})
 
@@ -523,8 +523,8 @@ def post_result5(request, classroom_id):
             questions[7][5-questionaire.p8]+=1
             questions[8][5-questionaire.p9]+=1
             questions[9][5-questionaire.p10]+=1
-            questionaires.append(questionaire)						
-        except ObjectDoesNotExist : 
+            questionaires.append(questionaire)
+        except ObjectDoesNotExist :
             pass
     return render(request, 'survey/post_result2.html', {'enrolls':enrolls, 'result':questions, 'questions': post_questions2, 'classroom':classroom, 'questionaires':questionaires})
 
@@ -538,10 +538,10 @@ def pre_teacher5(request, classroom_id):
             questionaire = PreSurvey5.objects.get(student_id=enroll.student_id)
         except ObjectDoesNotExist :
             questionaire = PreSurvey5(student_id=enroll.student_id)
-        questionaires.append([enroll, questionaire])						
+        questionaires.append([enroll, questionaire])
     return render(request, 'survey/pre_teacher1.html', {'classroom':classroom,'questionaires':questionaires, 'pre_questions':pre_questions1})
-  
-  
+
+
 def post_teacher5(request, classroom_id):
     enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
     classroom = Classroom.objects.get(id=classroom_id)
@@ -552,6 +552,5 @@ def post_teacher5(request, classroom_id):
             questionaire = PostSurvey5.objects.get(student_id=enroll.student_id)
         except ObjectDoesNotExist :
             questionaire = PostSurvey5(student_id=enroll.student_id)
-        questionaires.append([enroll, questionaire])						
+        questionaires.append([enroll, questionaire])
     return render(request, 'survey/post_teacher2.html', {'classroom':classroom,'questionaires':questionaires, 'post_questions':post_questions2})
-    

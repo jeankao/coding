@@ -142,9 +142,9 @@ def homepage(request):
     total_works = reduce(lambda a, b: a+wcnt[b], wcnt, 0)
     classroom_count = reduce(lambda a, b: a+ccnt[b], ccnt, 0)
     works = [
-        total_works, 
+        total_works,
         [ccnt[1], scnt[1], wcnt[1]],
-        [ccnt[2]+ccnt[4]+ccnt[5], scnt[2]+scnt[4]+scnt[5], wcnt[2]+wcnt[4]+wcnt[5]], 
+        [ccnt[2]+ccnt[4]+ccnt[5], scnt[2]+scnt[4]+scnt[5], wcnt[2]+wcnt[4]+wcnt[5]],
         [ccnt[3], scnt[3], wcnt[3]],
         [ccnt[8], scnt[8], wcnt[8]],
         [ccnt[7], scnt[7], wcnt[7]],
@@ -690,7 +690,7 @@ class LineCreateView(CreateView):
         if self.request.FILES:
             for file in self.request.FILES.getlist('files'):
                 content = MessageContent()
-                fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.user.id)+"/")
+                fs = FileSystemStorage(settings.BASE_DIR / f"static/attach/{self.request.user.id}/")
                 filename = uuid4().hex
                 content.title = file.name
                 content.message_id = self.object.id
@@ -782,7 +782,7 @@ class LineReplyView(CreateView):
             for file in self.request.FILES.getlist('files'):
                 content = MessageContent()
                 # fs = FileSystemStorage(settings.BASE_DIR + "/static/attach/"+str(self.request.user.id)+"/")
-                fs = FileSystemStorage(settings.BASE_DIR / "static/attach" / str(self.request.user.id) / "")
+                fs = FileSystemStorage(settings.BASE_DIR / f"static/attach/{self.request.user.id}/")
                 filename = uuid4().hex
                 content.title = file.name
                 content.message_id = self.object.id
@@ -831,7 +831,7 @@ def line_detail(request, classroom_id, message_id):
 def line_download(request, file_id):
     content = MessageContent.objects.get(id=file_id)
     filename = content.title
-    download =  settings.BASE_DIR / "static/attach" / content.filename
+    download =  settings.BASE_DIR / f"static/attach/{content.filename}"
     return FileResponse(open(download, "rb"), filename = filename, as_attachment = True)
 
 # 顯示圖片
