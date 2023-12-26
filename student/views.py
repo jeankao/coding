@@ -894,11 +894,11 @@ def progress(request, typing, lesson, unit, classroom_id):
     classroom = Classroom.objects.get(id=classroom_id)
     bars = []
 
-    enroll_pool = list(Enroll.objects.filter(classroom_id=classroom_id).order_by('seat'))
+    enroll_pool = list(Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat'))
     student_ids = map(lambda a: a.student_id, enroll_pool)
     work_pool = Work.objects.filter(typing=typing, user_id__in=student_ids, lesson_id=lesson).order_by("-id")
 
-    index = 1
+    # index = 1
     lesson_list = []
     if typing == "0":
         if lesson == "1":
@@ -935,7 +935,8 @@ def progress(request, typing, lesson, unit, classroom_id):
             lesson_list = lesson_list3
 
     for enroll in enroll_pool:
-        student_works = filter(lambda u: u.user_id == enroll.student_id, work_pool)
+        index = 1
+        student_works = list(filter(lambda u: u.user_id == enroll.student_id, work_pool))
         bar = []
         if typing == "0":
             for assignment in lesson_list:

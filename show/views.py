@@ -291,10 +291,20 @@ class ReviewUpdateView(UpdateView):
             self.object = ShowReview(show_id=self.kwargs['show_id'], student_id=self.request.user.id)
             self.object.save()
         reviews = ShowReview.objects.filter(show_id=self.kwargs['show_id'], done=True)
-        score0 = reviews.aggregate(Sum('score')).values()[0]
-        score1 = reviews.aggregate(Sum('score1')).values()[0]
-        score2 = reviews.aggregate(Sum('score2')).values()[0]
-        score3 = reviews.aggregate(Sum('score3')).values()[0]
+        # score0 = reviews.aggregate(Sum('score')).values()[0]
+        # score1 = reviews.aggregate(Sum('score1')).values()[0]
+        # score2 = reviews.aggregate(Sum('score2')).values()[0]
+        # score3 = reviews.aggregate(Sum('score3')).values()[0]
+        score_dict = reviews.aggregate(
+            score0 = Sum('score'), 
+            score1 = Sum('score1'), 
+            score2 = Sum('score2'), 
+            score3 = Sum('score3'), 
+        )
+        score0 = score_dict['score0']
+        score1 = score_dict['score1']
+        score2 = score_dict['score2']
+        score3 = score_dict['score3']
         score = [self.object.score1, self.object.score2,self.object.score3]
         if reviews.count() > 0 :
             score0 = score0 / reviews.count()

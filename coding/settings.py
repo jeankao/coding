@@ -141,6 +141,7 @@ SITE_ID = 1
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = BASE_DIR / 'static_files'
+STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
