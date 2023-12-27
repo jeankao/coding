@@ -464,9 +464,9 @@ def submit(request, typing, lesson, index):
             if filepath :
                 myfile = request.FILES['file']
                 if lesson == "6":
-                    fs = FileSystemStorage(settings.BASE_DIR / f"/static/work/microbit/{request.user.id}/")
+                    fs = FileSystemStorage(settings.BASE_DIR / f"static/work/microbit/{request.user.id}/")
                 else :
-                    fs = FileSystemStorage(settings.BASE_DIR / f"/static/work/scratch/{request.user.id}/")
+                    fs = FileSystemStorage(settings.BASE_DIR / f"static/work/scratch/{request.user.id}/")
                 filename = uuid4().hex
                 fs.save(filename, myfile)
             form = SubmitAForm(request.POST, request.FILES)
@@ -626,7 +626,7 @@ def submit(request, typing, lesson, index):
                         obj.work_id=work.id
                         if types == "12":
                             myfile = request.FILES['pic']
-                            fs = FileSystemStorage(settings.BASE_DIR / f"/static/upload/{request.user.id}/")
+                            fs = FileSystemStorage(settings.BASE_DIR / f"static/upload/{request.user.id}/")
                             filename = uuid4().hex
                             obj.picname = str(request.user.id)+"/"+filename
                             fs.save(filename, myfile)
