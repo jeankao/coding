@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.db.models import Q
@@ -385,9 +385,10 @@ def work_class(request, typing, lesson, classroom_id, index):
     for enroll in enrolls:
         try:
             work = Work.objects.get(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson)
-            if work.scorer > 0 :
-                scorer = User.objects.get(id=work.scorer)
-                scorer_name = scorer.first_name
+            if work.scorer:
+                # scorer = User.objects.get(id=work.scorer)
+                # scorer_name = scorer.first_name
+                scorer_name = work.scorer.first_name
             else :
                 scorer_name = "1"
         except ObjectDoesNotExist:
@@ -421,7 +422,7 @@ def work_group(request, typing, lesson, classroom_id, index):
     for enroll in enrolls:
         try:
             work = Work.objects.get(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson)
-            if work.scorer > 0 :
+            if work.scorer:
                 scorer = User.objects.get(id=work.scorer)
                 scorer_name = scorer.first_name
             else :
@@ -517,13 +518,15 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
                             # credit
                             update_avatar(request.user.id, 2, 1)
                             # History
-                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name.decode('utf8')+u'><'+enroll.student.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
+                            # history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name.decode('utf8')+u'><'+enroll.student.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
+                            history = PointHistory(user_id=request.user.id, kind=2, message=u'1分--小老師:<'+lesson_name+u'><'+enroll.student.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
                             history.save()
 
                         # credit
                         update_avatar(enroll.student_id, 1, 1)
                         # History
-                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name.decode('utf8')+u'><'+request.user.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
+                        # history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name.decode('utf8')+u'><'+request.user.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
+                        history = PointHistory(user_id=user_id, kind=1, message=u'1分--作業受評<'+lesson_name+u'><'+request.user.first_name+u'>', url="/student/work/show/"+lesson+"/"+index)
                         history.save()
 
                 works.update(score=form.cleaned_data['score'])
@@ -532,7 +535,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
 
                 if form.cleaned_data['comment']:
                     # create Message
-                    title = u"<" + request.user.first_name+ u">給了評語<" + lesson_name.decode('utf8') + u">"
+                    title = u"<" + request.user.first_name+ u">給了評語<" + lesson_name + u">"
                     url = "/student/work/show/" + typing + "/" + lesson + "/" + index + "/" + str(enroll.student_id)
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()
@@ -550,7 +553,7 @@ def scoring(request, typing, lesson, classroom_id, user_id, index):
                         assistant.save()
 
                     # create Message
-                    title = u"<" + assistant.student.first_name+ u">擔任小老師<" + lesson_name.decode('utf8') + u">"
+                    title = u"<" + assistant.student.first_name+ u">擔任小老師<" + lesson_name + u">"
                     url = "/teacher/score_peer/" + typing + "/" + lesson + "/" + index + "/" + classroom_id + "/" + str(enroll.group)
                     message = Message(title=title, url=url, time=timezone.now())
                     message.save()
@@ -618,7 +621,7 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
             scorer_name = ""
             try:
                 work = Work.objects.get(typing=typing, user_id=enroll.student.id, index=index, lesson_id=lesson)
-                if work.scorer > 0 :
+                if work.scorer:
                     scorer = User.objects.get(id=work.scorer)
                     scorer_name = scorer.first_name
             except ObjectDoesNotExist:
@@ -1022,7 +1025,7 @@ def work1(request, lesson, classroom_id):
     lesson_dict = {}
     groups = [group for group in EnrollGroup.objects.filter(classroom_id=classroom_id)]
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-    student_ids = map(lambda a: a.student_id, enroll_pool)
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
     work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=lesson)
     user_pool = [user for user in User.objects.filter(id__in=work_pool.values('scorer'))]
     assistant_pool = [assistant for assistant in Assistant.objects.filter(classroom_id=classroom_id)]
@@ -1092,7 +1095,7 @@ def make_work_assistant(request):
 
             # create Message
             group = Enroll.objects.get(classroom_id=classroom_id, student_id=assistant.student_id).group
-            title = "<" + assistant.student.first_name.encode("utf-8") + u">擔任小老師<".encode("utf-8") + assignment + ">"
+            title = "<" + assistant.student.first_name + ">擔任小老師<" + assignment + ">"
             url = "/teacher/score_peer/" + str(lesson) + "/" + index + "/"+ classroom_id + "/" + str(group)
 
             message = Message(title=title, url=url, time=timezone.now())
@@ -1101,13 +1104,13 @@ def make_work_assistant(request):
             try:
                 assistant = WorkAssistant.objects.get(student_id=user_id, classroom_id=classroom_id, lesson_id=lesson, index=index)
                 assistant.delete()
+                # create Message
+                title = "<" + assistant.student.first_name + ">取消小老師<" + assignment + ">"
+                url = "/student/group/work/" + lesson + "/" + index + "/" + classroom_id
+                message = Message(title=title, url=url, time=timezone.now())
+                message.save()
             except ObjectDoesNotExist:
                 pass
-            # create Message
-            title = "<" + assistant.student.first_name.encode("utf-8") + u">取消小老師<".encode("utf-8") + assignment + ">"
-            url = "/student/group/work/" + lesson + "/" + index + "/" + classroom_id
-            message = Message(title=title, url=url, time=timezone.now())
-            message.save()
 
         group = Enroll.objects.get(classroom_id=classroom_id, student_id=assistant.student_id).group
         if group > 0 :
@@ -1313,7 +1316,7 @@ def work_class2(request, lesson, classroom_id, work_id):
     for enroll in enrolls:
         try:
             work = Work.objects.get(typing=1, user_id=enroll.student_id, index=work_id, lesson_id=lesson)
-            if work.scorer > 0 :
+            if work.scorer:
                 scorer = User.objects.get(id=work.scorer)
                 scorer_name = scorer.first_name
             else :
@@ -1486,7 +1489,7 @@ def work_word(request, lesson, classroom_id, index):
     if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
        return redirect("/")
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-    student_ids = map(lambda a: a.student_id, enroll_pool)
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
     works = Work.objects.filter(typing=0, lesson_id=lesson, user_id__in=student_ids).order_by("-id")
     classroom = Classroom.objects.get(id=classroom_id)
     lesson_list = lesson_list4
@@ -1754,7 +1757,7 @@ def forum_class(request, classroom_id, work_id):
     for enroll in enrolls:
         try:
             work = SWork.objects.get(student_id=enroll.student_id, index=work_id)
-            if work.scorer > 0 :
+            if work.scorer:
                 scorer = User.objects.get(id=work.scorer)
                 scorer_name = scorer.first_name
             else :
@@ -1966,6 +1969,8 @@ def forum_export(request, classroom_id, forum_id):
         document.save(f)
         length = f.tell()
         f.seek(0)
+
+        return FileResponse(f, filename=docx_title)
         response = HttpResponse(
             f.getvalue(),
             content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -2250,7 +2255,7 @@ def assistant_group(request, typing, classroom_id):
             lesson_name = TWork.objects.get(classroom_id=classroom_id).title
         groups = range(classroom.group_number)
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)
+        student_ids = list(map(lambda a: a.student_id, enroll_pool))
         work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
         user_pool = [user for user in User.objects.filter(id__in=work_pool.values('scorer'))]
         assistant_pool = [assistant for assistant in WorkAssistant.objects.filter(classroom_id=classroom_id, typing=typing, lesson_id=lesson)]
@@ -2305,9 +2310,9 @@ class Science1QuestionAnswerView(ListView):
 
     def get_queryset(self):
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id'], seat__gt=0).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)
+        student_ids = list(map(lambda a: a.student_id, enroll_pool))
         work_pool = Science1Work.objects.filter(student_id__in=student_ids, question_id=self.kwargs['q_id'])
-        work_ids = map(lambda a: a.id, work_pool)
+        work_ids = list(map(lambda a: a.id, work_pool))
         content_pool = Science1Content.objects.filter(work_id__in=work_ids)
         queryset = []
         for enroll in enroll_pool:

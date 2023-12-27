@@ -5,7 +5,7 @@
 <h1>私訊同學</h1>
 
 {% for enroll in enrolls %}
-    <a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.student_id}}" class="btn btn-default" role="btn">({{enroll.seat}}){{enroll.student_id|realname}}</a>
+    <a href="/account/line/add/{{enroll.classroom_id}}/{{enroll.student_id}}" class="btn btn-default" role="btn">({{enroll.seat}}){{enroll.student.first_name}}</a>
 {% endfor %}
 
 {% endblock %}

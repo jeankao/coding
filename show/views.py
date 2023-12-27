@@ -17,8 +17,7 @@ from django.contrib.auth.models import User
 from account.avatar import *
 from django.core.exceptions import ObjectDoesNotExist
 from collections import OrderedDict
-from django.http import JsonResponse
-from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 import math
 # import cStringIO as StringIO
 from io import StringIO
@@ -49,12 +48,12 @@ def group(request, round_id):
         student_groups = []
         group_show_open = Classroom.objects.get(id=classroom_id).group_show_open
         shows = ShowGroup.objects.filter(round_id=round_id)
-        show_ids = map(lambda a: a.id, shows)
+        show_ids = list(map(lambda a: a.id, shows))
         nogroup = list(Enroll.objects.filter(classroom_id=classroom_id))
         try:
                 group_show = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).groupshow
                 if group_show:
-                    student_group = map(int, group_show.split(","))
+                    student_group = list(map(int, group_show.split(",")))
                 else :
                     student_group = []
         except ObjectDoesNotExist :
@@ -122,7 +121,7 @@ def group_enroll(request, round_id,  group_id):
         enrolls = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
         if len(enrolls)>0:
           if enrolls[0].groupshow:
-            groups = map(int, enrolls[0].groupshow.split(","))
+            groups = list(map(int, enrolls[0].groupshow.split(",")))
           else:
             groups = []
           shows = ShowGroup.objects.filter(round_id=round_id)
@@ -467,6 +466,7 @@ def show_download(request, show_id, showfile_id):
         username = username + member.student.first_name + "_"
     filename = show_id + "_" + username + "_" + show.title + ".sb3"
     download =  settings.BASE_DIR / showfile.filename
+    return FileResponse(open(download, "rb"), filename=showfile.filename)
     wrapper = FileWrapper(open( download, "r" ))
     response = HttpResponse(wrapper, content_type = 'application/force-download')
     #response = HttpResponse(content_type='application/force-download')
@@ -482,7 +482,7 @@ class TeacherListView(ListView):
     template_name = 'show/teacherlist.html'
 
     def get_context_data(self, **kwargs):
-        context = super(TeacherListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['round_id'] = self.kwargs['round_id']
         return context
 
@@ -490,12 +490,13 @@ class TeacherListView(ListView):
         lists = {}
         round = Round.objects.get(id=self.kwargs['round_id'])
         classroom_id = round.classroom_id
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
+        enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat')
         classroom_name = Classroom.objects.get(id=classroom_id).name
+        shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
         for enroll in enrolls:
             counter = 0
             lists[enroll.id] = []
-            shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
+            # shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
             if not shows.exists():
                 lists[enroll.id].append([enroll])
             else :
@@ -572,9 +573,9 @@ class GalleryListView(ListView):
         # VPhysics創意秀
         else:
             classroom_pool = [classroom for classroom in Classroom.objects.filter(lesson__in=[2,4])]
-        classroom_ids = map(lambda a: a.id, classroom_pool)
+        classroom_ids = list(map(lambda a: a.id, classroom_pool))
         round_pool = [round for round in Round.objects.filter(classroom_id__in=classroom_ids)]
-        round_ids = map(lambda a: a.id, round_pool)
+        round_ids = list(map(lambda a: a.id, round_pool))
         return ShowGroup.objects.filter(gallery=True, round_id__in=round_ids).order_by('-publish')
 
     def get_context_data(self, **kwargs):

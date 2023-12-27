@@ -2,7 +2,7 @@
 from typing import Any
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 #from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from student.lesson import *
@@ -41,7 +41,7 @@ def is_teacher(user, classroom_id):
 # 判斷是否為同班同學
 def is_classmate(user, classroom_id):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-    student_ids = map(lambda a: a.student_id, enroll_pool)
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
     return user.id in student_ids
 
 # 課程瀏覽記錄
@@ -313,7 +313,7 @@ class ClassroomAdd(ListView):
             queryset = User.objects.filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword)).order_by('-id')
         else :
             queryset = User.objects.filter(groups__name='teacher')
-        teacher_ids = map(lambda a: a.id, queryset)
+        teacher_ids = list(map(lambda a: a.id, queryset))
         classrooms = Classroom.objects.filter(teacher_id__in=teacher_ids).order_by('-id')
         classroom_teachers = []
         for classroom in classrooms:
@@ -828,7 +828,7 @@ class WorkDayListView(ListView):
 # 查詢某作業所有同學心得
 def memo(request, typing, lesson, classroom_id, index):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-    student_ids = map(lambda a: a.student_id, enroll_pool)
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
     work_pool = Work.objects.filter(typing=typing, lesson_id=lesson, user_id__in=student_ids, index=index).order_by("-id")
     datas = []
     for enroll in enroll_pool:
@@ -843,7 +843,7 @@ def memo(request, typing, lesson, classroom_id, index):
 # 查詢某檢核作業所有同學
 def work_class(request, typing, lesson, classroom_id, index):
     enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-    student_ids = map(lambda a: a.student_id, enroll_pool)
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
     work_pool = Work.objects.filter(typing=typing, lesson_id=lesson, user_id__in=student_ids, index=index).order_by("-id")
     datas = []
     enrollgroup_dict = dict(((group.id, enrollgroup) for enrollgroup in EnrollGroup.objects.filter(classroom_id=classroom_id)))
@@ -874,20 +874,13 @@ def work_download(request, typing, lesson, index, user_id, workfile_id):
         lesson_name = TWork.objects.get(id=index).title
 
     if lesson == "1":
-        filename = username + "_" + lesson_name.decode("utf-8")  + ".sb3"
+        filename = username + "_" + lesson_name + ".sb3"
         download =  settings.BASE_DIR / f"static/work/scratch/{user_id}/{workfile.filename}"
     elif lesson == "6":
-        filename = username + "_" + lesson_name.decode("utf-8")  + ".hex"
+        filename = username + "_" + lesson_name  + ".hex"
         download =  settings.BASE_DIR / f"static/work/microbit/{user_id}/{workfile.filename}"
-    wrapper = FileWrapper(open( download, "rb" ))
-    response = HttpResponse(wrapper, content_type = 'application/force-download')
-    #response = HttpResponse(content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
-    response['Content-Length'] = os.path.getsize(download)
-    # It's usually a good idea to set the 'Content-Length' header too.
-    # You can also set any other required headers: Cache-Control, etc.
-    return response
-    #return render(request, 'student/download.html', {'download':download})
+    
+    return FileResponse(open(download, "rb"), filename=filename)
 
 # 查詢作業進度
 def progress(request, typing, lesson, unit, classroom_id):
@@ -895,7 +888,7 @@ def progress(request, typing, lesson, unit, classroom_id):
     bars = []
 
     enroll_pool = list(Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat'))
-    student_ids = map(lambda a: a.student_id, enroll_pool)
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
     work_pool = Work.objects.filter(typing=typing, user_id__in=student_ids, lesson_id=lesson).order_by("-id")
 
     # index = 1
@@ -1023,7 +1016,7 @@ def work_group(request, typing, lesson, index, classroom_id):
         for enroll in enrolls:
             try:
                 work = Work.objects.get(user_id=enroll.student_id, index=index2)
-                if work.scorer > 0 :
+                if work.scorer:
                     scorer = User.objects.get(id=work.scorer)
                     scorer_name = scorer.first_name
                 else :
@@ -1710,7 +1703,7 @@ class WorkReportView(ListView):
 
     def get_queryset(self):
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)
+        student_ids = list(map(lambda a: a.student_id, enroll_pool))
         works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).annotate(month=TruncMonth('publication_date')).values('month', 'index').annotate(c=Count('id'))
         dates = works.values_list('month').distinct().order_by()
         queryset = []
@@ -1721,7 +1714,7 @@ class WorkReportView(ListView):
     def get_context_data(self, **kwargs):
         context = super(WorkReportView, self).get_context_data(**kwargs)
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)
+        student_ids = list(map(lambda a: a.student_id, enroll_pool))
         works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True).order_by('-id')
         first_element = works[0]
         end_year = int(str(first_element.publication_date)[0:4])
@@ -1747,7 +1740,7 @@ class WorkMonthView(ListView):
 
     def get_queryset(self):
         enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=self.kwargs['classroom_id']).order_by('seat')]
-        student_ids = map(lambda a: a.student_id, enroll_pool)
+        student_ids = list(map(lambda a: a.student_id, enroll_pool))
         year = int(self.kwargs['month'][0:4])
         month = int(self.kwargs['month'][4:6])
         works = Work.objects.filter(user_id__in=student_ids, lesson_id=10, publish=True, publication_date__year=year, publication_date__month=month).order_by("-id")

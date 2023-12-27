@@ -33,7 +33,7 @@ class VideoLogHelper:
         return videos
 
     def _collectTime(self, events):
-        videos = map(lambda e: {'uid': e.user_id, 'start': int(e.event[-9:-7]) * 3600 + int(e.event[-6:-4]) * 60 + int(e.event[-3:-1]) }, events)
+        videos = list(map(lambda e: {'uid': e.user_id, 'start': int(e.event[-9:-7]) * 3600 + int(e.event[-6:-4]) * 60 + int(e.event[-3:-1]) }, events))
         return videos
 
     def getLogByUserid(self, user_id, youtube_id):
