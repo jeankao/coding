@@ -474,10 +474,10 @@ def adminschool(request):
         for p in county_pool:
             district.append([p, []])
             index2 = 0
-            zones = filter(lambda u: u.county == p.id, zone_pool)
+            zones = list(filter(lambda u: u.county == p.id, zone_pool))
             for q in zones:
                 district[index][1].append([q, []])
-                schools = filter(lambda u: u.zone == q.id, school_pool)
+                schools = list(filter(lambda u: u.zone == q.id, school_pool))
                 for school in schools :
                     district[index][1][index2][1].append(school)
                 index2 = index2 + 1

@@ -70,11 +70,12 @@ class SubmitDForm(forms.Form):
 class SubmitF1Form(forms.ModelForm):
     class Meta:
         model = Science1Content
-        fields = ['work_id', 'types', 'text', 'pic']
+        # fields = ['work_id', 'types', 'text', 'pic']
+        fields = ['work', 'types', 'text', 'pic']
 
     def __init__(self, *args, **kwargs):
         super(SubmitF1Form, self).__init__(*args, **kwargs)
-        self.fields['work_id'].required = False
+        self.fields['work'].required = False
         self.fields['types'].required = False
         self.fields['text'].required = False
         self.fields['pic'].required = False
@@ -97,11 +98,12 @@ class SubmitF4Form(forms.Form):
 class SubmitF4BugForm(forms.ModelForm):
     class Meta:
         model = Science4Debug
-        fields = ['work3_id', 'bug_types', 'bug', 'improve']
+        # fields = ['work3_id', 'bug_types', 'bug', 'improve']
+        fields = ['work3', 'bug_types', 'bug', 'improve']
 
     def __init__(self, *args, **kwargs):
         super(SubmitF4BugForm, self).__init__(*args, **kwargs)
-        self.fields['work3_id'].required = False
+        self.fields['work3'].required = False
         self.fields['bug_types'].required = False
         self.fields['bug'].required = False
         self.fields['improve'].required = False

@@ -292,7 +292,7 @@ class ClassroomList(ListView):
         enrolls = list(Enroll.objects.filter(student_id=self.request.user.id).select_related('classroom').order_by("-id"))
         round_pool = Round.objects.all().order_by("-id")
         for enroll in enrolls :
-            shows = filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool)
+            shows = list(filter(lambda w: w.classroom_id == enroll.classroom_id, round_pool))
             classrooms.append([enroll, shows])
         return classrooms
 
@@ -793,7 +793,7 @@ class WorkListView(ListView):
         queryset = []
         daterange = [start + timedelta(days=x) for x in range(0, (end-start).days+1)]
         for day in reversed(daterange):
-            work = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
+            work = list(filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool))
             if len(work)>0 :
                 queryset.append([day, len(work)])
         context['total_works'] = queryset
@@ -815,7 +815,7 @@ class WorkDayListView(ListView):
             work_pool = Work.objects.filter(lesson_id=self.kwargs['lesson']).order_by("-id")
         timezone = pytz.timezone("Asia/Taipei")
         day = timezone.localize(datetime(int(self.kwargs['year']),int(self.kwargs['month']),int(self.kwargs['date'])))
-        works = filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool)
+        works = list(filter(lambda w: w.publication_date >= day and  w.publication_date < day+timedelta(days=1), work_pool))
         return works
 
     def get_context_data(self, **kwargs):
@@ -832,7 +832,7 @@ def memo(request, typing, lesson, classroom_id, index):
     work_pool = Work.objects.filter(typing=typing, lesson_id=lesson, user_id__in=student_ids, index=index).order_by("-id")
     datas = []
     for enroll in enroll_pool:
-        works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+        works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
         if works :
             datas.append([enroll, works])
         else:
@@ -853,7 +853,7 @@ def work_class(request, typing, lesson, classroom_id, index):
         group_name = enrollgroup_dict[enroll.group].name
 
     for enroll in enroll_pool:
-        works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+        works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
         if works :
             datas.append([enroll, works[0].score, group_name])
         else:
@@ -966,7 +966,7 @@ def progress(request, typing, lesson, unit, classroom_id):
         elif typing == "2":
             lesson_list = CWork.objects.filter(classroom_id=classroom_id)
             for assignment in lesson_list:
-                works = filter(lambda u: u.index == assignment.id, student_works)
+                works = list(filter(lambda u: u.index == assignment.id, student_works))
                 index = index + 1
                 if len(works) > 0:
                     bar.append([assignment, works[0]])
@@ -1262,7 +1262,7 @@ class ForumListView(ListView):
         fworks = FWork.objects.filter(id__in=fclass_dict.keys()).order_by("-id")
         sfwork_pool = SFWork.objects.filter(student_id=self.request.user.id).order_by("-id")
         for fwork in fworks:
-            sfworks = filter(lambda w: w.index==fwork.id, sfwork_pool)
+            sfworks = list(filter(lambda w: w.index==fwork.id, sfwork_pool))
             if len(sfworks)> 0 :
                 queryset.append([fwork, sfworks[0].publish, fclass_dict[fwork.id], len(sfworks)])
             else :
@@ -1394,11 +1394,11 @@ def forum_memo(request, classroom_id, index, action):
     reply_pool = SFReply.objects.filter(index=index).order_by("-id")
     file_pool = SFContent.objects.filter(index=index, visible=True).order_by("-id")
     for enroll in enrolls:
-        works = filter(lambda w: w.student_id==enroll.student_id, works_pool)
-        # 對未作答學生不特別處理，因為 filter 會傳回 []
+        works = list(filter(lambda w: w.student_id==enroll.student_id, works_pool))
+        # 對未作答學生不特別處理，因為 list(filter 會傳回 [])
         if len(works)>0:
-            replys = filter(lambda w: w.work_id==works[-1].id, reply_pool)
-            files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
+            replys = list(filter(lambda w: w.work_id==works[-1].id, reply_pool))
+            files = list(filter(lambda w: w.student_id==enroll.student_id, file_pool))
             if action == "2" :
               if works[-1].score == 5:
                     datas.append([enroll, works, replys, files])
@@ -1407,7 +1407,7 @@ def forum_memo(request, classroom_id, index, action):
         else :
             replys = []
             if not action == "2" :
-                files = filter(lambda w: w.student_id==enroll.student_id, file_pool)
+                files = list(filter(lambda w: w.student_id==enroll.student_id, file_pool))
                 datas.append([enroll, works, replys, files])
     def getKey(custom):
         if custom[1]:
@@ -1754,7 +1754,7 @@ class WorkMonthView(ListView):
         datas = works.values_list('index').distinct().order_by()
         queryset = []
         for data in datas:
-            work = filter(lambda w: w.index == data[0], works)[0]
+            work = list(filter(lambda w: w.index == data[0], works)[0])
             queryset.append([work.publication_date, work.user_id, lesson_list7[work.index-1], work.memo_c, work.memo_e, work.typing, work.index])
         return queryset
 

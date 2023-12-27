@@ -808,7 +808,7 @@ def grade(request, typing, lesson, unit, classroom_id):
       total = 0
       memo = 0
       grade = 0
-      stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+      stu_works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
       if typing == "0":
         if lesson == "1":
             if unit == "1":
@@ -895,7 +895,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     for enroll in enrolls:
       enroll_score = []
       total = 0
-      stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+      stu_works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
       if typing == "0":
         if lesson == "1":
             if unit == "1":
@@ -914,9 +914,9 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
       grade = 0
       for index, assignment in enumerate(lesson_list):
             if typing == "0":
-                works = filter(lambda w: w.index == index+1, stu_works)
+                works = list(filter(lambda w: w.index == index+1, stu_works))
             else :
-                works = filter(lambda w: w.index == assignment.id, stu_works)
+                works = list(filter(lambda w: w.index == assignment.id, stu_works))
             works_count = len(works)
             if works_count == 0:
                 enroll_score.append(["X", index])
@@ -1038,22 +1038,22 @@ def work1(request, lesson, classroom_id):
             lesson_dict[index] = [assignment.title]
         student_groups = []
         for group in groups:
-            members = filter(lambda u: u.group == group.id, enroll_pool)
+            members = list(filter(lambda u: u.group == group.id, enroll_pool))
             group_assistants = []
             scorer_name = ""
             for member in members:
                 if lesson == "1":
-                    sworks = filter(lambda w: w.index == index and w.student_id == member.student_id, work_pool)
+                    sworks = list(filter(lambda w: w.index == index and w.student_id == member.student_id, work_pool))
                 else:
-                    sworks = filter(lambda w: w.index == assignment.id and w.student_id == enroll.student_id, work_pool)
+                    sworks = list(filter(lambda w: w.index == assignment.id and w.student_id == enroll.student_id, work_pool))
                 if sworks:
                     work = sworks[-1]
-                    scorer = filter(lambda u: u.id == work.scorer, user_pool)
+                    scorer = list(filter(lambda u: u.id == work.scorer, user_pool))
                     scorer_name = scorer[0].first_name if scorer else 'X'
                 else:
                     work = SWork(index=index, student_id=1)
                 works.append([member, work.score, scorer_name, work.memo])
-                assistant = filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool)
+                assistant = list(filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool))
                 if assistant:
                     group_assistants.append(member)
             student_groups.append([group, works, group_assistants])
@@ -1498,7 +1498,7 @@ def work_word(request, lesson, classroom_id, index):
     document.add_paragraph(u"班級：" + classroom.name)
 
     for enroll in enroll_pool:
-      enroll_works = filter(lambda w: w.user_id == enroll.student_id, works)
+      enroll_works = list(filter(lambda w: w.user_id == enroll.student_id, works))
       work = enroll_works[0]
       run = document.add_paragraph().add_run(str(enroll.seat)+")"+enroll.student.first_name)
       font = run.font
@@ -1934,7 +1934,7 @@ def forum_export(request, classroom_id, forum_id):
                 for token in tokens:
                     m = re.match('\[m_(\d+)#(\d+):(\d+):(\d+)\]', token)
                     if m: # 若為時間標記，則插入連結
-                        vid = filter(lambda material: material.id == int(m.group(1)), contents)[0]
+                        vid = list(filter(lambda material: material.id == int(m.group(1)), contents)[0])
                         add_hyperlink(document, p, vid.youtube+"&t="+m.group(2)+"h"+m.group(3)+"m"+m.group(4)+"s", "["+m.group(2)+":"+m.group(3)+":"+m.group(4)+"]")
                     else: # 以一般文字插入
                         p.add_run(token)
@@ -2031,7 +2031,7 @@ def forum_grade(request, classroom_id, action):
             sfworks = SFWork.objects.filter(index__in=forum_ids, student_id=enroll.student_id).order_by("id")
             if len(sfworks) > 0:
                 for fclass in fclasses:
-                        works = filter(lambda w: w.index==fclass.forum_id, sfworks)
+                        works = list(filter(lambda w: w.index==fclass.forum_id, sfworks))
                         if enroll.student_id in datas:
                             if len(works) > 0 :
                                 datas[enroll.student_id].append(works[0])
@@ -2259,20 +2259,20 @@ def assistant_group(request, typing, classroom_id):
         for assignment in lesson_name:
                 student_groups = []
                 for group in groups:
-                    members = filter(lambda u: u.group == group, enroll_pool)
+                    members = list(filter(lambda u: u.group == group, enroll_pool))
                     group_assistants = []
                     works = []
                     scorer_name = ""
                     for member in members:
-                        work = filter(lambda w: w.index == index and w.user_id == member.student_id, work_pool)
+                        work = list(filter(lambda w: w.index == index and w.user_id == member.student_id, work_pool))
                         if work:
                             work = work[0]
-                            scorer = filter(lambda u: u.id == work.scorer, user_pool)
+                            scorer = list(filter(lambda u: u.id == work.scorer, user_pool))
                             scorer_name = scorer[0].first_name if scorer else 'X'
                         else:
                             work = Work(index=assignment[2], user_id=1, score=-2)
                         works.append([member, work.score, scorer_name, work.memo])
-                        assistant = filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool)
+                        assistant = list(filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool))
                         if assistant:
                             group_assistants.append(member)
                     student_groups.append([group, works, group_assistants])
@@ -2545,7 +2545,7 @@ def work_ckexcel(request, classroom_id):
     for enroll in enrolls:
       enroll_score = []
       total = 0
-      stu_works = filter(lambda w: w.user_id == enroll.student_id, work_pool)
+      stu_works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
       if typing == "0":
         lesson_list = lesson_list4
       elif typing == "1":
@@ -2558,7 +2558,7 @@ def work_ckexcel(request, classroom_id):
             if typing == "0":
                 works = list(filter(lambda w: w.index == int(index)+1, stu_works))
             else :
-                works = filter(lambda w: w.index == assignment.id, stu_works)
+                works = list(filter(lambda w: w.index == assignment.id, stu_works))
             works_count = len(works)
             if works_count == 0:
                 enroll_score.append(["X", index, Work()])

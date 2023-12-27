@@ -396,10 +396,20 @@ class ReviewListView(ListView):
             if self.kwargs['show_id'] in groups:
                 members.append(member)
         reviews = ShowReview.objects.filter(show_id=self.kwargs['show_id'], done=True)
-        score1 = reviews.aggregate(Sum('score1')).values()[0]
-        score2 = reviews.aggregate(Sum('score2')).values()[0]
-        score3 = reviews.aggregate(Sum('score3')).values()[0]
-        score = [review.score1, review.score2, review.score3]
+        # score1 = reviews.aggregate(Sum('score1')).values()[0]
+        # score2 = reviews.aggregate(Sum('score2')).values()[0]
+        # score3 = reviews.aggregate(Sum('score3')).values()[0]
+
+        # score = [review.score1, review.score2, review.score3]
+        score_dict = reviews.aggregate(
+            score1 = Sum('score1'), 
+            score2 = Sum('score2'), 
+            score3 = Sum('score3'), 
+        )
+        score1 = score_dict['score1']
+        score2 = score_dict['score2']
+        score3 = score_dict['score3']
+
         if reviews.count() > 0 :
             score1 = score1 / reviews.count()
             score2 = score2 / reviews.count()
@@ -434,7 +444,8 @@ class RankListView(ListView):
                     students.append(member)
             reviews = ShowReview.objects.filter(show_id=show.id, done=True)
             if reviews.count() > 0 :
-                score = reviews.aggregate(Sum('score'+self.kwargs['rank_id'])).values()[0]/reviews.count()
+                # score = reviews.aggregate(Sum('score'+self.kwargs['rank_id'])).values()[0]/reviews.count()
+                score = reviews.aggregate(score = Sum('score'+self.kwargs['rank_id']))['score']/reviews.count()
             else :
                 score = 0
             lists.append([show, students, score, reviews.count(), self.kwargs['rank_id'], self.kwargs['round_id']])
@@ -525,9 +536,17 @@ class ScoreListView(ListView):
                 if str(showa.id) in groups:
                     members.append(member)
             reviews = ShowReview.objects.filter(show_id=showa.id, done=True)
-            score1 = reviews.aggregate(Sum('score1')).values()[0]
-            score2 = reviews.aggregate(Sum('score2')).values()[0]
-            score3 = reviews.aggregate(Sum('score3')).values()[0]
+            # score1 = reviews.aggregate(Sum('score1')).values()[0]
+            # score2 = reviews.aggregate(Sum('score2')).values()[0]
+            # score3 = reviews.aggregate(Sum('score3')).values()[0]
+            score_dict = reviews.aggregate(
+                score1 = Sum('score1'), 
+                score2 = Sum('score2'), 
+                score3 = Sum('score3'), 
+            )
+            score1 = score_dict['score1']
+            score2 = score_dict['score2']
+            score3 = score_dict['score3']
             if reviews.count() > 0 :
                 score1 = score1 / reviews.count()
                 score2 = score2 / reviews.count()
@@ -567,9 +586,17 @@ class GalleryListView(ListView):
 def GalleryDetail(request, show_id):
     show = ShowGroup.objects.get(id=show_id)
     reviews = ShowReview.objects.filter(show_id=show_id, done=True)
-    score1 = reviews.aggregate(Sum('score1')).values()[0]
-    score2 = reviews.aggregate(Sum('score2')).values()[0]
-    score3 = reviews.aggregate(Sum('score3')).values()[0]
+    # score1 = reviews.aggregate(Sum('score1')).values()[0]
+    # score2 = reviews.aggregate(Sum('score2')).values()[0]
+    # score3 = reviews.aggregate(Sum('score3')).values()[0]
+    score_dict = reviews.aggregate(
+        score1 = Sum('score1'), 
+        score2 = Sum('score2'), 
+        score3 = Sum('score3'), 
+    )
+    score1 = score_dict['score1']
+    score2 = score_dict['score2']
+    score3 = score_dict['score3']
     if reviews.count() > 0 :
         score1 = score1 / reviews.count()
         score2 = score2 / reviews.count()
@@ -648,9 +675,17 @@ def excel(request, round_id):
         worksheet.write(3,4, u"評語")
         worksheet.write(3,5, u"時間")
         showreviews = ShowReview.objects.filter(show_id=show.id)
-        score1 = showreviews.aggregate(Sum('score1')).values()[0]
-        score2 = showreviews.aggregate(Sum('score2')).values()[0]
-        score3 = showreviews.aggregate(Sum('score3')).values()[0]
+        # score1 = showreviews.aggregate(Sum('score1')).values()[0]
+        # score2 = showreviews.aggregate(Sum('score2')).values()[0]
+        # score3 = showreviews.aggregate(Sum('score3')).values()[0]
+        score_dict = reviews.aggregate(
+            score1 = Sum('score1'), 
+            score2 = Sum('score2'), 
+            score3 = Sum('score3'), 
+        )
+        score1 = score_dict['score1']
+        score2 = score_dict['score2']
+        score3 = score_dict['score3']
         if showreviews.count() > 0 :
             score1 = score1 / showreviews.count()
             score2 = score2 / showreviews.count()

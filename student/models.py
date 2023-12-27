@@ -97,15 +97,17 @@ class Enroll(models.Model):
 
 # 小老師
 class WorkAssistant(models.Model):
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE, related_name='assistant_works')
     typing = models.IntegerField(default=0)
-    classroom_id = models.IntegerField(default=0)
+    # classroom_id = models.IntegerField(default=0)
+    classroom = models.ForeignKey(Classroom, models.CASCADE, related_name='work_assistants')
     index = models.IntegerField(default=0)
     lesson_id = models.IntegerField(default=0)
 
-    @property
-    def student(self):
-        return User.objects.get(id=self.student_id)
+    # @property
+    # def student(self):
+    #     return User.objects.get(id=self.student_id)
 
 def upload_path_handler(instance, filename):
     return "static/certificate/0/{filename}".format(filename=instance.id+".jpg")
@@ -121,7 +123,8 @@ class Work(models.Model):
             (6, "老師幫很多忙"),
 		]
 
-    user_id = models.IntegerField(default=0)
+    # user_id = models.IntegerField(default=0)
+    user = models.ForeignKey(User, models.CASCADE, related_name='work_list')
     lesson_id = models.IntegerField(default=0)
     typing = models.IntegerField(default=0)
     index = models.IntegerField()
@@ -131,7 +134,7 @@ class Work(models.Model):
     publish = models.BooleanField(default=False)
     publication_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=-2)
-    scorer = models.IntegerField(default=0)
+    scorer = models.ForeignKey(User, models.CASCADE, null=True)
 	# scratch, microbit
     file = models.FileField()
     #　python
@@ -142,42 +145,48 @@ class Work(models.Model):
     youtube = models.TextField(default='')
     comment = models.TextField(default='')
 
-    def __unicode__(self):
-        user = User.objects.filter(id=self.user_id)[0]
-        index = self.index
-        return user.first_name+"("+str(index)+")"
+    def __str__(self):
+        # user = User.objects.filter(id=self.user_id)[0]
+        # index = self.index
+        # return user.first_name+"("+str(index)+")"
+        return f"{self.user.first_name}({self.index})"
 
-    @property
-    def user(self):
-        return User.objects.get(id=self.user_id)
+    # @property
+    # def user(self):
+    #     return User.objects.get(id=self.user_id)
 
 class WorkFile(models.Model):
-    work_id = models.IntegerField(default=0)
+    # work_id = models.IntegerField(default=0)
+    work = models.ForeignKey(Work, models.CASCADE, related_name='attachments')
     filename = models.TextField()
     upload_date = models.DateTimeField(default=timezone.now)
 
 #解答
 class Answer(models.Model):
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
     lesson_id = models.IntegerField(default=0)
     index = models.IntegerField()
 
-    def __unicode__(self):
-        user = User.objects.filter(id=self.student_id)[0]
-        index = self.index
-        return user.first_name+"("+str(index)+")"
+    def __str__(self):
+        # user = User.objects.filter(id=self.student_id)[0]
+        # index = self.index
+        # return user.first_name+"("+str(index)+")"
+        return f"{self.student.first_name}({self.index})"
 
 # 測驗
 class Exam(models.Model):
     exam_id = models.IntegerField()
-    student_id = models.IntegerField()
+    # student_id = models.IntegerField()
+    student = models.ForeignKey(User, models.CASCADE)
     answer = models.TextField()
     score = models.IntegerField()
     test_time = models.DateTimeField(default=timezone.now)
 
 #討論區作業
 class SFWork(models.Model):
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE, related_name='sfwork_list')
     index = models.IntegerField()
     memo = models.TextField(default='')
     memo_e =  models.IntegerField(default=0)
@@ -186,22 +195,26 @@ class SFWork(models.Model):
     publication_date = models.DateTimeField(default=timezone.now)
     reply_date = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=0)
-    scorer = models.IntegerField(default=0)
+    # scorer = models.IntegerField(default=0)
+    scorer = models.ForeignKey(User, models.CASCADE, related_name='score_sfwork_list')
     comment = models.TextField(default='',null=True,blank=True)
     comment_publication_date = models.DateTimeField(default=timezone.now)
     likes = models.TextField(default='')
     like_count = models.IntegerField(default=0)
     reply = models.IntegerField(default=0)
 
-    def __unicode__(self):
-        user = User.objects.filter(id=self.student_id)[0]
-        index = self.index
-        return user.first_name+"("+str(index)+")"
+    def __str__(self):
+        # user = User.objects.filter(id=self.student_id)[0]
+        # index = self.index
+        # return user.first_name+"("+str(index)+")"
+        return f"{self.student.first_name}({self.index})"
 
 class SFContent(models.Model):
     index =  models.IntegerField(default=0)
-    student_id = models.IntegerField(default=0)
-    work_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)   
+    # work_id = models.IntegerField(default=0)
+    work = models.ForeignKey(Work, models.CASCADE)
     title =  models.CharField(max_length=250,null=True,blank=True)
     filename = models.CharField(max_length=60,null=True,blank=True)
     publication_date = models.DateTimeField(default=timezone.now)
@@ -211,61 +224,51 @@ class SFContent(models.Model):
 #討論留言
 class SFReply(models.Model):
     index = models.IntegerField(default=0)
-    work_id =  models.IntegerField(default=0)
-    user_id = models.IntegerField(default=0)
+    # work_id =  models.IntegerField(default=0)
+    # user_id = models.IntegerField(default=0)
+    work = models.ForeignKey(Work, models.CASCADE)
+    user = models.ForeignKey(User, models.CASCADE)
     memo =  models.TextField(default='')
     publication_date = models.DateTimeField(default=timezone.now)
 
 #Science1現象
 class Science1Question(models.Model):
-    work_id = models.IntegerField(default=0)
+    # work_id = models.IntegerField(default=0)
+    work = models.ForeignKey(Work, models.CASCADE)
     question =  models.TextField(default='')
 
 class Science1Work(models.Model):
-    question_id = models.IntegerField(default=0)
-    student_id = models.IntegerField(default=0)
+    # question_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    question = models.ForeignKey(Science1Question, models.CASCADE)
+    student = models.ForeignKey(User, models.CASCADE)
     index = models.IntegerField(default=0)
     publication_date = models.DateTimeField(default=timezone.now)
 
-    def __unicode__(self):
-        user = User.objects.filter(id=self.student_id)[0]
-        index = self.index
-        return user.first_name+"("+str(index)+")"
+    def __str__(self):
+        # user = User.objects.filter(id=self.student_id)[0]
+        # index = self.index
+        # return user.first_name+"("+str(index)+")"
+        return f"{self.student.first_name}({self.index})"
 
 class Science1Content(models.Model):
-    work_id =  models.IntegerField(default=0)
+    # work_id =  models.IntegerField(default=0)
+    work = models.ForeignKey(Work, models.CASCADE)
     types = models.IntegerField(default=0)
     text = models.TextField(default='')
     pic = models.FileField(blank=True,null=True)
     picname = models.CharField(max_length=60,null=True,blank=True)
 
-#Science4解釋
-class Science4Work(models.Model):
-    student_id = models.IntegerField(default=0)
+# 資料建模，流程建模
+class Science2Json(models.Model):
     index = models.IntegerField(default=0)
-    memo = models.TextField(default='')
-    publication_date = models.DateTimeField(default=timezone.now)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
+    model_type = models.IntegerField(default=0) # 0: 資料建模, 1: 流程建模
+    json = models.TextField(default='')
 
-    def __unicode__(self):
-        user = User.objects.filter(id=self.student_id)[0]
-        index = self.index
-        return user.first_name+"("+str(index)+")"
-
-class Science4Debug(models.Model):
-    BUG_CHOICES = [
-            (0, "程式語法錯誤"),
-            (1, "程式邏輯錯誤"),
-            (2, "其它"),
-		]
-
-    work3_id =  models.IntegerField(default=0)
-    bug_types = models.IntegerField(default=0, choices=BUG_CHOICES)
-    bug = models.TextField(default='')
-    improve = models.TextField(default='')
-    publication_date = models.DateTimeField(default=timezone.now)
-
-    def get_choice(self):
-        return dict(Science4Debug.BUG_CHOICES)[self.bug_types]
+def upload_path_handler_plant(instance, filename):
+    return "static/plant/{filename}".format(filename=instance.id+".jpg")
 
 class Science3Work(models.Model):
     HELP_CHOICES = [
@@ -275,7 +278,8 @@ class Science3Work(models.Model):
             (3, "老師幫一點忙"),
             (4, "老師幫很多忙"),
 		]
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
     lesson = models.IntegerField(default=0)
     typing = models.IntegerField(default=0)
     index = models.IntegerField()
@@ -284,35 +288,60 @@ class Science3Work(models.Model):
     helps = models.IntegerField(default=0, choices=HELP_CHOICES)
     code = models.TextField(default='')
 
+    def get_choice(self):
+        # return dict(Science3Work.HELP_CHOICES)[self.typing]
+        return dict(Science3Work.HELP_CHOICES)[self.helps]
+
+    def __str__(self):
+        # user = User.objects.filter(id=self.student_id)[0]
+        # index = self.index
+        # return user.first_name+"("+str(index)+")"
+        return f"{self.student.first_name}({self.index})"
+
+
+#Science4解釋
+class Science4Work(models.Model):
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
+    index = models.IntegerField(default=0)
+    memo = models.TextField(default='')
+    publication_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        # user = User.objects.filter(id=self.student_id)[0]
+        # index = self.index
+        # return user.first_name+"("+str(index)+")"
+        return f"{self.student.first_name}({self.index})"
+
+class Science4Debug(models.Model):
+    BUG_CHOICES = [
+            (0, "程式語法錯誤"),
+            (1, "程式邏輯錯誤"),
+            (2, "其它"),
+		]
+
+    # work3_id =  models.IntegerField(default=0)
+    work3 = models.ForeignKey(Science3Work, models.CASCADE)
+    bug_types = models.IntegerField(default=0, choices=BUG_CHOICES)
+    bug = models.TextField(default='')
+    improve = models.TextField(default='')
+    publication_date = models.DateTimeField(default=timezone.now)
 
     def get_choice(self):
-        return dict(Science3Work.HELP_CHOICES)[self.typing]
+        return dict(Science4Debug.BUG_CHOICES)[self.bug_types]
 
-
-    def __unicode__(self):
-        user = User.objects.filter(id=self.user_id)[0]
-        index = self.index
-        return user.first_name+"("+str(index)+")"
-
-# 資料建模，流程建模
-class Science2Json(models.Model):
-    index = models.IntegerField(default=0)
-    student_id = models.IntegerField(default=0)
-    model_type = models.IntegerField(default=0) # 0: 資料建模, 1: 流程建模
-    json = models.TextField(default='')
-
-def upload_path_handler_plant(instance, filename):
-    return "static/plant/{filename}".format(filename=instance.id+".jpg")
 
 class Plant(models.Model):
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
     memo = models.TextField(default='')
     filename = models.CharField(max_length=50,null=True,blank=True)
     picture = models.ImageField(upload_to = upload_path_handler_plant, default = '/static/python/null.jpg')
     publication_date = models.DateTimeField(default=timezone.now)
 
 class PlantLight(models.Model):
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
     light = models.FloatField(default=0)
     publication_date = models.DateTimeField(default=timezone.now)
 
@@ -320,7 +349,8 @@ def upload_path_handler_plantphoto(instance, filename):
     return "static/plant/photo/{filename}".format(filename=instance.id+".jpg")
 
 class PlantPhoto(models.Model):
-    student_id = models.IntegerField(default=0)
+    # student_id = models.IntegerField(default=0)
+    student = models.ForeignKey(User, models.CASCADE)
     filename = models.CharField(max_length=50,null=True,blank=True)
     uploads = models.ImageField(upload_to = upload_path_handler_plantphoto, default = '/static/python/null.jpg')
     publication_date = models.DateTimeField(default=timezone.now)
