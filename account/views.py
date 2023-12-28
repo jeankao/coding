@@ -355,18 +355,29 @@ class MessageListView(ListView):
     template_name = 'account/dashboard.html'
 
     def get_queryset(self):
+        if self.kwargs['action'] in [1, 2, 3]:
+            # 1: 公告, 2: 私訊, 3: 系統
+            return MessagePoll.objects.filter(
+                reader_id = self.request.user.id, 
+                message_type = self.kwargs['action'],
+            ).select_related('message').order_by('-message_id')
+
+        return MessagePoll.objects.filter(
+                reader_id = self.request.user.id, 
+            ).select_related('message').order_by('-message_id')
+
         query = []
         #公告
         if self.kwargs['action'] == 1:
-            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=1).order_by('-message_id')
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=1).select_related('message').order_by('-message_id')
         #私訊
         elif self.kwargs['action'] == 2:
-            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=2).order_by('-message_id')
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=2).select_related('message').order_by('-message_id')
         #系統
         elif self.kwargs['action'] == 3:
-            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=3).order_by('-message_id')
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id, message_type=3).select_related('message').order_by('-message_id')
         else :
-            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).order_by('-message_id')
+            messagepolls = MessagePoll.objects.filter(reader_id=self.request.user.id).select_related('message').order_by('-message_id')
         for messagepoll in messagepolls:
             if messagepoll.message_id!=26335:
                 query.append([messagepoll, messagepoll.message])
