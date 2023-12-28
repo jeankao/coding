@@ -27,6 +27,7 @@ from wsgiref.util import FileWrapper
 from django.http import HttpResponse
 from django.db.models import Count
 from functools import reduce
+from django.db import connection
 
 # 判斷是否為任教學生
 def is_student(user_id, request):
@@ -42,10 +43,13 @@ def is_classmate(user_id, classroom_id):
 
 # 網站首頁
 def homepage(request):
-    models = apps.get_models()
-    row_count = 0
-    for model in models:
-        row_count = row_count + model.objects.count()
+    # models = apps.get_models()
+    # row_count = 0
+    # for model in models:
+    #     row_count = row_count + model.objects.count()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT SUM(reltuples)::bigint FROM pg_class WHERE reltype > 100000 AND reltuples > 0")
+        row_count = cursor.fetchone()[0]
     user_count = User.objects.all().count()
     try :
         admin_user = User.objects.get(id=1)
@@ -136,9 +140,9 @@ def homepage(request):
     #                       [class_pandas, enroll_pandas, work_pandas],
     #                       [class_robot, enroll_robot, work_robot],
     #                       [class_book, enroll_book, work_book]]
-    ccnt = {l['lesson']: l['classes'] for l in Classroom.objects.values('lesson').annotate(classes=Count('id')).order_by('lesson')}
-    wcnt = {l['lesson_id']: l['works'] for l in Work.objects.exclude(lesson_id=10, publish=False).values('lesson_id').annotate(works=Count('id')).order_by('lesson_id')}
-    scnt = {l['classroom__lesson']: l['students'] for l in Enroll.objects.exclude(seat=0).values('classroom__lesson').annotate(students=Count('id')).order_by('classroom__lesson')}
+    ccnt = {k:0 for k in range(1, 11)} | {l['lesson']: l['classes'] for l in Classroom.objects.values('lesson').annotate(classes=Count('id')).order_by('lesson')}
+    wcnt = {k:0 for k in range(1, 11)} | {l['lesson_id']: l['works'] for l in Work.objects.exclude(lesson_id=10, publish=False).values('lesson_id').annotate(works=Count('id')).order_by('lesson_id')}
+    scnt = {k:0 for k in range(1, 11)} | {l['classroom__lesson']: l['students'] for l in Enroll.objects.exclude(seat=0).values('classroom__lesson').annotate(students=Count('id')).order_by('classroom__lesson')}
     total_works = reduce(lambda a, b: a+wcnt[b], wcnt, 0)
     classroom_count = reduce(lambda a, b: a+ccnt[b], ccnt, 0)
     works = [
