@@ -1,32 +1,44 @@
 {% extends "base.html" %}
 
 {% block title %}My Blog{% endblock %}
+
 {% load tz %}
+
 {% block content %}
 <h1>創意秀評分情況</h1>
-<table class="table">
-<tr>
-<TD>姓名</TD>
-<td>{{lists.items.0.1|length}}</td>
-{% for show in lists.items.0.1 %}
-<td>{% if show.2.done %}<a href="/show/detail/{{round_id}}/{{show.2.id}}">{% endif %}{{show.2.name}}</a><BR>{% for member in show.3 %}({{member.seat}}){{member.student.first_name}}<BR>{% endfor %}</td>
-{% endfor %}
-</tr>
-  {% for key, value in lists.items %}
-	<tr>
-	<td>({{value.0.0.seat}}){{value.0.0.student.first_name}}</td>
-	{% with value|last as last %}
-	<td>{{last.4}}</td>	
-    {% endwith %}	
-    {% for review in value %}
-	    {% if review.1.done %}
-		<td>V</td>
-		{% else %}
-        <td><font color=red>X</font></td>
-		{% endif %}
-		{% endfor %}
-	</tr>
-  {% endfor %}
-</table>
-
+<div class="table-responsive">
+  <table class="table">
+    <tr>
+      <th>姓名</th>
+      <th>{{show_groups|length}}</th>
+      {% for group in show_groups %}
+      <th>
+        {% if group.done %}
+          <a href="/show/detail/{{round_id}}/{{group.id}}">{{group.name}}</a><br/>
+        {% endif %}
+      </th>
+      {% endfor %}
+    </tr>
+    {% for enroll in lists %}
+    <tr>
+      <td>
+        <span class="badge badge-secondary">{{ enroll.seat }}</span>
+        {{ enroll.student.first_name }}
+      </td>
+      <td>
+        {{ enroll.counter }}
+      </td>
+      {% for review in enroll.review %}
+      <td>
+        {% if review.done %}
+        <span class="badge badge-success">V</span>
+        {% else %}
+        <span class="badge badge-danger">X</span>
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 {% endblock %}

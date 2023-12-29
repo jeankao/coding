@@ -423,8 +423,8 @@ def work_group(request, typing, lesson, classroom_id, index):
         try:
             work = Work.objects.get(typing=0, user_id=enroll.student_id, index=index, lesson_id=lesson)
             if work.scorer:
-                scorer = User.objects.get(id=work.scorer)
-                scorer_name = scorer.first_name
+                # scorer = User.objects.get(id=work.scorer)
+                scorer_name = work.scorer.first_name
             else :
                 scorer_name = "1"
         except ObjectDoesNotExist:
@@ -622,8 +622,8 @@ def score_peer(request, typing, lesson, index, classroom_id, group):
             try:
                 work = Work.objects.get(typing=typing, user_id=enroll.student.id, index=index, lesson_id=lesson)
                 if work.scorer:
-                    scorer = User.objects.get(id=work.scorer)
-                    scorer_name = scorer.first_name
+                    # scorer = User.objects.get(id=work.scorer)
+                    scorer_name = work.scorer.first_name
             except ObjectDoesNotExist:
                 work = Work(typing=typing, index=index, user_id=enroll.student.id, lesson_id=lesson)
             except MultipleObjectsReturned:
@@ -689,7 +689,8 @@ def check(request, typing, lesson, unit, user_id, classroom_id):
             lesson_dict[index].append(work.score)
             lesson_dict[index].append(work.publication_date)
             if work.score > 0:
-                score_name = User.objects.get(id=work.scorer).first_name
+                # score_name = User.objects.get(id=work.scorer).first_name
+                score_name = work.scorer.first_name
                 lesson_dict[index].append(score_name)
             else :
                 lesson_dict[index].append("尚未評分!")
@@ -1051,7 +1052,7 @@ def work1(request, lesson, classroom_id):
                     sworks = list(filter(lambda w: w.index == assignment.id and w.student_id == enroll.student_id, work_pool))
                 if sworks:
                     work = sworks[-1]
-                    scorer = list(filter(lambda u: u.id == work.scorer, user_pool))
+                    scorer = list(filter(lambda u: u.id == work.scorer_id, user_pool))
                     scorer_name = scorer[0].first_name if scorer else 'X'
                 else:
                     work = SWork(index=index, student_id=1)
@@ -1317,8 +1318,8 @@ def work_class2(request, lesson, classroom_id, work_id):
         try:
             work = Work.objects.get(typing=1, user_id=enroll.student_id, index=work_id, lesson_id=lesson)
             if work.scorer:
-                scorer = User.objects.get(id=work.scorer)
-                scorer_name = scorer.first_name
+                # scorer = User.objects.get(id=work.scorer_id)
+                scorer_name = work.scorer.first_name
             else :
                 scorer_name = "1"
         except ObjectDoesNotExist:
@@ -1480,7 +1481,7 @@ def work3_score(request, lesson, classroom_id, work_id):
             Work.objects.filter(typing=2, user_id=sid, index=work_id, lesson_id=lesson).delete()
             work = Work(typing=2, user_id=sid, index=work_id, lesson_id=lesson)
         work.score = request.POST.get('score')
-        work.scorer = request.user.id
+        work.scorer = request.user
         work.save()
     return JsonResponse({'staus':'ok'}, safe=False)
 
@@ -1756,14 +1757,14 @@ def forum_class(request, classroom_id, work_id):
     scorer_name = ""
     for enroll in enrolls:
         try:
-            work = SWork.objects.get(student_id=enroll.student_id, index=work_id)
+            work = SFWork.objects.get(student_id=enroll.student_id, index=work_id)
             if work.scorer:
-                scorer = User.objects.get(id=work.scorer)
-                scorer_name = scorer.first_name
+                # scorer = User.objects.get(id=work.scorer)
+                scorer_name = work.scorer.first_name
             else :
                 scorer_name = "1"
         except ObjectDoesNotExist:
-            work = SWork(index=work_id, student_id=1)
+            work = SFWork(index=work_id, student_id=1)
         try:
             group_name = EnrollGroup.objects.get(id=enroll.group).name
         except ObjectDoesNotExist:
@@ -2272,7 +2273,7 @@ def assistant_group(request, typing, classroom_id):
                         work = list(filter(lambda w: w.index == index and w.user_id == member.student_id, work_pool))
                         if work:
                             work = work[0]
-                            scorer = list(filter(lambda u: u.id == work.scorer, user_pool))
+                            scorer = list(filter(lambda u: u.id == work.scorer_id, user_pool))
                             scorer_name = scorer[0].first_name if scorer else 'X'
                         else:
                             work = Work(index=assignment[2], user_id=1, score=-2)
@@ -2442,7 +2443,7 @@ def group_assign(request, classroom_id):
         else:
             return redirect("/")
     else:
-        formset = GroupModelFormset(queryset=Enroll.objects.filter(classroom_id=classroom_id).order_by("seat"))
+        formset = GroupModelFormset(queryset=Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by("seat"))
     return render(request, 'teacher/group_assign.html', {'formset': formset, 'group_numbers':range(classroom.group_number)})
 
 class GroupUpdate2(UpdateView):

@@ -42,106 +42,107 @@ def is_teacher(user, classroom_id):
 
 # 所有組別
 def group(request, round_id):
-        round = Round.objects.get(id=round_id)
-        classroom_id = round.classroom_id
-        classroom = Classroom.objects.get(id=classroom_id)
-        student_groups = []
-        group_show_open = Classroom.objects.get(id=classroom_id).group_show_open
-        shows = ShowGroup.objects.filter(round_id=round_id)
-        show_ids = list(map(lambda a: a.id, shows))
-        nogroup = list(Enroll.objects.filter(classroom_id=classroom_id))
-        try:
-                group_show = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).groupshow
-                if group_show:
-                    student_group = list(map(int, group_show.split(",")))
-                else :
-                    student_group = []
-        except ObjectDoesNotExist :
+    round = Round.objects.get(id=round_id)
+    classroom_id = round.classroom_id
+    classroom = Classroom.objects.get(id=classroom_id)
+    student_groups = []
+    group_show_open = Classroom.objects.get(id=classroom_id).group_show_open
+    shows = ShowGroup.objects.filter(round_id=round_id)
+    show_ids = list(map(lambda a: a.id, shows))
+    nogroup = list(Enroll.objects.filter(classroom_id=classroom_id))
+    try:
+            group_show = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).groupshow
+            if group_show:
+                student_group = list(map(int, group_show.split(",")))
+            else :
                 student_group = []
-        for show in shows:
-            enrolls = Enroll.objects.filter(classroom_id=classroom_id, groupshow__icontains=show.id)
-            for enroll in enrolls:
-                nogroup.remove(enroll)
-            student_groups.append([show, enrolls,  classroom.group_show_size-len(enrolls)])
+    except ObjectDoesNotExist :
+            student_group = []
+    for show in shows:
+        enrolls = Enroll.objects.filter(classroom_id=classroom_id, groupshow__icontains=show.id)
+        for enroll in enrolls:
+            nogroup.remove(enroll)
+        student_groups.append([show, enrolls,  classroom.group_show_size-len(enrolls)])
 
-        #找出尚未分組的學生
-        def getKey(custom):
-            return custom.seat
-        nogroup = sorted(nogroup, key=getKey)
-        return render(request, 'show/group.html', {'shows':shows, 'round_id':round_id, 'nogroup': nogroup, 'group_show_open':group_show_open, 'teacher':is_teacher(request.user, classroom_id), 'student_groups':student_groups, 'classroom_id':classroom_id, 'student_group':student_group})
+    #找出尚未分組的學生
+    def getKey(custom):
+        return custom.seat
+    nogroup = sorted(nogroup, key=getKey)
+    return render(request, 'show/group.html', {'shows':shows, 'round_id':round_id, 'nogroup': nogroup, 'group_show_open':group_show_open, 'teacher':is_teacher(request.user, classroom_id), 'student_groups':student_groups, 'classroom_id':classroom_id, 'student_group':student_group})
 
 # 新增組別
 def group_add(request, round_id):
-        show = Round.objects.get(id=round_id)
-        classroom_id = show.classroom_id
-        classroom_name = Classroom.objects.get(id=classroom_id).name
-        if request.method == 'POST':
-            form = GroupForm(request.POST)
-            if form.is_valid():
-                group = ShowGroup(name=form.cleaned_data['name'],round_id=int(round_id))
-                group.save()
-                enrolls = Enroll.objects.filter(classroom_id=classroom_id)
-                for enroll in enrolls :
-                    review = ShowReview(show_id=group.id, student_id=enroll.student_id)
-                    review.save()
-                return redirect('/show/group/'+round_id)
-        else:
-            form = GroupForm()
-        return render(request, 'show/group_add.html', {'form':form})
+    show = Round.objects.get(id=round_id)
+    classroom_id = show.classroom_id
+    classroom_name = Classroom.objects.get(id=classroom_id).name
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            group = ShowGroup(name=form.cleaned_data['name'],round_id=int(round_id))
+            group.save()
+            enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+            for enroll in enrolls :
+                review = ShowReview(show_id=group.id, student_id=enroll.student_id)
+                review.save()
+            return redirect('/show/group/'+round_id)
+    else:
+        form = GroupForm()
+    return render(request, 'show/group_add.html', {'form':form})
 
 # 新增創意秀
 def round_add(request, classroom_id):
-        round = Round(classroom_id=classroom_id)
-        round.save()
-        return redirect('/show/group/'+str(round.id))
+    round = Round(classroom_id=classroom_id)
+    round.save()
+    return redirect('/show/group/'+str(round.id))
 
 # 設定組別人數
 def group_size(request, round_id):
-        show = Round.objects.get(id=round_id)
-        classroom_id = show.classroom_id
-        if request.method == 'POST':
-            form = GroupShowSizeForm(request.POST)
-            if form.is_valid():
-                classroom = Classroom.objects.get(id=classroom_id)
-                classroom.group_show_size = form.cleaned_data['group_show_size']
-                classroom.save()
-
-                return redirect('/show/group/'+str(round_id))
-        else:
+    show = Round.objects.get(id=round_id)
+    classroom_id = show.classroom_id
+    if request.method == 'POST':
+        form = GroupShowSizeForm(request.POST)
+        if form.is_valid():
             classroom = Classroom.objects.get(id=classroom_id)
-            form = GroupShowSizeForm(instance=classroom)
-        return render(request, 'show/group_size.html', {'form':form})
+            classroom.group_show_size = form.cleaned_data['group_show_size']
+            classroom.save()
+
+            return redirect('/show/group/'+str(round_id))
+    else:
+        classroom = Classroom.objects.get(id=classroom_id)
+        form = GroupShowSizeForm(instance=classroom)
+    return render(request, 'show/group_size.html', {'form':form})
 
 # 加入組別
 def group_enroll(request, round_id,  group_id):
-        round = Round.objects.get(id=round_id)
-        classroom_id = round.classroom_id
-        classroom_name = Classroom.objects.get(id=classroom_id).name
-        group_name = ShowGroup.objects.get(id=group_id).name
-        enrolls = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
-        if len(enrolls)>0:
-          if enrolls[0].groupshow:
+    round = Round.objects.get(id=round_id)
+    classroom_id = round.classroom_id
+    classroom_name = Classroom.objects.get(id=classroom_id).name
+    group_name = ShowGroup.objects.get(id=group_id).name
+    enrolls = Enroll.objects.filter(student_id=request.user.id, classroom_id=classroom_id)
+    if len(enrolls)>0:
+        if enrolls[0].groupshow:
             groups = list(map(int, enrolls[0].groupshow.split(",")))
-          else:
+        else:
             groups = []
-          shows = ShowGroup.objects.filter(round_id=round_id)
-          for show in shows:
-            if show.id in groups:
-              groups.remove(show.id)
-          groups.append(int(group_id))
-          enrolls.update(groupshow=str(groups).replace("[", "").replace("]", ""))
 
-        return redirect('/show/group/'+round_id)
+        shows = ShowGroup.objects.filter(round_id=round_id)
+        for show in shows:
+            if show.id in groups:
+                groups.remove(show.id)
+        groups.append(int(group_id))
+        enrolls.update(groupshow=str(groups).replace("[", "").replace("]", ""))
+
+    return redirect('/show/group/'+round_id)
 
 # 刪除組別
 def group_delete(request, group_id, round_id):
-        round = Round.objects.get(id=round_id)
-        classroom_name = Classroom.objects.get(id=round.classroom_id).name
-        group_name = ShowGroup(id=group_id).name
-        group = ShowGroup.objects.get(id=group_id)
+    round = Round.objects.get(id=round_id)
+    classroom_name = Classroom.objects.get(id=round.classroom_id).name
+    group_name = ShowGroup(id=group_id).name
+    group = ShowGroup.objects.get(id=group_id)
 
-        group.delete()
-        return redirect('/show/group/'+round_id)
+    group.delete()
+    return redirect('/show/group/'+round_id)
 
 # 開放選組
 def group_open(request, round_id, action):
@@ -295,10 +296,10 @@ class ReviewUpdateView(UpdateView):
         # score2 = reviews.aggregate(Sum('score2')).values()[0]
         # score3 = reviews.aggregate(Sum('score3')).values()[0]
         score_dict = reviews.aggregate(
-            score0 = Sum('score'), 
-            score1 = Sum('score1'), 
-            score2 = Sum('score2'), 
-            score3 = Sum('score3'), 
+            score0 = Sum('score'),
+            score1 = Sum('score1'),
+            score2 = Sum('score2'),
+            score3 = Sum('score3'),
         )
         score0 = score_dict['score0']
         score1 = score_dict['score1']
@@ -401,9 +402,9 @@ class ReviewListView(ListView):
 
         # score = [review.score1, review.score2, review.score3]
         score_dict = reviews.aggregate(
-            score1 = Sum('score1'), 
-            score2 = Sum('score2'), 
-            score3 = Sum('score3'), 
+            score1 = Sum('score1'),
+            score2 = Sum('score2'),
+            score3 = Sum('score3'),
         )
         score1 = score_dict['score1']
         score2 = score_dict['score2']
@@ -484,38 +485,43 @@ class TeacherListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['round_id'] = self.kwargs['round_id']
+        context['show_groups'] = self.show_groups
         return context
 
     def get_queryset(self):
         lists = {}
         round = Round.objects.get(id=self.kwargs['round_id'])
         classroom_id = round.classroom_id
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat')
-        classroom_name = Classroom.objects.get(id=classroom_id).name
-        shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
+        enrolls = list(Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat'))
+        show_groups = list(ShowGroup.objects.filter(round_id=round.id).order_by("-id"))
+        self.show_groups = show_groups
+        reviews = ShowReview.objects.filter(show_id__in=[group.id for group in show_groups])
         for enroll in enrolls:
             counter = 0
             lists[enroll.id] = []
-            # shows = ShowGroup.objects.filter(round_id=round.id).order_by("-id")
-            if not shows.exists():
+            review_list = []
+            if len(show_groups) == 0:
                 lists[enroll.id].append([enroll])
             else :
-                for show in shows:
-                    pmembers = Enroll.objects.filter(groupshow__icontains=str(show.id))
+                for group in show_groups:
+                    # pmembers = list(filter(lambda e: str(group.id) in e.groupshow, enrolls))
                     members = []
-                    for member in pmembers:
-                        groups = member.groupshow.split(",")
-                        if str(show.id) in groups:
-                            members.append(member)
+                    # for member in pmembers:
+                    #     groups = member.groupshow.split(",")
+                    #     if str(group.id) in groups:
+                    #         members.append(member)
                     try:
-                        review = ShowReview.objects.get(show_id=show.id, student_id=enroll.student_id)
-                    except ObjectDoesNotExist:
-                        review = ShowReview(show_id=show.id)
+                        review = list(filter(lambda r: r.show_id == group.id and r.student_id == enroll.student_id, reviews))[0]
+                    except:
+                        review = ShowReview(show_id = group.id)
+                    review_list.append(review)
                     if review.done:
                         counter = counter + 1
-                    lists[enroll.id].append([enroll, review, show, members, counter])
-        lists = OrderedDict(sorted(lists.items(), key=lambda x: x[1][0][0].seat))
-        return lists
+            enroll.review = review_list
+            enroll.show_group = group
+            enroll.members = members
+            enroll.counter = counter
+        return enrolls
 
 # 教師查看創意秀評分情況
 class ScoreListView(ListView):
@@ -541,9 +547,9 @@ class ScoreListView(ListView):
             # score2 = reviews.aggregate(Sum('score2')).values()[0]
             # score3 = reviews.aggregate(Sum('score3')).values()[0]
             score_dict = reviews.aggregate(
-                score1 = Sum('score1'), 
-                score2 = Sum('score2'), 
-                score3 = Sum('score3'), 
+                score1 = Sum('score1'),
+                score2 = Sum('score2'),
+                score3 = Sum('score3'),
             )
             score1 = score_dict['score1']
             score2 = score_dict['score2']
@@ -591,9 +597,9 @@ def GalleryDetail(request, show_id):
     # score2 = reviews.aggregate(Sum('score2')).values()[0]
     # score3 = reviews.aggregate(Sum('score3')).values()[0]
     score_dict = reviews.aggregate(
-        score1 = Sum('score1'), 
-        score2 = Sum('score2'), 
-        score3 = Sum('score3'), 
+        score1 = Sum('score1'),
+        score2 = Sum('score2'),
+        score3 = Sum('score3'),
     )
     score1 = score_dict['score1']
     score2 = score_dict['score2']
@@ -680,9 +686,9 @@ def excel(request, round_id):
         # score2 = showreviews.aggregate(Sum('score2')).values()[0]
         # score3 = showreviews.aggregate(Sum('score3')).values()[0]
         score_dict = reviews.aggregate(
-            score1 = Sum('score1'), 
-            score2 = Sum('score2'), 
-            score3 = Sum('score3'), 
+            score1 = Sum('score1'),
+            score2 = Sum('score2'),
+            score3 = Sum('score3'),
         )
         score1 = score_dict['score1']
         score2 = score_dict['score2']

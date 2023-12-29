@@ -1,32 +1,35 @@
 {% extends "base.html" %}
 {% load tag %}
+
 {% block content %}
 <form class="form-horizontal" method="POST" action="">
-{% csrf_token %}
-{{ formset.management_form }}
-<table class="table">
-{% for form in formset %}
-<tr><td>{{form.seat.value}}){{form.student.value}}</td>
-<td>
-    <input type="hidden" name={{form.id.auto_id|slice:"3:"}} value={{form.id.value}}>
-    <input type="hidden" name={{form.seat.auto_id|slice:"3:"}} value={{form.seat.value}}>
-    <input type="hidden" name={{form.student.auto_id|slice:"3:"}} value={{form.student_id.value}}>	
-    <select name="{{form.group.auto_id|slice:"3:"}}">
-    <option value="-1"{% if form.group.value == -1 %}selected{% endif %}>尚未選組</option>
-    {% for number in group_numbers %}
-    <option value="{{number}}" {% if form.group.value == number %}selected{% endif %}>第{{number|add:1}}組</option>
-	{% endfor %}
-  </select>
-  
-</td>
-</tr>
-{% endfor %}
-<tr>
-<td>
-</td>
-<td>
-<button type="submit" class="btn btn-block btn-primary">送出</button>
-</td></tr>
-</table>
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <table class="table table-sm">
+    {% for form in formset %}
+    <tr>
+      <td class="w-25">
+        <span class="badge badge-secondary">{{form.seat.value}}</span> {{form.instance.student.first_name}}
+      </td>
+      <td class="w-auto">
+        <input type="hidden" name={{form.id.auto_id|slice:"3:"}} value={{form.id.value}}>
+        <input type="hidden" name={{form.seat.auto_id|slice:"3:"}} value={{form.seat.value}}>
+        <input type="hidden" name={{form.student.auto_id|slice:"3:"}} value={{form.student.value}}>	
+        <select name="{{form.group.auto_id|slice:"3:"}}" class="form-control form-control-sm">
+          <option value="-1"{% if form.group.value == -1 %}selected{% endif %}>尚未選組</option>
+          {% for number in group_numbers %}
+          <option value="{{number}}" {% if form.group.value == number %}selected{% endif %}>第{{number|add:1}}組</option>
+          {% endfor %}
+        </select>        
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td></td>
+      <td>
+        <button type="submit" class="btn btn-block btn-primary">送出</button>
+      </td>
+    </tr>
+  </table>
 </form>
 {% endblock %}

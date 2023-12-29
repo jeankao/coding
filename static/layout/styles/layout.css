@@ -86,7 +86,7 @@ div.wrapper h1, div.wrapper h2, div.wrapper h3, div.wrapper h4, div.wrapper h5, 
 
 .container{padding:30px 0; border-top:1px solid #999999; border-bottom:1px solid #999999;}
 .whitebox{padding:30px; color:#000000; background-color:#FFFFFF;}
-.whitebox a{color:#A3443E; background-color:#FFFFFF;}
+/* .whitebox a{color:#A3443E; background-color:#FFFFFF;} */
 .content{display:block; float:left; width:900px;}
 
 /* Comments */

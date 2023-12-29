@@ -1763,7 +1763,7 @@ class GroupPanel(ListView):
         student_groups = {}
         self.classroom = Classroom.objects.get(id = classroom_id)
         numbers = self.classroom.group_number
-        self.enroll_list = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by("seat")
+        self.enroll_list = Enroll.objects.filter(classroom_id=classroom_id).select_related('student__profile').order_by("seat")
         for enroll in self.enroll_list:
             if enroll.group in student_groups:
                 student_groups[enroll.group].append(enroll)
