@@ -2,39 +2,51 @@
 {% load tz %}
 {% block content %}
 {{show.id}}--
-<h1>組別：{{show.name}}</h1>
-<h1>組員：{% for member in members %}({{member.seat}}){{member.student.first_name}}{% endfor %}</h1>
-<table>
-<tr>
-<td>姓名</td>
-<TD>美工設計</TD>
-<TD>程式難度</TD>
-<TD>創意表現</TD>
-<TD>總分</TD>	
-<TD>評語</TD>
-<TD>時間</TD>
-</tr>
-    <tr>
-        <td>平均({{scores.4}}人)</td>
-        <td>{{scores.0}}</td>
-        <td>{{scores.1}}</td>
-        <td>{{scores.2}}</td>
-        <td>{{scores.3}}</td>			
-        <td></td>
-        <td></td>
-        
-    </tr>
-  {% for review in reviews %}
-	<tr>
-	<td>{% if teacher %}{{review.student.first_name}}{% endif %}</td>
-	<td>{{review.score1}}</td>
-	<td>{{review.score2}}</td>
-	<td>{{review.score3}}</td>
-	<td>{{review.score1|add:review.score2|add:review.score3}}</td>
-	<td>{{review.comment}}</td>	
-	<td>{{review.publish}}</td>
-	</tr>
-  {% endfor %}
-</table>
-
+<div class="card card-sm card-default">
+  <div class="card-header">
+    <h1>組別：{{show.name}}</h1>
+    <ul class="list-group d-flex">
+    {% for member in members %}
+      <li class="list-group-item">
+        <span class="badge badge-secondary">{{ member.seat }}</span>{{member.student.first_name}}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+    <table class="table table-sm table-hover">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>美工設計</th>
+          <th>程式難度</th>
+          <th>創意表現</th>
+          <th>總分</th>	
+          <th>評語</th>
+          <th>時間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>平均({{scores.4}}人)</td>
+          <td>{{scores.0}}</td>
+          <td>{{scores.1}}</td>
+          <td>{{scores.2}}</td>
+          <td>{{scores.3|floatformat:"2"}}</td>			
+          <td></td>
+          <td></td>
+        </tr>
+        {% for review in reviews %}
+        <tr>
+          <td>{% if teacher %}{{review.student.first_name}}{% endif %}</td>
+          <td>{{review.score1}}</td>
+          <td>{{review.score2}}</td>
+          <td>{{review.score3}}</td>
+          <td>{{review.score1|add:review.score2|add:review.score3}}</td>
+          <td>{{review.comment}}</td>	
+          <td>{{review.publish|date:"Y-m-d H:i"}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
 {% endblock %}

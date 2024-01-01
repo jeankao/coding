@@ -1,83 +1,96 @@
 {% extends "base.html" %}
 {% block content %}
 {% load tag %}
-{% if group_show_open %}
-<a href="/show/group/add/{{round_id}}"><img src="/static/images/icon_group_new.png">新增組別</a>
-{% endif %}
-{% if teacher %}
-<a href="/show/group/size/{{round_id}}"><img src="/static/images/icon_size.png">設定人數</a>
-{% if group_show_open %}
-<a href="/show/group/open/{{round_id}}/0"><img src="/static/images/icon_close.png">關閉選組</a>
-{% else %}
-<a href="/show/group/open/{{round_id}}/1"><img src="/static/images/icon_open.png">開放選組</a>
-{% endif %}
-　<a href="/show/zip/{{round_id}}"><img src="/static/images/icon_zip.gif">匯出到Zip檔</a><BR>
-{% endif %}
-<br>
-{{groups}}--
-<table>
-<tr>
-<td>名稱</td>  
-<td>組員</td>  
-<td>狀態</td>
-<td>空位</td>
-<td>作品</td>
-<td>時間</td>
-<td>評分結果</td>
-<td>藝廊</td>
-</tr>
-        {% for group in student_groups %}
-                <tr>
-                <td>
-			{% for user_group in user.groups.all %}
-				{% if user_group.name == 'teacher' and group.1|length == 0 %}
-				<a href="/show/group/delete/{{group.0.id}}/{{round_id}}" onclick="return confirm('確定要刪除嗎?')">刪除</a>
-				{% endif %}		
-			{% endfor %}							
-				{{group.0.name}}</td>
-				<td>
+<div class="btn-group mb-3" role="group">
+  {% if group_show_open %}
+    <a href="/show/group/add/{{round_id}}" class="btn btn-sm btn-outline-primary"><img src="/static/images/icon_group_new.png">新增組別</a>
+  {% endif %}
+  {% if teacher %}
+    <a href="/show/group/size/{{round_id}}" class="btn btn-sm btn-outline-primary"><img src="/static/images/icon_size.png">設定人數</a>
+    {% if group_show_open %}
+      <a href="/show/group/open/{{round_id}}/0" class="btn btn-sm btn-outline-primary"><img src="/static/images/icon_close.png">關閉選組</a>
+    {% else %}
+      <a href="/show/group/open/{{round_id}}/1" class="btn btn-sm btn-outline-primary"><img src="/static/images/icon_open.png">開放選組</a>
+    {% endif %}
+  　<a href="/show/zip/{{round_id}}" class="btn btn-sm btn-outline-primary"><img src="/static/images/icon_zip.gif">匯出到Zip檔</a>
+  {% endif %}
+</div>
+<table class="table table-sm table-hover text-center">
+  <thead>
+    <tr>
+      <th>名稱</th>  
+      <th>組員</th>  
+      <th>狀態</th>
+      <th>作品</th>
+      <th>時間</th>
+      <th>評分結果</th>
+      <th>藝廊</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for group in student_groups %}
+    <tr>
+      <td>
+				<div>{{group.0.name}}</div>
+        {% if group.2 > 0 %}
+          <span class="badge badge-info">剩 {{ group.2 }} 位<span>
+        {% else %}
+          <span class="badge badge-danger">額滿</span>
+        {% endif %}
+      </td>
+      <td>
+        <ul class="list-group">
 				{% for enroll in group.1 %}
-				<A href="/account/profile/{{enroll.student.id}}"><img src="/static/avatar/s{{ enroll.student.profile.avatar }}.png"></a>
-				    ({{enroll.seat}}){{enroll.student.first_name}}
+        <li class="list-group-item p-0" style="white-space: nowrap">
+				  <a href="/account/profile/{{enroll.student.id}}"><img src="/static/avatar/s{{ enroll.student.profile.avatar }}.png"></a>
+				  <span class="badge badge-secondary">{{enroll.seat}}</span>{{enroll.student.first_name}}
+        </li>
 				{% endfor %}
-				</td>
-                <td>
-                {% if group.0.id in student_group %}
-		    	<a href="/show/group/submit/{{round_id}}/{{group.0.id}}">繳交</a>
-                {% endif %}                
+        </ul>
+      </td>
+      <td>
 				{% if group_show_open %}
-                {% if group.0.id in student_group %}
-                已加入
-                {% else %}
-                {% if group.2 > 0 %}
-                <a href="/show/group/enroll/{{round_id}}/{{group.0.id}}">加入此組</a>
-                {% else %}
-                額滿
-                {% endif %}
-                {% endif %}   
+          {% if group.0.id not in student_group and group.2 > 0 %}
+            <a href="/show/group/enroll/{{round_id}}/{{group.0.id}}" class="btn btn-sm btn-outline-primary">加入</a>
+          {% endif %}   
 				{% endif %}
-                </td>
-                <td>{{group.2}}</td>
-                <td>
+        {% if teacher and group.1|length == 0 %}
+          <a href="/show/group/delete/{{group.0.id}}/{{round_id}}" class="btn btn-sm btn-outline-danger" onclick="return confirm('確定要刪除嗎?')">刪除</a>
+        {% elif group.0.id in student_group %}
+		    	<a href="/show/group/submit/{{round_id}}/{{group.0.id}}" class="btn btn-sm btn-primary">繳交</a>
+        {% endif %}                
+      </td>
+      <td>
 				{% if group.0.done == True %}
 				<a href="/show/detail/{{round_id}}/{{group.0.id}}">{{group.0.title}}</a>
 				{% endif %}
-                </td>
-				<td>
+      </td>
+      <td>
 				{% if group.0.done == True %}				
-				{{group.0.publish}}
+				{{group.0.publish|date:"Y-m-d H:i"}}
 				{% endif %}
-				</td>
-				<td>
-				<a href="/show/score/{{group.0.id}}">查閱</a>
-				</td>
-                {% if request.user|has_group:"teacher" %} 			
-				<td>{% if group.0.gallery %}<a href="#" data-showid="{{ group.0.id }}" data-action="close" class="close">取消</a>{% else %}<a href="#" data-showid="{{  group.0.id }}" data-action="open" class="open">開放</a>{% endif %}</td>
-			    {% else %}
-			    <td>{% if group.0.open %}已分享{% else %}無{% endif %}</t>
-			    {% endif %}
-                </tr>
-        {% endfor %}
+      </td>
+      <td>
+				<a href="/show/score/{{group.0.id}}" class="btn btn-sm btn-primary">查閱</a>
+      </td>
+      <td>
+        {% if teacher %} 			
+				  {% if group.0.gallery %}
+            <a href="#" data-showid="{{ group.0.id }}" data-action="close" class="switch btn btn-sm btn-primary">取消</a>
+          {% else %}
+            <a href="#" data-showid="{{ group.0.id }}" data-action="open" class="switch btn btn-sm btn-outline-primary">開放</a>
+          {% endif %}
+        {% else %}
+			    {% if group.0.open %}
+            已分享
+          {% else %}
+            無
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 尚未分組名單
 {% for enroll in nogroup %}
@@ -86,7 +99,7 @@
 
 {% endblock %}
 {% block domready %}
-  $('a.open').click(function(e){
+  $('a.switch').click(function(e){
     var launcher = this;  
     e.preventDefault();
     $.post('/show/gallery/make/',
@@ -98,17 +111,17 @@
         if (data['status'] == 'ok')
         {
           var previous_action = $(launcher).data('action');
-		   if (previous_action == 'open') {
-               $(launcher).html("取消");
-               $(launcher).data('action', 'close');
-           } else {
-               $(launcher).data('action', 'open');
-               $(launcher).html("開放");
-           }
+          if (previous_action == 'open') {
+            $(launcher).html("取消");
+            $(launcher).data('action', 'close');
+          } else {
+            $(launcher).data('action', 'open');
+            $(launcher).html("開放");
+          }
         }
-		else {
-				alert("hello");
-		}
+        else {
+          alert("hello");
+        }
       }
     );
   });

@@ -3,25 +3,25 @@
 {% load tag %}
 
 {% block content %}
-<div class="btn-group mb-3">
-  <span class="btn btn-warning">{{classroom.name}}</span>
+<div class="btn-group mb-2">
+  <span class="btn btn-sm btn-warning">{{classroom.name}}</span>
   {% if request.user.id|is_teacher:classroom.id %}
     {% if classroom.group_open %}
-      <a class="btn btn-info" href="/teacher/group/make/{{classroom.id}}/0" data-groupid="{{ classroom.id }}" data-action="close" class="open btn btn-info" role="button">進行分組中</a>{% else %}<a href="/teacher/group/make/{{classroom.id}}/1" data-groupid="{{ classroom.id }}" data-action="open" class="open btn btn-danger" role="button">分組已結束</a>
+      <a class="btn btn-sm btn-info" href="/teacher/group/make/{{classroom.id}}/0" data-groupid="{{ classroom.id }}" data-action="close" class="open btn btn-sm btn-info" role="button">進行分組中</a>{% else %}<a href="/teacher/group/make/{{classroom.id}}/1" data-groupid="{{ classroom.id }}" data-action="open" class="open btn btn-sm btn-danger" role="button">分組已結束</a>
     {% endif %}
-    <a class="btn btn-info" href="/teacher/group/number/{{classroom_id}}">設定組數</a>
-    <a class="btn btn-info" href="/teacher/group/size/{{classroom_id}}">小組人數</a>		
-    <a class="btn btn-info" href="/teacher/group/assign/{{classroom_id}}">指派分組</a>					   
+    <a class="btn btn-sm btn-info" href="/teacher/group/number/{{classroom_id}}">設定組數</a>
+    <a class="btn btn-sm btn-info" href="/teacher/group/size/{{classroom_id}}">小組人數</a>		
+    <a class="btn btn-sm btn-info" href="/teacher/group/assign/{{classroom_id}}">指派分組</a>					   
   {% endif %}
 </div>
 <div class="table-responsive">
   <table class="table">
     <thead>
       <tr>
-        <td>組別</td>
-        <td>組員</td>
+        <th>組別</th>
+        <th>組員</th>
         {% if classroom.group_open %}
-          <td>功能</td>
+          <th>功能</th>
         {% endif %}
       </tr>            
     </thead>
@@ -30,9 +30,13 @@
       <tr>
         <td>第{{number|add:1}}組</td>
         <td>
+          <ul class="list-group d-flex flex-row">
           {% for member in members %}
-          <img src="/static/avatar/s{{ member.student.profile.avatar}}.png">({{member.seat}}){{member.student.first_name}}
+          <li class="list-group-item p-0 mr-1">
+            <img src="/static/avatar/s{{ member.student.profile.avatar}}.png"><br/><span class="badge badge-secondary">{{member.seat}}</span>{{member.student.first_name}}
+          </li>
           {% endfor %}
+          </ul>
         </td>
         {% if classroom.group_open %}
           {% if classroom.group_size > members|length %}
@@ -42,11 +46,11 @@
             </td>
             {% else %} 
             <td>
-              <a class="btn btn-primary" href="/student/group/join/{{classroom.id}}/{{number}}/{{enroll.id}}">加入此組</a>
+              <a class="btn btn-sm btn-outline-primary" href="/student/group/join/{{classroom.id}}/{{number}}/{{enroll.id}}">加入此組</a>
             </td>
             {% endif %}
           {% else %}
-            <td>已額滿</td>
+            <td><span class="badge badge-danger">已額滿</span></td>
           {% endif %}
         {% endif %}
       </tr>

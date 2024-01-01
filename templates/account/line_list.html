@@ -2,20 +2,32 @@
 {% block title %} Teachers {% endblock %}
 {% load tag %}
 {% block content %}
-        <table class="table">
-            <tr>
-                <td>時間</td>
-                <td>對象</td>                
-                <td>主旨</td>
-            </tr>
-        {% for message in messages %}
-            <tr>
-            <td>{{message.time|date:"Y/m/d H:i"}}</td>
-              <td><a href="/account/profile/{{message.reader_id}}">{{message.reader.first_name}}</a></td>
-            <td><a href="/account/line/detail/{{message.classroom_id|default:0}}/{{message.id}}">{{message.title}}</a></td>
-            </tr>
-        {% endfor %}
-        </table>
-        {% load pagination %}
-        {% get_pagination %}           
+<div id="btn-toolbar" class="btn-group mb-3">
+  <a href="/account/dashboard/0" class="btn btn-info{% if action == 0 %} active{% endif %}" role="btn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 所有訊息</a>
+  <a href="/account/dashboard/1" class="btn btn-info{% if action == 1 %} active{% endif %}" role="btn"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> 課程公告</a>
+  <a href="/account/dashboard/2" class="btn btn-info{% if action == 2 %} active{% endif %}" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 我的私訊</a>
+  <a href="/account/line/" class="btn btn-info" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 寄出私訊</a>
+</div>
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>時間</th>
+      <th>對象</th>                
+      <th>主旨</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for message in messages %}
+    <tr>
+      <td><span class="badge badge-secondary">{{message.time|date:"Y/m/d H:i"}}</span></td>
+      <td><a href="/account/profile/{{message.reader_id}}">{{message.reader.first_name}}</a></td>
+      <td><a href="/account/line/detail/{{message.classroom_id|default:0}}/{{message.id}}">{{message.title}}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% load pagination %}
+{% get_pagination %}
+
 {% endblock %}

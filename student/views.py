@@ -31,8 +31,9 @@ import jieba
 from django.db.models import Q
 import json
 from django.db.models.functions import TruncMonth, TruncDay
-from django.db.models import Count, Subquery, OuterRef
+from django.db.models import Count, Subquery, OuterRef, Prefetch
 from collections import OrderedDict
+from itertools import chain
 
 # 判斷是否為授課教師
 def is_teacher(user, classroom_id):
@@ -47,13 +48,38 @@ def is_classmate(user, classroom_id):
 # 課程瀏覽記錄
 def statics_lesson(request, lesson):
     try :
+        lesson_list = [
+            "A", "B", "C", "D", "E", "F", "G",
+        ] + [
+            "A{:03d}".format(id) for id in chain(range(1, 12), range(101, 109), range(201, 209), range(301, 309))
+        ] + [
+            "B{:02d}".format(id) for id in range(1, 19)
+        ] + [
+            "C{:02d}".format(id) for id in range(1, 19)
+        ] + [
+            "D{:02d}".format(id) for id in range(1, 11)
+        ] + [
+            "E{:02d}".format(id) for id in range(1, 19)
+        ] + [
+            "G{:02d}".format(id) for id in range(1, 20)
+        ] + [
+            "GA{:1d}".format(id) for id in range(1, 7)
+        ] + [
+            "GB{:1d}".format(id) for id in range(1, 7)
+        ] + [
+            "GC{:1d}".format(id) for id in range(1, 9)
+        ] + [
+            "GD{:1d}".format(id) for id in range(1, 9)
+        ]
+        if lesson not in lesson_list:
+            return -1
         counter = LessonCounter.objects.get(name=lesson)
         counter.hit = counter.hit + 1
     except ObjectDoesNotExist:
         counter = LessonCounter(name=lesson, hit=1)
     except MultipleObjectsReturned:
         counters = LessonCounter.objects.filter(name=lesson)
-        counter = counter[0]
+        counter = counters[0]
         counter.hit = counter.hit + 1
     counter.save()
     day = str(datetime.now())[0:4]+str(datetime.now())[5:7]+str(datetime.now())[8:10]
@@ -75,10 +101,10 @@ def statics_lesson(request, lesson):
 # 各種課程
 def lessons(request, subject_id):
     hit = statics_lesson(request, subject_id)
+    if hit < 0:
+        return render(request, "student/no_lesson.html")
     if request.user.is_authenticated:
-        user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        profile = Profile.objects.get(user=user)
+        profile = request.user.profile
         if subject_id == "A":
             lock = profile.lock1
         elif subject_id == "B":
@@ -92,7 +118,6 @@ def lessons(request, subject_id):
         else:
             lock = profile.lock1
     else :
-        user_id = 0
         lock = 1
     return render(request, 'student/lessons.html', {'subject_id': subject_id, 'counter': hit, 'lock':lock})
 
@@ -100,9 +125,11 @@ def lessons(request, subject_id):
 def lesson(request, lesson):
     work_dict = {}
     hit = statics_lesson(request, lesson)
+    if hit < 0:
+        return render(request, "student/no_lesson.html")
 
     if request.user.is_authenticated :
-        profile = Profile.objects.get(user=request.user)
+        profile = request.user.profile # Profile.objects.get(user=request.user)
     else:
         profile = Profile()
     if lesson[0] == "A":
@@ -827,7 +854,7 @@ class WorkDayListView(ListView):
 
 # 查詢某作業所有同學心得
 def memo(request, typing, lesson, classroom_id, index):
-    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
+    enroll_pool = list(Enroll.objects.filter(classroom_id=classroom_id).select_related('student').prefetch_related(Prefetch('student__work_list', queryset=Work.objects.filter(typing=typing, lesson_id=lesson, index=index).order_by("-id"))).order_by('seat'))
     student_ids = list(map(lambda a: a.student_id, enroll_pool))
     work_pool = Work.objects.filter(typing=typing, lesson_id=lesson, user_id__in=student_ids, index=index).order_by("-id")
     datas = []

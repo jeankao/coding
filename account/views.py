@@ -48,7 +48,7 @@ def homepage(request):
     # for model in models:
     #     row_count = row_count + model.objects.count()
     with connection.cursor() as cursor:
-        cursor.execute("SELECT SUM(reltuples)::bigint FROM pg_class WHERE reltype > 100000 AND reltuples > 0")
+        cursor.execute("SELECT SUM(reltuples)::bigint FROM pg_class WHERE relnamespace = 2200 AND reltype > 0 AND reltuples > 0")
         row_count = cursor.fetchone()[0]
     user_count = User.objects.all().count()
     try :

@@ -46,20 +46,21 @@ def group(request, round_id):
     classroom_id = round.classroom_id
     classroom = Classroom.objects.get(id=classroom_id)
     student_groups = []
-    group_show_open = Classroom.objects.get(id=classroom_id).group_show_open
+    group_show_open = classroom.group_show_open # Classroom.objects.get(id=classroom_id).group_show_open
     shows = ShowGroup.objects.filter(round_id=round_id)
     show_ids = list(map(lambda a: a.id, shows))
     nogroup = list(Enroll.objects.filter(classroom_id=classroom_id))
+    # is_teacher = request.user.groups.filter(name="teacher").exists()
     try:
-            group_show = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).groupshow
-            if group_show:
-                student_group = list(map(int, group_show.split(",")))
-            else :
-                student_group = []
-    except ObjectDoesNotExist :
+        group_show = Enroll.objects.get(student_id=request.user.id, classroom_id=classroom_id).groupshow
+        if group_show:
+            student_group = list(map(int, group_show.split(",")))
+        else :
             student_group = []
+    except ObjectDoesNotExist :
+        student_group = []
     for show in shows:
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id, groupshow__icontains=show.id)
+        enrolls = Enroll.objects.filter(classroom_id=classroom_id, groupshow__icontains=show.id).select_related('student__profile').prefetch_related('student__groups')
         for enroll in enrolls:
             nogroup.remove(enroll)
         student_groups.append([show, enrolls,  classroom.group_show_size-len(enrolls)])
