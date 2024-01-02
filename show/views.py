@@ -20,7 +20,7 @@ from collections import OrderedDict
 from django.http import JsonResponse, HttpResponse, FileResponse
 import math
 # import cStringIO as StringIO
-from io import StringIO
+from io import StringIO, BytesIO
 # from PIL import Image,ImageDraw,ImageFont
 from binascii import a2b_base64
 import os
@@ -469,14 +469,6 @@ def show_download(request, show_id, showfile_id):
     filename = show_id + "_" + username + "_" + show.title + ".sb3"
     download =  settings.BASE_DIR / showfile.filename
     return FileResponse(open(download, "rb"), filename=showfile.filename)
-    wrapper = FileWrapper(open( download, "r" ))
-    response = HttpResponse(wrapper, content_type = 'application/force-download')
-    #response = HttpResponse(content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
-    # It's usually a good idea to set the 'Content-Length' header too.
-    # You can also set any other required headers: Cache-Control, etc.
-    return response
-    #return render(request, 'student/download.html', {'download':download})
 
 # 教師查看創意秀評分情況
 class TeacherListView(ListView):
@@ -645,11 +637,9 @@ def make(request):
         return JsonResponse({'status':'ko'}, safe=False)
 
 def excel(request, round_id):
-    output = StringIO.StringIO()
+    output = BytesIO()
     workbook = xlsxwriter.Workbook(output)
-
     shows = ShowGroup.objects.filter(round_id=round_id)
-
     worksheet = workbook.add_worksheet(u"分組")
     c = 0
     for show in shows:
@@ -729,6 +719,8 @@ def excel(request, round_id):
             index = index + 1
         worksheet.insert_image(index+1,0, 'static/show/'+str(show.id)+'/Dr-Scratch.png')
     workbook.close()
+    output.seek(0)
+    return FileResponse(output, filename=f"Show-{datetime.now().date()}.xlsx")    
     # xlsx_data contains the Excel file
     #response = HttpResponse(content_type='application/vnd.ms-excel')
     #response['Content-Disposition'] = 'attachment; filename=Show'+str(datetime.now().date())+'.xlsx'

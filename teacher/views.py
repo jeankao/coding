@@ -27,11 +27,11 @@ from account.forms import PasswordForm, RealnameForm
 import sys
 from uuid import uuid4
 import os
-from io import StringIO
+from io import StringIO, BytesIO
 from shutil import copyfile
 import xlsxwriter
 from datetime import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.utils.timezone import localtime
 import json
 from docx import *
@@ -378,7 +378,7 @@ class WorkListView(ListView):
 @user_passes_test(not_in_teacher_group, login_url='/')
 # 列出某作業所有同學名單
 def work_class(request, typing, lesson, classroom_id, index):
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id)
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student')
     classroom = Classroom.objects.get(id=classroom_id)
     classmate_work = []
     scorer_name = ""
@@ -799,7 +799,7 @@ def grade(request, typing, lesson, unit, classroom_id):
     # 限本班任課教師
     if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
         return redirect("/")
-    enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat')
     classroom = Classroom.objects.get(id=classroom_id)
     user_ids = [enroll.student_id for enroll in enrolls]
     work_pool = Work.objects.filter(typing=typing, user_id__in=user_ids, lesson_id=lesson).order_by('id')
@@ -807,81 +807,81 @@ def grade(request, typing, lesson, unit, classroom_id):
     data = []
     lesson_list = [lesson_list1, lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5][int(lesson)-1]
     for enroll in enrolls:
-      enroll_score = []
-      enroll_grade = []
-      total = 0
-      memo = 0
-      grade = 0
-      stu_works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
-      if typing == "0":
-        if lesson == "1":
-            if unit == "1":
-                lesson_list = lesson_list[0:17]
-            elif unit == "2":
-                lesson_list = lesson_list[17:25]
-            elif unit == "3":
-                lesson_list = lesson_list[25:33]
-            elif unit == "4":
-                lesson_list = lesson_list[33:41]
-      elif typing == "1":
-        lesson_list = TWork.objects.filter(classroom_id=classroom_id)
-      else :
-        lesson_list = CWork.objects.filter(classroom_id=classroom_id)
-      for index, assignment in enumerate(lesson_list):
-            if typing == "0":
+        enroll_score = []
+        enroll_grade = []
+        total = 0
+        memo = 0
+        grade = 0
+        stu_works = list(filter(lambda w: w.user_id == enroll.student_id, work_pool))
+        if typing == "0":
+            if lesson == "1":
                 if unit == "1":
-                    work_index = index + 1
+                    lesson_list = lesson_list[0:17]
                 elif unit == "2":
-                    work_index = index + 1 + 17
+                    lesson_list = lesson_list[17:25]
                 elif unit == "3":
-                    work_index = index + 1 + 17 + 8
+                    lesson_list = lesson_list[25:33]
                 elif unit == "4":
-                    work_index = index + 1 + 17 + 8 + 8
-                works = list(filter(lambda w: w.index == work_index, stu_works))
-            else :
-                works = list(filter(lambda w: w.index == assignment.id, stu_works))
-                work_index = index + 1
-            works_count = len(works)
-            if works_count == 0:
-                enroll_score.append(["X", work_index])
-                if typing == "0" or typing == "1":
-                    if not lesson == "4":
-                        total += 60
-            else:
-                work = works[-1]
-                enroll_score.append([work.score, index])
-                if work.score == -2:
+                    lesson_list = lesson_list[33:41]
+        elif typing == "1":
+            lesson_list = TWork.objects.filter(classroom_id=classroom_id)
+        else :
+            lesson_list = CWork.objects.filter(classroom_id=classroom_id)
+        for index, assignment in enumerate(lesson_list):
+                if typing == "0":
+                    if unit == "1":
+                        work_index = index + 1
+                    elif unit == "2":
+                        work_index = index + 1 + 17
+                    elif unit == "3":
+                        work_index = index + 1 + 17 + 8
+                    elif unit == "4":
+                        work_index = index + 1 + 17 + 8 + 8
+                    works = list(filter(lambda w: w.index == work_index, stu_works))
+                else :
+                    works = list(filter(lambda w: w.index == assignment.id, stu_works))
+                    work_index = index + 1
+                works_count = len(works)
+                if works_count == 0:
+                    enroll_score.append(["X", work_index])
                     if typing == "0" or typing == "1":
-                          if not lesson == "4":
-                              total += 80
+                        if not lesson == "4":
+                            total += 60
                 else:
-                    total += work.score
+                    work = works[-1]
+                    enroll_score.append([work.score, index])
+                    if work.score == -2:
+                        if typing == "0" or typing == "1":
+                            if not lesson == "4":
+                                total += 80
+                    else:
+                        total += work.score
 
-            if typing == "0":
-                if lesson == "1":
-                    memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
-                elif lesson == "2":
-                    memo = enroll.score_memo_vphysics
-                elif lesson == "3":
-                    memo = enroll.score_memo_euler
-                elif lesson == "4":
-                    memo = enroll.score_memo_vphysics2
-                elif lesson == "5":
-                    memo = enroll.score_memo_vphysics3
-                elif lesson == "6":
-                    memo = enroll.score_memo_microbit
-                elif lesson == "7":
-                    memo = enroll.score_memo_pandas
-                elif lesson == "8":
-                    memo = enroll.score_memo_django
-                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
-            elif typing == "1":
-                memo = enroll.score_memo_custom
-                grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
-            elif typing == "2":
-                memo = enroll.score_memo_check
-                grade = total
-      data.append([enroll, enroll_score, memo, grade])
+                if typing == "0":
+                    if lesson == "1":
+                        memo = [enroll.score_memo1, enroll.score_memo2, enroll.score_memo3, enroll.score_memo4][int(unit)-1]
+                    elif lesson == "2":
+                        memo = enroll.score_memo_vphysics
+                    elif lesson == "3":
+                        memo = enroll.score_memo_euler
+                    elif lesson == "4":
+                        memo = enroll.score_memo_vphysics2
+                    elif lesson == "5":
+                        memo = enroll.score_memo_vphysics3
+                    elif lesson == "6":
+                        memo = enroll.score_memo_microbit
+                    elif lesson == "7":
+                        memo = enroll.score_memo_pandas
+                    elif lesson == "8":
+                        memo = enroll.score_memo_django
+                    grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
+                elif typing == "1":
+                    memo = enroll.score_memo_custom
+                    grade = int(total / len(lesson_list) * 0.6 + memo * 0.4)
+                elif typing == "2":
+                    memo = enroll.score_memo_check
+                    grade = total
+        data.append([enroll, enroll_score, memo, grade])
     return render(request, 'teacher/grade.html', {'typing':typing, 'lesson':lesson, 'unit':unit, 'lesson_list':lesson_list, 'classroom':classroom, 'data':data})
 
 @login_required
@@ -963,7 +963,7 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
       data.append([enroll, enroll_score, memo, grade])
 
     classroom = Classroom.objects.get(id=classroom_id)
-    output = StringIO.StringIO()
+    output = BytesIO()
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet(classroom.name)
     date_format = workbook.add_format({'num_format': 'yy/mm/dd'})
@@ -1004,7 +1004,6 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
 
     workbook.close()
     # xlsx_data contains the Excel file
-    response = HttpResponse(content_type='application/vnd.ms-excel')
     if typing == "0":
         type_name = "指定作業"
     elif typing == "1":
@@ -1012,10 +1011,8 @@ def grade_excel(request, typing, lesson, unit, classroom_id):
     else:
         type_name = "檢核作業"
     filename = classroom.name + '-' + type_name + "-" + str(localtime(timezone.now()).date()) + '.xlsx'
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename.encode('utf8'))
-    xlsx_data = output.getvalue()
-    response.write(xlsx_data)
-    return response
+    output.seek(0)
+    return FileResponse(output, filename=filename)
 
 # 列出分組所有作業
 @login_required
@@ -2242,59 +2239,59 @@ class VideoListView(ListView):
 
 # 列出所有作業小老師
 def assistant_group(request, typing, classroom_id):
-        # 限本班任課教師
-        if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
-            return redirect("/")
-        classroom = Classroom.objects.get(id=classroom_id)
-        lesson = Classroom.objects.get(id=classroom_id).lesson
-        if typing == "0":
-            if lesson == 1:
-                lesson_name = lesson_list1
-            elif lesson == 2:
-                lesson_name = lesson_list2
-            elif lesson == 3:
-                lesson_name = lesson_list3
-            elif lesson == 4:
-                lesson_name = lesson_list4
-            elif lesson == 5:
-                lesson_name = lesson_list2
-            elif lesson == 8:
-                lesson_name = lesson_list5
-            else:
-                lesson_name = lesson_list1
-        elif typing == "1":
-            lesson_name = TWork.objects.get(classroom_id=classroom_id).title
-        groups = range(classroom.group_number)
-        enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).order_by('seat')]
-        student_ids = list(map(lambda a: a.student_id, enroll_pool))
-        work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
-        user_pool = [user for user in User.objects.filter(id__in=work_pool.values('scorer'))]
-        assistant_pool = [assistant for assistant in WorkAssistant.objects.filter(classroom_id=classroom_id, typing=typing, lesson_id=lesson)]
-        lessons = []
-        index = 1
-        for assignment in lesson_name:
-                student_groups = []
-                for group in groups:
-                    members = list(filter(lambda u: u.group == group, enroll_pool))
-                    group_assistants = []
-                    works = []
-                    scorer_name = ""
-                    for member in members:
-                        work = list(filter(lambda w: w.index == index and w.user_id == member.student_id, work_pool))
-                        if work:
-                            work = work[0]
-                            scorer = list(filter(lambda u: u.id == work.scorer_id, user_pool))
-                            scorer_name = scorer[0].first_name if scorer else 'X'
-                        else:
-                            work = Work(index=assignment[2], user_id=1, score=-2)
-                        works.append([member, work.score, scorer_name, work.memo])
-                        assistant = list(filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool))
-                        if assistant:
-                            group_assistants.append(member)
-                    student_groups.append([group, works, group_assistants])
-                lessons.append([assignment, student_groups])
-                index = index + 1
-        return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id) and not is_assistant(request.user, classroom_id):
+        return redirect("/")
+    classroom = Classroom.objects.get(id=classroom_id)
+    lesson = Classroom.objects.get(id=classroom_id).lesson
+    if typing == "0":
+        if lesson == 1:
+            lesson_name = lesson_list1
+        elif lesson == 2:
+            lesson_name = lesson_list2
+        elif lesson == 3:
+            lesson_name = lesson_list3
+        elif lesson == 4:
+            lesson_name = lesson_list4
+        elif lesson == 5:
+            lesson_name = lesson_list2
+        elif lesson == 8:
+            lesson_name = lesson_list5
+        else:
+            lesson_name = lesson_list1
+    elif typing == "1":
+        lesson_name = TWork.objects.get(classroom_id=classroom_id).title
+    groups = range(classroom.group_number)
+    enroll_pool = [enroll for enroll in Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by('seat')]
+    student_ids = list(map(lambda a: a.student_id, enroll_pool))
+    work_pool = Work.objects.filter(user_id__in=student_ids, lesson_id=classroom.lesson)
+    user_pool = [user for user in User.objects.filter(id__in=work_pool.values('scorer'))]
+    assistant_pool = [assistant for assistant in WorkAssistant.objects.filter(classroom_id=classroom_id, typing=typing, lesson_id=lesson)]
+    lessons = []
+    index = 1
+    for assignment in lesson_name:
+        student_groups = []
+        for group in groups:
+            members = list(filter(lambda u: u.group == group, enroll_pool))
+            group_assistants = []
+            works = []
+            scorer_name = ""
+            for member in members:
+                work = list(filter(lambda w: w.index == index and w.user_id == member.student_id, work_pool))
+                if work:
+                    work = work[0]
+                    scorer = list(filter(lambda u: u.id == work.scorer_id, user_pool))
+                    scorer_name = scorer[0].first_name if scorer else 'X'
+                else:
+                    work = Work(index=assignment[2], user_id=1, score=-2)
+                works.append([member, work.score, scorer_name, work.memo])
+                assistant = list(filter(lambda a: a.student_id == member.student_id and a.index == index, assistant_pool))
+                if assistant:
+                    group_assistants.append(member)
+            student_groups.append([group, works, group_assistants])
+        lessons.append([assignment, student_groups])
+        index = index + 1
+    return render(request, 'teacher/assistant_group.html', {'lessons':lessons,'classroom':classroom})
 
 # 科學運算現象描述問題
 class Science1QuestionListView(ListView):

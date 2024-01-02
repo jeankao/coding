@@ -12,7 +12,7 @@ from PIL import Image,ImageDraw,ImageFont
 from django.conf import settings
 from django.utils.encoding import smart_str as smart_text
 from django.core.files import File
-from io import StringIO
+from io import StringIO, BytesIO
 import os
 from django.utils import timezone
 from django.http import JsonResponse
@@ -40,11 +40,11 @@ def upload_pic(request):
                 m.picture = form.cleaned_data['image']
 
                 image_field = form.cleaned_data.get('image')
-                image_file = StringIO.StringIO(image_field.read())
+                image_file = BytesIO(image_field.read())
                 image = Image.open(image_file)
                 image = image.resize((900, 640), Image.ANTIALIAS)
 
-                image_file = StringIO.StringIO()
+                # image_file = StringIO.StringIO()
                 image.save('static/certification/1/0/'+str(request.user.id)+'.jpg', 'JPEG', quality=90)
 
                 image_field.file = image_file
@@ -259,25 +259,25 @@ def classroom(request, lesson, unit, classroom_id):
                     return custom[1].publish
                 datas = sorted(datas, key=getKey)
             elif unit == "1" :
-                    if enroll.certificate1:
-	                    datas.append(enroll)
-                    else :
-                        nodatas.append(enroll)
+                if enroll.certificate1:
+                    datas.append(enroll)
+                else:
+                    nodatas.append(enroll)
             elif unit == "2" :
-                    if enroll.certificate2:
-       	                datas.append(enroll)
-                    else :
-                        nodatas.append(enroll)
+                if enroll.certificate2:
+                    datas.append(enroll)
+                else :
+                    nodatas.append(enroll)
             elif unit == "3" :
-                    if enroll.certificate3:
-	                      datas.append(enroll)
-                    else :
-                        nodatas.append(enroll)
+                if enroll.certificate3:
+                    datas.append(enroll)
+                else :
+                    nodatas.append(enroll)
             elif unit == "4" :
-                    if enroll.certificate4:
-	                      datas.append(enroll)
-                    else :
-		                    nodatas.append(enroll)
+                if enroll.certificate4:
+                    datas.append(enroll)
+                else :
+                    nodatas.append(enroll)
             if unit =="1" :
                 def getKey1(custom):
                     return custom.certificate1_date
@@ -303,16 +303,18 @@ def classroom(request, lesson, unit, classroom_id):
             nodatas = sorted(nodatas, key=getKey5)
         elif lesson == "2":
             if enroll.certificate_vphysics:
-	              datas.append(enroll)
+                datas.append(enroll)
             else :
                 nodatas.append(enroll)
         elif lesson == "3":
             if enroll.certificate_euler:
-	              datas.append(enroll)
+                datas.append(enroll)
             else :
                 nodatas.append(enroll)
+
     for student in nodatas:
-		    datas.append(student)
+        datas.append(student)
+
     return render(request, 'certificate/classroom.html', {'nodatas':nodatas, 'enrolls':enrolls,'datas': datas, 'unit':unit, 'lesson':lesson})
 
 def certificate(request, lesson, unit, enroll_id, action):

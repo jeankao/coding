@@ -2,37 +2,51 @@
 {% load tag %}
 {% block title %} Students {% endblock %}
 {% block content %}
-{% for assignment, student_groups in lessons %}
-<a href="#{{assignment.0}}" role="btn" class="btn btn-success">{{assignment.2}}</a>
-{% endfor %}
-
-<BR>
-			{% for assignment, student_groups in lessons %}
-			<a name="{{assignment.0}}"></a>			
-	{{assignment.0}}){{assignment.1}}--{{assignment.2}}
-<table class="table">
-<tr>
-<Td width=150>組別</Td>
-<td width=150>小老師</td>
-<td>組員</td>  
-</tr>	
-  {% for group, works, assistants in student_groups %}
-                <tr>
-									<td nowrap>第{{group|add:1}}組</td>
-                <td>
-                  {% for assistant in assistants %}
-				({{assistant.seat}}){{assistant.student_id|realname}}<BR>                            
-									{% endfor %}
-                </td>
-									<td>               
-				{% for enroll, score, scorer, memo in works %}                    
-            {% if request.user.id in assistants or request.user.id == classroom.teacher_id %}<a target=_blank href="/teacher/scoring/{{classroom.id}}/{{enroll.student_id}}/{{classroom.lesson}}/{{assignment.0.2}}">{% endif %}({{enroll.seat}}){{enroll.student.first_name}}{% if request.user.id in assistant or request.user.id == classroom.teacher_id %}</a>{% endif %}
-					  -{% if score == -2 %}<font color=green>尚未繳交</font>{% else %}{% if score > 0 %}{{score}}-{{scorer}}{% else %}<font color=red>尚未評分</font>{% endif %}{% endif %}
-					
-				{% endfor %}
-				</td>
-  </tr>
+<ul class="nav" id="myTab" role="tablist">
+	{% for assignment, student_groups in lessons %}
+  <li class="nav-item"> 
+	  <a href="#pane-{{assignment.0}}" id="tab-{{assignment.0}}" role="tab" data-toggle="tab" class="btn btn-sm btn-outline-success{% if forloop.counter == 1 %} active{% endif %}">{{assignment.2}}</a>
+  </li>
   {% endfor %}
-</table>
-{% endfor %}
+</ul>
+<div class="tab-content">
+  {% for assignment, student_groups in lessons %}
+  <div class="tab-pane{% if forloop.counter == 1 %} active{% endif %}" id="pane-{{ assignment.0 }}" role="tabpanel" aria-labelledby="tab-{{assignment.0}}">
+    <div></div>
+    {{assignment.0}}){{assignment.1}}--{{assignment.2}}
+    <table class="table">
+      <thead>
+        <tr>
+          <th width=150>組別</th>
+          <th width=150>小老師</th>
+          <th>組員</th>  
+        </tr>	
+      </thead>
+      <tbody>
+        {% for group, works, assistants in student_groups %}
+        <tr>
+          <td nowrap>第{{group|add:1}}組</td>
+          <td>
+            {% for assistant in assistants %}
+              ({{assistant.seat}}){{assistant.student.first_name}}<BR>                            
+            {% endfor %}
+          </td>
+          <td>               
+            {% for enroll, score, scorer, memo in works %}                    
+                {% if request.user.id in assistants or request.user.id == classroom.teacher_id %}
+                  <a target=_blank href="/teacher/scoring/{{classroom.id}}/{{enroll.student_id}}/{{classroom.lesson}}/{{assignment.0.2}}">
+                {% endif %}
+                ({{enroll.seat}}){{enroll.student.first_name}}{% if request.user.id in assistant or request.user.id == classroom.teacher_id %}</a>
+                {% endif %}
+                -{% if score == -2 %}<font color=green>尚未繳交</font>{% else %}{% if score > 0 %}{{score}}-{{scorer}}{% else %}<font color=red>尚未評分</font>{% endif %}{% endif %}
+              
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}
