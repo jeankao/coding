@@ -28,7 +28,7 @@ import pytz
 from django.core.paginator import Paginator
 import copy
 import jieba
-from django.db.models import Q
+from django.db.models import Q, Subquery, OuterRef
 import json
 from django.db.models.functions import TruncMonth, TruncDay
 from django.db.models import Count, Subquery, OuterRef, Prefetch
@@ -416,7 +416,25 @@ class AnnounceListView(ListView):
     def get_queryset(self):
         classroom = Classroom.objects.get(id=self.kwargs['classroom_id'])
 
-        messages = Message.objects.filter(classroom_id=self.kwargs['classroom_id'], author_id=classroom.teacher_id).order_by("-id")
+        messages = Message.objects.filter(
+                        type = 1, 
+                        classroom_id = self.kwargs['classroom_id'], 
+                        author_id = classroom.teacher_id
+                    ).annotate(
+                        poll_id = Subquery(
+                            MessagePoll.objects.filter(
+                                message_id = OuterRef('id'), 
+                                reader_id = self.request.user.id
+                            ).values_list('id', flat=True)[:1]
+                        ),
+                        read = Subquery(
+                            MessagePoll.objects.filter(
+                                message_id = OuterRef('id'), 
+                                reader_id = self.request.user.id
+                            ).values_list('read', flat=True)[:1]
+                        ),
+                    ).order_by("-id")
+        return messages
         queryset = []
         for message in messages:
             messagepoll = MessagePoll.objects.get(message_id=message.id, reader_id=self.request.user.id)

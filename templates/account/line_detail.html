@@ -2,45 +2,56 @@
 {% block title %} Teachers {% endblock %}
 {% load tag %}
 {% block content %}
-{% if message.type == 2 %}
-        <h1>私訊來源：<a href="/account/profile/{{message.author_id}}">{{message.author_id|realname}}</a></h1>
-        <h1>私訊對象：{{messagepoll.reader_id|realname}}{% if messagepoll.read %}(已讀){% else %}(未讀){% endif %}</h1>
-{% endif %} 
-<table class="table">
-            <tr>
-                <td>時間</td><td>{{message.time| date:"Y/m/d H:i"}}</td>
-            </tr>
-            <tr>
-                <td>主旨</td> <td>{{message.title}}</td>
-            </tr>
-            <tr>
-                <td>內容</td><td>{% if message.content %}{{message.content|safe}}{% else %}無{% endif %}</td>
-            </tr>
-           
-        </table>
-		      {% for file in files %}
-		  <BR><button class="btn btn-info">
-              {{forloop.revcounter}}
-        </button> 
-		          {{file.publication_date}}	
-			        {% if file.title|is_pic %}
-		<a href="/account/line/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
-			        {% else %}
-			<a href="/account/line/download/{{file.id}}" target="_blank">{{file.title}}</a>
-			        {% endif %}
-		      {% endfor %}
-
-{% if not request.user.id == message.author_id %}
-<h1><a href="/account/line/reply/{{message.classroom_id}}/{{message.author_id}}/{{message.id}}">回覆訊息</a></h1>
-{% endif %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">{{ message.title }}</h2>
+    <div class="card-text">
+      <div class="right">
+        <span class="badge badge-secondary">
+          <a href="/account/profile/{{ message.author_id }}" class="text-white">{{ message.author.first_name }}</a>
+          <i class="fa fa-arrow-circle-right"></i> {{ message.reader.first_name }}
+        </span>
+        <span class="badge badge-light">{{ message.time|date:"Y/m/d H:i" }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    {% if message.content %}
+      {{ message.content|safe }}
+    {% else %}
+      無
+    {% endif %}
+  </div>
+  {% if files %}
+    <ul class="list-group list-group-flush">
+      {% for file in message.attachments.all %}
+      <li class="list-group-item">
+        <span class="badge badge-info">{{ forloop.revcounter }}</span>
+        <span class="badge badge-light float-right">{{ file.publication_date|date:"Y/m/d H:i"}}</span>
+        {% if file.title|is_pic %}
+          <a href="/account/line/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+        {% else %}
+          <a href="/account/line/download/{{file.id}}" target="_blank">{{file.title}}</a>
+        {% endif %}          
+      </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if not request.user.id == message.author_id %}
+  <div class="card-footer">
+    <a href="/account/line/reply/{{message.classroom_id}}/{{message.author_id}}/{{message.id}}" class="btn btn-sm btn-primary">回覆訊息</a>
+  </div>
+  {% endif %}
+</div>
 {% if lists and message.type == 2 %}
-        <h1>歷史私訊</h1>
-        <table class="table">
-        {% for list in lists %}
-        <tr><td>{{list.time}}<a href="/account/line/detail/{{list.classroom_id}}/{{list.id}}">{{list.title}}</a></td></tr>
-        {% empty %}
-        <tr><td>無</td></tr>
-        {% endfor %}
-        </table>
+<h3 class="">歷史私訊</h3>
+<ul class="list-group">
+  {% for list in lists %}
+  <li class="list-group-item p-1">
+    <span class="badge badge-light right">{{ list.time|date:"Y/m/d H:i" }}</span>
+    <a href="/account/line/detail/{{list.classroom_id}}/{{list.id}}">{{list.title}}</a>
+  </li>
+  {% endfor %}
+</ul>
 {% endif %}
 {% endblock %}

@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, FileResponse
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
-from django.db.models import Q
+from django.db.models import Q, Subquery, OuterRef
 from django.forms.models import model_to_dict
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
@@ -318,21 +318,17 @@ def announce_detail(request, message_id):
     message = Message.objects.get(id=message_id)
     files = MessageContent.objects.filter(message_id=message_id)
     classroom = Classroom.objects.get(id=message.classroom_id)
-
-    announce_reads = []
-
-    messagepolls = MessagePoll.objects.filter(message_id=message_id)
-    for messagepoll in messagepolls:
-        try:
-            enroll = Enroll.objects.get(classroom_id=message.classroom_id, student_id=messagepoll.reader_id)
-            announce_reads.append([enroll.seat, enroll.student.first_name, messagepoll])
-        except ObjectDoesNotExist:
-            pass
-
-    def getKey(custom):
-        return custom[0]
-    announce_reads = sorted(announce_reads, key=getKey)
-    return render(request, 'teacher/announce_detail.html', {'files':files,'message':message, 'classroom':classroom, 'announce_reads':announce_reads})
+    read_status = Enroll.objects.filter(
+                        classroom_id = message.classroom_id
+                    ).select_related('student').annotate(
+                        read = Subquery(
+                            MessagePoll.objects.filter(
+                                message_id = message.id, 
+                                reader_id = OuterRef('student_id')
+                            ).values_list('read', flat=True)[:1]
+                        )
+                    ).order_by('seat')
+    return render(request, 'teacher/announce_detail.html', {'files':files,'message':message, 'classroom':classroom, 'read_status': read_status})
 
 # 列出所有課程
 class WorkListView(ListView):
@@ -2390,26 +2386,26 @@ def work2_science(request, classroom_id, index, user_id):
 
 # 查閱全班測驗卷成績
 def exam_list(request, classroom_id):
-        # 限本班任課教師
-        if not is_teacher(request.user, classroom_id):
-            return redirect("homepage")
-        enrolls = Enroll.objects.filter(classroom_id=classroom_id).order_by("seat")
-        classroom_name=""
-        enroll_exam = []
-        for enroll in enrolls:
-            classroom_name = enroll.classroom.name
-            exam_list = []
-            for exam_id in range(3):
-                exams = Exam.objects.filter(student_id=enroll.student_id, exam_id=exam_id+1)
-                total = 0
-                times = 0
-                for exam in exams:
-                    total += exam.score
-                    times += 1
-                exam_list.append(total)
-                exam_list.append(times)
-            enroll_exam.append([enroll, exam_list])
-        return render(request, 'teacher/exam_list.html', {'classroom_id':classroom_id, 'classroom_name':classroom_name, 'enroll_exam':enroll_exam})
+    # 限本班任課教師
+    if not is_teacher(request.user, classroom_id):
+        return redirect("homepage")
+    enrolls = Enroll.objects.filter(classroom_id=classroom_id).select_related('student').order_by("seat")
+    classroom_name=""
+    enroll_exam = []
+    for enroll in enrolls:
+        classroom_name = enroll.classroom.name
+        exam_list = []
+        for exam_id in range(3):
+            exams = Exam.objects.filter(student_id=enroll.student_id, exam_id=exam_id+1)
+            total = 0
+            times = 0
+            for exam in exams:
+                total += exam.score
+                times += 1
+            exam_list.append(total)
+            exam_list.append(times)
+        enroll_exam.append([enroll, exam_list])
+    return render(request, 'teacher/exam_list.html', {'classroom_id':classroom_id, 'classroom_name':classroom_name, 'enroll_exam':enroll_exam})
 
 # 查詢某項測驗的所有資料
 def exam_detail(request, classroom_id, student_id, exam_id):

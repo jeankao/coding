@@ -8,24 +8,21 @@
   <a href="/account/dashboard/2" class="btn btn-sm btn-info" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 我的私訊</a>
   <a href="/account/line/" class="btn btn-sm btn-info active" role="btn"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 寄出私訊</a>
 </div>
-<table class="table table-sm table-hover">
-  <thead>
-    <tr>
-      <th>時間</th>
-      <th>對象</th>                
-      <th>主旨</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for message in messages %}
-    <tr>
-      <td><span class="badge badge-secondary">{{message.time|date:"Y/m/d H:i"}}</span></td>
-      <td><a href="/account/profile/{{message.reader_id}}">{{message.reader.first_name}}</a></td>
-      <td><a href="/account/line/detail/{{message.classroom_id|default:0}}/{{message.id}}">{{message.title}}</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<ul class="list-group mb-3">
+  {% for message in messages %}
+  <li class="list-group-item">
+    <a href="/account/line/detail/{{message.classroom_id|default:0}}/{{message.id}}">{{message.title}}</a>
+    <div class="float-right">
+      {% if message.reader_id %}
+      <a href="/account/profile/{{message.reader_id}}" class="badge badge-warning">{{message.reader.first_name}}</a>
+      {% else %}
+        <span class="badge badge-info">{{ message.classroom }}</span>
+      {% endif %}
+      <span class="badge badge-light">{{message.time|date:"Y/m/d H:i"}}</span>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
 
 {% load pagination %}
 {% get_pagination %}

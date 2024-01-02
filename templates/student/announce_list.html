@@ -1,16 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-        <h1>班級名稱：{{classroom.name}}</h1>
-        <table class="table">
-            <tr>
-                <td>時間</td>
-                <td>主旨</td>
-        {% for message in messages %}
-            <tr>
-            <td>{{message.1.time}}</td>
-            <td><a href="/account/message/{{message.0.id}}">{{message.1.title}}</a></td>
-            </tr>
-        {% endfor %}
-        </table>
- {% include "pagination.html" with page=page_obj %}          
+<h1>班級名稱：{{classroom.name}}</h1>
+<ul class="list-group">
+  {% for message in messages %}
+  <li class="list-group-item">
+    <a href="/account/message/{{ message.poll_id }}">{{ message.title }}</a>
+    <span class="badge badge-light float-right">{{ message.time|date:"Y/m/d H:i" }}</span>
+  </li>
+  {% endfor %}
+</ul>
+<table class="table">
+    <tr>
+        <td>時間</td>
+        <td>主旨</td>
+{% for message in messages %}
+    <tr>
+    <td>{{message.1.time}}</td>
+    <td><a href="/account/message/{{message.0.id}}">{{message.1.title}}</a></td>
+    </tr>
+{% endfor %}
+</table>
+
+{% include "pagination.html" with page=page_obj %}          
+
 {% endblock %}

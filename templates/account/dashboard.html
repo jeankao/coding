@@ -11,7 +11,7 @@
 <ul id="message-list" class="list-group mb-3">
   {% for messagepoll in messages %}
   <li class="list-group-item">
-    <span class="badge badge-secondary">
+    <span class="badge badge-light float-right">
       {{ messagepoll.message.time| date:"Y/m/d H:i"}}
     </span>
     
@@ -22,11 +22,11 @@
     {% endif %}
     
     {% if messagepoll.message.type == 2 %}
-    <img src="/static/images/line.png">
+      <i class="fa fa-envelope" aria-hidden="true"></i>
     {% elif messagepoll.message.type == 1 %}
-    <img src="/static/images/announce.png">
+      <i class="fa fa-bullhorn" aria-hidden="true"></i>
     {% elif messagepoll.message.type == 3 %}
-    <img src="/static/images/system.png">
+      <i class="fa fa-cogs" aria-hidden="true"></i>
     {% endif %}
     
     {{ messagepoll.message.title}}

@@ -661,7 +661,7 @@ class LineListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = Message.objects.filter(author_id=self.request.user.id).select_related('reader').order_by("-id")
+        queryset = Message.objects.filter(author_id=self.request.user.id).select_related('reader', 'classroom').order_by("-id")
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -827,8 +827,7 @@ class LineReplyView(CreateView):
 
 # 查看私訊內容
 def line_detail(request, classroom_id, message_id):
-    message = Message.objects.get(id=message_id)
-    files = MessageContent.objects.filter(message_id=message_id)
+    message = Message.objects.select_related('author', 'reader').get(id=message_id)
     messes = Message.objects.filter(author_id=message.author_id, reader_id=request.user.id).order_by("-id")
     try:
         if message.type == 2:
@@ -840,7 +839,7 @@ def line_detail(request, classroom_id, message_id):
         messagepoll.save()
     except :
         messagepoll = MessagePoll()
-    return render(request, 'account/line_detail.html', {'files':files, 'lists':messes, 'classroom_id':classroom_id, 'message':message, 'messagepoll':messagepoll})
+    return render(request, 'account/line_detail.html', {'lists':messes, 'classroom_id':classroom_id, 'message':message, 'messagepoll':messagepoll})
 
 # 下載檔案
 def line_download(request, file_id):
