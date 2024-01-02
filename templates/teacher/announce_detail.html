@@ -1,49 +1,47 @@
 {% extends "base.html" %}
 {% load tag %}
 {% block content %}
-        <h1>班級名稱：{{classroom.name}}</h1>
-        <table class="table">
-             <tr>
-               <td>教師</td><td>{{message.author_id|realname}}</td>
-            </tr>         
-            <tr>
-                <td>時間</td><td>{{message.time}}</td>
-            </tr>
-            <tr>
-                <td>主旨</td> <td>{{message.title}}</td>
-            </tr>
-            <tr>
-                <td>內容</td><td>{{message.content|safe}}</td>
-            </tr>
-          <tr><td>附件</td><Td>
-               {% for file in files %}
-		  <BR><button class="btn btn-info">
-              {{forloop.revcounter}}
-        </button> 
-		          {{file.publication_date}}	
-			        {% if file.title|is_pic %}
-		<a href="/account/line/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
-			        {% else %}
-			<a href="/account/line/download/{{file.id}}" target="_blank">{{file.title}}</a>
-			        {% endif %}
-		      {% endfor %}
-            </Td></tr>
-
-           
-        </table>
-        <table> 
-           {% for announce_read in announce_reads %}
-            <tr>
-            <td>
-           ({{announce_read.0}}){{announce_read.1}}：
-           {% if announce_read.2.read %}
-           已讀
-           {% else %}
-           <font color=red>未讀</font>           
-           {% endif %}
-           </td>
-           </tr>
-           {% endfor %}
-            
-        </table>
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">{{message.title}}</h2>
+    <div class="card-text">
+      <span class="badge badge-info">{{classroom.name}}</span>
+      <div class="float-right">
+        <span class="badge badge-secondary">{{ message.author.first_name }}</span>
+        <span class="badge badge-light">{{ message.time|date:"Y-m-d H:i" }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    {{message.content|safe}}
+  </div>
+  {% if files %}  
+    <ul class="list-group list-group-flush">
+      {% for file in files %}
+      <li class="list-group-item">
+        <span class="badge badge-info">{{ forloop.revcounter }}</span>
+        <span class="badge badge-light float-right">{{ file.publication_date|date:"Y-m-d H:i"}}</span>
+        {% if file.title|is_pic %}
+          <a href="/account/line/showpic/{{file.id}}" target="_blank">{{file.title}}</a>
+        {% else %}
+          <a href="/account/line/download/{{file.id}}" target="_blank">{{file.title}}</a>
+        {% endif %}          
+      </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+<div id="read-status">
+  <div>
+    <span class="badge badge-success">已讀</span>
+    <span class="badge badge-danger">未讀</span>
+  </div>
+  <div class="d-flex align-content-end justify-content-between flex-wrap">
+    {% for announce_read in announce_reads %}
+    <div class="d-inline-block text-{% if announce_read.2.read %}success{% else %}danger{% endif %}">
+      ({{announce_read.0}}){{announce_read.1}}
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

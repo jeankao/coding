@@ -111,10 +111,10 @@ def make_image(lesson, unit, enroll_id, teacher_id):
     #red = (255,0,0)    # color of our text
     #text_pos = (10,10) # top-left position of our text
     # Now, we'll do the drawing:
-    font_student = ImageFont.truetype(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf', 60)
-    font_school  = ImageFont.truetype(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf', 30)
-    font_teacher = ImageFont.truetype(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf', 50)
-    font_date    = ImageFont.truetype(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf', 50)
+    font_student = ImageFont.truetype(str(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf'), 60)
+    font_school  = ImageFont.truetype(str(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf'), 30)
+    font_teacher = ImageFont.truetype(str(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf'), 50)
+    font_date    = ImageFont.truetype(str(settings.BASE_DIR / 'static/cwTeXQKai-Medium.ttf'), 50)
     enroll = Enroll.objects.get(id=enroll_id)
     #studnet_id = enroll.student.id
     student_name = User.objects.get(id=enroll.student.id).first_name
@@ -143,9 +143,9 @@ def make_image(lesson, unit, enroll_id, teacher_id):
     # now, we tell the image to save as a PNG to the
     # provided file-like object
 
-    temp_handle = StringIO.StringIO()
-    im.save(temp_handle, 'jpeg')
-    temp_handle.seek(0)
+    # temp_handle = StringIO()
+    # im.save(temp_handle, 'jpeg')
+    # temp_handle.seek(0)
 
     # open file write mode
     # if not os.path.exists(settings.BASE_DIR+"/static/certification/"):
@@ -154,14 +154,15 @@ def make_image(lesson, unit, enroll_id, teacher_id):
     #     os.mkdir(settings.BASE_DIR+"/static/certification/"+lesson)
     # if not os.path.exists(settings.BASE_DIR+"/static/certification/"+lesson+"/"+unit):
     #     os.mkdir(settings.BASE_DIR+"/static/certification/"+lesson+"/"+unit)
-    path_list = ["certification/", f"cretification/{lesson}/", f"certification/{lesson}/{unit}/"]
+    path_list = ["certification/", f"certification/{lesson}/", f"certification/{lesson}/{unit}/"]
     for p in path_list:
             if not os.path.exists(settings.BASE_DIR / f"static/{p}"):
                 os.mkdir(settings.BASE_DIR / f"static/{p}")
 
     context = {'error':''}
     fileName = settings.BASE_DIR / f"static/certification/{lesson}/{unit}/{enroll_id}.jpg"
-    writeFile(temp_handle.read(), fileName, context)
+    # writeFile(temp_handle.read(), fileName, context)
+    im.save(fileName, 'jpeg')
 
     #update and message
     title = "<" + teacher_name + u">核發了一張證書給你"

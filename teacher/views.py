@@ -1071,9 +1071,13 @@ def make_work_assistant(request):
     action = request.POST.get('action')
     lesson = request.POST.get('lesson')
     index = request.POST.get('index')
+
     if lesson == "1":
-        queryset = lesson_list1
-        assignment = queryset[int(index)-1][2]
+        try:
+            queryset = lesson_list1
+            assignment = queryset[int(index)-1][2]
+        except:
+            assignment = TWork.objects.get(id=index).title
     elif lesson == "2":
         queryset = lesson_list2
         assignment = queryset[int(index)-1][1]
@@ -1083,10 +1087,16 @@ def make_work_assistant(request):
     else:
         queryset = lesson_list1
         assignment = queryset[int(index)-1][2]
+        try:
+            queryset = lesson_list1
+            assignment = queryset[int(index)-1][2]
+        except:
+            assignment = TWork.objects.get(id=index).title
 
     if is_teacher(request.user, classroom_id) or is_assistant(request.user, classroom_id):
         if user_id and action and lesson and index:
             user = User.objects.get(id=user_id)
+        print("lesson=",lesson)
         if action == "set":
             try:
                 assistant = WorkAssistant.objects.get(student_id=user_id, classroom_id=classroom_id, lesson_id=lesson, index=index)
@@ -1340,7 +1350,7 @@ def work_class2(request, lesson, classroom_id, work_id):
 
     classmate_work = sorted(classmate_work, key=getKey)
 
-    return render(request, 'teacher/work_class.html',{'typing':1, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id})
+    return render(request, 'teacher/work_class.html',{'typing':1, 'classmate_work': classmate_work, 'classroom':classroom, 'index': work_id, 'lesson': lesson})
 
 # 設定班級助教
 def classroom_assistant(request, classroom_id):
