@@ -55,7 +55,7 @@
   <br>
   {% if work_dict|hash_scorer:index > 0 %}
   <button class="btn">
-    分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index|realname}}
+    分數：{{work_dict|hash_score:index}} / 評分者：{{work_dict|hash_scorer:index}}
 </button>
 <BR><BR>
   {% endif %}

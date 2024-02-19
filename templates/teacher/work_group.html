@@ -15,7 +15,7 @@
                 {% if not list.1.user_id == 0 %} 
                         {{list.0.seat}})<a href="/teacher/scoring/{{typing}}/{{classroom.lesson}}/{{classroom.id}}/{{list.0.student.id}}/{{index}}">{{list.0.student.first_name}}-{% if list.1 %}{{list.1.publication_date}}{% endif %}
                     {% if list.1.scorer > 0 %}
-                        ({{list.1.score}}-{{list.1.scorer|realname}})
+                        ({{list.1.score}}-{{list.1.scorer}})
                     {%  endif %}
                         </a><br/>
                 {% else %}

@@ -7,7 +7,7 @@
 {% endif %}
 {% if lesson == "1" %}
   {% if work %}
-    <div>評分者：{{ work.scorer|realname}}</div>
+    <div>評分者：{{ work.scorer}}</div>
     {% if work.score > 0 %}<div>分數：{{ work.score}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	
     <div>心得感想：</div>
@@ -141,7 +141,7 @@
   {% endif %}
 {% elif lesson == "4" %}
   {% if work %}
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	    
     <div>{{ work.memo }}</div>
     <div>Youtube：</div>
@@ -151,7 +151,7 @@
   {% endif %}
 {% elif lesson == "10" %}
   {% if work %}
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	       
     <div>心得感想：{% if work.publish %}(已發表){% else %}<a href="/student/work/publish/{{typing}}/{{lesson}}/{{index}}/2" class="btn" role="btn">發表心得</a>{% endif %}</div>
     <div>{{ work.memo|linebreaks }}</div>
@@ -160,7 +160,7 @@
   {% endif %}  
 {% elif lesson == "4" %}
   {% if work %}
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	    
     <div>心得感想：</div>
     <div>{{ work.memo }}</div>
@@ -171,7 +171,7 @@
   {% endif %}
 {% elif lesson == "6" %}
   {% if work %}
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	       
     <div>心得感想：</div>
     <div>{{ work.memo }}</div>
@@ -186,7 +186,7 @@
   {% endif %}
 {% elif lesson == "2" or lesson == "3" or lesson == "5" or lesson == "7" %}
   {% if work %}
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	       
     <div>心得感想：</div>
     <div>{{ work.memo }}</div>
@@ -204,7 +204,7 @@
   {% endif %}
 {% elif lesson == "8" %}
   {% if work %}
-    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer|realname}}</div>{% endif %}
+    {% if work.score > 0 %}<div>分數：{{ work.score}} / 評分者：{{ work.scorer}}</div>{% endif %}
     {% if work.comment %}<div>評語：{{ work.comment }}</div>{% endif %}	       
     <div>心得感想：</div>
     <div>{{ work.memo }}</div>

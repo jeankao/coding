@@ -30,7 +30,7 @@ $(function () {
             <tr><td>狀態</td><td>尚未繳交</td></tr>
         {% else %}
             {% if work_dict|hash_score:index > 0 %}
-              <tr><Td>分數</td><td>{{ work_dict|hash_score:index }} /  評分者：{{ work_dict|hash_scorer:index|realname }}</Td></tr>           
+              <tr><Td>分數</td><td>{{ work_dict|hash_score:index }} /  評分者：{{ work_dict|hash_scorer:index }}</Td></tr>           
             {% else %}
             <tr><td>分數</td><td>尚未評分</td></tr>                                   
             {% endif %}              
@@ -170,11 +170,15 @@ $(function () {
               loadProject('/static/work/scratch/{{request.user.id}}/{{workfiles.0.filename}}');
             }
         
-          </script>      
-
+          </script>
+        <div>
         {% for workfile in workfiles %}		
-              <BR>第{{workfiles|length|subtract:forloop.counter|add:1}}版：<A href="/student/work/download/{{typing}}/{{lesson_id}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{workfile.upload_date}}</A>
+          <div>
+            <span class="badge badge-light">第 {{ forloop.revcounter }} 版</span>
+            <a href="/student/work/download/{{typing}}/{{lesson_id}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{ workfile.upload_date|date:"Y-m-d H:i" }}</a>
+          </div>
         {% endfor %}
+        </div>
         {% endwith %}
 {% block footer_script %}
 <script>
