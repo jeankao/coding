@@ -1,211 +1,68 @@
 {% load tag %}
-<script type="text/javascript">
-function checkvalue(a, index) { 
-    var mystring = document.getElementById('id_memo'+index).value; 
-    if(!mystring.match(/\S/)) {
-        alert ('請填寫心得~~');
-        return false;
-    } else {
-        return true;
-    }
-}
-$(function () {
-    $('input[type=file][name="file"]').change(function () {
-        var val = $(this).val().toLowerCase(),
-            regex2 = new RegExp("(.*?)\.(sb2)$");
-            regex3 = new RegExp("(.*?)\.(sb3)$");
-            regex4 = new RegExp("(.*?)\.(sbx)$");            
-        if (!(regex2.test(val)) && !(regex3.test(val)) && !(regex4.test(val))) {
-            $(this).val('');
-            alert('您的檔案格式錯誤，只能上傳Scratch作品(.sb2或.sb3或.sbx)');
-        }
-    });
-});  
 
-</script>
-            <form action="/student/work/submit/{% if typing == "0" %}0{% else %}1{% endif %}/{% if 'A' in lesson %}1{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this, {{index}});">      
-              <input type="hidden" name="lesson" value={{lesson}}>             
-              <table class="table">            
-        {% if not work_dict|hash_memo:index %}                      
-            <tr><td>狀態</td><td>尚未繳交</td></tr>
-        {% else %}
-            {% if work_dict|hash_score:index > 0 %}
-              <tr><Td>分數</td><td>{{ work_dict|hash_score:index }} /  評分者：{{ work_dict|hash_scorer:index }}</Td></tr>           
-            {% else %}
-            <tr><td>分數</td><td>尚未評分</td></tr>                                   
-            {% endif %}              
-        {% endif %}
-        {% if not work_dict|hash_score:index > 0 %}      
-            <tr><td>作品檔案</td><td><input id="id_file" name="file" type="file" class="form-control"></td></tr>
-        <input type=hidden name=memo_e id=memo_e value={{work.memo_e}}>
-        <input type=hidden name=memo_c id=memo_c value={{work.memo_c}}> 
- <tr><td valign="top"><div id="result">心得感想</td><td><textarea cols="20" id="id_memo{{index}}" name="memo" rows="5"  class="form-control">{{ work_dict|hash_memo:index }}</textarea></td></tr>              
-            <tr><td></td><td><input type="submit" value="送出"  class="form-control btn-info"/></div></td></tr>
-        {% endif %}         
-              </table>
-      {% csrf_token %}   
-            </form>
-        {% with workfiles=work_dict|hash_files:index %}
+<form action="/student/work/submit/{% if typing == '0' %}0{% else %}1{% endif %}/{% if 'A' in lesson %}1{% else %}{{lesson}}{% endif %}/{{index}}/" method="post" enctype="multipart/form-data" onsubmit="return checkvalue(this);">
+  <input type="hidden" name="lesson" value="{{lesson}}">
+  <table class="table">
+    {% if not work_dict|hash_memo:index %}
+    <tr>
+      <td>狀態</td>
+      <td>尚未繳交</td>
+    </tr>
+    {% elif work_dict|hash_score:index > 0 %}
+    <tr>
+      <td>分數</td>
+      <td>{{ work_dict|hash_score:index }} / 評分者：{{ work_dict|hash_scorer:index }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td>分數</td>
+      <td>尚未評分</td>
+    </tr>
+    {% endif %}
+    {% if not work_dict|hash_score:index > 0 %}
+    <tr>
+      <td>作品檔案</td>
+      <td><input name="file" type="file" class="form-control"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <div class="memo_status">心得感想</div>
+        <input type="hidden" name="memo_e" class="memo_e" value="{{work.memo_e}}">
+        <input type="hidden" name="memo_c" class="memo_c" value="{{work.memo_c}}">
+      </td>
+      <td><textarea cols="20" class="memo" name="memo" rows="5" class="form-control">{{ work_dict|hash_memo:index }}</textarea></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" value="送出" class="form-control btn-info" />
+      </td>
+    </tr>
+    {% endif %}
+  </table>
+  {% csrf_token %}
+</form>
+{% with workfiles=work_dict|hash_files:index %}
 
 
-        <font color=red>作品：</font>
-        <style>
-            #test {width: 640px; height: 480px}
-          </style>
-          <script src="/static/libs/vendor.js"></script>
-          <script src="/static/libs/scratch-vm.min.js"></script>
-          <script src="/static/libs/scratch-storage.min.js"></script>
-          <script src="/static/libs/scratch-svg-renderer.js"></script>
-          <!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
-          <script src="/static/libs/scratch-render.min.js"></script>
-        
-          <img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm.greenFlag();" />
-          <canvas id="test"></canvas>
-        
-          <script>
-            // These variables are going to be available in the "window global" intentionally.
-            // Allows you easy access to debug with `vm.greenFlag()` etc.
-            window.devicePixelRatio = 1;
-        
-            var canvas = document.getElementById('test');
-            var render = new ScratchRender(canvas);
-            var vm = new VirtualMachine();
-            var storage = new ScratchStorage();
-            const audioEngine = new window.AudioEngine();
-            vm.attachAudioEngine(audioEngine);
-            vm.attachStorage(storage);
-            vm.attachRenderer(render);
-            vm.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
-            vm.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
-        
-            document.addEventListener('mousemove', e => {
-              const rect = canvas.getBoundingClientRect();
-              const coordinates = {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
-                canvasWidth: rect.width,
-                canvasHeight: rect.height
-              };
-              vm.postIOData('mouse', coordinates);
-            });
-            canvas.addEventListener('mousedown', e => {
-              const rect = canvas.getBoundingClientRect();
-              const data = {
-                isDown: true,
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
-                canvasWidth: rect.width,
-                canvasHeight: rect.height
-              };
-              vm.postIOData('mouse', data);
-              e.preventDefault();
-            });
-            canvas.addEventListener('mouseup', e => {
-              const rect = canvas.getBoundingClientRect();
-              const data = {
-                isDown: false,
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
-                canvasWidth: rect.width,
-                canvasHeight: rect.height
-              };
-              vm.postIOData('mouse', data);
-              e.preventDefault();
-            });
-        
-            // Feed keyboard events as VM I/O events.
-            document.addEventListener('keydown', e => {
-              // Don't capture keys intended for Blockly inputs.
-              if (e.target !== document && e.target !== document.body) {
-                return;
-              }
-              vm.postIOData('keyboard', {
-                keyCode: e.keyCode,
-                isDown: true
-              });
-              e.preventDefault();
-            });
-            document.addEventListener('keyup', e => {
-              // Always capture up events,
-              // even those that have switched to other targets.
-              vm.postIOData('keyboard', {
-                keyCode: e.keyCode,
-                isDown: false
-              });
-              // E.g., prevent scroll.
-              if (e.target !== document && e.target !== document.body) {
-                e.preventDefault();
-              }
-            });
-        
-            function loadProject(project) {
-              const reader = new FileReader();
-              reader.onload = () => {
-                vm.start();
-                vm.loadProject(reader.result)
-                  .then(() => {
-                    // we add a `#loaded` div to our document, the integration suite
-                    // waits for that element to show up to assume the vm is ready
-                    // to play!
-                    const div = document.createElement('div');
-                    div.id = 'loaded';
-                    document.body.appendChild(div);
-                    //vm.greenFlag();
-                  });
-              };
-              if (!(project instanceof File)) {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', project);
-                xhr.responseType = 'blob';
-                xhr.onload = function (e) {
-                  reader.readAsArrayBuffer(e.target.response);
-                }
-                xhr.send();
-              } else {
-                reader.readAsArrayBuffer(project);
-              }
-            }
-        
-            window.onload = function (e) {
-              loadProject('/static/work/scratch/{{request.user.id}}/{{workfiles.0.filename}}');
-            }
-        
-          </script>
-        <div>
-        {% for workfile in workfiles %}		
-          <div>
-            <span class="badge badge-light">第 {{ forloop.revcounter }} 版</span>
-            <a href="/student/work/download/{{typing}}/{{lesson_id}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{ workfile.upload_date|date:"Y-m-d H:i" }}</a>
-          </div>
-        {% endfor %}
-        </div>
-        {% endwith %}
-{% block footer_script %}
-<script>
-function wordCount( val ){
-    var clean_message = val.replace(/\[m_\d+#\d+:\d+:\d+\]/g, '');
-    var chinese = clean_message.match(/[\u4E00-\u9FA5]/g);
-    var pure_english = clean_message.replace(/[\u4E00-\u9FA5]/g, '')
-    var wom = pure_english.match(/\w+/g);
-    return {
-      words : wom ? wom.length : 0,
-      chars : chinese ? chinese.length : 0,
-		};
-}
+<font color=red>作品：</font>
+<style>
+  .renderer {
+    width: 640px;
+    height: 480px
+  }
+</style>
 
-$('#id_memo{{index}}').on('input', function(e){
-    var v = wordCount(e.target.value);
-    if (v.words + v.chars > 500) {
-      // Split the string on first 200 words and rejoin on spaces
-      $(this).val($(this).val().substring(0, 500));
-    }
-    else {
-  console.log(e.target.value);
-  $('#result').html("心得感想<BR>(英:" + v.words + " / 中: " + v.chars + ")");
-  $('input#memo_e').val(v.words);
-  $('input#memo_c').val(v.chars);
-    }
+<div>
+  <img class="greenFlag" src="/static/images/greenflag.png" alt="Start" />
+  <canvas class="renderer" data-src="/static/work/scratch/{{request.user.id}}/{{workfiles.0.filename}}"></canvas>
+</div>
 
-});
-</script>
-{% endblock %}
+<div>
+  {% for workfile in workfiles %}
+  <div>
+    <span class="badge badge-light">第 {{ forloop.revcounter }} 版</span>
+    <a href="/student/work/download/{{typing}}/{{lesson_id}}/{{index}}/{{request.user.id}}/{{workfile.id}}">{{ workfile.upload_date|date:"Y-m-d H:i" }}</a>
+  </div>
+  {% endfor %}
+</div>
+{% endwith %}
