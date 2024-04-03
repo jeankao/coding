@@ -12,7 +12,7 @@ jieba==0.42.1
 lml==0.1.0
 lxml==4.9.3
 openpyxl==3.1.2
-Pillow==10.1.0
+Pillow==10.3.0
 psycopg==3.1.15
 pyexcel==0.7.0
 pyexcel-io==0.6.6
