@@ -14,8 +14,8 @@ urlpatterns = [
     path('survey/', include('survey.urls')),
     path('certificate/', include('certificate.urls')),
     path('show/', include('show.urls')),
-    path('photologue/', include('photologue.urls')),
-    path('gallery/', TemplateView.as_view(template_name="gallery.html")),
+    # path('photologue/', include('photologue.urls')),
+    # path('gallery/', TemplateView.as_view(template_name="gallery.html")),
     path('annotate/', include('annotate.urls')),
 ]
 

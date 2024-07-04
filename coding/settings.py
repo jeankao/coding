@@ -46,8 +46,6 @@ INSTALLED_APPS = [
     'django_recaptcha',
     'show',
     'django.contrib.sitemaps',
-    'photologue',
-    'sortedm2m',
     'annotate',
 ]
 

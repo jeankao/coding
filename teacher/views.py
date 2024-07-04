@@ -22,7 +22,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from wsgiref.util import FileWrapper
 from collections import OrderedDict
-import django_excel as excel
+# import django_excel as excel
 from account.forms import PasswordForm, RealnameForm
 import sys
 from uuid import uuid4
