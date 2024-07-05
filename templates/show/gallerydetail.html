@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{ show.title }}
+{% block title %}
+{{ show.title }}
 {% endblock %}
 {% block head_ext %}
 {% load tag %}
@@ -18,8 +19,48 @@
   <h1>組員：{% for member in members %}({{member.seat}}){{member.student.first_name}}{% endfor %}</h1>
   <h1>作品名稱：{{show.title}}</h1>
 {% if show.number %}
-   <BR>
+<BR>
+<script type="text/javascript" id="j">
+      // sb3 檔案位置  -----------------------------------------> 只修此處
+      var sb_file = "/show/download/{{show.id}}/{{showfile.id}}";
+      
+      //是否一開始就播放 (true or false)
+      var AutoStart = false;
+      
+      var DESIRED_USERNAME = "griffpatch",COMPAT = true, TURBO = false;
+      var SRC = "file" ;
+          
+      var request = new XMLHttpRequest();
+      request.open('GET', sb_file, true);
+      request.responseType = 'blob';
+      request.onload = function() {
+          const  reader = new FileReader();
+          reader.readAsDataURL(request.response);
+          reader.onload =  function(e){
+              //console.log('DataURL:', e.target.result);
+              //FILE = "data:application/octet-stream;base64,"+ e.target.result   ;
+              console.log('read sb3 data ok ');
+              var FILE =   e.target.result   ;
+      
+              if (SRC === 'file') {
+      
+                    fetch(FILE)
+                      .then(r => r.arrayBuffer())
+                      .then(b => Scratch.vm.loadProject(b));
+                  } else {
+                    Scratch.vm.downloadProjectId('');
+                  }
+          };
+      };
+      request.send();
+      
+      </script>
+      
+      <script src="./js/vm.min.js"></script>
+      <script src="./js/play_scratch.js"></script>
+<!--
   <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/{{ show.number  }}/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+-->
   <BR>
 {% else %}
 <style>
@@ -148,19 +189,17 @@
   <p class="date">
     {{ show.publish|timezone:'Asia/Taipei' }}
   </p>
-  {{ show.body|linebreaks }}              
+    {{ show.body|linebreaks }}              
     作品：<BR>
 <div id="flashContent" >
- 
+    {% for showfile in showfiles %}          
+    <BR>第{{showfiles|length|subtract:forloop.counter|add:1}}版：<A href="/show/download/{{show.id}}/{{showfile.id}}">{{showfile.upload_date}}</A>
+    {% endfor %}
 </div> 
-
-        {% for showfile in showfiles %}
-              <BR>第{{showfiles|length|subtract:forloop.counter|add:1}}版：<A href="/show/download/{{show.id}}/{{showfile.id}}">{{showfile.upload_date}}</A>
-
 	{% if show.youtube %}
 	<iframe width="560" height="315" src="https://www.youtube.com/embed/{{show.youtube}}" frameborder="0" allowfullscreen></iframe>
 	{% endif %}	<Br><BR>
-                {% endfor %}<H1>評分結果({{scores.3}}人)</h1>
+    <h1>評分結果({{scores.3}}人)</h1>
 美工設計：{{scores.0}}  程式難度：{{scores.1}} 創意表現：{{scores.2}}<BR>
 評語：<BR>
 {% for review in reviews %}

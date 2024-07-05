@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}{{ show.title }}
+{% endblock %}
+{% block head_ext %}
+{% load tag %}
+<!-- bootstrap javascript library: BEGIN -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<!-- bootstrap javascript library: END -->
+<!-- bootstrap slide library: BEGIN -->
+<link href="/static/css/bootstrap-slider.css" rel="stylesheet" type="text/css">
+<script src="/static/js/bootstrap-slider.js"></script>
+<!-- bootstrap slide library: END -->
+{% endblock %}
+{% load tz %}
+{% block content %}
+  <h1>組別：{{show.name}}</h1>
+  <h1>組員：{% for member in members %}({{member.seat}}){{member.student.first_name}}{% endfor %}</h1>
+  <h1>作品名稱：{{show.title}}</h1>
+{% if show.number %}
+   <BR>
+  <iframe allowtransparency="true" width="485" height="402" src="http://scratch.mit.edu/projects/embed/{{ show.number  }}/?autostart=false" frameborder=“0” allowfullscreen></iframe>
+  <BR>
+{% else %}
+<style>
+  #test {width: 640px; height: 480px}
+</style>
+<script src="/static/libs/vendor.js"></script>
+<script src="/static/libs/scratch-vm.min.js"></script>
+<script src="/static/libs/scratch-storage.min.js"></script>
+<script src="/static/libs/scratch-svg-renderer.js"></script>
+<!-- note: this uses the BUILT version of scratch-render!  make sure to npm run build -->
+<script src="/static/libs/scratch-render.min.js"></script>
+
+<img src="/static/images/greenflag.png" alt="Start" onclick="javascript: vm.greenFlag();" />
+<canvas id="test"></canvas>
+
+<script>
+  // These variables are going to be available in the "window global" intentionally.
+  // Allows you easy access to debug with `vm.greenFlag()` etc.
+  window.devicePixelRatio = 1;
+
+  var canvas = document.getElementById('test');
+  var render = new ScratchRender(canvas);
+  var vm = new VirtualMachine();
+  var storage = new ScratchStorage();
+  const audioEngine = new window.AudioEngine();
+  vm.attachAudioEngine(audioEngine);
+  vm.attachStorage(storage);
+  vm.attachRenderer(render);
+  vm.attachV2SVGAdapter(new ScratchSVGRenderer.SVGRenderer());
+  vm.attachV2BitmapAdapter(new ScratchSVGRenderer.BitmapAdapter());
+
+  document.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const coordinates = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      canvasWidth: rect.width,
+      canvasHeight: rect.height
+    };
+    vm.postIOData('mouse', coordinates);
+  });
+  canvas.addEventListener('mousedown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const data = {
+      isDown: true,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      canvasWidth: rect.width,
+      canvasHeight: rect.height
+    };
+    vm.postIOData('mouse', data);
+    e.preventDefault();
+  });
+  canvas.addEventListener('mouseup', e => {
+    const rect = canvas.getBoundingClientRect();
+    const data = {
+      isDown: false,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      canvasWidth: rect.width,
+      canvasHeight: rect.height
+    };
+    vm.postIOData('mouse', data);
+    e.preventDefault();
+  });
+
+  // Feed keyboard events as VM I/O events.
+  document.addEventListener('keydown', e => {
+    // Don't capture keys intended for Blockly inputs.
+    if (e.target !== document && e.target !== document.body) {
+      return;
+    }
+    vm.postIOData('keyboard', {
+      keyCode: e.keyCode,
+      isDown: true
+    });
+    e.preventDefault();
+  });
+  document.addEventListener('keyup', e => {
+    // Always capture up events,
+    // even those that have switched to other targets.
+    vm.postIOData('keyboard', {
+      keyCode: e.keyCode,
+      isDown: false
+    });
+    // E.g., prevent scroll.
+    if (e.target !== document && e.target !== document.body) {
+      e.preventDefault();
+    }
+  });
+
+  function loadProject(project) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      vm.start();
+      vm.loadProject(reader.result)
+        .then(() => {
+          // we add a `#loaded` div to our document, the integration suite
+          // waits for that element to show up to assume the vm is ready
+          // to play!
+          const div = document.createElement('div');
+          div.id = 'loaded';
+          document.body.appendChild(div);
+          //vm.greenFlag();
+        });
+    };
+    if (!(project instanceof File)) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', project);
+      xhr.responseType = 'blob';
+      xhr.onload = function (e) {
+        reader.readAsArrayBuffer(e.target.response);
+      }
+      xhr.send();
+    } else {
+      reader.readAsArrayBuffer(project);
+    }
+  }
+
+  window.onload = function (e) {
+    loadProject('/static/show/{{show.id}}/{{show.file}}');
+  }
+
+</script>
+{% endif %}			
+  <p class="date">
+    {{ show.publish|timezone:'Asia/Taipei' }}
+  </p>
+  {{ show.body|linebreaks }}              
+    作品：<BR>
+<div id="flashContent" >
+ 
+</div> 
+
+        {% for showfile in showfiles %}
+              <BR>第{{showfiles|length|subtract:forloop.counter|add:1}}版：<A href="/show/download/{{show.id}}/{{showfile.id}}">{{showfile.upload_date}}</A>
+
+	{% if show.youtube %}
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/{{show.youtube}}" frameborder="0" allowfullscreen></iframe>
+	{% endif %}	<Br><BR>
+                {% endfor %}<H1>評分結果({{scores.3}}人)</h1>
+美工設計：{{scores.0}}  程式難度：{{scores.1}} 創意表現：{{scores.2}}<BR>
+評語：<BR>
+{% for review in reviews %}
+{{review.comment}}<BR>
+{% endfor %}
+{% endblock %}
