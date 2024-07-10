@@ -1421,7 +1421,7 @@ class WorkCreateView3(CreateView):
     model = CWork
     form_class = Work3Form
     template_name = 'form.html'
-心
+    
     def dispatch(self, *args, **kwargs):
         if not not_in_teacher_group(self.request.user):
             raise PermissionDenied
