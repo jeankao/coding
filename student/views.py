@@ -465,10 +465,10 @@ def work_list(request, typing, lesson, classroom_id):
     lessons = []
 
     if typing == "0":
-        if lesson in ["2", "3", "4", "5", "6", "7", "8", "9", "10"]:
-            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5, lesson_list2, lesson_list7][int(lesson)-2]
-        else:
+        if lesson == "1" :
             assignments = lesson_list1
+        else :
+            assignments = [lesson_list2, lesson_list3, lesson_list4, lesson_list2, lesson_list6, lesson_list2, lesson_list5, lesson_list2, lesson_list7][int(lesson)-2]    
     elif typing == "1":
         assignments = TWork.objects.filter(classroom_id=classroom_id).order_by("-id")
     elif typing == "2":

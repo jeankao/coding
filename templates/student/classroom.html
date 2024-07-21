@@ -52,6 +52,7 @@
         {% endif %}
       </div>
     </div>
+    {% if enroll.classroom.lesson == 1 %}   
     <div>
       <span class="badge badge-secondary">作業進度</span>
       <div class="btn-group">
@@ -61,7 +62,7 @@
         <a href="/student/progress/0/{{enroll.classroom.lesson}}/4/{{enroll.classroom.id}}/" role="button" class="btn btn-sm btn-primary">實戰高手</a>			
         <a href="/student/progress/1/{{enroll.classroom.lesson}}/1/{{enroll.classroom.id}}/" role="button" class="btn btn-sm btn-primary">自訂作業</a>			
       </div>
-    </div>
+    </div> 
     <div>
       <span class="badge badge-secondary">修業證書</span>
       <div class="btn-group">
@@ -72,6 +73,7 @@
         <a href="/certificate/cert/classroom/1/4/{{enroll.classroom.id}}/" role="button" class="btn btn-sm btn-primary">實戰高手</a>			
       </div>
     </div>
+    {% endif %}
     <div>
       <span class="badge badge-secondary">師生互動</span>
       <div class="btn-group">
